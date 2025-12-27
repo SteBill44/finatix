@@ -1,7 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  useEnrollments,
+  useLessonProgress,
+  useQuizAttempts,
+  useTotalStudyTime,
+} from "@/hooks/useStudentProgress";
 import {
   BarChart2,
   BookOpen,
@@ -9,12 +17,12 @@ import {
   TrendingUp,
   Target,
   AlertCircle,
-  CheckCircle,
   Play,
   Calendar,
   Award,
   Brain,
-  Zap
+  Zap,
+  GraduationCap,
 } from "lucide-react";
 import {
   LineChart,
@@ -34,7 +42,22 @@ import {
 } from "recharts";
 
 const Dashboard = () => {
-  // Mock data for charts
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
+  const { data: lessonProgress } = useLessonProgress();
+  const { data: quizAttempts } = useQuizAttempts();
+  const { formatted: studyTimeFormatted, totalMinutes } = useTotalStudyTime();
+
+  // Calculate stats from real data
+  const totalEnrollments = enrollments?.length || 0;
+  const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
+  const totalQuizzes = quizAttempts?.length || 0;
+  const averageScore = totalQuizzes > 0
+    ? Math.round(quizAttempts!.reduce((acc, q) => acc + (q.score / q.max_score) * 100, 0) / totalQuizzes)
+    : 0;
+
+  // Mock data for charts (will be replaced with real data as more tracking is added)
   const progressData = [
     { week: "W1", score: 45 },
     { week: "W2", score: 52 },
@@ -43,7 +66,7 @@ const Dashboard = () => {
     { week: "W5", score: 68 },
     { week: "W6", score: 74 },
     { week: "W7", score: 72 },
-    { week: "W8", score: 81 },
+    { week: "W8", score: averageScore || 81 },
   ];
 
   const competencyData = [
@@ -63,19 +86,23 @@ const Dashboard = () => {
     { topic: "Ethics", correct: 38, incorrect: 12 },
   ];
 
-  const weakAreas = [
-    { topic: "Cost-Volume-Profit Analysis", score: 52, priority: "high" },
-    { topic: "Activity-Based Costing", score: 58, priority: "high" },
-    { topic: "Macroeconomic Policy", score: 64, priority: "medium" },
-    { topic: "Transfer Pricing", score: 68, priority: "medium" },
-  ];
-
   const suggestedSessions = [
     { title: "CVP Analysis Deep Dive", duration: "45 min", type: "Video + Practice" },
     { title: "ABC Costing Fundamentals", duration: "30 min", type: "Interactive" },
     { title: "Mock Exam: Management Accounting", duration: "2 hours", type: "Practice Test" },
-    { title: "Quick Review: Governance", duration: "15 min", type: "Flashcards" },
   ];
+
+  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
+
+  if (enrollmentsLoading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -88,20 +115,34 @@ const Dashboard = () => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/80 text-sm font-medium mb-3">
-                Demo Dashboard
+                Student Dashboard
               </span>
               <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
-                Welcome back, Sarah! 👋
+                Welcome back, {userName}! 👋
               </h1>
               <p className="text-primary-foreground/70">
-                You're making great progress on your P1 Management Accounting course.
+                {totalEnrollments > 0
+                  ? `You're enrolled in ${totalEnrollments} course${totalEnrollments > 1 ? "s" : ""}. Keep up the great work!`
+                  : "Get started by enrolling in your first course."}
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" size="lg" className="gap-2">
-                <Play className="w-5 h-5" />
-                Continue Learning
-              </Button>
+              {totalEnrollments > 0 ? (
+                <Button variant="outline" size="lg" className="gap-2">
+                  <Play className="w-5 h-5" />
+                  Continue Learning
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-2"
+                  onClick={() => navigate("/courses")}
+                >
+                  <GraduationCap className="w-5 h-5" />
+                  Browse Courses
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -119,10 +160,10 @@ const Dashboard = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
-              { label: "Syllabus Completed", value: "68%", icon: BookOpen, color: "text-primary" },
-              { label: "Study Hours", value: "42h", icon: Clock, color: "text-teal" },
-              { label: "Questions Practiced", value: "347", icon: Target, color: "text-accent" },
-              { label: "Current Streak", value: "12 days", icon: Zap, color: "text-yellow-500" },
+              { label: "Courses Enrolled", value: totalEnrollments.toString(), icon: BookOpen, color: "text-primary" },
+              { label: "Study Time", value: studyTimeFormatted || "0h", icon: Clock, color: "text-teal" },
+              { label: "Lessons Completed", value: completedLessons.toString(), icon: Target, color: "text-accent" },
+              { label: "Quiz Avg Score", value: averageScore > 0 ? `${averageScore}%` : "N/A", icon: Zap, color: "text-yellow-500" },
             ].map((stat) => (
               <Card key={stat.label} className="p-6 hover-lift">
                 <div className="flex items-center gap-4">
@@ -138,209 +179,193 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Progress Chart */}
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    Score Progress
-                  </h2>
-                  <span className="text-sm text-muted-foreground">Last 8 weeks</span>
-                </div>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={progressData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: "hsl(var(--card))", 
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px"
-                        }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="score" 
-                        stroke="hsl(var(--primary))" 
-                        strokeWidth={3}
-                        dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Competency Radar */}
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                    <Brain className="w-5 h-5 text-accent" />
-                    Competency Analysis
-                  </h2>
-                </div>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart data={competencyData}>
-                      <PolarGrid stroke="hsl(var(--border))" />
-                      <PolarAngleAxis dataKey="subject" stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                      <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={10} />
-                      <Radar
-                        name="Score"
-                        dataKey="score"
-                        stroke="hsl(var(--primary))"
-                        fill="hsl(var(--primary))"
-                        fillOpacity={0.3}
-                        strokeWidth={2}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Question History */}
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                    <BarChart2 className="w-5 h-5 text-teal" />
-                    Practice Question History
-                  </h2>
-                </div>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={questionHistory} layout="vertical">
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                      <YAxis dataKey="topic" type="category" stroke="hsl(var(--muted-foreground))" fontSize={11} width={100} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: "hsl(var(--card))", 
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px"
-                        }}
-                      />
-                      <Bar dataKey="correct" fill="hsl(var(--accent))" stackId="a" radius={[0, 4, 4, 0]} />
-                      <Bar dataKey="incorrect" fill="hsl(var(--destructive))" stackId="a" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="flex justify-center gap-6 mt-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded bg-accent" />
-                    <span className="text-sm text-muted-foreground">Correct</span>
+          {totalEnrollments === 0 ? (
+            // Empty state
+            <Card className="p-12 text-center">
+              <GraduationCap className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <h2 className="text-2xl font-bold text-foreground mb-2">No Courses Yet</h2>
+              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                Start your learning journey by enrolling in a course. We have a variety of
+                courses to help you achieve your goals.
+              </p>
+              <Button size="lg" onClick={() => navigate("/courses")}>
+                Browse Courses
+              </Button>
+            </Card>
+          ) : (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Main Content */}
+              <div className="lg:col-span-2 space-y-8">
+                {/* Progress Chart */}
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-primary" />
+                      Score Progress
+                    </h2>
+                    <span className="text-sm text-muted-foreground">Last 8 weeks</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded bg-destructive" />
-                    <span className="text-sm text-muted-foreground">Incorrect</span>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={progressData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                        <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: "hsl(var(--card))", 
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "8px"
+                          }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="score" 
+                          stroke="hsl(var(--primary))" 
+                          strokeWidth={3}
+                          dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
                   </div>
-                </div>
-              </Card>
-            </div>
+                </Card>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Current Course Progress */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-primary" />
-                  Current Course
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="font-medium">P1 Management Accounting</span>
-                      <span className="text-muted-foreground">68%</span>
+                {/* Competency Radar */}
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                      <Brain className="w-5 h-5 text-accent" />
+                      Competency Analysis
+                    </h2>
+                  </div>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart data={competencyData}>
+                        <PolarGrid stroke="hsl(var(--border))" />
+                        <PolarAngleAxis dataKey="subject" stroke="hsl(var(--muted-foreground))" fontSize={11} />
+                        <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={10} />
+                        <Radar
+                          name="Score"
+                          dataKey="score"
+                          stroke="hsl(var(--primary))"
+                          fill="hsl(var(--primary))"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                        />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </Card>
+
+                {/* Question History */}
+                <Card className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                      <BarChart2 className="w-5 h-5 text-teal" />
+                      Practice Question History
+                    </h2>
+                  </div>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={questionHistory} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                        <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                        <YAxis dataKey="topic" type="category" stroke="hsl(var(--muted-foreground))" fontSize={11} width={100} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: "hsl(var(--card))", 
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "8px"
+                          }}
+                        />
+                        <Bar dataKey="correct" fill="hsl(var(--accent))" stackId="a" radius={[0, 4, 4, 0]} />
+                        <Bar dataKey="incorrect" fill="hsl(var(--destructive))" stackId="a" radius={[0, 4, 4, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex justify-center gap-6 mt-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded bg-accent" />
+                      <span className="text-sm text-muted-foreground">Correct</span>
                     </div>
-                    <Progress value={68} className="h-2" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="p-3 bg-secondary/50 rounded-lg">
-                      <p className="text-muted-foreground">Lessons</p>
-                      <p className="font-semibold text-foreground">34 / 50</p>
-                    </div>
-                    <div className="p-3 bg-secondary/50 rounded-lg">
-                      <p className="text-muted-foreground">Quizzes</p>
-                      <p className="font-semibold text-foreground">8 / 12</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded bg-destructive" />
+                      <span className="text-sm text-muted-foreground">Incorrect</span>
                     </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
 
-              {/* Weak Areas */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-destructive" />
-                  Areas to Improve
-                </h3>
-                <div className="space-y-3">
-                  {weakAreas.map((area, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-foreground">{area.topic}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Progress value={area.score} className="h-1.5 flex-1" />
-                          <span className="text-xs text-muted-foreground">{area.score}%</span>
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Enrolled Courses */}
+                <Card className="p-6">
+                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                    Your Courses
+                  </h3>
+                  <div className="space-y-4">
+                    {enrollments?.map((enrollment) => (
+                      <div key={enrollment.id} className="p-3 bg-secondary/50 rounded-lg">
+                        <div className="flex justify-between text-sm mb-2">
+                          <span className="font-medium text-foreground">{enrollment.courses.title}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <span className="capitalize">{enrollment.courses.level}</span>
+                          <span>•</span>
+                          <span>{enrollment.courses.duration_hours}h</span>
+                        </div>
+                        {enrollment.completed_at ? (
+                          <span className="mt-2 inline-block text-xs text-accent font-medium">Completed</span>
+                        ) : (
+                          <Progress value={30} className="h-1.5 mt-2" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Suggested Sessions */}
+                <Card className="p-6">
+                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-accent" />
+                    Suggested Next Sessions
+                  </h3>
+                  <div className="space-y-3">
+                    {suggestedSessions.map((session, index) => (
+                      <div 
+                        key={index} 
+                        className="p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
+                      >
+                        <p className="text-sm font-medium text-foreground">{session.title}</p>
+                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {session.duration}
+                          </span>
+                          <span>{session.type}</span>
                         </div>
                       </div>
-                      <span className={`ml-3 px-2 py-0.5 rounded text-xs font-medium ${
-                        area.priority === "high" 
-                          ? "bg-destructive/10 text-destructive" 
-                          : "bg-yellow-500/10 text-yellow-600"
-                      }`}>
-                        {area.priority}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-
-              {/* Suggested Sessions */}
-              <Card className="p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-accent" />
-                  Suggested Next Sessions
-                </h3>
-                <div className="space-y-3">
-                  {suggestedSessions.map((session, index) => (
-                    <div 
-                      key={index} 
-                      className="p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
-                    >
-                      <p className="text-sm font-medium text-foreground">{session.title}</p>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {session.duration}
-                        </span>
-                        <span>{session.type}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  View Full Schedule
-                </Button>
-              </Card>
-
-              {/* Achievement */}
-              <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                    <Award className="w-7 h-7 text-primary-foreground" />
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground">12 Day Streak!</p>
-                    <p className="text-sm text-muted-foreground">Keep it up! You're on fire 🔥</p>
+                </Card>
+
+                {/* Achievement */}
+                <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                      <Award className="w-7 h-7 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">Keep Learning!</p>
+                      <p className="text-sm text-muted-foreground">Complete lessons to earn achievements</p>
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </Layout>
