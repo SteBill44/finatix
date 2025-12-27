@@ -1,9 +1,44 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, X, Star, Zap, Shield, Users } from "lucide-react";
+import { CheckCircle, X, Zap, Shield } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCourses, useEnrollments, useEnrollInCourse } from "@/hooks/useStudentProgress";
+import { toast } from "sonner";
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: courses } = useCourses();
+  const { data: enrollments } = useEnrollments();
+  const enrollMutation = useEnrollInCourse();
+
+  const isEnrolled = (courseId: string) => {
+    return enrollments?.some((e) => e.course_id === courseId);
+  };
+
+  const handleEnroll = async (courseId: string, courseName: string) => {
+    if (!user) {
+      toast.error("Please sign in to enroll");
+      navigate("/auth");
+      return;
+    }
+
+    if (isEnrolled(courseId)) {
+      toast.info("You're already enrolled in this course");
+      navigate("/dashboard");
+      return;
+    }
+
+    try {
+      await enrollMutation.mutateAsync(courseId);
+      toast.success(`Successfully enrolled in ${courseName}!`);
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to enroll");
+    }
+  };
+
   const plans = [
     {
       name: "Single Module",
@@ -104,9 +139,76 @@ const Pricing = () => {
         </div>
       </section>
 
+      {/* Individual Courses */}
+      {courses && courses.length > 0 && (
+        <section className="py-16 lg:py-20 bg-secondary/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                Individual Courses
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Enroll in Individual Courses
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Start with a single course and expand your knowledge at your own pace.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {courses.map((course) => {
+                const enrolled = isEnrolled(course.id);
+                return (
+                  <div
+                    key={course.id}
+                    className="bg-card rounded-2xl border border-border p-6 hover-lift"
+                  >
+                    <div className="mb-4">
+                      <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium capitalize">
+                        {course.level}
+                      </span>
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">{course.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      {course.description}
+                    </p>
+                    <div className="flex items-baseline gap-2 mb-4">
+                      <span className="text-3xl font-bold text-foreground">
+                        £{Number(course.price).toFixed(0)}
+                      </span>
+                      <span className="text-muted-foreground text-sm">one-time</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mb-6">
+                      {course.duration_hours} hours of content
+                    </div>
+                    <Button
+                      className="w-full"
+                      variant={enrolled ? "outline" : "default"}
+                      disabled={enrollMutation.isPending}
+                      onClick={() => handleEnroll(course.id, course.title)}
+                    >
+                      {enrolled ? "Already Enrolled" : "Enroll Now"}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Pricing Cards */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Bundle Plans
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Save more with our comprehensive bundle plans.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {plans.map((plan) => (
               <div
