@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -10,19 +10,21 @@ import {
   useQuizAttempts,
   useTotalStudyTime,
 } from "@/hooks/useStudentProgress";
+import { useQuizzes } from "@/hooks/useQuizzes";
 import {
   BarChart2,
   BookOpen,
   Clock,
   TrendingUp,
   Target,
-  AlertCircle,
   Play,
   Calendar,
   Award,
   Brain,
   Zap,
   GraduationCap,
+  FileQuestion,
+  ChevronRight,
 } from "lucide-react";
 import {
   LineChart,
@@ -47,17 +49,31 @@ const Dashboard = () => {
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { data: lessonProgress } = useLessonProgress();
   const { data: quizAttempts } = useQuizAttempts();
-  const { formatted: studyTimeFormatted, totalMinutes } = useTotalStudyTime();
+  const { formatted: studyTimeFormatted } = useTotalStudyTime();
+
+  // Get quizzes for enrolled courses
+  const enrolledCourseIds = enrollments?.map((e) => e.course_id) || [];
+  const { data: allQuizzes } = useQuizzes();
+  const availableQuizzes = allQuizzes?.filter((q) =>
+    enrolledCourseIds.includes(q.course_id)
+  );
 
   // Calculate stats from real data
   const totalEnrollments = enrollments?.length || 0;
   const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
   const totalQuizzes = quizAttempts?.length || 0;
-  const averageScore = totalQuizzes > 0
-    ? Math.round(quizAttempts!.reduce((acc, q) => acc + (q.score / q.max_score) * 100, 0) / totalQuizzes)
-    : 0;
+  const averageScore =
+    totalQuizzes > 0
+      ? Math.round(
+          quizAttempts!.reduce((acc, q) => acc + (q.score / q.max_score) * 100, 0) /
+            totalQuizzes
+        )
+      : 0;
 
-  // Mock data for charts (will be replaced with real data as more tracking is added)
+  // Recent quiz attempts for display
+  const recentQuizAttempts = quizAttempts?.slice(0, 5) || [];
+
+  // Mock data for charts
   const progressData = [
     { week: "W1", score: 45 },
     { week: "W2", score: 52 },
@@ -86,13 +102,8 @@ const Dashboard = () => {
     { topic: "Ethics", correct: 38, incorrect: 12 },
   ];
 
-  const suggestedSessions = [
-    { title: "CVP Analysis Deep Dive", duration: "45 min", type: "Video + Practice" },
-    { title: "ABC Costing Fundamentals", duration: "30 min", type: "Interactive" },
-    { title: "Mock Exam: Management Accounting", duration: "2 hours", type: "Practice Test" },
-  ];
-
-  const userName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
+  const userName =
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
 
   if (enrollmentsLoading) {
     return (
@@ -110,7 +121,7 @@ const Dashboard = () => {
       <section className="relative py-12 lg:py-16 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="absolute top-10 right-20 w-64 h-64 bg-accent/30 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
@@ -122,7 +133,9 @@ const Dashboard = () => {
               </h1>
               <p className="text-primary-foreground/70">
                 {totalEnrollments > 0
-                  ? `You're enrolled in ${totalEnrollments} course${totalEnrollments > 1 ? "s" : ""}. Keep up the great work!`
+                  ? `You're enrolled in ${totalEnrollments} course${
+                      totalEnrollments > 1 ? "s" : ""
+                    }. Keep up the great work!`
                   : "Get started by enrolling in your first course."}
               </p>
             </div>
@@ -146,10 +159,13 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 40" fill="none" className="w-full">
-            <path d="M0 40L1440 40L1440 0C1200 30 720 40 0 15L0 40Z" fill="hsl(var(--background))"/>
+            <path
+              d="M0 40L1440 40L1440 0C1200 30 720 40 0 15L0 40Z"
+              fill="hsl(var(--background))"
+            />
           </svg>
         </div>
       </section>
@@ -160,14 +176,36 @@ const Dashboard = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
-              { label: "Courses Enrolled", value: totalEnrollments.toString(), icon: BookOpen, color: "text-primary" },
-              { label: "Study Time", value: studyTimeFormatted || "0h", icon: Clock, color: "text-teal" },
-              { label: "Lessons Completed", value: completedLessons.toString(), icon: Target, color: "text-accent" },
-              { label: "Quiz Avg Score", value: averageScore > 0 ? `${averageScore}%` : "N/A", icon: Zap, color: "text-yellow-500" },
+              {
+                label: "Courses Enrolled",
+                value: totalEnrollments.toString(),
+                icon: BookOpen,
+                color: "text-primary",
+              },
+              {
+                label: "Study Time",
+                value: studyTimeFormatted || "0h",
+                icon: Clock,
+                color: "text-teal",
+              },
+              {
+                label: "Lessons Completed",
+                value: completedLessons.toString(),
+                icon: Target,
+                color: "text-accent",
+              },
+              {
+                label: "Quiz Avg Score",
+                value: averageScore > 0 ? `${averageScore}%` : "N/A",
+                icon: Zap,
+                color: "text-yellow-500",
+              },
             ].map((stat) => (
               <Card key={stat.label} className="p-6 hover-lift">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl bg-secondary flex items-center justify-center ${stat.color}`}>
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-secondary flex items-center justify-center ${stat.color}`}
+                  >
                     <stat.icon className="w-6 h-6" />
                   </div>
                   <div>
@@ -180,13 +218,11 @@ const Dashboard = () => {
           </div>
 
           {totalEnrollments === 0 ? (
-            // Empty state
             <Card className="p-12 text-center">
               <GraduationCap className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
               <h2 className="text-2xl font-bold text-foreground mb-2">No Courses Yet</h2>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Start your learning journey by enrolling in a course. We have a variety of
-                courses to help you achieve your goals.
+                Start your learning journey by enrolling in a course.
               </p>
               <Button size="lg" onClick={() => navigate("/courses")}>
                 Browse Courses
@@ -209,19 +245,27 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={progressData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis dataKey="week" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                        <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: "hsl(var(--card))", 
+                        <XAxis
+                          dataKey="week"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={12}
+                        />
+                        <YAxis
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={12}
+                          domain={[0, 100]}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
                             border: "1px solid hsl(var(--border))",
-                            borderRadius: "8px"
+                            borderRadius: "8px",
                           }}
                         />
-                        <Line 
-                          type="monotone" 
-                          dataKey="score" 
-                          stroke="hsl(var(--primary))" 
+                        <Line
+                          type="monotone"
+                          dataKey="score"
+                          stroke="hsl(var(--primary))"
                           strokeWidth={3}
                           dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
                           activeDot={{ r: 6 }}
@@ -243,8 +287,17 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart data={competencyData}>
                         <PolarGrid stroke="hsl(var(--border))" />
-                        <PolarAngleAxis dataKey="subject" stroke="hsl(var(--muted-foreground))" fontSize={11} />
-                        <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={10} />
+                        <PolarAngleAxis
+                          dataKey="subject"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={11}
+                        />
+                        <PolarRadiusAxis
+                          angle={30}
+                          domain={[0, 100]}
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={10}
+                        />
                         <Radar
                           name="Score"
                           dataKey="score"
@@ -270,17 +323,37 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={questionHistory} layout="vertical">
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                        <YAxis dataKey="topic" type="category" stroke="hsl(var(--muted-foreground))" fontSize={11} width={100} />
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: "hsl(var(--card))", 
+                        <XAxis
+                          type="number"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={12}
+                        />
+                        <YAxis
+                          dataKey="topic"
+                          type="category"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={11}
+                          width={100}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
                             border: "1px solid hsl(var(--border))",
-                            borderRadius: "8px"
+                            borderRadius: "8px",
                           }}
                         />
-                        <Bar dataKey="correct" fill="hsl(var(--accent))" stackId="a" radius={[0, 4, 4, 0]} />
-                        <Bar dataKey="incorrect" fill="hsl(var(--destructive))" stackId="a" radius={[0, 4, 4, 0]} />
+                        <Bar
+                          dataKey="correct"
+                          fill="hsl(var(--accent))"
+                          stackId="a"
+                          radius={[0, 4, 4, 0]}
+                        />
+                        <Bar
+                          dataKey="incorrect"
+                          fill="hsl(var(--destructive))"
+                          stackId="a"
+                          radius={[0, 4, 4, 0]}
+                        />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -309,7 +382,9 @@ const Dashboard = () => {
                     {enrollments?.map((enrollment) => (
                       <div key={enrollment.id} className="p-3 bg-secondary/50 rounded-lg">
                         <div className="flex justify-between text-sm mb-2">
-                          <span className="font-medium text-foreground">{enrollment.courses.title}</span>
+                          <span className="font-medium text-foreground">
+                            {enrollment.courses.title}
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
                           <span className="capitalize">{enrollment.courses.level}</span>
@@ -317,7 +392,9 @@ const Dashboard = () => {
                           <span>{enrollment.courses.duration_hours}h</span>
                         </div>
                         {enrollment.completed_at ? (
-                          <span className="mt-2 inline-block text-xs text-accent font-medium">Completed</span>
+                          <span className="mt-2 inline-block text-xs text-accent font-medium">
+                            Completed
+                          </span>
                         ) : (
                           <Progress value={30} className="h-1.5 mt-2" />
                         )}
@@ -326,30 +403,79 @@ const Dashboard = () => {
                   </div>
                 </Card>
 
-                {/* Suggested Sessions */}
-                <Card className="p-6">
-                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-accent" />
-                    Suggested Next Sessions
-                  </h3>
-                  <div className="space-y-3">
-                    {suggestedSessions.map((session, index) => (
-                      <div 
-                        key={index} 
-                        className="p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
-                      >
-                        <p className="text-sm font-medium text-foreground">{session.title}</p>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {session.duration}
-                          </span>
-                          <span>{session.type}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
+                {/* Available Quizzes */}
+                {availableQuizzes && availableQuizzes.length > 0 && (
+                  <Card className="p-6">
+                    <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <FileQuestion className="w-5 h-5 text-accent" />
+                      Available Quizzes
+                    </h3>
+                    <div className="space-y-3">
+                      {availableQuizzes.map((quiz) => (
+                        <Link
+                          key={quiz.id}
+                          to={`/quiz/${quiz.id}`}
+                          className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors group"
+                        >
+                          <div>
+                            <p className="text-sm font-medium text-foreground">
+                              {quiz.title}
+                            </p>
+                            {quiz.description && (
+                              <p className="text-xs text-muted-foreground line-clamp-1">
+                                {quiz.description}
+                              </p>
+                            )}
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </Link>
+                      ))}
+                    </div>
+                  </Card>
+                )}
+
+                {/* Recent Quiz Attempts */}
+                {recentQuizAttempts.length > 0 && (
+                  <Card className="p-6">
+                    <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                      <Calendar className="w-5 h-5 text-primary" />
+                      Recent Quiz Results
+                    </h3>
+                    <div className="space-y-3">
+                      {recentQuizAttempts.map((attempt) => {
+                        const percentage = Math.round(
+                          (attempt.score / attempt.max_score) * 100
+                        );
+                        return (
+                          <div
+                            key={attempt.id}
+                            className="p-3 bg-secondary/50 rounded-lg"
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-foreground">
+                                {attempt.score}/{attempt.max_score} correct
+                              </span>
+                              <span
+                                className={`text-sm font-bold ${
+                                  percentage >= 80
+                                    ? "text-accent"
+                                    : percentage >= 60
+                                    ? "text-yellow-500"
+                                    : "text-destructive"
+                                }`}
+                              >
+                                {percentage}%
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {new Date(attempt.attempted_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </Card>
+                )}
 
                 {/* Achievement */}
                 <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
@@ -359,7 +485,11 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Keep Learning!</p>
-                      <p className="text-sm text-muted-foreground">Complete lessons to earn achievements</p>
+                      <p className="text-sm text-muted-foreground">
+                        {totalQuizzes > 0
+                          ? `${totalQuizzes} quiz${totalQuizzes > 1 ? "zes" : ""} completed`
+                          : "Take a quiz to earn achievements"}
+                      </p>
                     </div>
                   </div>
                 </Card>
