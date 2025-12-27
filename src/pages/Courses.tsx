@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   Search, 
-  Filter, 
   Clock, 
   Users, 
   Star, 
@@ -13,14 +12,16 @@ import {
   BookOpen,
   BarChart3,
   Target,
-  ArrowRight
+  ArrowRight,
+  Award
 } from "lucide-react";
 
 interface Course {
   id: string;
   code: string;
   title: string;
-  level: "operational" | "management" | "strategic";
+  level: "certificate" | "operational" | "management" | "strategic";
+  type: "objective" | "casestudy";
   description: string;
   price: number;
   originalPrice?: number;
@@ -32,22 +33,29 @@ interface Course {
 }
 
 const courses: Course[] = [
-  // Operational Level
-  { id: "ba1", code: "BA1", title: "Fundamentals of Business Economics", level: "operational", description: "Understand the economic context of business and how organisations function in their environment.", price: 149, originalPrice: 199, duration: "40 hours", students: 2340, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "ba2", code: "BA2", title: "Fundamentals of Management Accounting", level: "operational", description: "Master the core principles of management accounting and cost analysis.", price: 149, originalPrice: 199, duration: "45 hours", students: 2150, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "ba3", code: "BA3", title: "Fundamentals of Financial Accounting", level: "operational", description: "Build a solid foundation in financial accounting principles and practices.", price: 149, originalPrice: 199, duration: "42 hours", students: 1980, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "ba4", code: "BA4", title: "Fundamentals of Ethics, Corporate Governance and Business Law", level: "operational", description: "Explore ethical principles, governance frameworks, and business law essentials.", price: 149, originalPrice: 199, duration: "38 hours", students: 1750, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  // Management Level
-  { id: "e1", code: "E1", title: "Organisational Management", level: "management", description: "Develop skills in organisational structure, HR management, and business processes.", price: 199, originalPrice: 249, duration: "50 hours", students: 1650, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "p1", code: "P1", title: "Management Accounting", level: "management", description: "Advanced management accounting techniques for decision-making and control.", price: 199, originalPrice: 249, duration: "55 hours", students: 1820, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "f1", code: "F1", title: "Financial Reporting", level: "management", description: "Master financial reporting standards and complex accounting treatments.", price: 199, originalPrice: 249, duration: "52 hours", students: 1590, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  // Strategic Level
-  { id: "e2", code: "E2", title: "Project and Relationship Management", level: "strategic", description: "Lead complex projects and manage stakeholder relationships effectively.", price: 249, originalPrice: 299, duration: "48 hours", students: 1120, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "p2", code: "P2", title: "Advanced Management Accounting", level: "strategic", description: "Strategic management accounting for complex business decisions.", price: 249, originalPrice: 299, duration: "58 hours", students: 1340, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "f2", code: "F2", title: "Advanced Financial Reporting", level: "strategic", description: "Complex group accounting, current issues, and professional standards.", price: 249, originalPrice: 299, duration: "55 hours", students: 1280, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "e3", code: "E3", title: "Strategic Management", level: "strategic", description: "Develop strategic thinking and enterprise-level management skills.", price: 279, originalPrice: 349, duration: "60 hours", students: 980, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "p3", code: "P3", title: "Risk Management", level: "strategic", description: "Enterprise risk management and strategic risk assessment.", price: 279, originalPrice: 349, duration: "55 hours", students: 890, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
-  { id: "f3", code: "F3", title: "Financial Strategy", level: "strategic", description: "Financial strategy formulation and implementation for senior finance roles.", price: 279, originalPrice: 349, duration: "58 hours", students: 920, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  // Certificate in Business Accounting (BA1-BA4)
+  { id: "ba1", code: "BA1", title: "Fundamentals of Business Economics", level: "certificate", type: "objective", description: "Understand the economic context of business and how organisations function in their environment.", price: 99, originalPrice: 149, duration: "30 hours", students: 3240, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "ba2", code: "BA2", title: "Fundamentals of Management Accounting", level: "certificate", type: "objective", description: "Master the core principles of management accounting and cost analysis.", price: 99, originalPrice: 149, duration: "32 hours", students: 2950, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "ba3", code: "BA3", title: "Fundamentals of Financial Accounting", level: "certificate", type: "objective", description: "Build a solid foundation in financial accounting principles and practices.", price: 99, originalPrice: 149, duration: "30 hours", students: 2780, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "ba4", code: "BA4", title: "Fundamentals of Ethics, Corporate Governance and Business Law", level: "certificate", type: "objective", description: "Explore ethical principles, governance frameworks, and business law essentials.", price: 99, originalPrice: 149, duration: "28 hours", students: 2450, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  
+  // Operational Level (E1, P1, F1 + Case Study)
+  { id: "e1", code: "E1", title: "Managing Finance in a Digital World", level: "operational", type: "objective", description: "Explore digital transformation in finance and the role of technology in modern business.", price: 149, originalPrice: 199, duration: "40 hours", students: 1850, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "p1", code: "P1", title: "Management Accounting", level: "operational", type: "objective", description: "Core management accounting techniques for cost management and short-term decision making.", price: 149, originalPrice: 199, duration: "45 hours", students: 2120, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "f1", code: "F1", title: "Financial Reporting", level: "operational", type: "objective", description: "Prepare financial statements and understand reporting standards for single entities.", price: 149, originalPrice: 199, duration: "42 hours", students: 1890, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "ocs", code: "OCS", title: "Operational Case Study", level: "operational", type: "casestudy", description: "Apply operational level knowledge in integrated, real-world business scenarios.", price: 199, originalPrice: 249, duration: "35 hours", students: 1650, rating: 4.9, format: "Case Study Prep + Practice Exams", hasFreeLesson: true },
+  
+  // Management Level (E2, P2, F2 + Case Study)
+  { id: "e2", code: "E2", title: "Managing Performance", level: "management", type: "objective", description: "Strategic performance management, project management, and relationship management.", price: 179, originalPrice: 229, duration: "48 hours", students: 1420, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "p2", code: "P2", title: "Advanced Management Accounting", level: "management", type: "objective", description: "Advanced costing, pricing, budgeting, and performance evaluation techniques.", price: 179, originalPrice: 229, duration: "52 hours", students: 1540, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "f2", code: "F2", title: "Advanced Financial Reporting", level: "management", type: "objective", description: "Complex group accounting, consolidated financial statements, and current issues.", price: 179, originalPrice: 229, duration: "50 hours", students: 1380, rating: 4.7, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "mcs", code: "MCS", title: "Management Case Study", level: "management", type: "casestudy", description: "Integrate management level skills in complex, multi-disciplinary business scenarios.", price: 229, originalPrice: 279, duration: "40 hours", students: 1280, rating: 4.9, format: "Case Study Prep + Practice Exams", hasFreeLesson: true },
+  
+  // Strategic Level (E3, P3, F3 + Strategic Case Study)
+  { id: "e3", code: "E3", title: "Strategic Management", level: "strategic", type: "objective", description: "Strategic analysis, choice and implementation at the enterprise level.", price: 199, originalPrice: 249, duration: "55 hours", students: 980, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "p3", code: "P3", title: "Risk Management", level: "strategic", type: "objective", description: "Enterprise risk management, internal controls, and risk assessment frameworks.", price: 199, originalPrice: 249, duration: "50 hours", students: 920, rating: 4.8, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "f3", code: "F3", title: "Financial Strategy", level: "strategic", type: "objective", description: "Treasury, investment decisions, and financial strategy for senior finance roles.", price: 199, originalPrice: 249, duration: "52 hours", students: 890, rating: 4.9, format: "On-demand + Mock Exams", hasFreeLesson: true },
+  { id: "scs", code: "SCS", title: "Strategic Case Study", level: "strategic", type: "casestudy", description: "The final CIMA exam - demonstrate strategic level competencies in a board-level scenario.", price: 279, originalPrice: 349, duration: "50 hours", students: 780, rating: 4.9, format: "Case Study Prep + Practice Exams", hasFreeLesson: true },
 ];
 
 const Courses = () => {
@@ -55,9 +63,10 @@ const Courses = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
 
   const levelConfig = {
-    operational: { label: "Operational", icon: BookOpen, color: "from-teal to-teal-light" },
-    management: { label: "Management", icon: BarChart3, color: "from-primary to-royal-blue-dark" },
-    strategic: { label: "Strategic", icon: Target, color: "from-accent to-teal" },
+    certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-orange" },
+    operational: { label: "Operational", icon: BookOpen, color: "bg-primary" },
+    management: { label: "Management", icon: BarChart3, color: "bg-accent" },
+    strategic: { label: "Strategic", icon: Target, color: "bg-purple" },
   };
 
   const filteredCourses = courses.filter((course) => {
@@ -70,38 +79,73 @@ const Courses = () => {
 
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {
-      case "operational": return "bg-teal/10 text-teal";
-      case "management": return "bg-primary/10 text-primary";
-      case "strategic": return "bg-accent/10 text-accent";
+      case "certificate": return "bg-orange/10 text-orange";
+      case "operational": return "bg-primary/10 text-primary";
+      case "management": return "bg-accent/10 text-accent";
+      case "strategic": return "bg-purple/10 text-purple";
       default: return "bg-secondary text-secondary-foreground";
+    }
+  };
+
+  const getLevelBorderColor = (level: string) => {
+    switch (level) {
+      case "certificate": return "border-l-orange";
+      case "operational": return "border-l-primary";
+      case "management": return "border-l-accent";
+      case "strategic": return "border-l-purple";
+      default: return "border-l-border";
     }
   };
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 gradient-bg opacity-95" />
-        <div className="absolute top-20 right-20 w-72 h-72 bg-accent/30 rounded-full blur-3xl" />
-        
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="pt-24 pb-16 lg:pb-20 hex-pattern">
+        <div className="container mx-auto px-4">
           <div className="max-w-3xl">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
-              CIMA Course Catalog
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
-              Find Your Perfect Course
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+              EXPLORE <span className="text-primary">CIMA COURSES</span>
             </h1>
-            <p className="text-xl text-primary-foreground/80">
-              From foundation to strategic level, we've got comprehensive courses to help you ace every CIMA exam.
+            <p className="text-lg text-muted-foreground">
+              From the Certificate in Business Accounting to the Strategic Case Study, we've got comprehensive courses to help you ace every CIMA exam.
             </p>
           </div>
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-            <path d="M0 60L1440 60L1440 0C1200 40 720 60 0 20L0 60Z" fill="hsl(var(--background))"/>
-          </svg>
+      </section>
+
+      {/* CIMA Pathway Overview */}
+      <section className="py-12 bg-card border-y border-border">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center p-6">
+              <div className="w-12 h-12 rounded-full bg-orange/10 flex items-center justify-center mx-auto mb-3">
+                <Award className="w-6 h-6 text-orange" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">Certificate (CBA)</h3>
+              <p className="text-sm text-muted-foreground">BA1, BA2, BA3, BA4</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                <BookOpen className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">Operational Level</h3>
+              <p className="text-sm text-muted-foreground">E1, P1, F1 + Case Study</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
+                <BarChart3 className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">Management Level</h3>
+              <p className="text-sm text-muted-foreground">E2, P2, F2 + Case Study</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-12 h-12 rounded-full bg-purple/10 flex items-center justify-center mx-auto mb-3">
+                <Target className="w-6 h-6 text-purple" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">Strategic Level</h3>
+              <p className="text-sm text-muted-foreground">E3, P3, F3 + Case Study</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -114,10 +158,10 @@ const Courses = () => {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
-                placeholder="Search courses..."
+                placeholder="Search courses (e.g., BA1, E2, Case Study)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12"
+                className="pl-10 h-12 rounded-full"
               />
             </div>
 
@@ -150,17 +194,21 @@ const Courses = () => {
             {filteredCourses.map((course) => (
               <div
                 key={course.id}
-                className="group bg-card rounded-2xl border border-border overflow-hidden hover-lift"
+                className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift`}
               >
-                {/* Course Header */}
-                <div className={`h-2 bg-gradient-to-r ${levelConfig[course.level].color}`} />
-                
                 <div className="p-6">
                   {/* Level Badge & Code */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className={`px-3 py-1 rounded-lg text-xs font-semibold ${getLevelBadgeStyle(course.level)}`}>
-                      {course.code}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getLevelBadgeStyle(course.level)}`}>
+                        {course.code}
+                      </span>
+                      {course.type === "casestudy" && (
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                          Case Study
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1 text-yellow-500">
                       <Star className="w-4 h-4 fill-current" />
                       <span className="text-sm font-medium text-foreground">{course.rating}</span>
