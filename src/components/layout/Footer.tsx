@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { GraduationCap, Mail, Phone, MapPin, Linkedin, Twitter, Youtube, Facebook } from "lucide-react";
+import { Linkedin, Twitter, Youtube, Facebook } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -38,22 +38,19 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="bg-charcoal text-background">
       <div className="container mx-auto px-4 py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
-          <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-primary-foreground" />
-              </div>
+          <div className="lg:col-span-1">
+            <Link to="/" className="inline-block mb-4">
               <span className="text-xl font-bold">
-                CIMA<span className="text-primary">Study</span>
+                cima<span className="text-primary">Study</span>
               </span>
             </Link>
-            <p className="text-background/70 text-sm mb-6 max-w-sm">
-              Smarter CIMA study. Modern tools. Real insights. Helping you pass your exams with confidence through competency-based learning.
+            <p className="text-background/60 text-sm mb-6">
+              Smarter CIMA study. Modern tools. Real insights.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -61,9 +58,9 @@ const Footer = () => {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-10 h-10 rounded-lg bg-background/10 flex items-center justify-center hover:bg-primary transition-colors duration-200"
+                  className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center hover:bg-primary transition-colors duration-200"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
@@ -71,13 +68,13 @@ const Footer = () => {
 
           {/* Courses */}
           <div>
-            <h4 className="font-semibold mb-4">Courses</h4>
+            <h4 className="font-semibold mb-4 text-sm">Courses</h4>
             <ul className="space-y-3">
               {footerLinks.courses.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/70 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -88,13 +85,13 @@ const Footer = () => {
 
           {/* Company */}
           <div>
-            <h4 className="font-semibold mb-4">Company</h4>
+            <h4 className="font-semibold mb-4 text-sm">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/70 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -105,13 +102,13 @@ const Footer = () => {
 
           {/* Support */}
           <div>
-            <h4 className="font-semibold mb-4">Support</h4>
+            <h4 className="font-semibold mb-4 text-sm">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/70 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -120,42 +117,29 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Legal */}
           <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
+            <h4 className="font-semibold mb-4 text-sm">Legal</h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2 text-sm text-background/70">
-                <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>hello@cimastudy.com</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-background/70">
-                <Phone className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>+44 (0) 20 1234 5678</span>
-              </li>
-              <li className="flex items-start gap-2 text-sm text-background/70">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>London, United Kingdom</span>
-              </li>
+              {footerLinks.legal.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.path}
+                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-background/50">
+        <div className="mt-12 pt-8 border-t border-background/10 text-center">
+          <p className="text-sm text-background/40">
             © {currentYear} CIMAStudy. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            {footerLinks.legal.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="text-sm text-background/50 hover:text-primary transition-colors duration-200"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

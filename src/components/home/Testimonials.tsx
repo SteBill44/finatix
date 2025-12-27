@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Testimonials = () => {
@@ -7,36 +7,22 @@ const Testimonials = () => {
 
   const testimonials = [
     {
-      name: "Sarah Mitchell",
+      name: "Sarah M.",
       role: "Management Accountant",
-      company: "Deloitte",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-      quote: "The competency-based analytics completely changed how I studied. I passed P2 on my first attempt after failing twice with other providers.",
-      rating: 5,
+      initials: "SM",
+      quote: "Wish I had enrolled in these courses sooner! The competency-based analytics completely changed how I studied. Each module provides real-world scenarios with actionable tools and techniques that I was able to apply immediately in my role. The engaging mix of video walkthroughs, interactive labs, and quizzes ensures you can revisit the different concepts until you feel confident.",
     },
     {
-      name: "James Chen",
-      role: "Finance Manager",
-      company: "HSBC",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      quote: "Best investment I made for my CIMA journey. The mock exams and instant feedback helped me identify exactly where I needed to improve.",
-      rating: 5,
+      name: "Chris T.",
+      role: "Cyber Threat and Risk Manager",
+      initials: "CT",
+      quote: "The courses provided by CIMAStudy are the best in terms of content and structure I have come across. An absolute must for anyone wanting to pursue their CIMA certification but also anyone wanting to gain a solid baseline knowledge set for a career in management accounting.",
     },
     {
-      name: "Priya Sharma",
-      role: "Senior Analyst",
-      company: "PwC",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      quote: "As someone studying while working full-time, the mobile app and adaptive learning made it possible to study efficiently during my commute.",
-      rating: 5,
-    },
-    {
-      name: "Michael Thompson",
-      role: "Financial Controller",
-      company: "Unilever",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-      quote: "The strategic level courses are exceptional. The case study preparation was thorough and gave me confidence going into the exam.",
-      rating: 5,
+      name: "Brod K.",
+      role: "Finance Analyst",
+      initials: "BK",
+      quote: "This course is great for practitioners. Details & deep knowledge from this course helped me pass on my first attempt.",
     },
   ];
 
@@ -48,63 +34,43 @@ const Testimonials = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
   return (
-    <section className="py-20 lg:py-32 bg-background overflow-hidden">
+    <section className="py-20 lg:py-32 bg-card">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-            Student Success Stories
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Trusted by{" "}
-            <span className="gradient-text">Thousands</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
+            Trusted by <span className="text-primary">Security Professionals</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Join our community of successful CIMA professionals who passed their exams with confidence.
+            Join thousands of professionals who have advanced their careers
           </p>
         </div>
 
-        {/* Testimonial Slider */}
-        <div className="relative max-w-4xl mx-auto">
-          {/* Main Card */}
-          <div className="bg-card rounded-2xl border border-border p-8 md:p-12 shadow-card">
-            <Quote className="w-12 h-12 text-primary/20 mb-6" />
-            
-            <p className="text-xl md:text-2xl text-foreground leading-relaxed mb-8">
+        {/* Testimonials */}
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-background rounded-xl border border-border p-8 md:p-12 mb-8">
+            <p className="text-lg md:text-xl text-charcoal leading-relaxed mb-8">
               "{testimonials[currentIndex].quote}"
             </p>
 
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src={testimonials[currentIndex].image}
-                  alt={testimonials[currentIndex].name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-primary/20"
-                />
-                <div>
-                  <h4 className="font-semibold text-foreground">{testimonials[currentIndex].name}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {testimonials[currentIndex].role} at {testimonials[currentIndex].company}
-                  </p>
-                </div>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="text-primary font-semibold">
+                  {testimonials[currentIndex].initials}
+                </span>
               </div>
-
-              <div className="flex gap-1">
-                {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                ))}
+              <div>
+                <h4 className="font-semibold text-charcoal">{testimonials[currentIndex].name}</h4>
+                <p className="text-sm text-muted-foreground">
+                  {testimonials[currentIndex].role}
+                </p>
               </div>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-center gap-4 mt-8">
+          <div className="flex items-center justify-center gap-4">
             <Button
               variant="outline"
               size="icon"
@@ -137,29 +103,6 @@ const Testimonials = () => {
             >
               <ChevronRight className="w-5 h-5" />
             </Button>
-          </div>
-        </div>
-
-        {/* Trust Badges */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-60">
-          <div className="text-center">
-            <p className="text-3xl font-bold text-foreground">94%</p>
-            <p className="text-sm text-muted-foreground">Pass Rate</p>
-          </div>
-          <div className="w-px h-12 bg-border hidden md:block" />
-          <div className="text-center">
-            <p className="text-3xl font-bold text-foreground">4.9/5</p>
-            <p className="text-sm text-muted-foreground">Student Rating</p>
-          </div>
-          <div className="w-px h-12 bg-border hidden md:block" />
-          <div className="text-center">
-            <p className="text-3xl font-bold text-foreground">10,000+</p>
-            <p className="text-sm text-muted-foreground">Students</p>
-          </div>
-          <div className="w-px h-12 bg-border hidden md:block" />
-          <div className="text-center">
-            <p className="text-3xl font-bold text-foreground">50+</p>
-            <p className="text-sm text-muted-foreground">Countries</p>
           </div>
         </div>
       </div>
