@@ -3,7 +3,99 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-16 hex-pattern">
+    <section className="relative min-h-screen flex flex-col justify-center pt-16 hex-pattern overflow-hidden">
+      {/* Tech/Finance Background Graphic */}
+      <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none opacity-20 dark:opacity-10">
+        <svg
+          viewBox="0 0 800 800"
+          className="w-full h-full"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Grid pattern */}
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+            </pattern>
+          </defs>
+          <rect width="800" height="800" fill="url(#grid)" />
+          
+          {/* Rising bar chart */}
+          <g className="text-primary" fill="currentColor">
+            <rect x="520" y="450" width="40" height="120" rx="4" opacity="0.6" />
+            <rect x="580" y="380" width="40" height="190" rx="4" opacity="0.7" />
+            <rect x="640" y="300" width="40" height="270" rx="4" opacity="0.8" />
+            <rect x="700" y="220" width="40" height="350" rx="4" opacity="0.9" />
+          </g>
+          
+          {/* Trend line */}
+          <path
+            d="M 100 500 Q 200 480 300 420 T 500 320 T 700 180"
+            stroke="currentColor"
+            strokeWidth="3"
+            fill="none"
+            className="text-accent"
+            strokeLinecap="round"
+          />
+          
+          {/* Data points on trend */}
+          <g className="text-accent" fill="currentColor">
+            <circle cx="100" cy="500" r="8" />
+            <circle cx="300" cy="420" r="8" />
+            <circle cx="500" cy="320" r="8" />
+            <circle cx="700" cy="180" r="8" />
+          </g>
+          
+          {/* Pie chart segment */}
+          <g transform="translate(200, 250)">
+            <circle cx="0" cy="0" r="80" fill="none" stroke="currentColor" strokeWidth="20" className="text-muted" opacity="0.3" />
+            <circle
+              cx="0"
+              cy="0"
+              r="80"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="20"
+              strokeDasharray="150 350"
+              strokeDashoffset="0"
+              className="text-primary"
+              opacity="0.6"
+            />
+            <circle
+              cx="0"
+              cy="0"
+              r="80"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="20"
+              strokeDasharray="100 400"
+              strokeDashoffset="-150"
+              className="text-accent"
+              opacity="0.6"
+            />
+          </g>
+          
+          {/* Circuit/tech nodes */}
+          <g className="text-primary">
+            <circle cx="450" cy="150" r="6" fill="currentColor" opacity="0.5" />
+            <circle cx="550" cy="100" r="4" fill="currentColor" opacity="0.4" />
+            <circle cx="350" cy="200" r="5" fill="currentColor" opacity="0.6" />
+            <line x1="450" y1="150" x2="550" y2="100" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+            <line x1="450" y1="150" x2="350" y2="200" stroke="currentColor" strokeWidth="1" opacity="0.3" />
+          </g>
+          
+          {/* Hexagon tech element */}
+          <polygon
+            points="650,80 690,60 730,80 730,120 690,140 650,120"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="text-accent"
+            opacity="0.4"
+          />
+        </svg>
+      </div>
+      
       <div className="container mx-auto px-4 py-20">
         <div className="max-w-4xl">
           {/* Heading */}
