@@ -46,46 +46,43 @@ const CourseLevels = () => {
   ];
 
   return (
-    <section className="py-20 lg:py-32 bg-card">
+    <section className="py-16 lg:py-24 bg-card">
       <div className="container mx-auto px-4">
         {steps.map((step, index) => (
           <div 
             key={step.number}
-            className={`flex flex-col ${step.imagePosition === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20 mb-24 last:mb-0`}
+            className={`flex flex-col ${step.imagePosition === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-8 lg:gap-12 mb-12 last:mb-0`}
           >
             {/* Content */}
             <div className="flex-1">
-              <span className="text-sm text-muted-foreground mb-4 block">Step {step.number}</span>
-              <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                {step.title}
+              <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-3">
+                <span className="text-charcoal">{step.title.split(' ').slice(0, -1).join(' ')}</span>{' '}
+                <span className="text-primary">{step.title.split(' ').slice(-1)}</span>
               </h2>
-              <p className="text-muted-foreground text-lg mb-6">
+              <p className="text-muted-foreground mb-4">
                 {step.description}
               </p>
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-2 mb-6">
                 {step.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-muted-foreground">{feature}</span>
+                  <li key={i} className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                    <span className="text-muted-foreground text-sm">{feature}</span>
                   </li>
                 ))}
               </ul>
-              <p className="text-sm text-muted-foreground mb-6">
-                You're only a few minutes away from accessing exceptional online CIMA training.
-              </p>
               <Link to={step.ctaLink}>
-                <Button>{step.cta}</Button>
+                <Button size="sm">{step.cta}</Button>
               </Link>
             </div>
 
             {/* Image Placeholder */}
             <div className="flex-1 w-full">
               <div className="bg-secondary rounded-xl aspect-[4/3] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-20 h-20 bg-primary/10 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-3xl font-bold text-primary">{step.number}</span>
+                <div className="text-center p-6">
+                  <div className="w-16 h-16 bg-primary/10 rounded-xl mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-2xl font-bold text-primary">{step.number}</span>
                   </div>
-                  <p className="text-muted-foreground">Course Preview</p>
+                  <p className="text-muted-foreground text-sm">Course Preview</p>
                 </div>
               </div>
             </div>
