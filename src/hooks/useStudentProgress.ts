@@ -227,6 +227,46 @@ export const useEnrollInCourse = () => {
   });
 };
 
+export const useEnrollInMultipleCourses = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (courseIds: string[]) => {
+      if (!user) throw new Error("Must be logged in");
+      
+      // Get existing enrollments to avoid duplicates
+      const { data: existingEnrollments } = await supabase
+        .from("enrollments")
+        .select("course_id")
+        .eq("user_id", user.id);
+      
+      const existingCourseIds = new Set(existingEnrollments?.map(e => e.course_id) || []);
+      const newCourseIds = courseIds.filter(id => !existingCourseIds.has(id));
+      
+      if (newCourseIds.length === 0) {
+        return { enrolled: 0, message: "Already enrolled in all courses" };
+      }
+      
+      const enrollments = newCourseIds.map(courseId => ({
+        user_id: user.id,
+        course_id: courseId,
+      }));
+      
+      const { data, error } = await supabase
+        .from("enrollments")
+        .insert(enrollments)
+        .select();
+
+      if (error) throw error;
+      return { enrolled: data.length, message: `Enrolled in ${data.length} courses` };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+    },
+  });
+};
+
 export const useMarkLessonComplete = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
