@@ -54,13 +54,29 @@ const Courses = () => {
     strategic: { label: "Strategic", icon: Target, color: "bg-purple" },
   };
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesSearch = 
-      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.slug.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
-    return matchesSearch && matchesLevel;
-  });
+  // Custom sort order for courses within each level
+  const getCourseOrder = (slug: string) => {
+    const code = slug.split("-")[0].toLowerCase();
+    // Certificate level: ba1, ba2, ba3, ba4
+    if (code.startsWith("ba")) return parseInt(code.replace("ba", ""));
+    // Other levels: E, P, F, then Case Study
+    if (code.startsWith("e")) return 1;
+    if (code.startsWith("p")) return 2;
+    if (code.startsWith("f")) return 3;
+    // Case studies last
+    if (code === "ocs" || code === "mcs" || code === "scs") return 4;
+    return 5;
+  };
+
+  const filteredCourses = courses
+    .sort((a, b) => getCourseOrder(a.slug) - getCourseOrder(b.slug))
+    .filter((course) => {
+      const matchesSearch = 
+        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.slug.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
+      return matchesSearch && matchesLevel;
+    });
 
   // Group courses by level
   const groupedCourses = {
