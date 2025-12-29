@@ -204,7 +204,7 @@ const CourseDetail = () => {
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
                 <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-4xl font-bold text-foreground">£{Number(course.price).toFixed(0)}</span>
+                  <span className="text-4xl font-bold text-foreground">£{Number(course.price ?? 0).toFixed(0)}</span>
                 </div>
 
                 {isEnrolled ? (
