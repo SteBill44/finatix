@@ -85,6 +85,26 @@ export const useCourses = () => {
   });
 };
 
+export const useLessons = (courseId?: string) => {
+  return useQuery({
+    queryKey: ["lessons", courseId],
+    queryFn: async () => {
+      let query = supabase
+        .from("lessons")
+        .select("*")
+        .order("order_index", { ascending: true });
+      
+      if (courseId) {
+        query = query.eq("course_id", courseId);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    },
+  });
+};
+
 export const useLessonProgress = (courseId?: string) => {
   const { user } = useAuth();
 
@@ -118,6 +138,17 @@ export const useLessonProgress = (courseId?: string) => {
     },
     enabled: !!user,
   });
+};
+
+export const useCourseProgress = (courseId: string) => {
+  const { data: lessons } = useLessons(courseId);
+  const { data: progress } = useLessonProgress(courseId);
+  
+  const totalLessons = lessons?.length || 0;
+  const completedLessons = progress?.filter((p) => p.completed).length || 0;
+  const percentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  
+  return { totalLessons, completedLessons, percentage };
 };
 
 export const useQuizAttempts = () => {
