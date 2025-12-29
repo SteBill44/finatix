@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,10 +15,32 @@ import {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("user_id", user.id)
+          .single();
+        
+        if (data?.full_name) {
+          // Get first name from full name
+          setFirstName(data.full_name.split(" ")[0]);
+        }
+      } else {
+        setFirstName(null);
+      }
+    };
+    
+    fetchProfile();
+  }, [user]);
 
   const navLinks = [
     { name: "HOME", path: "/" },
@@ -87,7 +110,7 @@ const Navbar = () => {
                       <User className="w-4 h-4 text-primary" />
                     </div>
                     <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
-                      {user.email?.split("@")[0]}
+                      {firstName || user.email?.split("@")[0]}
                     </span>
                   </button>
                 </DropdownMenuTrigger>
