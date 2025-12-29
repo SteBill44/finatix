@@ -88,7 +88,7 @@ const ComingSoon = () => {
               </span>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
-                Master <span className="text-primary">CIMA</span> with Modern Learning
+                MASTER <span className="text-primary">CIMA</span> WITH MODERN LEARNING
               </h1>
               
               <p className="text-lg text-muted-foreground mb-8">
