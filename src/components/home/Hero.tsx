@@ -107,7 +107,7 @@ const Hero = () => {
 
           {/* Subheading */}
           <p className="animate-fade-up-delay-1 text-lg md:text-xl text-muted-foreground max-w-2xl mb-10">
-            Master CIMA with modern, competency-based training trusted by leading organizations worldwide
+            Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </p>
 
           {/* CTA Buttons */}
