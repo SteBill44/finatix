@@ -39,6 +39,22 @@ const Pricing = () => {
     }
   };
 
+  // Group courses by level
+  const coursesByLevel = courses?.reduce((acc, course) => {
+    const level = course.level;
+    if (!acc[level]) acc[level] = [];
+    acc[level].push(course);
+    return acc;
+  }, {} as Record<string, typeof courses>);
+
+  const levelOrder = ['certificate', 'operational', 'management', 'strategic'];
+  const levelNames: Record<string, string> = {
+    certificate: 'Certificate Level (Entry Level)',
+    operational: 'Operational Level',
+    management: 'Management Level',
+    strategic: 'Strategic Level',
+  };
+
   const plans = [
     {
       name: "Single Module",
@@ -62,9 +78,9 @@ const Pricing = () => {
     {
       name: "Full Level",
       description: "Complete preparation for your entire level",
-      price: 399,
+      price: 449,
       period: "per level",
-      originalPrice: 597,
+      originalPrice: 646,
       features: [
         { text: "All modules in one level", included: true },
         { text: "150+ hours of video content", included: true },
@@ -84,7 +100,7 @@ const Pricing = () => {
       description: "Everything you need to become CIMA qualified",
       price: 999,
       period: "lifetime access",
-      originalPrice: 1791,
+      originalPrice: 1940,
       features: [
         { text: "All CIMA modules", included: true },
         { text: "500+ hours of video content", included: true },
@@ -139,8 +155,8 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* Individual Courses */}
-      {courses && courses.length > 0 && (
+      {/* Individual Courses by Level */}
+      {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
         <section className="py-16 lg:py-20 bg-secondary/30">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -148,47 +164,81 @@ const Pricing = () => {
                 Individual Courses
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Enroll in Individual Courses
+                CIMA Qualification Structure
               </h2>
               <p className="text-lg text-muted-foreground">
-                Start with a single course and expand your knowledge at your own pace.
+                Choose individual modules or bundle an entire level for maximum savings.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {courses.map((course) => {
-                const enrolled = isEnrolled(course.id);
+            <div className="max-w-4xl mx-auto space-y-8">
+              {levelOrder.map((level) => {
+                const levelCourses = coursesByLevel[level];
+                if (!levelCourses || levelCourses.length === 0) return null;
+
+                const isCertificate = level === 'certificate';
+                const levelTotal = levelCourses.reduce((sum, c) => sum + Number(c.price || 0), 0);
+
                 return (
-                  <div
-                    key={course.id}
-                    className="bg-card rounded-2xl border border-border p-6 hover-lift"
-                  >
-                    <div className="mb-4">
-                      <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium capitalize">
-                        {course.level}
-                      </span>
+                  <div key={level} className="bg-card rounded-2xl border border-border overflow-hidden">
+                    {/* Level Header */}
+                    <div className={`px-6 py-4 ${isCertificate ? 'bg-accent/20' : 'bg-primary/10'} border-b border-border`}>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-xl font-bold text-foreground">{levelNames[level]}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {levelCourses.length} {levelCourses.length === 1 ? 'exam' : 'exams'}
+                          </p>
+                        </div>
+                        {!isCertificate && (
+                          <div className="text-right">
+                            <div className="text-sm text-muted-foreground line-through">
+                              £{levelTotal} individually
+                            </div>
+                            <div className="text-lg font-bold text-accent">
+                              £449 as bundle
+                            </div>
+                          </div>
+                        )}
+                        {isCertificate && (
+                          <span className="px-3 py-1 rounded-full bg-accent text-accent-foreground text-sm font-medium">
+                            Free
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">{course.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {course.description}
-                    </p>
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-3xl font-bold text-foreground">
-                        £{Number(course.price).toFixed(0)}
-                      </span>
-                      <span className="text-muted-foreground text-sm">one-time</span>
+
+                    {/* Course List */}
+                    <div className="divide-y divide-border">
+                      {levelCourses.map((course) => {
+                        const enrolled = isEnrolled(course.id);
+                        const isFree = Number(course.price) === 0;
+
+                        return (
+                          <div key={course.id} className="px-6 py-4 flex items-center justify-between hover:bg-secondary/30 transition-colors">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-foreground">{course.title}</h4>
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                {course.description}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-4 ml-4">
+                              <span className={`text-lg font-bold ${isFree ? 'text-accent' : 'text-foreground'}`}>
+                                {isFree ? 'Free' : `£${Number(course.price).toFixed(0)}`}
+                              </span>
+                              <Button
+                                size="sm"
+                                variant={enrolled ? "outline" : isFree ? "default" : "secondary"}
+                                disabled={enrollMutation.isPending}
+                                onClick={() => handleEnroll(course.id, course.title)}
+                              >
+                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Enroll"}
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="text-sm text-muted-foreground mb-6">
-                      {course.duration_hours} hours of content
-                    </div>
-                    <Button
-                      className="w-full"
-                      variant={enrolled ? "outline" : "default"}
-                      disabled={enrollMutation.isPending}
-                      onClick={() => handleEnroll(course.id, course.title)}
-                    >
-                      {enrolled ? "Already Enrolled" : "Enroll Now"}
-                    </Button>
                   </div>
                 );
               })}
