@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, User } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User, Shield } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
@@ -20,6 +21,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { user, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -114,12 +116,20 @@ const Navbar = () => {
                     </span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuContent align="end" className="w-48 bg-popover border border-border">
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard" className="cursor-pointer">
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="cursor-pointer flex items-center">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -188,6 +198,14 @@ const Navbar = () => {
                         Dashboard
                       </Button>
                     </Link>
+                    {isAdmin && (
+                      <Link to="/admin" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
+                          Admin Dashboard
+                        </Button>
+                      </Link>
+                    )}
                     <Button
                       variant="ghost"
                       className="w-full text-destructive"
