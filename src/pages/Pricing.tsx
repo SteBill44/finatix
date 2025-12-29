@@ -182,7 +182,12 @@ const Pricing = () => {
                 return (
                   <div key={level} className="bg-card rounded-2xl border border-border overflow-hidden">
                     {/* Level Header */}
-                    <div className={`px-6 py-4 ${isCertificate ? 'bg-accent/20' : 'bg-primary/10'} border-b border-border`}>
+                    <div className={`px-6 py-4 ${
+                      level === 'certificate' ? 'bg-orange/10' : 
+                      level === 'operational' ? 'bg-primary/10' : 
+                      level === 'management' ? 'bg-purple/10' : 
+                      'bg-red/10'
+                    } border-b border-border`}>
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="text-xl font-bold text-foreground">{levelNames[level]}</h3>
@@ -195,13 +200,17 @@ const Pricing = () => {
                             <div className="text-sm text-muted-foreground line-through">
                               £{levelTotal} individually
                             </div>
-                            <div className="text-lg font-bold text-accent">
+                            <div className={`text-lg font-bold ${
+                              level === 'operational' ? 'text-primary' : 
+                              level === 'management' ? 'text-purple' : 
+                              'text-red'
+                            }`}>
                               £449 as bundle
                             </div>
                           </div>
                         )}
                         {isCertificate && (
-                          <span className="px-3 py-1 rounded-full bg-accent text-accent-foreground text-sm font-medium">
+                          <span className="px-3 py-1 rounded-full bg-orange text-white text-sm font-medium">
                             Free
                           </span>
                         )}
@@ -223,7 +232,9 @@ const Pricing = () => {
                               </p>
                             </div>
                             <div className="flex items-center gap-4 ml-4">
-                              <span className={`text-lg font-bold ${isFree ? 'text-accent' : 'text-foreground'}`}>
+                              <span className={`text-lg font-bold ${
+                                isFree ? 'text-orange' : 'text-foreground'
+                              }`}>
                                 {isFree ? 'Free' : `£${Number(course.price).toFixed(0)}`}
                               </span>
                               <Button
@@ -285,7 +296,7 @@ const Pricing = () => {
                   {plan.originalPrice && (
                     <p className="mt-2 text-sm text-muted-foreground">
                       <span className="line-through">£{plan.originalPrice}</span>
-                      <span className="ml-2 text-accent font-medium">
+                      <span className="ml-2 text-primary font-medium">
                         Save £{plan.originalPrice - plan.price}
                       </span>
                     </p>
@@ -296,7 +307,7 @@ const Pricing = () => {
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-3">
                       {feature.included ? (
-                        <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                       ) : (
                         <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
                       )}
@@ -320,8 +331,8 @@ const Pricing = () => {
 
           {/* Money Back Guarantee */}
           <div className="text-center mt-12">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-accent/10 rounded-full">
-              <Shield className="w-5 h-5 text-accent" />
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
+              <Shield className="w-5 h-5 text-primary" />
               <span className="text-foreground font-medium">30-day money-back guarantee on all plans</span>
             </div>
           </div>
@@ -361,7 +372,7 @@ const Pricing = () => {
                   <div className="p-4 text-foreground">{row.feature}</div>
                   <div className="p-4 flex justify-center">
                     {row.us === true ? (
-                      <CheckCircle className="w-5 h-5 text-accent" />
+                      <CheckCircle className="w-5 h-5 text-primary" />
                     ) : (
                       <span className="text-muted-foreground">{row.us}</span>
                     )}
