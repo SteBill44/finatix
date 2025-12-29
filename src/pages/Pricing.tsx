@@ -3,7 +3,7 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, X, Zap, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCourses, useEnrollments, useEnrollInCourse } from "@/hooks/useStudentProgress";
+import { useCourses, useEnrollments, useEnrollInCourse, useEnrollInMultipleCourses } from "@/hooks/useStudentProgress";
 import { toast } from "sonner";
 
 const Pricing = () => {
@@ -12,6 +12,7 @@ const Pricing = () => {
   const { data: courses } = useCourses();
   const { data: enrollments } = useEnrollments();
   const enrollMutation = useEnrollInCourse();
+  const enrollMultipleMutation = useEnrollInMultipleCourses();
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
@@ -36,6 +37,62 @@ const Pricing = () => {
       navigate("/dashboard");
     } catch (error: any) {
       toast.error(error.message || "Failed to enroll");
+    }
+  };
+
+  const handleBuyLevelBundle = async (level: string, levelCourses: typeof courses) => {
+    if (!user) {
+      toast.error("Please sign in to purchase");
+      navigate("/auth");
+      return;
+    }
+
+    if (!levelCourses || levelCourses.length === 0) {
+      toast.error("No courses found for this level");
+      return;
+    }
+
+    const courseIds = levelCourses.map(c => c.id);
+    
+    try {
+      const result = await enrollMultipleMutation.mutateAsync(courseIds);
+      if (result.enrolled > 0) {
+        toast.success(`Successfully enrolled in ${result.enrolled} ${level} level courses!`);
+        navigate("/dashboard");
+      } else {
+        toast.info("You're already enrolled in all courses for this level");
+        navigate("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to enroll in bundle");
+    }
+  };
+
+  const handleBuyAllCourses = async () => {
+    if (!user) {
+      toast.error("Please sign in to purchase");
+      navigate("/auth");
+      return;
+    }
+
+    if (!courses || courses.length === 0) {
+      toast.error("No courses available");
+      return;
+    }
+
+    const courseIds = courses.map(c => c.id);
+    
+    try {
+      const result = await enrollMultipleMutation.mutateAsync(courseIds);
+      if (result.enrolled > 0) {
+        toast.success(`Successfully enrolled in ${result.enrolled} courses!`);
+        navigate("/dashboard");
+      } else {
+        toast.info("You're already enrolled in all courses");
+        navigate("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to enroll in all courses");
     }
   };
 
@@ -183,9 +240,10 @@ const Pricing = () => {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
-                onClick={() => toast.info("Complete bundle purchase coming soon! Contact us for early access.")}
+                disabled={enrollMultipleMutation.isPending}
+                onClick={handleBuyAllCourses}
               >
-                Buy All 15 Courses
+                {enrollMultipleMutation.isPending ? "Enrolling..." : "Buy All 15 Courses"}
               </Button>
             </div>
           </div>
@@ -236,9 +294,10 @@ const Pricing = () => {
                                 level === 'management' ? 'bg-purple hover:bg-purple/90' : 
                                 'bg-red hover:bg-red/90'
                               } text-white`}
-                              onClick={() => toast.info("Bundle purchase coming soon! Contact us for early access.")}
+                              disabled={enrollMultipleMutation.isPending}
+                              onClick={() => handleBuyLevelBundle(level, levelCourses)}
                             >
-                              Buy Level Bundle
+                              {enrollMultipleMutation.isPending ? "Enrolling..." : "Buy Level Bundle"}
                             </Button>
                           </div>
                         )}
