@@ -11,6 +11,7 @@ import {
   useTotalStudyTime,
 } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
+import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import {
   BarChart2,
   BookOpen,
@@ -378,27 +379,9 @@ const Dashboard = () => {
                     <BookOpen className="w-5 h-5 text-primary" />
                     Your Courses
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {enrollments?.map((enrollment) => (
-                      <div key={enrollment.id} className="p-3 bg-secondary/50 rounded-lg">
-                        <div className="flex justify-between text-sm mb-2">
-                          <span className="font-medium text-foreground">
-                            {enrollment.courses.title}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="capitalize">{enrollment.courses.level}</span>
-                          <span>•</span>
-                          <span>{enrollment.courses.duration_hours}h</span>
-                        </div>
-                        {enrollment.completed_at ? (
-                          <span className="mt-2 inline-block text-xs text-accent font-medium">
-                            Completed
-                          </span>
-                        ) : (
-                          <Progress value={30} className="h-1.5 mt-2" />
-                        )}
-                      </div>
+                      <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
                     ))}
                   </div>
                 </Card>
