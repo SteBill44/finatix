@@ -26,8 +26,8 @@ const Features = () => {
     },
     {
       icon: FileQuestion,
-      title: "Unlimited Mock Tests",
-      description: "Practice with our extensive question bank and get instant breakdowns of your performance.",
+      title: "Realistic Mock Exams",
+      description: "Practice with exam-style questions and get instant breakdowns of your performance.",
     },
     {
       icon: Smartphone,
