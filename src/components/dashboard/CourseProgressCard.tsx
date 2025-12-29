@@ -19,6 +19,21 @@ interface CourseProgressCardProps {
   };
 }
 
+const getLevelBadgeStyle = (level: string) => {
+  switch (level.toLowerCase()) {
+    case "certificate":
+      return "bg-orange/10 text-orange";
+    case "operational":
+      return "bg-primary/10 text-primary";
+    case "management":
+      return "bg-purple/10 text-purple";
+    case "strategic":
+      return "bg-red/10 text-red";
+    default:
+      return "bg-primary/10 text-primary";
+  }
+};
+
 const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   const { data: lessons } = useLessons(enrollment.course_id);
   const { data: progress } = useLessonProgress(enrollment.course_id);
@@ -36,7 +51,7 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
             {enrollment.courses.title}
           </h4>
           <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-            <span className="capitalize px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+            <span className={`capitalize px-2 py-0.5 rounded-full ${getLevelBadgeStyle(enrollment.courses.level)}`}>
               {enrollment.courses.level}
             </span>
             <span>•</span>
