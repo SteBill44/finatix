@@ -40,18 +40,26 @@ export const useQuizzes = (courseId?: string) => {
   });
 };
 
-export const useQuizQuestions = (quizId: string) => {
+export const useQuizQuestions = (quizId: string, includeAnswers: boolean = false) => {
   return useQuery({
-    queryKey: ["quiz_questions", quizId],
+    queryKey: ["quiz_questions", quizId, includeAnswers],
     queryFn: async () => {
+      // Use the secure RPC function that hides answers until quiz is attempted
       const { data, error } = await supabase
-        .from("quiz_questions")
-        .select("*")
-        .eq("quiz_id", quizId)
-        .order("order_index", { ascending: true });
+        .rpc("get_quiz_questions", { _quiz_id: quizId });
 
       if (error) throw error;
-      return data as QuizQuestion[];
+      
+      // Transform the data to match our interface
+      return (data || []).map((q: any) => ({
+        id: q.id,
+        quiz_id: q.quiz_id,
+        question: q.question,
+        options: q.options as string[],
+        correct_answer: q.correct_answer,
+        explanation: q.explanation,
+        order_index: q.order_index,
+      })) as QuizQuestion[];
     },
     enabled: !!quizId,
   });
@@ -87,5 +95,6 @@ export const useQuizWithQuestions = (quizId: string) => {
     questions: questionsQuery.data || [],
     isLoading: quizQuery.isLoading || questionsQuery.isLoading,
     error: quizQuery.error || questionsQuery.error,
+    refetchQuestions: questionsQuery.refetch,
   };
 };

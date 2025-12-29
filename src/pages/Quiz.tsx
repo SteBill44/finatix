@@ -23,7 +23,7 @@ const Quiz = () => {
   const { quizId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { quiz, questions, isLoading } = useQuizWithQuestions(quizId || "");
+  const { quiz, questions, isLoading, refetchQuestions } = useQuizWithQuestions(quizId || "");
   const recordAttempt = useRecordQuizAttempt();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -111,6 +111,8 @@ const Quiz = () => {
         score,
         maxScore: questions.length,
       });
+      // Refetch questions to get correct answers now that attempt is recorded
+      await refetchQuestions();
       toast.success("Quiz completed! Your score has been saved.");
     } catch (error) {
       toast.error("Failed to save score, but you can see your results.");
