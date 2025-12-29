@@ -21,7 +21,7 @@ const FAQ = () => {
     },
     {
       question: "Can I add my certification to my resume?",
-      answer: "Absolutely! Demonstrating your dedication to professional development in management accounting is always a great idea. Our certifications are already recognised by a number of partner organisations who value our training and certifications."
+      answer: "Absolutely! Demonstrating your dedication to professional development in management accounting is always a great idea. Our certifications are already recognised by leading professionals who value our training and certifications."
     },
     {
       question: "Can I buy training courses for people in my company?",
