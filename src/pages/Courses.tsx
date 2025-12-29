@@ -77,6 +77,16 @@ const Courses = () => {
     return matchesSearch && matchesLevel;
   });
 
+  // Group courses by level
+  const groupedCourses = {
+    certificate: filteredCourses.filter(c => c.level === "certificate"),
+    operational: filteredCourses.filter(c => c.level === "operational"),
+    management: filteredCourses.filter(c => c.level === "management"),
+    strategic: filteredCourses.filter(c => c.level === "strategic"),
+  };
+
+  const levelOrder = ["certificate", "operational", "management", "strategic"] as const;
+
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {
       case "certificate": return "bg-orange/10 text-orange";
@@ -189,87 +199,95 @@ const Courses = () => {
             </div>
           </div>
 
-          {/* Course Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredCourses.map((course) => (
-              <div
-                key={course.id}
-                className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift`}
-              >
-                <div className="p-6">
-                  {/* Level Badge & Code */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getLevelBadgeStyle(course.level)}`}>
-                        {course.code}
-                      </span>
-                      {course.type === "casestudy" && (
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
-                          Case Study
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1 text-yellow-500">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="text-sm font-medium text-foreground">{course.rating}</span>
-                    </div>
+          {/* Courses Grouped by Level */}
+          {levelOrder.map((level) => {
+            const levelCourses = groupedCourses[level];
+            if (levelCourses.length === 0) return null;
+            
+            const config = levelConfig[level];
+            const LevelIcon = config.icon;
+            
+            return (
+              <div key={level} className="mb-16 last:mb-0">
+                {/* Level Header */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className={`w-10 h-10 rounded-full ${config.color}/10 flex items-center justify-center`}>
+                    <LevelIcon className={`w-5 h-5 ${config.color.replace('bg-', 'text-')}`} />
                   </div>
-
-                  {/* Title & Description */}
-                  <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">
-                    {course.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                    {course.description}
-                  </p>
-
-                  {/* Meta Info */}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {course.duration}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      {course.students.toLocaleString()}
-                    </span>
+                  <div>
+                    <h2 className="text-xl font-bold text-foreground">{config.label}</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {level === "certificate" ? "4 Objective Tests" : "3 Objective Tests + Case Study"}
+                    </p>
                   </div>
+                </div>
 
-                  {/* Format */}
-                  <p className="text-xs text-muted-foreground mb-4">
-                    {course.format}
-                  </p>
+                {/* Course Grid - 4 per row */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {levelCourses.map((course) => (
+                    <div
+                      key={course.id}
+                      className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift`}
+                    >
+                      <div className="p-4">
+                        {/* Code & Type Badge */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${getLevelBadgeStyle(course.level)}`}>
+                              {course.code}
+                            </span>
+                            {course.type === "casestudy" && (
+                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                                Case Study
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1 text-yellow-500">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            <span className="text-xs font-medium text-foreground">{course.rating}</span>
+                          </div>
+                        </div>
 
-                  {/* Price & CTA */}
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-foreground">£{course.price}</span>
-                      {course.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">£{course.originalPrice}</span>
-                      )}
+                        {/* Title */}
+                        <h3 className="text-sm font-semibold text-foreground mb-2 line-clamp-2 min-h-[2.5rem]">
+                          {course.title}
+                        </h3>
+
+                        {/* Meta Info */}
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" />
+                            {course.duration}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3.5 h-3.5" />
+                            {course.students.toLocaleString()}
+                          </span>
+                        </div>
+
+                        {/* Price & CTA */}
+                        <div className="flex items-center justify-between pt-3 border-t border-border">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-lg font-bold text-foreground">£{course.price}</span>
+                            {course.originalPrice && (
+                              <span className="text-xs text-muted-foreground line-through">£{course.originalPrice}</span>
+                            )}
+                          </div>
+                          <Link
+                            to={`/courses/${course.id}`}
+                            className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                          >
+                            View
+                            <ArrowRight className="w-3 h-3" />
+                          </Link>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      {course.hasFreeLesson && (
-                        <Button variant="outline" size="sm" className="gap-1">
-                          <Play className="w-3 h-3" />
-                          Try Free
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* View Course Link */}
-                  <Link
-                    to={`/courses/${course.id}`}
-                    className="mt-4 flex items-center justify-center gap-2 w-full py-3 text-sm font-medium text-primary hover:text-primary/80 transition-colors group/link"
-                  >
-                    View Course Details
-                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                  </Link>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
 
           {/* Empty State */}
           {filteredCourses.length === 0 && (
