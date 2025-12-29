@@ -166,12 +166,31 @@ const Pricing = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 CIMA Qualification Structure
               </h2>
-              <p className="text-lg text-muted-foreground">
-                Choose individual modules or bundle an entire level for maximum savings.
-              </p>
+            <p className="text-lg text-muted-foreground mb-6">
+              Choose individual modules or bundle an entire level for maximum savings.
+            </p>
+            
+            {/* Buy All 15 Courses Banner */}
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 bg-gradient-to-r from-primary/20 via-purple/20 to-red/20 rounded-2xl border border-primary/30">
+              <div className="text-center sm:text-left">
+                <p className="text-lg font-bold text-foreground">Complete CIMA Bundle - All 15 Courses</p>
+                <p className="text-sm text-muted-foreground">
+                  <span className="line-through">£2,235</span>
+                  <span className="ml-2 text-primary font-semibold">£999 lifetime access</span>
+                  <span className="ml-2 text-primary">Save £1,236!</span>
+                </p>
+              </div>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
+                onClick={() => toast.info("Complete bundle purchase coming soon! Contact us for early access.")}
+              >
+                Buy All 15 Courses
+              </Button>
             </div>
+          </div>
 
-            <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-8 mt-8">
               {levelOrder.map((level) => {
                 const levelCourses = coursesByLevel[level];
                 if (!levelCourses || levelCourses.length === 0) return null;
@@ -196,17 +215,31 @@ const Pricing = () => {
                           </p>
                         </div>
                         {!isCertificate && (
-                          <div className="text-right">
-                            <div className="text-sm text-muted-foreground line-through">
-                              £{levelTotal} individually
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <div className="text-sm text-muted-foreground line-through">
+                                £{levelTotal} individually
+                              </div>
+                              <div className={`text-lg font-bold ${
+                                level === 'operational' ? 'text-primary' : 
+                                level === 'management' ? 'text-purple' : 
+                                'text-red'
+                              }`}>
+                                £449 as bundle
+                              </div>
                             </div>
-                            <div className={`text-lg font-bold ${
-                              level === 'operational' ? 'text-primary' : 
-                              level === 'management' ? 'text-purple' : 
-                              'text-red'
-                            }`}>
-                              £449 as bundle
-                            </div>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              className={`${
+                                level === 'operational' ? 'bg-primary hover:bg-primary/90' : 
+                                level === 'management' ? 'bg-purple hover:bg-purple/90' : 
+                                'bg-red hover:bg-red/90'
+                              } text-white`}
+                              onClick={() => toast.info("Bundle purchase coming soon! Contact us for early access.")}
+                            >
+                              Buy Level Bundle
+                            </Button>
                           </div>
                         )}
                         {isCertificate && (
