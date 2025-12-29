@@ -1,6 +1,11 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
+import { toast } from "sonner";
 import { 
   Clock, 
   Users, 
@@ -12,7 +17,8 @@ import {
   Award,
   BarChart2,
   ArrowLeft,
-  ShoppingCart
+  ShoppingCart,
+  Lock
 } from "lucide-react";
 import {
   Accordion,
@@ -21,83 +27,117 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const courseData: Record<string, any> = {
-  ba1: {
-    code: "BA1",
-    title: "Fundamentals of Business Economics",
-    level: "Operational",
-    description: "Understand the economic context of business and how organisations function in their environment. This comprehensive course covers microeconomics, macroeconomics, and their application to business decisions.",
-    price: 149,
-    originalPrice: 199,
-    duration: "40 hours",
-    students: 2340,
-    rating: 4.8,
-    reviews: 312,
-    instructor: {
-      name: "Dr. Sarah Williams",
-      title: "Senior Economics Lecturer",
-      experience: "15+ years teaching CIMA",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-    },
-    syllabus: [
-      { title: "Introduction to Business Economics", lessons: 8, duration: "4 hours" },
-      { title: "Microeconomic Principles", lessons: 12, duration: "8 hours" },
-      { title: "Macroeconomic Environment", lessons: 10, duration: "7 hours" },
-      { title: "Market Structures", lessons: 8, duration: "6 hours" },
-      { title: "Government Economic Policy", lessons: 6, duration: "5 hours" },
-      { title: "International Trade", lessons: 8, duration: "5 hours" },
-      { title: "Exam Preparation & Mock Tests", lessons: 10, duration: "5 hours" },
-    ],
-    features: [
-      "40+ hours of video content",
-      "500+ practice questions",
-      "5 full mock exams",
-      "Competency-based progress tracking",
-      "Weak area identification",
-      "Mobile app access",
-      "24/7 community support",
-      "Certificate of completion"
-    ]
-  }
-};
-
-// Fallback for other courses
-const defaultCourse = {
-  code: "CIMA",
-  title: "CIMA Professional Course",
-  level: "Professional",
-  description: "Comprehensive course designed to help you master the exam content and pass with confidence.",
-  price: 199,
-  originalPrice: 249,
-  duration: "50 hours",
-  students: 1500,
-  rating: 4.8,
-  reviews: 250,
-  instructor: {
-    name: "Expert Instructor",
-    title: "CIMA Qualified",
-    experience: "10+ years teaching",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
-  },
-  syllabus: [
-    { title: "Introduction", lessons: 5, duration: "3 hours" },
-    { title: "Core Concepts", lessons: 10, duration: "8 hours" },
-    { title: "Advanced Topics", lessons: 12, duration: "10 hours" },
-    { title: "Practice & Review", lessons: 8, duration: "6 hours" },
-  ],
-  features: [
-    "50+ hours of video content",
-    "300+ practice questions",
-    "3 full mock exams",
-    "Progress tracking",
-    "Mobile access",
-    "Community support"
-  ]
-};
-
 const CourseDetail = () => {
   const { courseId } = useParams();
-  const course = courseData[courseId || ""] || { ...defaultCourse, code: courseId?.toUpperCase() };
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { data: enrollments } = useEnrollments();
+  const enrollMutation = useEnrollInCourse();
+
+  // Fetch course from database
+  const { data: course, isLoading } = useQuery({
+    queryKey: ["course", courseId],
+    queryFn: async () => {
+      // Try to find by slug first, then by id
+      let { data, error } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("slug", courseId)
+        .maybeSingle();
+
+      if (!data) {
+        const result = await supabase
+          .from("courses")
+          .select("*")
+          .eq("id", courseId)
+          .maybeSingle();
+        data = result.data;
+        error = result.error;
+      }
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!courseId,
+  });
+
+  // Fetch lessons for this course
+  const { data: lessons } = useLessons(course?.id);
+  const { data: lessonProgress } = useLessonProgress(course?.id);
+
+  const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
+  const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
+  const totalLessons = lessons?.length || 0;
+  const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+  const isLessonCompleted = (lessonId: string) => {
+    return lessonProgress?.some((p) => p.lesson_id === lessonId && p.completed);
+  };
+
+  const handleEnroll = async () => {
+    if (!user) {
+      toast.error("Please sign in to enroll");
+      navigate("/auth");
+      return;
+    }
+
+    if (!course) return;
+
+    try {
+      await enrollMutation.mutateAsync(course.id);
+      toast.success(`Successfully enrolled in ${course.title}!`);
+    } catch (error: any) {
+      if (error.message?.includes("duplicate")) {
+        toast.info("You're already enrolled in this course");
+      } else {
+        toast.error(error.message || "Failed to enroll");
+      }
+    }
+  };
+
+  const handleStartLearning = () => {
+    if (lessons && lessons.length > 0) {
+      // Find first incomplete lesson or start from beginning
+      const firstIncomplete = lessons.find((l) => !isLessonCompleted(l.id));
+      const targetLesson = firstIncomplete || lessons[0];
+      navigate(`/courses/${course?.id}/lesson/${targetLesson.id}`);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!course) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Course not found</h2>
+            <p className="text-muted-foreground mb-4">This course doesn't exist or has been removed.</p>
+            <Button onClick={() => navigate("/courses")}>Browse Courses</Button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  const features = [
+    `${course.duration_hours || 40}+ hours of video content`,
+    "500+ practice questions",
+    "5 full mock exams",
+    "Competency-based progress tracking",
+    "Weak area identification",
+    "Mobile app access",
+    "24/7 community support",
+    "Certificate of completion"
+  ];
 
   return (
     <Layout>
@@ -114,71 +154,86 @@ const CourseDetail = () => {
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
-                {course.level} Level • {course.code}
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4 capitalize">
+                {course.level} Level
               </span>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4">
                 {course.title}
               </h1>
               <p className="text-lg text-primary-foreground/80 mb-6">
-                {course.description}
+                {course.description || "Comprehensive course designed to help you master the exam content and pass with confidence."}
               </p>
 
               {/* Stats */}
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <Clock className="w-5 h-5" />
-                  <span>{course.duration}</span>
+                  <span>{course.duration_hours || 40} hours</span>
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <Users className="w-5 h-5" />
-                  <span>{course.students.toLocaleString()} students</span>
+                  <BookOpen className="w-5 h-5" />
+                  <span>{totalLessons} lessons</span>
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span>{course.rating} ({course.reviews} reviews)</span>
+                  <span>4.8 (312 reviews)</span>
                 </div>
               </div>
 
-              {/* Instructor */}
-              <div className="flex items-center gap-4 p-4 bg-primary-foreground/10 rounded-xl backdrop-blur-sm">
-                <img
-                  src={course.instructor.image}
-                  alt={course.instructor.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-primary-foreground/20"
-                />
-                <div>
-                  <h4 className="font-semibold text-primary-foreground">{course.instructor.name}</h4>
-                  <p className="text-sm text-primary-foreground/70">
-                    {course.instructor.title} • {course.instructor.experience}
+              {/* Progress for enrolled users */}
+              {isEnrolled && (
+                <div className="p-4 bg-primary-foreground/10 rounded-xl backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-primary-foreground">Your Progress</span>
+                    <span className="text-sm text-primary-foreground">{progressPercentage}%</span>
+                  </div>
+                  <div className="w-full bg-primary-foreground/20 rounded-full h-2">
+                    <div 
+                      className="bg-accent h-2 rounded-full transition-all duration-300" 
+                      style={{ width: `${progressPercentage}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-primary-foreground/70 mt-2">
+                    {completedLessons} of {totalLessons} lessons completed
                   </p>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Pricing Card */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
                 <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-4xl font-bold text-foreground">£{course.price}</span>
-                  {course.originalPrice && (
-                    <span className="text-xl text-muted-foreground line-through">£{course.originalPrice}</span>
-                  )}
-                  {course.originalPrice && (
-                    <span className="px-2 py-1 rounded bg-accent/10 text-accent text-sm font-medium">
-                      {Math.round((1 - course.price / course.originalPrice) * 100)}% off
-                    </span>
-                  )}
+                  <span className="text-4xl font-bold text-foreground">£{Number(course.price).toFixed(0)}</span>
                 </div>
 
-                <Button size="lg" className="w-full mb-3 gap-2">
-                  <ShoppingCart className="w-5 h-5" />
-                  Enroll Now
-                </Button>
-                <Button variant="outline" size="lg" className="w-full gap-2">
-                  <Play className="w-5 h-5" />
-                  Try Free Lesson
-                </Button>
+                {isEnrolled ? (
+                  <>
+                    <Button size="lg" className="w-full mb-3 gap-2" onClick={handleStartLearning}>
+                      <Play className="w-5 h-5" />
+                      {progressPercentage > 0 ? "Continue Learning" : "Start Learning"}
+                    </Button>
+                    <p className="text-center text-sm text-accent font-medium">
+                      ✓ You're enrolled in this course
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      size="lg" 
+                      className="w-full mb-3 gap-2" 
+                      onClick={handleEnroll}
+                      disabled={enrollMutation.isPending}
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      {enrollMutation.isPending ? "Enrolling..." : "Enroll Now"}
+                    </Button>
+                    <Button variant="outline" size="lg" className="w-full gap-2" onClick={handleStartLearning}>
+                      <Play className="w-5 h-5" />
+                      Try Free Lesson
+                    </Button>
+                  </>
+                )}
 
                 <p className="text-center text-sm text-muted-foreground mt-4">
                   30-day money-back guarantee
@@ -187,7 +242,7 @@ const CourseDetail = () => {
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
                   <ul className="space-y-3">
-                    {course.features.slice(0, 5).map((feature: string, index: number) => (
+                    {features.slice(0, 5).map((feature: string, index: number) => (
                       <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
                         <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
                         {feature}
@@ -213,36 +268,54 @@ const CourseDetail = () => {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Syllabus */}
+              {/* Lessons */}
               <div className="mb-12">
                 <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                   <BookOpen className="w-6 h-6 text-primary" />
-                  Course Syllabus
+                  Course Lessons
                 </h2>
-                <Accordion type="single" collapsible className="space-y-3">
-                  {course.syllabus.map((section: any, index: number) => (
-                    <AccordionItem
-                      key={index}
-                      value={`section-${index}`}
-                      className="bg-card rounded-xl border border-border px-6"
-                    >
-                      <AccordionTrigger className="hover:no-underline py-4">
-                        <div className="flex items-center justify-between w-full pr-4">
-                          <span className="font-medium text-foreground">{section.title}</span>
-                          <span className="text-sm text-muted-foreground">
-                            {section.lessons} lessons • {section.duration}
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="pb-4">
-                        <p className="text-muted-foreground">
-                          Comprehensive coverage of {section.title.toLowerCase()} with video lectures, 
-                          practice questions, and interactive exercises.
-                        </p>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+                <div className="space-y-3">
+                  {lessons && lessons.length > 0 ? (
+                    lessons.map((lesson, index) => {
+                      const completed = isLessonCompleted(lesson.id);
+                      return (
+                        <Link
+                          key={lesson.id}
+                          to={`/courses/${course.id}/lesson/${lesson.id}`}
+                          className="flex items-center gap-4 p-4 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors group"
+                        >
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                            {completed ? (
+                              <CheckCircle className="w-5 h-5 text-accent" />
+                            ) : (
+                              <span className="text-sm font-medium text-muted-foreground">{index + 1}</span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-foreground group-hover:text-primary transition-colors">
+                              {lesson.title}
+                            </h3>
+                            {lesson.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-1">{lesson.description}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {lesson.duration_minutes} min
+                            </span>
+                            <Play className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-12 bg-card rounded-xl border border-border">
+                      <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                      <p className="text-muted-foreground">Lessons coming soon</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Analytics Preview */}
@@ -273,7 +346,7 @@ const CourseDetail = () => {
                   All Course Features
                 </h3>
                 <ul className="space-y-3">
-                  {course.features.map((feature: string, index: number) => (
+                  {features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
                       <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" />
                       {feature}
