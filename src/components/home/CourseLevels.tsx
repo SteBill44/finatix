@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import stepAccountImg from "@/assets/course-step-1-account.jpg";
+import stepChooseImg from "@/assets/course-step-2-choose.jpg";
+import stepSuccessImg from "@/assets/course-step-3-success.jpg";
 
 const CourseLevels = () => {
   const steps = [
@@ -15,7 +18,8 @@ const CourseLevels = () => {
       ],
       cta: "Register for Free",
       ctaLink: "/courses",
-      imagePosition: "right"
+      imagePosition: "right",
+      image: stepAccountImg
     },
     {
       number: "02",
@@ -28,7 +32,8 @@ const CourseLevels = () => {
       ],
       cta: "Explore Courses",
       ctaLink: "/courses",
-      imagePosition: "left"
+      imagePosition: "left",
+      image: stepChooseImg
     },
     {
       number: "03",
@@ -41,7 +46,8 @@ const CourseLevels = () => {
       ],
       cta: "View Certifications",
       ctaLink: "/courses",
-      imagePosition: "right"
+      imagePosition: "right",
+      image: stepSuccessImg
     },
   ];
 
@@ -75,15 +81,14 @@ const CourseLevels = () => {
               </Link>
             </div>
 
-            {/* Image Placeholder */}
+            {/* Image */}
             <div className="flex-1 w-full">
-              <div className="bg-secondary rounded-xl aspect-[4/3] flex items-center justify-center">
-                <div className="text-center p-6">
-                  <div className="w-16 h-16 bg-primary/10 rounded-xl mx-auto mb-3 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-primary">{step.number}</span>
-                  </div>
-                  <p className="text-muted-foreground text-sm">Course Preview</p>
-                </div>
+              <div className="rounded-xl overflow-hidden shadow-lg">
+                <img 
+                  src={step.image} 
+                  alt={step.title}
+                  className="w-full h-auto object-cover aspect-[4/3]"
+                />
               </div>
             </div>
           </div>
