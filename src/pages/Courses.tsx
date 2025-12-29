@@ -50,8 +50,8 @@ const Courses = () => {
   const levelConfig = {
     certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-orange" },
     operational: { label: "Operational", icon: BookOpen, color: "bg-primary" },
-    management: { label: "Management", icon: BarChart3, color: "bg-accent" },
-    strategic: { label: "Strategic", icon: Target, color: "bg-purple" },
+    management: { label: "Management", icon: BarChart3, color: "bg-purple" },
+    strategic: { label: "Strategic", icon: Target, color: "bg-red" },
   };
 
   // Custom sort order for courses within each level
@@ -92,8 +92,8 @@ const Courses = () => {
     switch (level) {
       case "certificate": return "bg-orange/10 text-orange";
       case "operational": return "bg-primary/10 text-primary";
-      case "management": return "bg-accent/10 text-accent";
-      case "strategic": return "bg-purple/10 text-purple";
+      case "management": return "bg-purple/10 text-purple";
+      case "strategic": return "bg-red/10 text-red";
       default: return "bg-secondary text-secondary-foreground";
     }
   };
@@ -102,8 +102,8 @@ const Courses = () => {
     switch (level) {
       case "certificate": return "border-l-orange";
       case "operational": return "border-l-primary";
-      case "management": return "border-l-accent";
-      case "strategic": return "border-l-purple";
+      case "management": return "border-l-purple";
+      case "strategic": return "border-l-red";
       default: return "border-l-border";
     }
   };
@@ -151,15 +151,15 @@ const Courses = () => {
               <p className="text-sm text-muted-foreground">E1, P1, F1 + Case Study</p>
             </div>
             <div className="text-center p-6">
-              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
-                <BarChart3 className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-purple/10 flex items-center justify-center mx-auto mb-3">
+                <BarChart3 className="w-6 h-6 text-purple" />
               </div>
               <h3 className="font-semibold text-foreground mb-1">Management Level</h3>
               <p className="text-sm text-muted-foreground">E2, P2, F2 + Case Study</p>
             </div>
             <div className="text-center p-6">
-              <div className="w-12 h-12 rounded-full bg-purple/10 flex items-center justify-center mx-auto mb-3">
-                <Target className="w-6 h-6 text-purple" />
+              <div className="w-12 h-12 rounded-full bg-red/10 flex items-center justify-center mx-auto mb-3">
+                <Target className="w-6 h-6 text-red" />
               </div>
               <h3 className="font-semibold text-foreground mb-1">Strategic Level</h3>
               <p className="text-sm text-muted-foreground">E3, P3, F3 + Case Study</p>
