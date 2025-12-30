@@ -235,7 +235,7 @@ const CourseDetail = () => {
                   <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                     <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4 [&[data-state=open]>div>svg]:rotate-0">
                       <div className="flex items-center gap-3">
-                        <FileText className={`w-5 h-5 ${levelColor}`} />
+                        <FileText className="w-5 h-5 text-primary-foreground" />
                         Course Objectives & Syllabus
                       </div>
                     </AccordionTrigger>
