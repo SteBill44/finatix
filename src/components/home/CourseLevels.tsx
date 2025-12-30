@@ -87,7 +87,7 @@ const CourseLevels = () => {
                 <img 
                   src={step.image} 
                   alt={step.title}
-                  className="w-full h-auto object-cover aspect-[4/3]"
+                  className={`w-full h-auto ${step.number === "02" ? "object-contain bg-card" : "object-cover aspect-[4/3]"}`}
                 />
               </div>
             </div>
