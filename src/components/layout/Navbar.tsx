@@ -69,7 +69,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-bold text-foreground">
-              SMN<span className="text-primary">H</span>
+              cima<span className="text-primary">Study</span>
             </span>
           </Link>
 

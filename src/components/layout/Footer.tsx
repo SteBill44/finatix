@@ -46,11 +46,11 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
               <span className="text-xl font-bold">
-                SMN<span className="text-primary">H</span>
+                cima<span className="text-primary">Study</span>
               </span>
             </Link>
             <p className="text-background/60 text-sm mb-6">
-              Study Smart Not Hard. Modern tools. Real insights.
+              Smarter CIMA study. Modern tools. Real insights.
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -138,7 +138,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-background/10 text-center">
           <p className="text-sm text-background/40">
-            © {currentYear} SMNH. All rights reserved.
+            © {currentYear} CIMAStudy. All rights reserved.
           </p>
         </div>
       </div>
