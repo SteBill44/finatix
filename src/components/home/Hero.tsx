@@ -125,7 +125,7 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4">
-            <Link to="/courses">
+            <Link to="/auth?mode=signup">
               <Button size="xl" className="shadow-lg shadow-primary/20">
                 Register for Free
               </Button>

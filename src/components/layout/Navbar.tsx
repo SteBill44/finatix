@@ -142,7 +142,7 @@ const Navbar = () => {
                 <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   SIGN IN
                 </Link>
-                <Link to="/auth">
+                <Link to="/auth?mode=signup">
                   <Button size="sm">Get Started</Button>
                 </Link>
               </>
@@ -225,7 +225,7 @@ const Navbar = () => {
                         Sign In
                       </Button>
                     </Link>
-                    <Link to="/auth" onClick={() => setIsOpen(false)}>
+                    <Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>
                       <Button className="w-full">Get Started</Button>
                     </Link>
                   </>
