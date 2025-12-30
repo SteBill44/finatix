@@ -6,6 +6,7 @@ interface CIMAData {
   first_name?: string;
   last_name?: string;
   cima_id?: string;
+  siebel_id?: string;
 }
 
 interface AuthContextType {
@@ -83,6 +84,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           first_name: cimaData.first_name,
           last_name: cimaData.last_name,
           cima_id: cimaData.cima_id,
+          siebel_id: cimaData.siebel_id,
           cima_start_date: new Date().toISOString().split("T")[0],
         }, { onConflict: 'user_id' });
       }, 0);
