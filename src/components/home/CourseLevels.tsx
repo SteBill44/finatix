@@ -87,7 +87,7 @@ const CourseLevels = () => {
                 <img 
                   src={step.image} 
                   alt={step.title}
-                  className={`w-full h-auto ${step.number === "02" ? "object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" : "object-cover aspect-[4/3]"}`}
+                  className={`w-full h-auto ${step.number === "02" ? "object-contain" : "object-cover aspect-[4/3]"}`}
                 />
               </div>
             </div>
