@@ -19,6 +19,7 @@ const signupSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }).max(100),
   lastName: z.string().trim().min(1, { message: "Last name is required" }).max(100),
   cimaId: z.string().trim().min(1, { message: "CIMA ID is required" }).max(20),
+  siebelId: z.string().trim().max(20).optional(),
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string(),
@@ -40,6 +41,7 @@ const Auth = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [cimaId, setCimaId] = useState("");
+  const [siebelId, setSiebelId] = useState("");
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
@@ -86,7 +88,7 @@ const Auth = () => {
           navigate("/dashboard");
         }
       } else {
-        const result = signupSchema.safeParse({ firstName, lastName, cimaId, email, password, confirmPassword });
+        const result = signupSchema.safeParse({ firstName, lastName, cimaId, siebelId: siebelId || undefined, email, password, confirmPassword });
         if (!result.success) {
           const fieldErrors: Record<string, string> = {};
           result.error.errors.forEach((err) => {
@@ -101,7 +103,8 @@ const Auth = () => {
         const { error } = await signUp(email, password, fullName, { 
           first_name: firstName.trim(), 
           last_name: lastName.trim(), 
-          cima_id: cimaId.trim() 
+          cima_id: cimaId.trim(),
+          siebel_id: siebelId.trim() || undefined
         });
         if (error) {
           if (error.message.includes("User already registered")) {
@@ -158,22 +161,38 @@ const Auth = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                   <>
-                    <div className="space-y-2">
-                      <Label htmlFor="cimaId">CIMA ID / AICPA ID *</Label>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="cimaId">CIMA Contact ID *</Label>
+                        <div className="relative">
+                          <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                          <Input
+                            id="cimaId"
+                            type="text"
+                            placeholder="e.g., 1-482715"
+                            value={cimaId}
+                            onChange={(e) => setCimaId(e.target.value)}
+                            className="pl-10"
+                          />
+                        </div>
+                        {errors.cimaId && (
+                          <p className="text-sm text-destructive">{errors.cimaId}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="siebelId">AICPA ID (Optional)</Label>
                         <Input
-                          id="cimaId"
+                          id="siebelId"
                           type="text"
                           placeholder="e.g., 40123456"
-                          value={cimaId}
-                          onChange={(e) => setCimaId(e.target.value)}
-                          className="pl-10"
+                          value={siebelId}
+                          onChange={(e) => setSiebelId(e.target.value)}
                         />
+                        {errors.siebelId && (
+                          <p className="text-sm text-destructive">{errors.siebelId}</p>
+                        )}
                       </div>
-                      {errors.cimaId && (
-                        <p className="text-sm text-destructive">{errors.cimaId}</p>
-                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
