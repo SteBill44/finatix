@@ -20,17 +20,13 @@ const Hero = () => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Grid pattern */}
+          {/* Grid pattern removed for cleaner look */}
           <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-            </pattern>
             <linearGradient id="barGradient" x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="currentColor" stopOpacity="0.4" />
               <stop offset="100%" stopColor="currentColor" stopOpacity="0.9" />
             </linearGradient>
           </defs>
-          <rect width="800" height="800" fill="url(#grid)" />
           
           {/* Rising bar chart with gradient */}
           <g className="text-primary">
