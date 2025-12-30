@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[85vh] flex flex-col justify-center pt-16 pb-12 hex-pattern hero-gradient-light overflow-hidden">
+    <section className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 hex-pattern hero-gradient-light overflow-hidden -mt-16">
       {/* Animated gradient orbs for light mode visual interest */}
       <div className="gradient-orb gradient-orb-primary w-[500px] h-[500px] -top-20 -left-20 pointer-events-none" />
       <div className="gradient-orb gradient-orb-accent w-[400px] h-[400px] top-1/3 right-0 pointer-events-none" />
