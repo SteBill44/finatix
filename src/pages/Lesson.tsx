@@ -83,7 +83,7 @@ const Lesson = () => {
     if (!lessonId) return;
 
     try {
-      await markComplete.mutateAsync(lessonId);
+      await markComplete.mutateAsync({ lessonId, courseId: courseId! });
       toast.success("Lesson marked as complete!");
       
       // Auto-navigate to next lesson after a short delay

@@ -272,9 +272,10 @@ export const useMarkLessonComplete = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (lessonId: string) => {
+    mutationFn: async ({ lessonId, courseId }: { lessonId: string; courseId: string }) => {
       if (!user) throw new Error("Must be logged in");
       
+      // Mark the lesson as complete
       const { data, error } = await supabase
         .from("lesson_progress")
         .upsert({
@@ -287,10 +288,36 @@ export const useMarkLessonComplete = () => {
         .single();
 
       if (error) throw error;
+
+      // Check if all lessons in the course are now complete
+      const { data: allLessons } = await supabase
+        .from("lessons")
+        .select("id")
+        .eq("course_id", courseId);
+
+      const { data: completedLessons } = await supabase
+        .from("lesson_progress")
+        .select("lesson_id")
+        .eq("user_id", user.id)
+        .eq("completed", true)
+        .in("lesson_id", allLessons?.map(l => l.id) || []);
+
+      // If all lessons are complete, mark the enrollment as completed
+      if (allLessons && completedLessons && allLessons.length > 0 && 
+          completedLessons.length >= allLessons.length) {
+        await supabase
+          .from("enrollments")
+          .update({ completed_at: new Date().toISOString() })
+          .eq("user_id", user.id)
+          .eq("course_id", courseId)
+          .is("completed_at", null); // Only update if not already completed
+      }
+
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lesson_progress"] });
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
     },
   });
 };
