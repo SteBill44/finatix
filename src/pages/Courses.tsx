@@ -246,9 +246,10 @@ const Courses = () => {
                 {/* Course Grid - 4 per row */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {levelCourses.map((course) => (
-                    <div
+                    <Link
                       key={course.id}
-                      className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift`}
+                      to={`/courses/${course.slug}`}
+                      className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift block`}
                     >
                       <div className="p-4">
                         {/* Code & Type Badge */}
@@ -291,16 +292,13 @@ const Courses = () => {
                               <span className="text-lg font-bold text-foreground">£{course.price}</span>
                             )}
                           </div>
-                          <Link
-                            to={`/courses/${course.slug}`}
-                            className="text-xs font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
-                          >
+                          <span className="text-xs font-medium text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">
                             View
                             <ArrowRight className="w-3 h-3" />
-                          </Link>
+                          </span>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
