@@ -288,6 +288,68 @@ const CourseDetail = () => {
         </div>
       </section>
 
+      {/* Course Objectives Dropdown */}
+      <section className="py-8 lg:py-12 border-b border-border">
+        <div className="container mx-auto px-4">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="objectives" className="border border-border rounded-xl bg-card px-6">
+              <AccordionTrigger className="text-lg font-semibold text-foreground hover:no-underline py-5">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5 text-primary" />
+                  Course Objectives & Syllabus
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-6">
+                <div className="prose prose-sm max-w-none text-muted-foreground">
+                  <p className="mb-6">
+                    <strong className="text-foreground">Objective:</strong> The BA1 syllabus is divided into <strong className="text-foreground">four key syllabus areas</strong>, each with specific weightings and topics. These areas reflect the economic and operating context of business and the numerical techniques to support decision-making. Here's the comprehensive breakdown based on the official CIMA syllabus.
+                  </p>
+                  
+                  <ul className="space-y-4 list-none pl-0">
+                    <li>
+                      <h4 className="font-semibold text-foreground mb-2">• The Macroeconomic Environment (25%)</h4>
+                      <ul className="list-disc list-inside space-y-1 pl-4 text-muted-foreground">
+                        <li>National income and economic growth</li>
+                        <li>Inflation, unemployment, and economic policies (fiscal and monetary)</li>
+                        <li>Institutional factors (e.g., government, central banks, international organizations)</li>
+                      </ul>
+                    </li>
+                    
+                    <li>
+                      <h4 className="font-semibold text-foreground mb-2">• Microeconomic and Organisational Context of Business (30%)</h4>
+                      <ul className="list-disc list-inside space-y-1 pl-4 text-muted-foreground">
+                        <li>Goals and governance of organizations</li>
+                        <li>Supply and demand (including elasticity)</li>
+                        <li>Costs, revenue, and profit maximization</li>
+                        <li>Market structures (perfect competition, monopoly, oligopoly, etc.)</li>
+                      </ul>
+                    </li>
+                    
+                    <li>
+                      <h4 className="font-semibold text-foreground mb-2">• Informational Context of Business (20%)</h4>
+                      <ul className="list-disc list-inside space-y-1 pl-4 text-muted-foreground">
+                        <li>Data collection and analysis</li>
+                        <li>Forecasting and its role in decision-making</li>
+                        <li>Big data and its implications for business</li>
+                      </ul>
+                    </li>
+                    
+                    <li>
+                      <h4 className="font-semibold text-foreground mb-2">• Financial Context of Business (25%)</h4>
+                      <ul className="list-disc list-inside space-y-1 pl-4 text-muted-foreground">
+                        <li>Financial markets and institutions</li>
+                        <li>Foreign exchange and international trade</li>
+                        <li>Interest rates and their impact on business</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+
       {/* Course Content */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
