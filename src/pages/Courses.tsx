@@ -119,8 +119,13 @@ const Courses = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="pt-24 pb-16 lg:pb-20 hex-pattern">
-        <div className="container mx-auto px-4">
+      <section className="relative pt-24 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
+        {/* Animated gradient orbs for light mode visual interest */}
+        <div className="gradient-orb gradient-orb-primary w-[400px] h-[400px] -top-20 -left-20 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-accent w-[300px] h-[300px] top-1/4 right-0 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] bottom-10 left-1/3 pointer-events-none" />
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
             <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
               EXPLORE <span className="text-primary">CIMA COURSES</span>
