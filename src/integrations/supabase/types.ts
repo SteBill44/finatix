@@ -56,6 +56,7 @@ export type Database = {
       enrollments: {
         Row: {
           completed_at: string | null
+          completed_course_slug: string | null
           course_id: string
           enrolled_at: string
           id: string
@@ -63,6 +64,7 @@ export type Database = {
         }
         Insert: {
           completed_at?: string | null
+          completed_course_slug?: string | null
           course_id: string
           enrolled_at?: string
           id?: string
@@ -70,6 +72,7 @@ export type Database = {
         }
         Update: {
           completed_at?: string | null
+          completed_course_slug?: string | null
           course_id?: string
           enrolled_at?: string
           id?: string
@@ -182,25 +185,43 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          cima_end_date: string | null
+          cima_id: string | null
+          cima_start_date: string | null
           created_at: string
+          first_name: string | null
           full_name: string | null
           id: string
+          last_name: string | null
+          siebel_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
+          cima_end_date?: string | null
+          cima_id?: string | null
+          cima_start_date?: string | null
           created_at?: string
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          last_name?: string | null
+          siebel_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
+          cima_end_date?: string | null
+          cima_id?: string | null
+          cima_start_date?: string | null
           created_at?: string
+          first_name?: string | null
           full_name?: string | null
           id?: string
+          last_name?: string | null
+          siebel_id?: string | null
           updated_at?: string
           user_id?: string
         }

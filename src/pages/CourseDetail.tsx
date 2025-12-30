@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -5,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
+import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
+import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { 
   Clock, 
@@ -33,6 +36,9 @@ const CourseDetail = () => {
   const { user } = useAuth();
   const { data: enrollments } = useEnrollments();
   const enrollMutation = useEnrollInCourse();
+  const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
+  const [showCIMAModal, setShowCIMAModal] = useState(false);
+  const [pendingEnrollment, setPendingEnrollment] = useState(false);
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -83,15 +89,35 @@ const CourseDetail = () => {
 
     if (!course) return;
 
+    // Check if user has complete CIMA profile
+    if (!hasCompleteProfile && !isLoadingProfile) {
+      setPendingEnrollment(true);
+      setShowCIMAModal(true);
+      return;
+    }
+
+    await performEnrollment();
+  };
+
+  const performEnrollment = async () => {
+    if (!course) return;
+    
     try {
       await enrollMutation.mutateAsync(course.id);
       toast.success(`Successfully enrolled in ${course.title}!`);
+      setPendingEnrollment(false);
     } catch (error: any) {
       if (error.message?.includes("duplicate")) {
         toast.info("You're already enrolled in this course");
       } else {
         toast.error(error.message || "Failed to enroll");
       }
+    }
+  };
+
+  const handleCIMAModalSuccess = () => {
+    if (pendingEnrollment) {
+      performEnrollment();
     }
   };
 
@@ -375,6 +401,15 @@ const CourseDetail = () => {
           </div>
         </div>
       </section>
+
+      <CIMAProfileModal
+        open={showCIMAModal}
+        onClose={() => {
+          setShowCIMAModal(false);
+          setPendingEnrollment(false);
+        }}
+        onSuccess={handleCIMAModalSuccess}
+      />
     </Layout>
   );
 };
