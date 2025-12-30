@@ -2,11 +2,17 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+interface CIMAData {
+  first_name?: string;
+  last_name?: string;
+  cima_id?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName: string, cimaData?: CIMAData) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -50,19 +56,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName: string) => {
+  const signUp = async (email: string, password: string, fullName: string, cimaData?: CIMAData) => {
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName,
+          first_name: cimaData?.first_name,
+          last_name: cimaData?.last_name,
+          cima_id: cimaData?.cima_id,
         },
       },
     });
+
+    // If signup successful and we have CIMA data, update the profile
+    if (!error && data.user && cimaData) {
+      // Use setTimeout to defer the Supabase call and avoid deadlock
+      setTimeout(async () => {
+        await supabase.from("profiles").upsert({
+          user_id: data.user!.id,
+          full_name: fullName,
+          first_name: cimaData.first_name,
+          last_name: cimaData.last_name,
+          cima_id: cimaData.cima_id,
+          cima_start_date: new Date().toISOString().split("T")[0],
+        }, { onConflict: 'user_id' });
+      }, 0);
+    }
     
     return { error: error as Error | null };
   };

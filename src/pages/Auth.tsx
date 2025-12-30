@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, CreditCard } from "lucide-react";
 import { z } from "zod";
+import CIMAProfileModal from "@/components/CIMAProfileModal";
 
 const loginSchema = z.object({
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
@@ -15,7 +16,9 @@ const loginSchema = z.object({
 });
 
 const signupSchema = z.object({
-  fullName: z.string().trim().min(2, { message: "Name must be at least 2 characters" }).max(100),
+  firstName: z.string().trim().min(1, { message: "First name is required" }).max(100),
+  lastName: z.string().trim().min(1, { message: "Last name is required" }).max(100),
+  cimaId: z.string().trim().min(1, { message: "CIMA ID is required" }).max(20),
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string(),
@@ -29,11 +32,14 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showCIMAModal, setShowCIMAModal] = useState(false);
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [cimaId, setCimaId] = useState("");
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
@@ -80,7 +86,7 @@ const Auth = () => {
           navigate("/dashboard");
         }
       } else {
-        const result = signupSchema.safeParse({ fullName, email, password, confirmPassword });
+        const result = signupSchema.safeParse({ firstName, lastName, cimaId, email, password, confirmPassword });
         if (!result.success) {
           const fieldErrors: Record<string, string> = {};
           result.error.errors.forEach((err) => {
@@ -91,7 +97,12 @@ const Auth = () => {
           return;
         }
 
-        const { error } = await signUp(email, password, fullName);
+        const fullName = `${firstName.trim()} ${lastName.trim()}`;
+        const { error } = await signUp(email, password, fullName, { 
+          first_name: firstName.trim(), 
+          last_name: lastName.trim(), 
+          cima_id: cimaId.trim() 
+        });
         if (error) {
           if (error.message.includes("User already registered")) {
             toast({
@@ -146,23 +157,59 @@ const Auth = () => {
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                      <Input
-                        id="fullName"
-                        type="text"
-                        placeholder="John Smith"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="pl-10"
-                      />
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="cimaId">CIMA ID / AICPA ID *</Label>
+                      <div className="relative">
+                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                        <Input
+                          id="cimaId"
+                          type="text"
+                          placeholder="e.g., 40123456"
+                          value={cimaId}
+                          onChange={(e) => setCimaId(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                      {errors.cimaId && (
+                        <p className="text-sm text-destructive">{errors.cimaId}</p>
+                      )}
                     </div>
-                    {errors.fullName && (
-                      <p className="text-sm text-destructive">{errors.fullName}</p>
-                    )}
-                  </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="firstName">First Name *</Label>
+                        <div className="relative">
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                          <Input
+                            id="firstName"
+                            type="text"
+                            placeholder="John"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="pl-10"
+                          />
+                        </div>
+                        {errors.firstName && (
+                          <p className="text-sm text-destructive">{errors.firstName}</p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="lastName">Last Name *</Label>
+                        <Input
+                          id="lastName"
+                          type="text"
+                          placeholder="Smith"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
+                        {errors.lastName && (
+                          <p className="text-sm text-destructive">{errors.lastName}</p>
+                        )}
+                      </div>
+                    </div>
+                  </>
                 )}
 
                 <div className="space-y-2">

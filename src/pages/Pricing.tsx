@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, X, Zap, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCourses, useEnrollments, useEnrollInCourse, useEnrollInMultipleCourses } from "@/hooks/useStudentProgress";
+import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
+import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 
 const Pricing = () => {
@@ -13,9 +16,21 @@ const Pricing = () => {
   const { data: enrollments } = useEnrollments();
   const enrollMutation = useEnrollInCourse();
   const enrollMultipleMutation = useEnrollInMultipleCourses();
+  const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
+  const [showCIMAModal, setShowCIMAModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
+  };
+
+  const checkCIMAAndExecute = async (action: () => Promise<void>) => {
+    if (!hasCompleteProfile && !isLoadingProfile) {
+      setPendingAction(() => action);
+      setShowCIMAModal(true);
+      return;
+    }
+    await action();
   };
 
   const handleEnroll = async (courseId: string, courseName: string) => {
@@ -31,13 +46,15 @@ const Pricing = () => {
       return;
     }
 
-    try {
-      await enrollMutation.mutateAsync(courseId);
-      toast.success(`Successfully enrolled in ${courseName}!`);
-      navigate("/dashboard");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to enroll");
-    }
+    await checkCIMAAndExecute(async () => {
+      try {
+        await enrollMutation.mutateAsync(courseId);
+        toast.success(`Successfully enrolled in ${courseName}!`);
+        navigate("/dashboard");
+      } catch (error: any) {
+        toast.error(error.message || "Failed to enroll");
+      }
+    });
   };
 
   const handleBuyLevelBundle = async (level: string, levelCourses: typeof courses) => {
@@ -52,20 +69,21 @@ const Pricing = () => {
       return;
     }
 
-    const courseIds = levelCourses.map(c => c.id);
-    
-    try {
-      const result = await enrollMultipleMutation.mutateAsync(courseIds);
-      if (result.enrolled > 0) {
-        toast.success(`Successfully enrolled in ${result.enrolled} ${level} level courses!`);
-        navigate("/dashboard");
-      } else {
-        toast.info("You're already enrolled in all courses for this level");
-        navigate("/dashboard");
+    await checkCIMAAndExecute(async () => {
+      const courseIds = levelCourses.map(c => c.id);
+      try {
+        const result = await enrollMultipleMutation.mutateAsync(courseIds);
+        if (result.enrolled > 0) {
+          toast.success(`Successfully enrolled in ${result.enrolled} ${level} level courses!`);
+          navigate("/dashboard");
+        } else {
+          toast.info("You're already enrolled in all courses for this level");
+          navigate("/dashboard");
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Failed to enroll in bundle");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to enroll in bundle");
-    }
+    });
   };
 
   const handleBuyAllCourses = async () => {
@@ -80,19 +98,27 @@ const Pricing = () => {
       return;
     }
 
-    const courseIds = courses.map(c => c.id);
-    
-    try {
-      const result = await enrollMultipleMutation.mutateAsync(courseIds);
-      if (result.enrolled > 0) {
-        toast.success(`Successfully enrolled in ${result.enrolled} courses!`);
-        navigate("/dashboard");
-      } else {
-        toast.info("You're already enrolled in all courses");
-        navigate("/dashboard");
+    await checkCIMAAndExecute(async () => {
+      const courseIds = courses.map(c => c.id);
+      try {
+        const result = await enrollMultipleMutation.mutateAsync(courseIds);
+        if (result.enrolled > 0) {
+          toast.success(`Successfully enrolled in ${result.enrolled} courses!`);
+          navigate("/dashboard");
+        } else {
+          toast.info("You're already enrolled in all courses");
+          navigate("/dashboard");
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Failed to enroll in all courses");
       }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to enroll in all courses");
+    });
+  };
+
+  const handleCIMAModalSuccess = () => {
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
     }
   };
 
@@ -509,6 +535,15 @@ const Pricing = () => {
           </div>
         </div>
       </section>
+
+      <CIMAProfileModal
+        open={showCIMAModal}
+        onClose={() => {
+          setShowCIMAModal(false);
+          setPendingAction(null);
+        }}
+        onSuccess={handleCIMAModalSuccess}
+      />
     </Layout>
   );
 };
