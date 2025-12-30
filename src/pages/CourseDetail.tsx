@@ -241,48 +241,106 @@ const CourseDetail = () => {
                     </AccordionTrigger>
                     <AccordionContent className="pb-5">
                       <div className="text-primary-foreground/90">
-                        <p className="mb-5 text-sm leading-relaxed">
-                          <strong className="text-primary-foreground">Objective:</strong> The BA1 syllabus is divided into <strong className="text-primary-foreground">four key syllabus areas</strong>, each with specific weightings and topics. These areas reflect the economic and operating context of business and the numerical techniques to support decision-making.
-                        </p>
-                        
-                        <ul className="space-y-4 list-none pl-0 text-sm">
-                          <li>
-                            <h4 className="font-semibold text-primary-foreground mb-1.5">• The Macroeconomic Environment (25%)</h4>
-                            <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
-                              <li>National income and economic growth</li>
-                              <li>Inflation, unemployment, and economic policies (fiscal and monetary)</li>
-                              <li>Institutional factors (e.g., government, central banks, international organizations)</li>
+                        {course.slug === "ba1-business-economics" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> The BA1 syllabus is divided into <strong className="text-primary-foreground">four key syllabus areas</strong>, each with specific weightings and topics. These areas reflect the economic and operating context of business and the numerical techniques to support decision-making.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: The Macroeconomic Environment (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>National income and economic growth</li>
+                                  <li>Inflation, unemployment, and economic policies (fiscal and monetary)</li>
+                                  <li>Institutional factors (e.g., government, central banks, international organizations)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Microeconomic and Organisational Context of Business (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Goals and governance of organizations</li>
+                                  <li>Supply and demand (including elasticity)</li>
+                                  <li>Costs, revenue, and profit maximization</li>
+                                  <li>Market structures (perfect competition, monopoly, oligopoly, etc.)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Informational Context of Business (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Data collection and analysis</li>
+                                  <li>Forecasting and its role in decision-making</li>
+                                  <li>Big data and its implications for business</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Financial Context of Business (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Financial markets and institutions</li>
+                                  <li>Foreign exchange and international trade</li>
+                                  <li>Interest rates and their impact on business</li>
+                                </ul>
+                              </li>
                             </ul>
-                          </li>
-                          
-                          <li>
-                            <h4 className="font-semibold text-primary-foreground mb-1.5">• Microeconomic and Organisational Context of Business (30%)</h4>
-                            <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
-                              <li>Goals and governance of organizations</li>
-                              <li>Supply and demand (including elasticity)</li>
-                              <li>Costs, revenue, and profit maximization</li>
-                              <li>Market structures (perfect competition, monopoly, oligopoly, etc.)</li>
+                          </>
+                        )}
+
+                        {course.slug === "ba2-management-accounting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> BA2 introduces the principles and techniques of management accounting, focusing on providing information for internal decision-making, planning, control, and performance evaluation. It equips learners with skills to support managers in optimizing business operations and achieving strategic goals.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: The Nature, Source, and Purpose of Management Accounting (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Definition and role of management accounting</li>
+                                  <li>Comparison with financial accounting</li>
+                                  <li>Types of data and information for planning, decision-making, and control</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Cost Accounting Techniques (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Cost classification (e.g., fixed, variable, direct, indirect)</li>
+                                  <li>Costing methods: absorption costing, marginal costing</li>
+                                  <li>Accounting for materials, labor, and overheads</li>
+                                  <li>Cost-volume-profit (CVP) analysis</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Budgeting and Standard Costing (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Budget preparation (functional, cash, master budgets)</li>
+                                  <li>Forecasting techniques and budget coordination</li>
+                                  <li>Standard costing and variance analysis (material, labor, overhead)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Performance Measurement and Short-Term Decision-Making (35%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Short-term decisions (e.g., make-or-buy, pricing, limiting factors)</li>
+                                  <li>Relevant costs and benefits analysis</li>
+                                  <li>Performance measurement (financial and non-financial indicators)</li>
+                                  <li>Responsibility accounting and divisional performance</li>
+                                </ul>
+                              </li>
                             </ul>
-                          </li>
-                          
-                          <li>
-                            <h4 className="font-semibold text-primary-foreground mb-1.5">• Informational Context of Business (20%)</h4>
-                            <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
-                              <li>Data collection and analysis</li>
-                              <li>Forecasting and its role in decision-making</li>
-                              <li>Big data and its implications for business</li>
-                            </ul>
-                          </li>
-                          
-                          <li>
-                            <h4 className="font-semibold text-primary-foreground mb-1.5">• Financial Context of Business (25%)</h4>
-                            <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
-                              <li>Financial markets and institutions</li>
-                              <li>Foreign exchange and international trade</li>
-                              <li>Interest rates and their impact on business</li>
-                            </ul>
-                          </li>
-                        </ul>
+                          </>
+                        )}
+
+                        {!["ba1-business-economics", "ba2-management-accounting"].includes(course.slug) && (
+                          <p className="text-sm text-primary-foreground/80">
+                            Course objectives and syllabus information coming soon.
+                          </p>
+                        )}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
