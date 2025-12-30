@@ -336,7 +336,112 @@ const CourseDetail = () => {
                           </>
                         )}
 
-                        {!["ba1-business-economics", "ba2-management-accounting"].includes(course.slug) && (
+                        {course.slug === "ba3-financial-accounting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> BA3 provides the foundational knowledge and skills to prepare, record, and interpret financial accounts for external reporting. It introduces learners to the double-entry system, financial statement preparation, and basic analysis, preparing them for compliance with accounting standards.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Accounting Principles, Concepts, and Regulations (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Purpose and scope of financial accounting</li>
+                                  <li>Fundamental accounting principles (e.g., accruals, going concern)</li>
+                                  <li>Overview of regulatory frameworks (e.g., IFRS, IASB)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Recording Accounting Transactions (50%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Double-entry bookkeeping and ledger accounts</li>
+                                  <li>Books of prime entry (e.g., sales, purchases, cash)</li>
+                                  <li>Adjustments: accruals, prepayments, depreciation, bad debts</li>
+                                  <li>Inventory valuation and cost of sales</li>
+                                  <li>Non-current assets (acquisition, depreciation, disposal)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Preparation of Accounts for Single Entities (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Trial balance and correction of errors</li>
+                                  <li>Preparation of income statements and balance sheets for sole traders</li>
+                                  <li>Basic adjustments in financial statements</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Analysis of Financial Statements (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Introduction to ratio analysis (e.g., profitability, liquidity)</li>
+                                  <li>Interpretation of financial statements</li>
+                                  <li>Limitations of financial analysis</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "ba4-ethics-governance-law" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> BA4 integrates ethical considerations, corporate governance principles, and foundational business law to ensure learners understand the ethical and legal context of business operations. It prepares students to navigate moral dilemmas, governance structures, and legal obligations in a professional setting.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Business Ethics (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Definition and importance of ethics in business</li>
+                                  <li>Ethical theories and decision-making frameworks</li>
+                                  <li>Professional ethics (e.g., CIMA Code of Ethics)</li>
+                                  <li>Ethical issues (e.g., conflicts of interest, whistleblowing)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Corporate Governance (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Principles and objectives of corporate governance</li>
+                                  <li>Roles of boards, directors, and stakeholders</li>
+                                  <li>Governance mechanisms (e.g., audits, internal controls)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: The Legal Framework (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Sources of law (e.g., statute, common law)</li>
+                                  <li>Legal systems and their impact on business</li>
+                                  <li>Dispute resolution (courts, arbitration)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Contract Law (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Formation of contracts (offer, acceptance, consideration)</li>
+                                  <li>Terms of contracts (express, implied)</li>
+                                  <li>Breach of contract and remedies (e.g., damages)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• E: Employment Law and Other Legal Areas (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Employment contracts and employee rights</li>
+                                  <li>Discrimination, health, and safety regulations</li>
+                                  <li>Tort law (e.g., negligence)</li>
+                                  <li>Business structures and data protection (e.g., GDPR)</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {!["ba1-business-economics", "ba2-management-accounting", "ba3-financial-accounting", "ba4-ethics-governance-law"].includes(course.slug) && (
                           <p className="text-sm text-primary-foreground/80">
                             Course objectives and syllabus information coming soon.
                           </p>
