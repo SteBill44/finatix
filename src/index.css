@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 20% 98%;
     --foreground: 210 15% 10%;
 
     --card: 0 0% 100%;
@@ -18,11 +18,11 @@
     --primary: 174 72% 35%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 15% 94%;
+    --secondary: 174 30% 94%;
     --secondary-foreground: 210 15% 10%;
 
-    --muted: 210 15% 94%;
-    --muted-foreground: 210 15% 40%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 15% 35%;
 
     --accent: 262 83% 55%;
     --accent-foreground: 0 0% 100%;
@@ -30,8 +30,8 @@
     --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 15% 85%;
-    --input: 210 15% 85%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
     --ring: 174 72% 35%;
 
     --radius: 0.5rem;
@@ -40,16 +40,22 @@
     --charcoal: 210 11% 15%;
     --teal: 174 72% 40%;
     --teal-dark: 174 72% 35%;
-    --teal-light: 174 72% 45%;
+    --teal-light: 174 72% 50%;
     --purple: 262 83% 58%;
     --orange: 25 95% 53%;
     --red: 0 72% 50%;
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(210 11% 15% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(210 11% 15% / 0.07), 0 2px 4px -2px hsl(210 11% 15% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(210 11% 15% / 0.08), 0 4px 6px -4px hsl(210 11% 15% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(210 11% 15% / 0.1), 0 8px 10px -6px hsl(210 11% 15% / 0.05);
+    /* Light mode gradients and glows */
+    --hero-gradient-start: 174 60% 97%;
+    --hero-gradient-end: 262 50% 97%;
+    --glow-primary: 174 72% 45%;
+    --glow-accent: 262 83% 65%;
+    
+    /* Shadows - more pronounced for light mode */
+    --shadow-sm: 0 1px 2px 0 hsl(210 11% 15% / 0.06);
+    --shadow-md: 0 4px 6px -1px hsl(210 11% 15% / 0.08), 0 2px 4px -2px hsl(210 11% 15% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(210 11% 15% / 0.1), 0 4px 6px -4px hsl(210 11% 15% / 0.06);
+    --shadow-xl: 0 20px 25px -5px hsl(210 11% 15% / 0.12), 0 8px 10px -6px hsl(210 11% 15% / 0.06);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -123,13 +129,48 @@
     @apply bg-gradient-to-br from-primary to-teal-dark;
   }
 
-  /* Hexagon pattern background */
+  /* Light mode hero gradient background */
+  .hero-gradient-light {
+    background: linear-gradient(135deg, hsl(var(--hero-gradient-start)) 0%, hsl(var(--hero-gradient-end)) 100%);
+  }
+
+  .dark .hero-gradient-light {
+    background: transparent;
+  }
+
+  /* Animated gradient orbs for light mode */
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .gradient-orb-primary {
+    background: linear-gradient(135deg, hsl(var(--glow-primary) / 0.4), hsl(var(--glow-primary) / 0.2));
+  }
+
+  .gradient-orb-accent {
+    background: linear-gradient(135deg, hsl(var(--glow-accent) / 0.3), hsl(var(--glow-accent) / 0.15));
+    animation-delay: -4s;
+  }
+
+  .dark .gradient-orb {
+    opacity: 0.15;
+  }
+
+  /* Hexagon pattern background - more visible in light mode */
   .hex-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2320b2aa' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .dark .hex-pattern {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .stat-card {
-    @apply bg-card rounded-xl border border-border p-8 text-center transition-all duration-300;
+    @apply bg-card rounded-xl border border-border p-8 text-center transition-all duration-300 shadow-sm;
   }
 
   .stat-card:hover {
@@ -137,7 +178,7 @@
   }
 
   .feature-card {
-    @apply bg-card rounded-xl border-l-4 border-l-primary border border-border p-6;
+    @apply bg-card rounded-xl border-l-4 border-l-primary border border-border p-6 shadow-sm;
   }
 
   .hover-lift {
@@ -203,5 +244,17 @@
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
   }
 }
