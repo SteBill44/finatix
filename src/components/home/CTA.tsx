@@ -16,7 +16,7 @@ const CTA = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/courses">
+            <Link to="/auth?mode=signup">
               <Button size="xl">
                 Register for Free
               </Button>
