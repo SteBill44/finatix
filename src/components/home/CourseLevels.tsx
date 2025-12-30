@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
-import stepChooseImg from "@/assets/course-step-2-choose.jpg";
+import stepChooseImg from "@/assets/course-step-2-choose.png";
 import stepSuccessImg from "@/assets/course-step-3-success.jpg";
 
 const CourseLevels = () => {
