@@ -20,7 +20,7 @@ const Hero = () => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Grid pattern removed for cleaner look */}
+          {/* Gradients and animations */}
           <defs>
             <linearGradient id="barGradient" x1="0%" y1="100%" x2="0%" y2="0%">
               <stop offset="0%" stopColor="currentColor" stopOpacity="0.4" />
@@ -28,15 +28,27 @@ const Hero = () => {
             </linearGradient>
           </defs>
           
-          {/* Rising bar chart with gradient */}
+          {/* Rising bar chart with staggered animation */}
           <g className="text-primary">
-            <rect x="520" y="450" width="40" height="120" rx="4" fill="url(#barGradient)" />
-            <rect x="580" y="380" width="40" height="190" rx="4" fill="url(#barGradient)" />
-            <rect x="640" y="300" width="40" height="270" rx="4" fill="url(#barGradient)" />
-            <rect x="700" y="220" width="40" height="350" rx="4" fill="url(#barGradient)" />
+            <rect x="520" y="450" width="40" height="120" rx="4" fill="url(#barGradient)">
+              <animate attributeName="height" values="120;140;120" dur="3s" repeatCount="indefinite" begin="0s" />
+              <animate attributeName="y" values="450;430;450" dur="3s" repeatCount="indefinite" begin="0s" />
+            </rect>
+            <rect x="580" y="380" width="40" height="190" rx="4" fill="url(#barGradient)">
+              <animate attributeName="height" values="190;210;190" dur="3s" repeatCount="indefinite" begin="0.5s" />
+              <animate attributeName="y" values="380;360;380" dur="3s" repeatCount="indefinite" begin="0.5s" />
+            </rect>
+            <rect x="640" y="300" width="40" height="270" rx="4" fill="url(#barGradient)">
+              <animate attributeName="height" values="270;295;270" dur="3s" repeatCount="indefinite" begin="1s" />
+              <animate attributeName="y" values="300;275;300" dur="3s" repeatCount="indefinite" begin="1s" />
+            </rect>
+            <rect x="700" y="220" width="40" height="350" rx="4" fill="url(#barGradient)">
+              <animate attributeName="height" values="350;380;350" dur="3s" repeatCount="indefinite" begin="1.5s" />
+              <animate attributeName="y" values="220;190;220" dur="3s" repeatCount="indefinite" begin="1.5s" />
+            </rect>
           </g>
           
-          {/* Trend line */}
+          {/* Trend line with drawing animation */}
           <path
             d="M 100 500 Q 200 480 300 420 T 500 320 T 700 180"
             stroke="currentColor"
@@ -44,17 +56,33 @@ const Hero = () => {
             fill="none"
             className="text-accent"
             strokeLinecap="round"
-          />
+            strokeDasharray="800"
+            strokeDashoffset="800"
+          >
+            <animate attributeName="stroke-dashoffset" from="800" to="0" dur="2s" fill="freeze" />
+          </path>
           
-          {/* Data points on trend with glow effect */}
+          {/* Data points with pulse animation */}
           <g className="text-accent">
-            <circle cx="100" cy="500" r="10" fill="currentColor" opacity="0.3" />
+            <circle cx="100" cy="500" r="10" fill="currentColor" opacity="0.3">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite" begin="0s" />
+              <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite" begin="0s" />
+            </circle>
             <circle cx="100" cy="500" r="6" fill="currentColor" />
-            <circle cx="300" cy="420" r="10" fill="currentColor" opacity="0.3" />
+            <circle cx="300" cy="420" r="10" fill="currentColor" opacity="0.3">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite" begin="0.5s" />
+              <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite" begin="0.5s" />
+            </circle>
             <circle cx="300" cy="420" r="6" fill="currentColor" />
-            <circle cx="500" cy="320" r="10" fill="currentColor" opacity="0.3" />
+            <circle cx="500" cy="320" r="10" fill="currentColor" opacity="0.3">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite" begin="1s" />
+              <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite" begin="1s" />
+            </circle>
             <circle cx="500" cy="320" r="6" fill="currentColor" />
-            <circle cx="700" cy="180" r="10" fill="currentColor" opacity="0.3" />
+            <circle cx="700" cy="180" r="10" fill="currentColor" opacity="0.3">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite" begin="1.5s" />
+              <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite" begin="1.5s" />
+            </circle>
             <circle cx="700" cy="180" r="6" fill="currentColor" />
           </g>
           
