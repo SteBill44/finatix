@@ -154,6 +154,29 @@ const CourseDetail = () => {
     );
   }
 
+  const getLevelColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "certificate": return "text-orange";
+      case "operational": return "text-primary";
+      case "management": return "text-purple";
+      case "strategic": return "text-red";
+      default: return "text-primary";
+    }
+  };
+
+  const getLevelBgColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "certificate": return "bg-orange";
+      case "operational": return "bg-primary";
+      case "management": return "bg-purple";
+      case "strategic": return "bg-red";
+      default: return "bg-primary";
+    }
+  };
+
+  const levelColor = getLevelColor(course?.level || "");
+  const levelBgColor = getLevelBgColor(course?.level || "");
+
   const features = [
     `${course.duration_hours || 40}+ hours of video content`,
     "500+ practice questions",
@@ -212,7 +235,7 @@ const CourseDetail = () => {
                   <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                     <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4 [&[data-state=open]>div>svg]:rotate-0">
                       <div className="flex items-center gap-3">
-                        <FileText className="w-5 h-5 text-accent" />
+                        <FileText className={`w-5 h-5 ${levelColor}`} />
                         Course Objectives & Syllabus
                       </div>
                     </AccordionTrigger>
@@ -275,7 +298,7 @@ const CourseDetail = () => {
                   </div>
                   <div className="w-full bg-primary-foreground/20 rounded-full h-2">
                     <div 
-                      className="bg-accent h-2 rounded-full transition-all duration-300" 
+                      className={`${levelBgColor} h-2 rounded-full transition-all duration-300`}
                       style={{ width: `${progressPercentage}%` }}
                     />
                   </div>
@@ -330,7 +353,7 @@ const CourseDetail = () => {
                   <ul className="space-y-3">
                     {features.slice(0, 5).map((feature: string, index: number) => (
                       <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <CheckCircle className="w-5 h-5 text-accent flex-shrink-0" />
+                        <CheckCircle className={`w-5 h-5 ${levelColor} flex-shrink-0`} />
                         {feature}
                       </li>
                     ))}
@@ -372,7 +395,7 @@ const CourseDetail = () => {
                         >
                           <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
                             {completed ? (
-                              <CheckCircle className="w-5 h-5 text-accent" />
+                              <CheckCircle className={`w-5 h-5 ${levelColor}`} />
                             ) : (
                               <span className="text-sm font-medium text-muted-foreground">{index + 1}</span>
                             )}
@@ -428,13 +451,13 @@ const CourseDetail = () => {
               {/* All Features */}
               <div className="bg-card rounded-2xl border border-border p-6">
                 <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Award className="w-5 h-5 text-primary" />
+                  <Award className={`w-5 h-5 ${levelColor}`} />
                   All Course Features
                 </h3>
                 <ul className="space-y-3">
                   {features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <CheckCircle className="w-4 h-4 text-accent flex-shrink-0" />
+                      <CheckCircle className={`w-4 h-4 ${levelColor} flex-shrink-0`} />
                       {feature}
                     </li>
                   ))}
