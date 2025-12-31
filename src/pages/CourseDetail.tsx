@@ -21,8 +21,11 @@ import {
   BarChart2,
   ArrowLeft,
   ShoppingCart,
-  Lock
+  Lock,
+  MessageSquare
 } from "lucide-react";
+import CourseReviews from "@/components/CourseReviews";
+import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
   AccordionContent,
@@ -70,6 +73,7 @@ const CourseDetail = () => {
   // Fetch lessons for this course
   const { data: lessons } = useLessons(course?.id);
   const { data: lessonProgress } = useLessonProgress(course?.id);
+  const { data: ratingData } = useCourseRating(course?.id || "");
 
   const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
   const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
@@ -225,7 +229,9 @@ const CourseDetail = () => {
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span>4.8 (312 reviews)</span>
+                  <span>
+                    {ratingData?.averageRating.toFixed(1) || "0.0"} ({ratingData?.totalReviews || 0} reviews)
+                  </span>
                 </div>
               </div>
 
@@ -608,6 +614,15 @@ const CourseDetail = () => {
                     Track your progress across competencies, identify weak areas, and get personalized study recommendations.
                   </p>
                 </div>
+              </div>
+
+              {/* Course Reviews Section */}
+              <div className="bg-card rounded-2xl border border-border p-8">
+                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <MessageSquare className="w-6 h-6 text-primary" />
+                  Student Reviews
+                </h2>
+                <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
               </div>
             </div>
 
