@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield } from "lucide-react";
+import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield, Crown } from "lucide-react";
+import { AppRole } from "@/hooks/useUserRole";
 
 interface UserProfile {
   user_id: string;
@@ -53,7 +54,7 @@ interface Lesson {
 
 interface UserDetailSheetProps {
   userId: string | null;
-  userRole: "admin" | "user" | null;
+  userRole: AppRole | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -220,7 +221,11 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-semibold">{profile.full_name || "Unknown User"}</h3>
                   {userRole && (
-                    <Badge variant={userRole === "admin" ? "default" : "secondary"} className="flex items-center gap-1">
+                    <Badge 
+                      variant={userRole === "master_admin" ? "default" : userRole === "admin" ? "default" : "secondary"} 
+                      className={`flex items-center gap-1 ${userRole === "master_admin" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+                    >
+                      {userRole === "master_admin" && <Crown className="h-3 w-3" />}
                       {userRole === "admin" && <Shield className="h-3 w-3" />}
                       {userRole}
                     </Badge>
