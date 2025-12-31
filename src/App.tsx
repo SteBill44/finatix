@@ -18,6 +18,7 @@ import Auth from "./pages/Auth";
 import Quiz from "./pages/Quiz";
 import Admin from "./pages/Admin";
 import Achievements from "./pages/Achievements";
+import Discussions from "./pages/Discussions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/quiz/:quizId" element={<Quiz />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/achievements" element={<Achievements />} />
+              <Route path="/discussions" element={<Discussions />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
