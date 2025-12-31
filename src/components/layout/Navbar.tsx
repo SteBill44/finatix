@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, User, Shield } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -122,6 +122,12 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/achievements" className="cursor-pointer flex items-center">
+                      <Trophy className="w-4 h-4 mr-2" />
+                      Achievements
+                    </Link>
+                  </DropdownMenuItem>
                   {isAdmin && (
                     <DropdownMenuItem asChild>
                       <Link to="/admin" className="cursor-pointer flex items-center">
@@ -196,6 +202,12 @@ const Navbar = () => {
                     <Link to="/dashboard" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full">
                         Dashboard
+                      </Button>
+                    </Link>
+                    <Link to="/achievements" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Trophy className="w-4 h-4" />
+                        Achievements
                       </Button>
                     </Link>
                     {isAdmin && (
