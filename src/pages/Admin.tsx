@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useIsAdmin } from "@/hooks/useUserRole";
+import { useIsAdmin, useIsMasterAdmin, AppRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 
 interface Course {
@@ -43,7 +43,7 @@ interface Lesson {
 interface UserWithRole {
   user_id: string;
   email: string;
-  role: "admin" | "user" | null;
+  role: AppRole | null;
   created_at: string;
 }
 
@@ -51,6 +51,7 @@ const Admin = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const { isMasterAdmin } = useIsMasterAdmin();
   const { toast } = useToast();
 
   const [courses, setCourses] = useState<Course[]>([]);
@@ -88,11 +89,18 @@ const Admin = () => {
   // User role state
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [newRole, setNewRole] = useState<"admin" | "user">("user");
+  const [newRole, setNewRole] = useState<AppRole>("user");
 
   // User detail sheet state
   const [userDetailOpen, setUserDetailOpen] = useState(false);
-  const [selectedUserForDetail, setSelectedUserForDetail] = useState<{ userId: string; role: "admin" | "user" | null } | null>(null);
+  const [selectedUserForDetail, setSelectedUserForDetail] = useState<{ userId: string; role: AppRole | null } | null>(null);
+
+  // Add role by search state
+  const [addRoleDialogOpen, setAddRoleDialogOpen] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<{ user_id: string; full_name: string | null }[]>([]);
+  const [selectedUserToAdd, setSelectedUserToAdd] = useState<string | null>(null);
+  const [roleToAdd, setRoleToAdd] = useState<AppRole>("admin");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -411,6 +419,45 @@ const Admin = () => {
       toast({ title: "Role removed successfully" });
       fetchUsers();
     }
+  };
+
+  // Search for users by name
+  const handleUserSearch = async (query: string) => {
+    setUserSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("user_id, full_name")
+      .ilike("full_name", `%${query}%`)
+      .limit(10);
+
+    if (!error && data) {
+      setSearchResults(data);
+    }
+  };
+
+  const handleAddRoleBySearch = async () => {
+    if (!selectedUserToAdd) return;
+
+    const { error } = await supabase
+      .from("user_roles")
+      .upsert({ user_id: selectedUserToAdd, role: roleToAdd }, { onConflict: "user_id,role" });
+
+    if (error) {
+      toast({ title: "Error assigning role", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Role assigned successfully" });
+      fetchUsers();
+    }
+
+    setAddRoleDialogOpen(false);
+    setUserSearchQuery("");
+    setSearchResults([]);
+    setSelectedUserToAdd(null);
   };
 
   if (authLoading || roleLoading) {
@@ -760,9 +807,89 @@ const Admin = () => {
           {/* Users Tab */}
           <TabsContent value="users">
             <Card>
-              <CardHeader>
-                <CardTitle>Users & Roles</CardTitle>
-                <CardDescription>Manage user roles and permissions</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Users & Roles</CardTitle>
+                  <CardDescription>Manage user roles and permissions</CardDescription>
+                </div>
+                {isMasterAdmin && (
+                  <Dialog open={addRoleDialogOpen} onOpenChange={(open) => {
+                    setAddRoleDialogOpen(open);
+                    if (!open) {
+                      setUserSearchQuery("");
+                      setSearchResults([]);
+                      setSelectedUserToAdd(null);
+                    }
+                  }}>
+                    <DialogTrigger asChild>
+                      <Button className="flex items-center gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        Assign Role
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-background">
+                      <DialogHeader>
+                        <DialogTitle>Assign Role by Name</DialogTitle>
+                        <DialogDescription>
+                          Search for a user by name and assign them a role.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4 space-y-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="user-search">Search User</Label>
+                          <Input
+                            id="user-search"
+                            value={userSearchQuery}
+                            onChange={(e) => handleUserSearch(e.target.value)}
+                            placeholder="Type a name to search..."
+                          />
+                          {searchResults.length > 0 && (
+                            <div className="border rounded-md max-h-40 overflow-y-auto">
+                              {searchResults.map((result) => (
+                                <div
+                                  key={result.user_id}
+                                  className={`p-2 cursor-pointer hover:bg-muted ${selectedUserToAdd === result.user_id ? "bg-muted" : ""}`}
+                                  onClick={() => setSelectedUserToAdd(result.user_id)}
+                                >
+                                  {result.full_name || "Unknown"}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {selectedUserToAdd && (
+                            <div className="text-sm text-muted-foreground">
+                              Selected: {searchResults.find(r => r.user_id === selectedUserToAdd)?.full_name}
+                            </div>
+                          )}
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="role-to-add">Role</Label>
+                          <Select
+                            value={roleToAdd}
+                            onValueChange={(value: AppRole) => setRoleToAdd(value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover">
+                              <SelectItem value="user">User</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="master_admin">Master Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setAddRoleDialogOpen(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleAddRoleBySearch} disabled={!selectedUserToAdd}>
+                          Assign Role
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </CardHeader>
               <CardContent>
                 {loadingUsers ? (
@@ -797,7 +924,11 @@ const Admin = () => {
                           </TableCell>
                           <TableCell>
                             {userItem.role ? (
-                              <Badge variant={userItem.role === "admin" ? "default" : "secondary"} className="flex items-center gap-1 w-fit">
+                              <Badge 
+                                variant={userItem.role === "master_admin" || userItem.role === "admin" ? "default" : "secondary"} 
+                                className={`flex items-center gap-1 w-fit ${userItem.role === "master_admin" ? "bg-amber-500 hover:bg-amber-600" : ""}`}
+                              >
+                                {userItem.role === "master_admin" && <Crown className="h-3 w-3" />}
                                 {userItem.role === "admin" && <Shield className="h-3 w-3" />}
                                 {userItem.role}
                               </Badge>
@@ -807,64 +938,69 @@ const Admin = () => {
                           </TableCell>
                           <TableCell>{new Date(userItem.created_at).toLocaleDateString()}</TableCell>
                           <TableCell className="text-right">
-                            <Dialog open={roleDialogOpen && selectedUserId === userItem.user_id} onOpenChange={(open) => {
-                              setRoleDialogOpen(open);
-                              if (!open) setSelectedUserId(null);
-                            }}>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedUserId(userItem.user_id);
-                                    setNewRole(userItem.role || "user");
-                                  }}
-                                >
-                                  {userItem.role ? "Change Role" : "Assign Role"}
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent className="bg-background">
-                                <DialogHeader>
-                                  <DialogTitle>Manage Role</DialogTitle>
-                                  <DialogDescription>
-                                    Assign or update the role for this user.
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="py-4">
-                                  <Label htmlFor="role">Role</Label>
-                                  <Select
-                                    value={newRole}
-                                    onValueChange={(value: "admin" | "user") => setNewRole(value)}
+                            {isMasterAdmin && (
+                              <>
+                                <Dialog open={roleDialogOpen && selectedUserId === userItem.user_id} onOpenChange={(open) => {
+                                  setRoleDialogOpen(open);
+                                  if (!open) setSelectedUserId(null);
+                                }}>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedUserId(userItem.user_id);
+                                        setNewRole(userItem.role || "user");
+                                      }}
+                                    >
+                                      {userItem.role ? "Change Role" : "Assign Role"}
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="bg-background">
+                                    <DialogHeader>
+                                      <DialogTitle>Manage Role</DialogTitle>
+                                      <DialogDescription>
+                                        Assign or update the role for this user.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="py-4">
+                                      <Label htmlFor="role">Role</Label>
+                                      <Select
+                                        value={newRole}
+                                        onValueChange={(value: AppRole) => setNewRole(value)}
+                                      >
+                                        <SelectTrigger className="mt-2">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-popover">
+                                          <SelectItem value="user">User</SelectItem>
+                                          <SelectItem value="admin">Admin</SelectItem>
+                                          <SelectItem value="master_admin">Master Admin</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                    <DialogFooter>
+                                      <Button variant="outline" onClick={() => setRoleDialogOpen(false)}>
+                                        Cancel
+                                      </Button>
+                                      <Button onClick={handleAssignRole}>Save</Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                                {userItem.role && (
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleRemoveRole(userItem.user_id);
+                                    }}
                                   >
-                                    <SelectTrigger className="mt-2">
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-popover">
-                                      <SelectItem value="user">User</SelectItem>
-                                      <SelectItem value="admin">Admin</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                                <DialogFooter>
-                                  <Button variant="outline" onClick={() => setRoleDialogOpen(false)}>
-                                    Cancel
+                                    <Trash2 className="h-4 w-4 text-destructive" />
                                   </Button>
-                                  <Button onClick={handleAssignRole}>Save</Button>
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
-                            {userItem.role && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleRemoveRole(userItem.user_id);
-                                }}
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
+                                )}
+                              </>
                             )}
                           </TableCell>
                         </TableRow>
