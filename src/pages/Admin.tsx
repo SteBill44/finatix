@@ -16,7 +16,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye } from "lucide-react";
+import UserDetailSheet from "@/components/admin/UserDetailSheet";
 
 interface Course {
   id: string;
@@ -88,6 +89,10 @@ const Admin = () => {
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [newRole, setNewRole] = useState<"admin" | "user">("user");
+
+  // User detail sheet state
+  const [userDetailOpen, setUserDetailOpen] = useState(false);
+  const [selectedUserForDetail, setSelectedUserForDetail] = useState<{ userId: string; role: "admin" | "user" | null } | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -776,8 +781,20 @@ const Admin = () => {
                     </TableHeader>
                     <TableBody>
                       {users.map((userItem) => (
-                        <TableRow key={userItem.user_id}>
-                          <TableCell className="font-medium">{userItem.email}</TableCell>
+                        <TableRow 
+                          key={userItem.user_id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => {
+                            setSelectedUserForDetail({ userId: userItem.user_id, role: userItem.role });
+                            setUserDetailOpen(true);
+                          }}
+                        >
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <Eye className="h-4 w-4 text-muted-foreground" />
+                              {userItem.email}
+                            </div>
+                          </TableCell>
                           <TableCell>
                             {userItem.role ? (
                               <Badge variant={userItem.role === "admin" ? "default" : "secondary"} className="flex items-center gap-1 w-fit">
@@ -798,7 +815,8 @@ const Admin = () => {
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation();
                                     setSelectedUserId(userItem.user_id);
                                     setNewRole(userItem.role || "user");
                                   }}
@@ -840,7 +858,10 @@ const Admin = () => {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => handleRemoveRole(userItem.user_id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleRemoveRole(userItem.user_id);
+                                }}
                               >
                                 <Trash2 className="h-4 w-4 text-destructive" />
                               </Button>
@@ -855,6 +876,14 @@ const Admin = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* User Detail Sheet */}
+        <UserDetailSheet
+          userId={selectedUserForDetail?.userId || null}
+          userRole={selectedUserForDetail?.role || null}
+          open={userDetailOpen}
+          onOpenChange={setUserDetailOpen}
+        />
       </div>
     </Layout>
   );
