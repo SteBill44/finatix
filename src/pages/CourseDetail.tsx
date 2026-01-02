@@ -637,17 +637,23 @@ const CourseDetail = () => {
                               </span>
                             </div>
                           </div>
-                          <div className="flex gap-3">
+                          <div className="flex flex-wrap gap-2">
                             <Link to={`/quiz/${quiz.id}`}>
                               <Button variant="outline" size="sm" className="gap-2">
                                 <ClipboardList className="w-4 h-4" />
-                                Practice Mode
+                                Practice
                               </Button>
                             </Link>
                             <Link to={`/exam/${quiz.id}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <Timer className="w-4 h-4" />
+                                Quick Exam
+                              </Button>
+                            </Link>
+                            <Link to={`/mock-exam/${quiz.id}`}>
                               <Button size="sm" className="gap-2">
                                 <GraduationCap className="w-4 h-4" />
-                                CIMA Exam Mode
+                                Mock Exam
                               </Button>
                             </Link>
                           </div>
