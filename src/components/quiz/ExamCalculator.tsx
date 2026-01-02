@@ -79,6 +79,77 @@ const ExamCalculator = ({ onClose, initialPosition }: ExamCalculatorProps) => {
     };
   }, [isDragging]);
 
+  // Keyboard event handling
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent default for calculator keys to avoid interfering with page
+      const calculatorKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '+', '-', '*', '/', '=', 'Enter', 'Escape', 'Backspace', 'Delete', 'c', 'C', '%'];
+      
+      if (calculatorKeys.includes(e.key)) {
+        e.preventDefault();
+      }
+
+      // Number keys
+      if (e.key >= '0' && e.key <= '9') {
+        inputDigit(e.key);
+        return;
+      }
+
+      // Decimal point
+      if (e.key === '.') {
+        inputDecimal();
+        return;
+      }
+
+      // Operators
+      switch (e.key) {
+        case '+':
+          performOperation('+');
+          break;
+        case '-':
+          performOperation('-');
+          break;
+        case '*':
+          performOperation('×');
+          break;
+        case '/':
+          performOperation('÷');
+          break;
+        case '^':
+          performOperation('^');
+          break;
+        case '=':
+        case 'Enter':
+          handleEquals();
+          break;
+        case 'Escape':
+          onClose();
+          break;
+        case 'Backspace':
+          handleBackspace();
+          break;
+        case 'Delete':
+        case 'c':
+        case 'C':
+          clear();
+          break;
+        case '%':
+          inputPercent();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  });
+
+  const handleBackspace = () => {
+    if (display.length === 1 || (display.length === 2 && display.startsWith('-'))) {
+      setDisplay('0');
+    } else {
+      setDisplay(display.slice(0, -1));
+    }
+  };
   const handleDragStart = (e: React.MouseEvent) => {
     e.preventDefault();
     const rect = cardRef.current?.getBoundingClientRect();
