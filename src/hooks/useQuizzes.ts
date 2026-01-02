@@ -51,9 +51,9 @@ export interface QuizQuestion {
   order_index: number;
 }
 
-export const useQuizzes = (courseId?: string) => {
+export const useQuizzes = (courseId?: string, lessonId?: string) => {
   return useQuery({
-    queryKey: ["quizzes", courseId],
+    queryKey: ["quizzes", courseId, lessonId],
     queryFn: async () => {
       let query = supabase
         .from("quizzes")
@@ -64,10 +64,45 @@ export const useQuizzes = (courseId?: string) => {
         query = query.eq("course_id", courseId);
       }
 
+      if (lessonId) {
+        query = query.eq("lesson_id", lessonId);
+      }
+
       const { data, error } = await query;
       if (error) throw error;
-      return data as Quiz[];
+      return data as (Quiz & { lesson_id?: string })[];
     },
+  });
+};
+
+export const useLessonQuizAttempts = (lessonId?: string) => {
+  return useQuery({
+    queryKey: ["lesson_quiz_attempts", lessonId],
+    queryFn: async () => {
+      if (!lessonId) return [];
+      
+      // First get quizzes for this lesson
+      const { data: quizzes, error: quizzesError } = await supabase
+        .from("quizzes")
+        .select("id")
+        .eq("lesson_id", lessonId);
+
+      if (quizzesError) throw quizzesError;
+      if (!quizzes || quizzes.length === 0) return [];
+
+      const quizIds = quizzes.map(q => q.id);
+
+      // Then get attempts for those quizzes
+      const { data: attempts, error: attemptsError } = await supabase
+        .from("quiz_attempts")
+        .select("*, quizzes(title)")
+        .in("quiz_id", quizIds)
+        .order("attempted_at", { ascending: false });
+
+      if (attemptsError) throw attemptsError;
+      return attempts || [];
+    },
+    enabled: !!lessonId,
   });
 };
 
