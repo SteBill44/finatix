@@ -120,18 +120,18 @@ const CourseDetail = () => {
   const getSyllabusAreas = (slug: string) => {
     if (slug === "ba1-business-economics") {
       return [
-        { subject: "A: Macroeconomic (25%)", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Microeconomic (30%)", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Informational (20%)", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
-        { subject: "D: Financial (25%)", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+        { subject: "A: Macroeconomic", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Microeconomic", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Informational", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
+        { subject: "D: Financial", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
       ];
     }
     if (slug === "ba2-management-accounting") {
       return [
-        { subject: "A: Nature of MA (10%)", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "B: Cost Accounting (30%)", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Budgeting (25%)", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Performance (35%)", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
+        { subject: "A: Nature of MA", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "B: Cost Accounting", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Budgeting", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Performance", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
       ];
     }
     // Default fallback for other courses
