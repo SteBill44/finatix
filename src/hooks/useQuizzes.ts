@@ -10,12 +10,43 @@ export interface Quiz {
   created_at: string;
 }
 
+export type QuestionType = 'multiple_choice' | 'multiple_response' | 'number_entry' | 'hotspot' | 'drag_drop';
+
+export interface HotspotRegion {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isCorrect: boolean;
+}
+
+export interface DragItem {
+  id: string;
+  text: string;
+  correctPosition?: number;
+  matchTarget?: string;
+}
+
+export interface DragTarget {
+  id: string;
+  text: string;
+}
+
 export interface QuizQuestion {
   id: string;
   quiz_id: string;
   question: string;
+  question_type: QuestionType;
   options: string[];
   correct_answer: number;
+  correct_answers?: number[];
+  number_answer?: number;
+  number_tolerance?: number;
+  image_url?: string;
+  hotspot_regions?: HotspotRegion[];
+  drag_items?: DragItem[];
+  drag_targets?: DragTarget[];
   explanation: string | null;
   order_index: number;
 }
@@ -55,8 +86,16 @@ export const useQuizQuestions = (quizId: string, includeAnswers: boolean = false
         id: q.id,
         quiz_id: q.quiz_id,
         question: q.question,
+        question_type: q.question_type || 'multiple_choice',
         options: q.options as string[],
         correct_answer: q.correct_answer,
+        correct_answers: q.correct_answers,
+        number_answer: q.number_answer,
+        number_tolerance: q.number_tolerance,
+        image_url: q.image_url,
+        hotspot_regions: q.hotspot_regions,
+        drag_items: q.drag_items,
+        drag_targets: q.drag_targets,
         explanation: q.explanation,
         order_index: q.order_index,
       })) as QuizQuestion[];

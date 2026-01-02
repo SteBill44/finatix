@@ -4,10 +4,11 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useQuizWithQuestions } from "@/hooks/useQuizzes";
+import { useQuizWithQuestions, QuizQuestion } from "@/hooks/useQuizzes";
 import { useRecordQuizAttempt } from "@/hooks/useStudentProgress";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import QuestionRenderer, { Answer, isAnswerCorrect } from "@/components/quiz/QuestionRenderer";
 import {
   CheckCircle,
   XCircle,
@@ -27,7 +28,7 @@ const Quiz = () => {
   const recordAttempt = useRecordQuizAttempt();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, Answer>>({});
   const [showResults, setShowResults] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -67,18 +68,18 @@ const Quiz = () => {
   const calculateScore = () => {
     let correct = 0;
     questions.forEach((q, index) => {
-      if (selectedAnswers[index] === q.correct_answer) {
+      if (isAnswerCorrect(q as any, selectedAnswers[index])) {
         correct++;
       }
     });
     return correct;
   };
 
-  const handleSelectAnswer = (optionIndex: number) => {
+  const handleAnswerChange = (answer: Answer) => {
     if (submitted) return;
     setSelectedAnswers((prev) => ({
       ...prev,
-      [currentQuestion]: optionIndex,
+      [currentQuestion]: answer,
     }));
   };
 
@@ -129,6 +130,47 @@ const Quiz = () => {
   const score = calculateScore();
   const percentage = Math.round((score / questions.length) * 100);
 
+  // Helper to render result for each question type
+  const renderQuestionResult = (q: QuizQuestion, index: number) => {
+    const userAnswer = selectedAnswers[index];
+    const correct = isAnswerCorrect(q as any, userAnswer);
+
+    return (
+      <Card key={q.id} className="p-6">
+        <div className="flex items-start gap-3 mb-4">
+          {correct ? (
+            <CheckCircle className="w-6 h-6 text-accent flex-shrink-0" />
+          ) : (
+            <XCircle className="w-6 h-6 text-destructive flex-shrink-0" />
+          )}
+          <div className="flex-1">
+            <p className="font-medium text-foreground mb-1">
+              {index + 1}. {q.question}
+            </p>
+            <span className="text-xs text-muted-foreground capitalize">
+              {q.question_type.replace('_', ' ')}
+            </span>
+          </div>
+        </div>
+        <div className="ml-9">
+          <QuestionRenderer
+            question={q as any}
+            answer={userAnswer}
+            onAnswerChange={() => {}}
+            showResult={true}
+            isCorrect={correct}
+            disabled={true}
+          />
+          {q.explanation && (
+            <p className="text-sm text-muted-foreground mt-4 p-3 bg-secondary/30 rounded-lg">
+              <strong>Explanation:</strong> {q.explanation}
+            </p>
+          )}
+        </div>
+      </Card>
+    );
+  };
+
   if (showResults) {
     return (
       <Layout>
@@ -178,54 +220,7 @@ const Quiz = () => {
 
             <h3 className="text-xl font-semibold text-foreground mb-4">Review Answers</h3>
             <div className="space-y-4">
-              {questions.map((q, index) => {
-                const userAnswer = selectedAnswers[index];
-                const isCorrect = userAnswer === q.correct_answer;
-                return (
-                  <Card key={q.id} className="p-6">
-                    <div className="flex items-start gap-3 mb-4">
-                      {isCorrect ? (
-                        <CheckCircle className="w-6 h-6 text-accent flex-shrink-0" />
-                      ) : (
-                        <XCircle className="w-6 h-6 text-destructive flex-shrink-0" />
-                      )}
-                      <div>
-                        <p className="font-medium text-foreground">
-                          {index + 1}. {q.question}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="space-y-2 ml-9">
-                      {q.options.map((option, optIndex) => (
-                        <div
-                          key={optIndex}
-                          className={cn(
-                            "p-3 rounded-lg text-sm",
-                            optIndex === q.correct_answer
-                              ? "bg-accent/10 text-accent border border-accent/20"
-                              : optIndex === userAnswer && !isCorrect
-                              ? "bg-destructive/10 text-destructive border border-destructive/20"
-                              : "bg-secondary/50 text-muted-foreground"
-                          )}
-                        >
-                          {option}
-                          {optIndex === q.correct_answer && (
-                            <span className="ml-2 text-xs font-medium">(Correct)</span>
-                          )}
-                          {optIndex === userAnswer && optIndex !== q.correct_answer && (
-                            <span className="ml-2 text-xs font-medium">(Your answer)</span>
-                          )}
-                        </div>
-                      ))}
-                      {q.explanation && (
-                        <p className="text-sm text-muted-foreground mt-3 p-3 bg-secondary/30 rounded-lg">
-                          <strong>Explanation:</strong> {q.explanation}
-                        </p>
-                      )}
-                    </div>
-                  </Card>
-                );
-              })}
+              {questions.map((q, index) => renderQuestionResult(q, index))}
             </div>
           </div>
         </section>
@@ -281,39 +276,22 @@ const Quiz = () => {
 
           {/* Question Card */}
           <Card className="p-8 mb-8">
-            <h2 className="text-xl font-semibold text-foreground mb-6">
-              {question.question}
-            </h2>
-
-            <div className="space-y-3">
-              {question.options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSelectAnswer(index)}
-                  disabled={submitted}
-                  className={cn(
-                    "w-full p-4 text-left rounded-xl border-2 transition-all",
-                    selectedAnswers[currentQuestion] === index
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50 hover:bg-secondary/50"
-                  )}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={cn(
-                        "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium border-2",
-                        selectedAnswers[currentQuestion] === index
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-muted-foreground/30 text-muted-foreground"
-                      )}
-                    >
-                      {String.fromCharCode(65 + index)}
-                    </div>
-                    <span className="text-foreground">{option}</span>
-                  </div>
-                </button>
-              ))}
+            <div className="flex items-start justify-between mb-2">
+              <h2 className="text-xl font-semibold text-foreground">
+                {question.question}
+              </h2>
             </div>
+            <p className="text-xs text-muted-foreground mb-6 capitalize">
+              {question.question_type.replace('_', ' ')}
+            </p>
+
+            <QuestionRenderer
+              question={question as any}
+              answer={selectedAnswers[currentQuestion] ?? null}
+              onAnswerChange={handleAnswerChange}
+              showResult={false}
+              disabled={submitted}
+            />
           </Card>
 
           {/* Navigation */}
@@ -328,7 +306,7 @@ const Quiz = () => {
               Previous
             </Button>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap justify-center">
               {questions.map((_, index) => (
                 <button
                   key={index}
