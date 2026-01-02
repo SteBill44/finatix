@@ -47,6 +47,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "HOME", path: "/" },
     { name: "EXPLORE COURSES", path: "/courses" },
+    ...(user ? [{ name: "DASHBOARD", path: "/dashboard" }] : []),
     { name: "PRICING", path: "/pricing" },
     { name: "CONTACT", path: "/contact" },
   ];
