@@ -26,6 +26,7 @@ export interface LessonProgress {
 export interface QuizAttempt {
   id: string;
   course_id: string;
+  quiz_id?: string;
   score: number;
   max_score: number;
   attempted_at: string;
@@ -460,7 +461,7 @@ export const useRecordQuizAttempt = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ courseId, score, maxScore }: { courseId: string; score: number; maxScore: number }) => {
+    mutationFn: async ({ courseId, quizId, score, maxScore }: { courseId: string; quizId?: string; score: number; maxScore: number }) => {
       if (!user) throw new Error("Must be logged in");
       
       const { data, error } = await supabase
@@ -468,6 +469,7 @@ export const useRecordQuizAttempt = () => {
         .insert({
           user_id: user.id,
           course_id: courseId,
+          quiz_id: quizId || null,
           score,
           max_score: maxScore,
         })
@@ -479,6 +481,7 @@ export const useRecordQuizAttempt = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quiz_attempts"] });
+      queryClient.invalidateQueries({ queryKey: ["lesson_quiz_attempts"] });
     },
   });
 };
