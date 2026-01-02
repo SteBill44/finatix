@@ -33,6 +33,7 @@ import {
   Brain,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
+import CourseSideNav from "@/components/course/CourseSideNav";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
@@ -420,14 +421,16 @@ const CourseDetail = () => {
               )}
             </div>
 
-            {/* Pricing Card */}
+            {/* Pricing Card - Hide price when enrolled */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-4xl font-bold text-foreground">
-                    {Number(course.price ?? 0) === 0 ? "Free" : `£${Number(course.price).toFixed(0)}`}
-                  </span>
-                </div>
+                {!isEnrolled && (
+                  <div className="flex items-baseline gap-3 mb-6">
+                    <span className="text-4xl font-bold text-foreground">
+                      {Number(course.price ?? 0) === 0 ? "Free" : `£${Number(course.price).toFixed(0)}`}
+                    </span>
+                  </div>
+                )}
 
                 {isEnrolled ? (
                   <>
@@ -804,6 +807,15 @@ const CourseDetail = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
+              {/* Course Content Navigation */}
+              <CourseSideNav
+                courseId={course.id}
+                lessons={lessons || []}
+                quizzes={quizzes || []}
+                lessonProgress={lessonProgress}
+                levelColor={levelColor}
+              />
+
               {/* All Features */}
               <div className="bg-card rounded-2xl border border-border p-6">
                 <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
