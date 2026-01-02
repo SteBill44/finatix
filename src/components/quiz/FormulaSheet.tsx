@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, GripHorizontal, BookOpen } from "lucide-react";
+import { X, GripHorizontal, BookOpen, Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FormulaSheetProps {
@@ -12,42 +12,71 @@ interface FormulaSheetProps {
 }
 
 const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
-  const [position, setPosition] = useState({ x: window.innerWidth - 420, y: 80 });
+  const [position, setPosition] = useState({ x: window.innerWidth - 520, y: 80 });
+  const [size, setSize] = useState({ width: 500, height: 500 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const dragOffset = useRef({ x: 0, y: 0 });
+  const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
+  const prevState = useRef({ position: { x: 0, y: 0 }, size: { width: 500, height: 500 } });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      const newX = e.clientX - dragOffset.current.x;
-      const newY = e.clientY - dragOffset.current.y;
-      const maxX = window.innerWidth - (cardRef.current?.offsetWidth || 400);
-      const maxY = window.innerHeight - (cardRef.current?.offsetHeight || 500);
-      setPosition({
-        x: Math.max(0, Math.min(newX, maxX)),
-        y: Math.max(0, Math.min(newY, maxY)),
-      });
+      if (isDragging && !isMaximized) {
+        const newX = e.clientX - dragOffset.current.x;
+        const newY = e.clientY - dragOffset.current.y;
+        const maxX = window.innerWidth - size.width;
+        const maxY = window.innerHeight - size.height;
+        setPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY)),
+        });
+      }
+      if (isResizing) {
+        const deltaX = e.clientX - resizeStart.current.x;
+        const deltaY = e.clientY - resizeStart.current.y;
+        setSize({
+          width: Math.max(350, Math.min(resizeStart.current.width + deltaX, window.innerWidth - position.x)),
+          height: Math.max(300, Math.min(resizeStart.current.height + deltaY, window.innerHeight - position.y)),
+        });
+      }
     };
 
-    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+    };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging) return;
       const touch = e.touches[0];
-      const newX = touch.clientX - dragOffset.current.x;
-      const newY = touch.clientY - dragOffset.current.y;
-      const maxX = window.innerWidth - (cardRef.current?.offsetWidth || 400);
-      const maxY = window.innerHeight - (cardRef.current?.offsetHeight || 500);
-      setPosition({
-        x: Math.max(0, Math.min(newX, maxX)),
-        y: Math.max(0, Math.min(newY, maxY)),
-      });
+      if (isDragging && !isMaximized) {
+        const newX = touch.clientX - dragOffset.current.x;
+        const newY = touch.clientY - dragOffset.current.y;
+        const maxX = window.innerWidth - size.width;
+        const maxY = window.innerHeight - size.height;
+        setPosition({
+          x: Math.max(0, Math.min(newX, maxX)),
+          y: Math.max(0, Math.min(newY, maxY)),
+        });
+      }
+      if (isResizing) {
+        const deltaX = touch.clientX - resizeStart.current.x;
+        const deltaY = touch.clientY - resizeStart.current.y;
+        setSize({
+          width: Math.max(350, Math.min(resizeStart.current.width + deltaX, window.innerWidth - position.x)),
+          height: Math.max(300, Math.min(resizeStart.current.height + deltaY, window.innerHeight - position.y)),
+        });
+      }
     };
 
-    const handleTouchEnd = () => setIsDragging(false);
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+    };
 
-    if (isDragging) {
+    if (isDragging || isResizing) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
       document.addEventListener("touchmove", handleTouchMove);
@@ -60,9 +89,10 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDragging]);
+  }, [isDragging, isResizing, size.width, size.height, position.x, position.y, isMaximized]);
 
   const handleDragStart = (e: React.MouseEvent) => {
+    if (isMaximized) return;
     e.preventDefault();
     const rect = cardRef.current?.getBoundingClientRect();
     if (rect) {
@@ -72,12 +102,39 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (isMaximized) return;
     const touch = e.touches[0];
     const rect = cardRef.current?.getBoundingClientRect();
     if (rect) {
       dragOffset.current = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
     }
     setIsDragging(true);
+  };
+
+  const handleResizeStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resizeStart.current = { x: e.clientX, y: e.clientY, width: size.width, height: size.height };
+    setIsResizing(true);
+  };
+
+  const handleResizeTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
+    const touch = e.touches[0];
+    resizeStart.current = { x: touch.clientX, y: touch.clientY, width: size.width, height: size.height };
+    setIsResizing(true);
+  };
+
+  const toggleMaximize = () => {
+    if (isMaximized) {
+      setPosition(prevState.current.position);
+      setSize(prevState.current.size);
+    } else {
+      prevState.current = { position, size };
+      setPosition({ x: 10, y: 70 });
+      setSize({ width: window.innerWidth - 20, height: window.innerHeight - 80 });
+    }
+    setIsMaximized(!isMaximized);
   };
 
   // Check if this exam level has formulae
@@ -116,12 +173,20 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
   return (
     <Card
       ref={cardRef}
-      className="w-[400px] shadow-2xl border-2 border-border bg-card fixed z-50"
-      style={{ left: position.x, top: position.y }}
+      className="shadow-2xl border-2 border-border bg-card fixed z-50 flex flex-col"
+      style={{ 
+        left: position.x, 
+        top: position.y,
+        width: size.width,
+        height: size.height,
+      }}
     >
       {/* Draggable Header */}
       <div
-        className="flex items-center justify-between p-3 border-b border-border cursor-grab active:cursor-grabbing select-none"
+        className={cn(
+          "flex items-center justify-between p-3 border-b border-border select-none flex-shrink-0",
+          !isMaximized && "cursor-grab active:cursor-grabbing"
+        )}
         onMouseDown={handleDragStart}
         onTouchStart={handleTouchStart}
       >
@@ -129,19 +194,30 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
           <GripHorizontal className="w-4 h-4 text-muted-foreground" />
           <h3 className="font-semibold text-foreground text-sm">{examLevel} Formula Sheet</h3>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-6 w-6"
-          onClick={onClose}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <X className="w-3 h-3" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={toggleMaximize}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            {isMaximized ? <Minimize2 className="w-3 h-3" /> : <Maximize2 className="w-3 h-3" />}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={onClose}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <X className="w-3 h-3" />
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="formulae" className="w-full">
-        <TabsList className="w-full rounded-none border-b">
+      <Tabs defaultValue="formulae" className="flex-1 flex flex-col min-h-0">
+        <TabsList className="w-full rounded-none border-b flex-shrink-0">
           <TabsTrigger value="formulae" className="flex-1">Formulae</TabsTrigger>
           <TabsTrigger value="pv" className="flex-1">PV Table</TabsTrigger>
           <TabsTrigger value="cpv" className="flex-1">Cumulative PV</TabsTrigger>
@@ -150,8 +226,8 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
           )}
         </TabsList>
 
-        <ScrollArea className="h-[400px]">
-          <TabsContent value="formulae" className="p-4 mt-0">
+        <div className="flex-1 overflow-auto p-4">
+          <TabsContent value="formulae" className="mt-0 h-full">
             {examLevel === "BA1" && <BA1Formulae />}
             {examLevel === "BA2" && <BA2Formulae />}
             {examLevel === "P1" && <P1Formulae />}
@@ -161,23 +237,39 @@ const FormulaSheet = ({ onClose, examLevel }: FormulaSheetProps) => {
             {examLevel === "P3" && <P3Formulae />}
           </TabsContent>
 
-          <TabsContent value="pv" className="p-4 mt-0">
+          <TabsContent value="pv" className="mt-0 h-full">
             <PresentValueTable />
           </TabsContent>
 
-          <TabsContent value="cpv" className="p-4 mt-0">
+          <TabsContent value="cpv" className="mt-0 h-full">
             <CumulativePVTable />
           </TabsContent>
 
-          <TabsContent value="normal" className="p-4 mt-0">
+          <TabsContent value="normal" className="mt-0 h-full">
             <NormalDistributionTable />
           </TabsContent>
-        </ScrollArea>
+        </div>
       </Tabs>
+
+      {/* Resize Handle */}
+      {!isMaximized && (
+        <div
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+          onMouseDown={handleResizeStart}
+          onTouchStart={handleResizeTouchStart}
+        >
+          <svg
+            className="w-4 h-4 text-muted-foreground"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M22 22H20V20H22V22ZM22 18H20V16H22V18ZM18 22H16V20H18V22ZM22 14H20V12H22V14ZM18 18H16V16H18V18ZM14 22H12V20H14V22Z" />
+          </svg>
+        </div>
+      )}
     </Card>
   );
 };
-
 // BA1 Formulae
 const BA1Formulae = () => (
   <div className="space-y-4 text-sm">
