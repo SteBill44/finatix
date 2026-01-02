@@ -189,18 +189,18 @@ const CourseDetail = () => {
       // Extract clean title - remove existing "A:", "B:" prefix if present
       let cleanTitle = area.title.replace(/^[A-Z]:\s*/, '').trim();
       
-      // Create short label for chart axis
-      const words = cleanTitle.split(/\s+/);
-      let shortTitle: string;
+      // Create meaningful short label - filter out common words and take key terms
+      const stopWords = ['the', 'of', 'and', 'in', 'to', 'for', 'a', 'an', 'context'];
+      const words = cleanTitle.split(/\s+/).filter(w => !stopWords.includes(w.toLowerCase()));
       
-      if (words.length >= 3) {
-        // Take first word only for long titles
-        shortTitle = words[0].length > 10 ? words[0].substring(0, 10) : words[0];
-      } else if (words.length === 2) {
-        // Two words - abbreviate each
-        shortTitle = words.map(w => w.substring(0, 5)).join(" ");
+      // Take the most meaningful word(s)
+      let shortTitle: string;
+      if (words.length >= 1) {
+        // Take first significant word, capitalize properly
+        const mainWord = words[0];
+        shortTitle = mainWord.length > 12 ? mainWord.substring(0, 10) + "." : mainWord;
       } else {
-        shortTitle = cleanTitle.length > 12 ? cleanTitle.substring(0, 12) : cleanTitle;
+        shortTitle = `Area ${String.fromCharCode(65 + index)}`;
       }
       
       return {
@@ -677,55 +677,57 @@ const CourseDetail = () => {
                   </h2>
                   <div className="grid lg:grid-cols-5 gap-6">
                     {/* Course Competency Radar - Prominent Left Side */}
-                    <Card className="p-6 lg:col-span-3">
+                    <Card className="p-4 lg:col-span-3 flex flex-col">
                       <div className="flex items-center gap-2 mb-2">
                         <Target className="w-5 h-5 text-primary" />
                         <h3 className="font-semibold text-foreground text-lg">Course Competency</h3>
                       </div>
                       {competencyData && competencyData.length > 0 ? (
-                        <ChartContainer
-                          config={{
-                            competency: {
-                              label: "Competency %",
-                              color: "hsl(var(--primary))",
-                            },
-                          }}
-                          className="h-[340px]"
-                        >
-                          <RadarChart
-                            data={competencyData}
-                            margin={{ top: 30, right: 60, bottom: 30, left: 60 }}
+                        <div className="flex-1 min-h-[300px]">
+                          <ChartContainer
+                            config={{
+                              competency: {
+                                label: "Competency %",
+                                color: "hsl(var(--primary))",
+                              },
+                            }}
+                            className="w-full h-full"
                           >
-                            <PolarGrid />
-                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: "hsl(var(--foreground))" }} />
-                            <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
-                            <ChartTooltip 
-                              content={({ active, payload }) => {
-                                if (active && payload?.length) {
-                                  const data = payload[0].payload;
-                                  return (
-                                    <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
-                                      <p className="font-medium text-foreground text-sm">{data.fullTitle}</p>
-                                      <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
-                                      <p className="text-primary text-sm font-semibold mt-1">{data.value}% competency</p>
-                                    </div>
-                                  );
-                                }
-                                return null;
-                              }}
-                            />
-                            <Radar
-                              name="Competency"
-                              dataKey="value"
-                              stroke="hsl(var(--primary))"
-                              fill="hsl(var(--primary))"
-                              fillOpacity={0.4}
-                              strokeWidth={2}
-                            />
-                          </RadarChart>
-                        </ChartContainer>
+                            <RadarChart
+                              data={competencyData}
+                              margin={{ top: 20, right: 40, bottom: 20, left: 40 }}
+                            >
+                              <PolarGrid />
+                              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12, fill: "hsl(var(--foreground))" }} />
+                              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
+                              <ChartTooltip 
+                                content={({ active, payload }) => {
+                                  if (active && payload?.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                      <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
+                                        <p className="font-medium text-foreground text-sm">{data.fullTitle}</p>
+                                        <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
+                                        <p className="text-primary text-sm font-semibold mt-1">{data.value}% competency</p>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                }}
+                              />
+                              <Radar
+                                name="Competency"
+                                dataKey="value"
+                                stroke="hsl(var(--primary))"
+                                fill="hsl(var(--primary))"
+                                fillOpacity={0.4}
+                                strokeWidth={2}
+                              />
+                            </RadarChart>
+                          </ChartContainer>
+                        </div>
                       ) : (
-                        <div className="h-[340px] flex items-center justify-center text-muted-foreground text-sm">
+                        <div className="flex-1 min-h-[300px] flex items-center justify-center text-muted-foreground text-sm">
                           Complete quizzes to see course competency
                         </div>
                       )}
