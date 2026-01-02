@@ -606,6 +606,7 @@ export type Database = {
           course_id: string
           id: string
           max_score: number
+          quiz_id: string | null
           score: number
           user_id: string
         }
@@ -614,6 +615,7 @@ export type Database = {
           course_id: string
           id?: string
           max_score: number
+          quiz_id?: string | null
           score: number
           user_id: string
         }
@@ -622,6 +624,7 @@ export type Database = {
           course_id?: string
           id?: string
           max_score?: number
+          quiz_id?: string | null
           score?: number
           user_id?: string
         }
@@ -631,6 +634,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_attempts_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
             referencedColumns: ["id"]
           },
         ]
@@ -706,6 +716,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          lesson_id: string | null
           order_index: number
           title: string
         }
@@ -714,6 +725,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lesson_id?: string | null
           order_index?: number
           title: string
         }
@@ -722,6 +734,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lesson_id?: string | null
           order_index?: number
           title?: string
         }
@@ -731,6 +744,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quizzes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
             referencedColumns: ["id"]
           },
         ]
