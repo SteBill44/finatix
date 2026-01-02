@@ -16,10 +16,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
+import SyllabusManagement from "@/components/admin/SyllabusManagement";
 
 interface Course {
   id: string;
@@ -485,10 +486,14 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-4">
+          <TabsList className="grid w-full max-w-3xl grid-cols-5">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
+            </TabsTrigger>
+            <TabsTrigger value="syllabus" className="flex items-center gap-2">
+              <ScrollText className="h-4 w-4" />
+              Syllabus
             </TabsTrigger>
             <TabsTrigger value="questions" className="flex items-center gap-2">
               <ClipboardList className="h-4 w-4" />
@@ -503,6 +508,11 @@ const Admin = () => {
               Users
             </TabsTrigger>
           </TabsList>
+
+          {/* Syllabus Tab */}
+          <TabsContent value="syllabus">
+            <SyllabusManagement />
+          </TabsContent>
 
           {/* Questions Tab */}
           <TabsContent value="questions">
