@@ -447,11 +447,9 @@ const ExamMode = () => {
         )}
       </div>
 
-      {/* Calculator Modal - positioned on left to avoid navigator overlap */}
+      {/* Calculator - now self-positioned and draggable */}
       {showCalculator && (
-        <div className="fixed bottom-20 left-4 z-50">
-          <ExamCalculator onClose={() => setShowCalculator(false)} />
-        </div>
+        <ExamCalculator onClose={() => setShowCalculator(false)} />
       )}
 
       {/* Submit Confirmation Dialog */}

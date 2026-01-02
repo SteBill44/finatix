@@ -1,20 +1,107 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, GripHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ExamCalculatorProps {
   onClose: () => void;
+  initialPosition?: { x: number; y: number };
 }
 
-const ExamCalculator = ({ onClose }: ExamCalculatorProps) => {
+const ExamCalculator = ({ onClose, initialPosition }: ExamCalculatorProps) => {
   const [display, setDisplay] = useState("0");
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [isRadians, setIsRadians] = useState(true);
   const [memory, setMemory] = useState<number>(0);
+  
+  // Dragging state
+  const [position, setPosition] = useState(initialPosition || { x: 16, y: window.innerHeight - 500 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragOffset = useRef({ x: 0, y: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      
+      const newX = e.clientX - dragOffset.current.x;
+      const newY = e.clientY - dragOffset.current.y;
+      
+      // Keep within viewport bounds
+      const maxX = window.innerWidth - (cardRef.current?.offsetWidth || 320);
+      const maxY = window.innerHeight - (cardRef.current?.offsetHeight || 500);
+      
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY)),
+      });
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+      
+      const touch = e.touches[0];
+      const newX = touch.clientX - dragOffset.current.x;
+      const newY = touch.clientY - dragOffset.current.y;
+      
+      const maxX = window.innerWidth - (cardRef.current?.offsetWidth || 320);
+      const maxY = window.innerHeight - (cardRef.current?.offsetHeight || 500);
+      
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY)),
+      });
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchmove", handleTouchMove);
+      document.addEventListener("touchend", handleTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [isDragging]);
+
+  const handleDragStart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (rect) {
+      dragOffset.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    }
+    setIsDragging(true);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (rect) {
+      dragOffset.current = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+      };
+    }
+    setIsDragging(true);
+  };
 
   const inputDigit = (digit: string) => {
     if (waitingForOperand) {
@@ -212,11 +299,32 @@ const ExamCalculator = ({ onClose }: ExamCalculatorProps) => {
   const btnScientific = cn(btnBase, "text-xs");
 
   return (
-    <Card className="w-80 p-3 shadow-2xl border-2 border-border bg-card">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="font-semibold text-foreground text-sm">Scientific Calculator</h3>
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
+    <Card 
+      ref={cardRef}
+      className="w-80 p-3 shadow-2xl border-2 border-border bg-card fixed z-50"
+      style={{ 
+        left: position.x, 
+        top: position.y,
+        cursor: isDragging ? "grabbing" : "default",
+      }}
+    >
+      {/* Draggable Header */}
+      <div 
+        className="flex items-center justify-between mb-2 cursor-grab active:cursor-grabbing select-none"
+        onMouseDown={handleDragStart}
+        onTouchStart={handleTouchStart}
+      >
+        <div className="flex items-center gap-2">
+          <GripHorizontal className="w-4 h-4 text-muted-foreground" />
+          <h3 className="font-semibold text-foreground text-sm">Scientific Calculator</h3>
+        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-6 w-6" 
+          onClick={onClose}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
           <X className="w-3 h-3" />
         </Button>
       </div>
