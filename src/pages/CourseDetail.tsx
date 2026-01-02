@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
+import { useQuizzes } from "@/hooks/useQuizzes";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
@@ -22,7 +23,10 @@ import {
   ArrowLeft,
   ShoppingCart,
   Lock,
-  MessageSquare
+  MessageSquare,
+  GraduationCap,
+  Timer,
+  ClipboardList,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
 import { useCourseRating } from "@/hooks/useReviews";
@@ -73,6 +77,7 @@ const CourseDetail = () => {
   // Fetch lessons for this course
   const { data: lessons } = useLessons(course?.id);
   const { data: lessonProgress } = useLessonProgress(course?.id);
+  const { data: quizzes } = useQuizzes(course?.id);
   const { data: ratingData } = useCourseRating(course?.id || "");
 
   const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
@@ -598,7 +603,61 @@ const CourseDetail = () => {
                 </div>
               </div>
 
-              {/* Analytics Preview */}
+              {/* Quizzes Section */}
+              {quizzes && quizzes.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <GraduationCap className="w-6 h-6 text-primary" />
+                    Practice Quizzes & Exams
+                  </h2>
+                  <div className="space-y-4">
+                    {quizzes.map((quiz) => (
+                      <div
+                        key={quiz.id}
+                        className="bg-card rounded-xl border border-border p-6 hover:border-primary/50 transition-colors"
+                      >
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-foreground text-lg mb-1">
+                              {quiz.title}
+                            </h3>
+                            {quiz.description && (
+                              <p className="text-sm text-muted-foreground mb-3">
+                                {quiz.description}
+                              </p>
+                            )}
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <ClipboardList className="w-3.5 h-3.5" />
+                                Multiple choice
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Timer className="w-3.5 h-3.5" />
+                                Timed exam available
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex gap-3">
+                            <Link to={`/quiz/${quiz.id}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <ClipboardList className="w-4 h-4" />
+                                Practice Mode
+                              </Button>
+                            </Link>
+                            <Link to={`/exam/${quiz.id}`}>
+                              <Button size="sm" className="gap-2">
+                                <GraduationCap className="w-4 h-4" />
+                                CIMA Exam Mode
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="bg-card rounded-2xl border border-border p-8">
                 <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                   <BarChart2 className="w-6 h-6 text-primary" />
