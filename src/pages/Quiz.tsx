@@ -239,13 +239,20 @@ const Quiz = () => {
       <section className="relative py-8 lg:py-12 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="container mx-auto px-4 relative z-10">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground mb-4"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </Link>
+            <Link to={`/exam/${quizId}`}>
+              <Button variant="secondary" size="sm" className="gap-2">
+                🎓 CIMA Exam Mode
+              </Button>
+            </Link>
+          </div>
           <h1 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
             {quiz.title}
           </h1>
