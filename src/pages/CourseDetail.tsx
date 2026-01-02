@@ -521,7 +521,474 @@ const CourseDetail = () => {
                           </>
                         )}
 
-                        {!["ba1-business-economics", "ba2-management-accounting", "ba3-financial-accounting", "ba4-ethics-governance-law"].includes(course.slug) && (
+                        {course.slug === "e1-managing-finance" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> Understand how finance supports organizational success in a digital environment. Learners should be able to explain the role of the finance function, assess technology impact, understand data importance, analyze finance team structures, and demonstrate cross-functional collaboration.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Role of the Finance Function (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Purpose of finance: value creation, stewardship, decision support</li>
+                                  <li>Activities: planning, budgeting, performance monitoring, risk management</li>
+                                  <li>Governance principles and ethical frameworks</li>
+                                  <li>Stakeholder mapping and influence (Mendelow's matrix)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Technology in a Digital World (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Emerging technologies: AI, blockchain, IoT, cloud computing, RPA</li>
+                                  <li>Big Data characteristics (volume, velocity, variety, veracity)</li>
+                                  <li>Digital transformation and its impact on finance processes</li>
+                                  <li>Cybersecurity and compliance (GDPR, data protection)</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Data and Information in a Digital World (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Data vs information; turning raw data into insights</li>
+                                  <li>Data collection methods: internal vs external sources</li>
+                                  <li>Data analytics tools: BI, dashboards, predictive analytics</li>
+                                  <li>Data governance and quality assurance</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Shape and Structure of the Finance Function (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Organizational structures: centralized, decentralized, shared services</li>
+                                  <li>Outsourcing and offshoring trends</li>
+                                  <li>Modern finance roles: business partnering, digital centers of excellence</li>
+                                  <li>Impact of automation on finance roles</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• E: Finance Interacting with the Organisation (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Finance's role in operations, marketing, HR, and supply chain</li>
+                                  <li>Value chain analysis and process improvement</li>
+                                  <li>Cross-functional collaboration for strategic objectives</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "e2-managing-performance" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section focuses on implementing strategy through business models, people management, and project leadership. Learners will explain how business models create value, assess leadership and team dynamics, apply performance management techniques, understand project management principles, and evaluate how projects contribute to strategic success.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Business Models and Value Creation (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Purpose and components of business models (value proposition, customer segments, revenue streams)</li>
+                                  <li>Types of business models: traditional, digital, and platform-based</li>
+                                  <li>Creating, delivering, and capturing value through strategic alignment</li>
+                                  <li>Innovation and technology influence on business model design</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Managing People Performance (40%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Leadership theories (transformational, transactional, situational)</li>
+                                  <li>Motivation theories: Maslow's hierarchy, Herzberg's two-factor model</li>
+                                  <li>Team development stages, communication, and conflict resolution</li>
+                                  <li>Setting objectives, KPIs, and performance measures</li>
+                                  <li>Change management principles and managing resistance</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Managing Projects (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Project life cycle: initiation, planning, execution, monitoring, closure</li>
+                                  <li>Project planning tools: Gantt charts, PERT diagrams, critical path analysis</li>
+                                  <li>Risk management techniques for project delivery</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "e3-strategic-management" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section focuses on formulating and implementing strategy, managing change, and leveraging digital transformation. Learners will explain the strategic management process, analyze environments using frameworks, evaluate strategic options, understand digital strategy impact, and apply strategic control systems.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Strategy Process (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Stages of strategic management: analysis, choice, implementation, evaluation</li>
+                                  <li>Vision, mission, and objectives guiding strategic direction</li>
+                                  <li>PESTEL for macro factors, Porter's Five Forces for industry analysis</li>
+                                  <li>SWOT and resource-based view for internal capabilities</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Digital Strategy (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Digital transformation reshaping business models and customer engagement</li>
+                                  <li>Emerging technologies (AI, blockchain, cloud) for competitive advantage</li>
+                                  <li>Governance principles for digital initiatives and data ethics</li>
+                                  <li>Cybersecurity risks and compliance requirements</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Finance and the Organisation (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Role of finance in strategic decision-making and resource allocation</li>
+                                  <li>Financial analysis supporting investment in strategic projects</li>
+                                  <li>Finance contributing to value creation and sustainability</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Strategic Control (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Balanced Scorecard and KPIs for monitoring strategic objectives</li>
+                                  <li>Risk management frameworks for strategic uncertainty</li>
+                                  <li>Governance structures for accountability and compliance</li>
+                                  <li>Feedback loops for continuous improvement</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• E: Generating Strategic Options (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Growth strategies: market penetration, product development, diversification</li>
+                                  <li>Ansoff Matrix and BCG Growth-Share Matrix</li>
+                                  <li>Mergers, acquisitions, and alliances as strategic options</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• F: Analysing the Ecosystem (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Porter's Five Forces and scenario planning for market analysis</li>
+                                  <li>VRIO analysis for sustainable competitive advantage</li>
+                                  <li>Global trends, regulatory changes, and stakeholder expectations</li>
+                                  <li>Ecosystem partnerships and network effects</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "p1-management-accounting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> Develop skills to apply costing, budgeting, and decision-making techniques for short-term planning and control.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Cost Accounting for Decision and Control (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Cost classification: fixed, variable, semi-variable</li>
+                                  <li>Absorption vs marginal costing</li>
+                                  <li>Activity-Based Costing (ABC) and Activity-Based Management (ABM)</li>
+                                  <li>Modern costing approaches: throughput accounting, target costing</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Budgeting and Budgetary Control (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Types of budgets: fixed, flexible, rolling, zero-based</li>
+                                  <li>Behavioral aspects of budgeting</li>
+                                  <li>Variance analysis: sales, cost, mix, yield, efficiency</li>
+                                  <li>Forecasting techniques</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Short-Term Commercial Decision-Making (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Cost-volume-profit (CVP) analysis and break-even</li>
+                                  <li>Limiting factor analysis and optimal product mix</li>
+                                  <li>Make-or-buy decisions</li>
+                                  <li>Pricing strategies and contribution analysis</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Risk and Uncertainty in Short-Term Decisions (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Expected values and probability analysis</li>
+                                  <li>Decision trees and sensitivity analysis</li>
+                                  <li>Risk mitigation techniques</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "p2-advanced-management-accounting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section develops the ability to manage costs strategically, appraise long-term investments, evaluate divisional performance, and address risk and control. Learners will apply advanced costing techniques, evaluate capital investments, assess divisional performance, understand transfer pricing, and manage risk.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Managing Costs for Value Creation (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Advanced costing: ABC, ABM, and throughput accounting</li>
+                                  <li>Strategic cost management: target costing, life-cycle costing, Kaizen</li>
+                                  <li>JIT, TQM, and lean principles for waste reduction</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Capital Investment Decision-Making (35%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>NPV, IRR, Modified IRR, and payback period</li>
+                                  <li>Impact of inflation, taxation, and risk on investment decisions</li>
+                                  <li>Capital rationing and project prioritization</li>
+                                  <li>Real options analysis for strategic investments</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Managing Performance of Business Units (30%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Responsibility centers: cost, profit, and investment centers</li>
+                                  <li>ROI, Residual Income (RI), and Economic Value Added (EVA)</li>
+                                  <li>Non-financial performance measures and balanced scorecard</li>
+                                  <li>Transfer pricing methods and implications</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Risk and Control (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Risks in medium-term decisions: operational, financial, strategic</li>
+                                  <li>Sensitivity analysis, scenario planning, probability-based approaches</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "p3-risk-management" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section develops the ability to identify, assess, and manage risks at an enterprise and strategic level. Learners will explain risk management frameworks, assess strategic and operational risks, design internal control systems, understand governance requirements, and address cyber risks.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Enterprise Risk (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Enterprise Risk Management (ERM) and strategic planning</li>
+                                  <li>ERM frameworks: COSO and ISO 31000</li>
+                                  <li>Risk categories: financial, operational, strategic, compliance, reputational</li>
+                                  <li>Risk registers, heat maps, and scenario analysis</li>
+                                  <li>Risk appetite and tolerance in decision-making</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Strategic Risk (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Risks from strategic decisions: mergers, acquisitions, market entry</li>
+                                  <li>Reputational risk impact on stakeholder trust</li>
+                                  <li>Sensitivity analysis and stress testing</li>
+                                  <li>Strategic risk and corporate governance relationship</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Internal Controls (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Internal control systems to prevent fraud and error</li>
+                                  <li>Segregation of duties, authorization, and reconciliation</li>
+                                  <li>Internal audit role in monitoring control effectiveness</li>
+                                  <li>Governance frameworks for accountability and compliance</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Cyber Risks (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Cyber threats: data breaches, ransomware, phishing attacks</li>
+                                  <li>Impact of cyber risk on financial and operational performance</li>
+                                  <li>Mitigation strategies: encryption, firewalls, multi-factor authentication</li>
+                                  <li>GDPR and cybersecurity compliance requirements</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "f1-financial-reporting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> Prepare and interpret financial statements, understand regulation, and manage working capital.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Regulatory Environment (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Role of IFRS and standard-setting bodies</li>
+                                  <li>Conceptual framework principles</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Financial Statements (45%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Preparation of income statement, balance sheet, cash flow</li>
+                                  <li>Adjustments: accruals, prepayments, depreciation, provisions</li>
+                                  <li>Group accounts basics: consolidation principles</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Principles of Taxation (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Types of taxes: corporate, income, indirect</li>
+                                  <li>Basic tax computations and implications for business</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Managing Cash and Working Capital (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Cash flow forecasting and liquidity management</li>
+                                  <li>Working capital cycle and financing options</li>
+                                  <li>Short-term funding sources</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "f2-advanced-financial-reporting" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section builds on financial reporting knowledge to include complex standards, group accounts, integrated reporting, and performance analysis. Learners will explain long-term finance sources, apply advanced IFRS, prepare consolidated financial statements, understand integrated reporting, and analyze financial performance.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Sources of Long-Term Finance (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Sources of long-term finance: equity, debt, hybrid instruments</li>
+                                  <li>Cost of capital and WACC calculation</li>
+                                  <li>Gearing and leverage impact on financial risk</li>
+                                  <li>Capital structure and dividend policy implications</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Financial Reporting Standards (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Advanced IFRS: IFRS 16 (Leases), IFRS 9, IFRS 15</li>
+                                  <li>Provisions, contingencies, and events after reporting period</li>
+                                  <li>Fair value measurement application</li>
+                                  <li>Disclosure requirements: related parties, segments, EPS</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Group Accounts (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Consolidated financial statements with subsidiaries</li>
+                                  <li>Associates using equity method, non-controlling interests</li>
+                                  <li>Foreign currency translation for overseas subsidiaries</li>
+                                  <li>Goodwill calculation and impairment testing</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Integrated Reporting (10%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Purpose and principles of integrated reporting</li>
+                                  <li>Six capitals: financial, manufactured, intellectual, human, social, natural</li>
+                                  <li>Stakeholder communication and long-term sustainability</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• E: Analysis of Financial Statements (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Ratio analysis: profitability, liquidity, efficiency, solvency</li>
+                                  <li>Trend analysis and performance changes over time</li>
+                                  <li>Benchmarking against industry standards</li>
+                                  <li>Limitations of ratio analysis and non-financial indicators</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {course.slug === "f3-financial-strategy" && (
+                          <>
+                            <p className="mb-5 text-sm leading-relaxed">
+                              <strong className="text-primary-foreground">Objective:</strong> This section focuses on developing long-term financial strategies that support organizational goals and create shareholder value. Learners will formulate financial policies, evaluate long-term finance sources, assess and manage financial risks, apply valuation methods, and understand M&A implications.
+                            </p>
+                            
+                            <ul className="space-y-4 list-none pl-0 text-sm">
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• A: Financial Policy Decisions (15%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Financial strategy supporting corporate objectives</li>
+                                  <li>Policies on capital structure, dividends, and gearing</li>
+                                  <li>Risk and return trade-off in decision-making</li>
+                                  <li>Impact on shareholder wealth and market perception</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• B: Sources of Long-Term Finance (25%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Equity, debt, and hybrid instruments evaluation</li>
+                                  <li>Cost of capital implications and WACC calculation</li>
+                                  <li>Gearing and leverage impact on profitability</li>
+                                  <li>Retained earnings, leasing, and venture capital options</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• C: Financial Risks (20%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Interest rate risk, foreign exchange risk, credit risk</li>
+                                  <li>Hedging, forward contracts, futures, options, and swaps</li>
+                                  <li>Derivatives for mitigating market volatility</li>
+                                  <li>Treasury management for financial risk control</li>
+                                </ul>
+                              </li>
+                              
+                              <li>
+                                <h4 className="font-semibold text-primary-foreground mb-1.5">• D: Business Valuation (40%)</h4>
+                                <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
+                                  <li>Valuation methods: DCF, Net Asset Value, earnings multiples</li>
+                                  <li>Free cash flow valuation and terminal value estimation</li>
+                                  <li>Adjustments for risk, inflation, and uncertainty</li>
+                                  <li>Valuation in M&A context including synergy analysis</li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </>
+                        )}
+
+                        {!["ba1-business-economics", "ba2-management-accounting", "ba3-financial-accounting", "ba4-ethics-governance-law", "e1-managing-finance", "e2-managing-performance", "e3-strategic-management", "p1-management-accounting", "p2-advanced-management-accounting", "p3-risk-management", "f1-financial-reporting", "f2-advanced-financial-reporting", "f3-financial-strategy"].includes(course.slug) && (
                           <p className="text-sm text-primary-foreground/80">
                             Course objectives and syllabus information coming soon.
                           </p>
