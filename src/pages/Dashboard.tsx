@@ -1,7 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -13,6 +12,9 @@ import {
 } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
+import StreakWidget from "@/components/dashboard/StreakWidget";
+import QuickActions from "@/components/dashboard/QuickActions";
+import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
 import {
   BookOpen,
   Clock,
@@ -24,7 +26,6 @@ import {
   ChevronRight,
   ArrowRight,
   Calendar,
-  Award,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -56,8 +57,7 @@ const Dashboard = () => {
       : 0;
 
   // Recent quiz attempts for display
-  const recentQuizAttempts = quizAttempts?.slice(0, 5) || [];
-
+  const recentQuizAttempts = quizAttempts?.slice(0, 3) || [];
 
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
@@ -209,27 +209,26 @@ const Dashboard = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Enrolled Courses */}
-                <Card className="p-6 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent shadow-lg">
-                  <div className="flex items-center gap-3 mb-1">
+                {/* My Courses Grid */}
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                       <BookOpen className="w-5 h-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-foreground text-lg">Your Courses</h3>
+                      <h3 className="font-bold text-foreground text-lg">My Courses</h3>
                       <p className="text-xs text-muted-foreground">Continue where you left off</p>
                     </div>
                   </div>
-                  <div className="space-y-3 mt-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     {enrollments?.map((enrollment) => (
                       <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
                     ))}
                   </div>
-                </Card>
+                </div>
+
+                {/* Quick Actions */}
+                <QuickActions />
 
                 {/* Available Quizzes */}
                 {availableQuizzes && availableQuizzes.length > 0 && (
@@ -238,15 +237,15 @@ const Dashboard = () => {
                       <FileQuestion className="w-5 h-5 text-accent" />
                       Available Quizzes
                     </h3>
-                    <div className="space-y-3">
-                      {availableQuizzes.map((quiz) => (
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {availableQuizzes.slice(0, 4).map((quiz) => (
                         <Link
                           key={quiz.id}
                           to={`/quiz/${quiz.id}`}
                           className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors group"
                         >
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground truncate">
                               {quiz.title}
                             </p>
                             {quiz.description && (
@@ -255,19 +254,28 @@ const Dashboard = () => {
                               </p>
                             )}
                           </div>
-                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 ml-2" />
                         </Link>
                       ))}
                     </div>
                   </Card>
                 )}
+              </div>
 
-                {/* Recent Quiz Attempts */}
+              {/* Sidebar */}
+              <div className="space-y-6">
+                {/* Streak Widget */}
+                <StreakWidget />
+
+                {/* Leaderboard Preview */}
+                <LeaderboardPreview />
+
+                {/* Recent Quiz Results */}
                 {recentQuizAttempts.length > 0 && (
-                  <Card className="p-6">
+                  <Card className="p-5">
                     <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-primary" />
-                      Recent Quiz Results
+                      Recent Results
                     </h3>
                     <div className="space-y-3">
                       {recentQuizAttempts.map((attempt) => {
@@ -304,23 +312,6 @@ const Dashboard = () => {
                     </div>
                   </Card>
                 )}
-
-                {/* Achievement */}
-                <Card className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <Award className="w-7 h-7 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-foreground">Keep Learning!</p>
-                      <p className="text-sm text-muted-foreground">
-                        {totalQuizzes > 0
-                          ? `${totalQuizzes} quiz${totalQuizzes > 1 ? "zes" : ""} completed`
-                          : "Take a quiz to earn achievements"}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
               </div>
             </div>
           )}

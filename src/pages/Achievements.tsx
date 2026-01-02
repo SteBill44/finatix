@@ -185,11 +185,9 @@ const Achievements = () => {
                   <p className="text-center text-muted-foreground py-6">No data yet</p>
                 ) : (
                   leaderboard?.map((entry, index) => {
-                    const profile = entry.profiles as any;
+                    const profile = entry.profile;
                     const displayName = profile?.full_name || 
-                      (profile?.first_name && profile?.last_name 
-                        ? `${profile.first_name} ${profile.last_name}` 
-                        : "Anonymous");
+                      profile?.first_name || "Anonymous";
                     const isCurrentUser = entry.user_id === user?.id;
 
                     return (
