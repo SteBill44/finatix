@@ -13,7 +13,7 @@ import {
   useLessonProgress,
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
-import { useLessonResources } from "@/hooks/useResources";
+import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
 import {
   ArrowLeft,
   ArrowRight,
@@ -61,6 +61,13 @@ const Lesson = () => {
   const { data: lessons, isLoading: lessonsLoading } = useLessons(courseId);
   const { data: progress } = useLessonProgress(courseId);
   const { data: resources } = useLessonResources(lessonId || "");
+  const incrementDownload = useIncrementDownloadCount();
+
+  // Handle resource download with tracking
+  const handleDownload = (resource: { id: string; file_url: string }) => {
+    incrementDownload.mutate(resource.id);
+    window.open(resource.file_url, "_blank");
+  };
 
   // Helper to get file icon based on type
   const getFileIcon = (fileType: string) => {
@@ -378,17 +385,10 @@ const Lesson = () => {
                             variant="outline"
                             size="sm"
                             className="gap-2 flex-shrink-0"
-                            asChild
+                            onClick={() => handleDownload(resource)}
                           >
-                            <a
-                              href={resource.file_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              download
-                            >
-                              <Download className="w-4 h-4" />
-                              Download
-                            </a>
+                            <Download className="w-4 h-4" />
+                            Download
                           </Button>
                         </div>
                       </Card>
