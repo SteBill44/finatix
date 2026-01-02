@@ -14,37 +14,18 @@ import {
 import { useQuizzes } from "@/hooks/useQuizzes";
 import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import {
-  BarChart2,
   BookOpen,
   Clock,
-  TrendingUp,
   Target,
   Play,
-  Calendar,
-  Award,
-  Brain,
   Zap,
   GraduationCap,
   FileQuestion,
   ChevronRight,
   ArrowRight,
+  Calendar,
+  Award,
 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  BarChart,
-  Bar,
-} from "recharts";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -77,34 +58,6 @@ const Dashboard = () => {
   // Recent quiz attempts for display
   const recentQuizAttempts = quizAttempts?.slice(0, 5) || [];
 
-  // Mock data for charts
-  const progressData = [
-    { week: "W1", score: 45 },
-    { week: "W2", score: 52 },
-    { week: "W3", score: 48 },
-    { week: "W4", score: 61 },
-    { week: "W5", score: 68 },
-    { week: "W6", score: 74 },
-    { week: "W7", score: 72 },
-    { week: "W8", score: averageScore || 81 },
-  ];
-
-  const competencyData = [
-    { subject: "Economics", score: 85, fullMark: 100 },
-    { subject: "Costing", score: 72, fullMark: 100 },
-    { subject: "Financial Reporting", score: 68, fullMark: 100 },
-    { subject: "Governance", score: 91, fullMark: 100 },
-    { subject: "Analysis", score: 78, fullMark: 100 },
-    { subject: "Decision Making", score: 64, fullMark: 100 },
-  ];
-
-  const questionHistory = [
-    { topic: "Microeconomics", correct: 42, incorrect: 8 },
-    { topic: "Macroeconomics", correct: 35, incorrect: 15 },
-    { topic: "Cost Analysis", correct: 28, incorrect: 22 },
-    { topic: "Governance", correct: 48, incorrect: 2 },
-    { topic: "Ethics", correct: 38, incorrect: 12 },
-  ];
 
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
@@ -256,142 +209,6 @@ const Dashboard = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Progress Chart */}
-                <Card className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                      <TrendingUp className="w-5 h-5 text-primary" />
-                      Score Progress
-                    </h2>
-                    <span className="text-sm text-muted-foreground">Last 8 weeks</span>
-                  </div>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={progressData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis
-                          dataKey="week"
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={12}
-                        />
-                        <YAxis
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={12}
-                          domain={[0, 100]}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "8px",
-                          }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="score"
-                          stroke="hsl(var(--primary))"
-                          strokeWidth={3}
-                          dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                          activeDot={{ r: 6 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </Card>
-
-                {/* Competency Radar */}
-                <Card className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                      <Brain className="w-5 h-5 text-accent" />
-                      Competency Analysis
-                    </h2>
-                  </div>
-                  <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart data={competencyData}>
-                        <PolarGrid stroke="hsl(var(--border))" />
-                        <PolarAngleAxis
-                          dataKey="subject"
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={11}
-                        />
-                        <PolarRadiusAxis
-                          angle={30}
-                          domain={[0, 100]}
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={10}
-                        />
-                        <Radar
-                          name="Score"
-                          dataKey="score"
-                          stroke="hsl(var(--primary))"
-                          fill="hsl(var(--primary))"
-                          fillOpacity={0.3}
-                          strokeWidth={2}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </Card>
-
-                {/* Question History */}
-                <Card className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-                      <BarChart2 className="w-5 h-5 text-teal" />
-                      Practice Question History
-                    </h2>
-                  </div>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={questionHistory} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                        <XAxis
-                          type="number"
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={12}
-                        />
-                        <YAxis
-                          dataKey="topic"
-                          type="category"
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={11}
-                          width={100}
-                        />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "8px",
-                          }}
-                        />
-                        <Bar
-                          dataKey="correct"
-                          fill="hsl(var(--accent))"
-                          stackId="a"
-                          radius={[0, 4, 4, 0]}
-                        />
-                        <Bar
-                          dataKey="incorrect"
-                          fill="hsl(var(--destructive))"
-                          stackId="a"
-                          radius={[0, 4, 4, 0]}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex justify-center gap-6 mt-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded bg-accent" />
-                      <span className="text-sm text-muted-foreground">Correct</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded bg-destructive" />
-                      <span className="text-sm text-muted-foreground">Incorrect</span>
-                    </div>
-                  </div>
-                </Card>
               </div>
 
               {/* Sidebar */}
