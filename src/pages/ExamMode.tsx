@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import ExamCalculator from "@/components/quiz/ExamCalculator";
 import ExamTimer from "@/components/quiz/ExamTimer";
 import QuestionNavigator from "@/components/quiz/QuestionNavigator";
+import FormulaSheet from "@/components/quiz/FormulaSheet";
 import {
   CheckCircle,
   XCircle,
@@ -22,6 +23,7 @@ import {
   List,
   X,
   AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -49,6 +51,7 @@ const ExamMode = () => {
   const [submitted, setSubmitted] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const [showNavigator, setShowNavigator] = useState(false);
+  const [showFormulaSheet, setShowFormulaSheet] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
 
@@ -303,6 +306,15 @@ const ExamMode = () => {
             {/* Right - Tools */}
             <div className="flex items-center gap-2">
               <Button
+                variant={showFormulaSheet ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowFormulaSheet(!showFormulaSheet)}
+                className="gap-2"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span className="hidden sm:inline">Formulae</span>
+              </Button>
+              <Button
                 variant={showCalculator ? "default" : "outline"}
                 size="sm"
                 onClick={() => setShowCalculator(!showCalculator)}
@@ -450,6 +462,11 @@ const ExamMode = () => {
       {/* Calculator - now self-positioned and draggable */}
       {showCalculator && (
         <ExamCalculator onClose={() => setShowCalculator(false)} />
+      )}
+
+      {/* Formula Sheet */}
+      {showFormulaSheet && (
+        <FormulaSheet examLevel="BA1" onClose={() => setShowFormulaSheet(false)} />
       )}
 
       {/* Submit Confirmation Dialog */}
