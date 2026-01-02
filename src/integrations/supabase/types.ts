@@ -403,6 +403,7 @@ export type Database = {
           file_url: string
           id: string
           lesson_id: string
+          order_index: number
           title: string
         }
         Insert: {
@@ -414,6 +415,7 @@ export type Database = {
           file_url: string
           id?: string
           lesson_id: string
+          order_index?: number
           title: string
         }
         Update: {
@@ -425,6 +427,7 @@ export type Database = {
           file_url?: string
           id?: string
           lesson_id?: string
+          order_index?: number
           title?: string
         }
         Relationships: [
