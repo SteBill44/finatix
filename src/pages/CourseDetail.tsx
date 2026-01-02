@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress, useQuizAttempts } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
+import { useIsAdmin } from "@/hooks/useUserRole";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { 
@@ -58,11 +59,13 @@ const CourseDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: enrollments } = useEnrollments();
+  const { data: enrollments, refetch: refetchEnrollments } = useEnrollments();
   const enrollMutation = useEnrollInCourse();
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
+  const { isAdmin } = useIsAdmin();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
+  const [autoEnrolled, setAutoEnrolled] = useState(false);
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -116,7 +119,29 @@ const CourseDetail = () => {
       score: Math.round((attempt.score / attempt.max_score) * 100),
     }));
 
-  // Syllabus areas for BA1 course
+  // Check enrollment status
+  const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
+
+  // Auto-enroll admins in courses
+  useEffect(() => {
+    const autoEnrollAdmin = async () => {
+      if (isAdmin && user && course && !isEnrolled && !autoEnrolled) {
+        try {
+          await enrollMutation.mutateAsync(course.id);
+          setAutoEnrolled(true);
+          refetchEnrollments();
+        } catch (error: any) {
+          // Ignore duplicate enrollment errors
+          if (!error.message?.includes("duplicate")) {
+            console.error("Auto-enroll failed:", error);
+          }
+        }
+      }
+    };
+    autoEnrollAdmin();
+  }, [isAdmin, user, course, isEnrolled, autoEnrolled]);
+
+  // Syllabus areas for all courses
   const getSyllabusAreas = (slug: string) => {
     if (slug === "ba1-business-economics") {
       return [
@@ -134,6 +159,98 @@ const CourseDetail = () => {
         { subject: "D: Performance", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
       ];
     }
+    if (slug === "ba3-financial-accounting") {
+      return [
+        { subject: "A: Principles", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "B: Recording", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Preparation", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Analysis", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "ba4-ethics-governance-law") {
+      return [
+        { subject: "A: Business Ethics", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Corporate Governance", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "C: Legal Framework", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "D: Contract Law", score: averageScore > 0 ? Math.min(100, averageScore + 3) : 0, fullMark: 100 },
+        { subject: "E: Employment Law", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "e1-managing-finance") {
+      return [
+        { subject: "A: Role of Finance", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Technology", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "C: Data & Info", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "D: Structure", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "E: Interacting", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "e2-managing-performance") {
+      return [
+        { subject: "A: Business Models", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Managing People", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Managing Projects", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "e3-strategic-management") {
+      return [
+        { subject: "A: Strategy Process", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Digital Strategy", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "C: Finance & Org", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "D: Strategic Control", score: averageScore > 0 ? Math.min(100, averageScore + 3) : 0, fullMark: 100 },
+        { subject: "E: Strategic Options", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+        { subject: "F: Ecosystem", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "p1-management-accounting") {
+      return [
+        { subject: "A: Cost Accounting", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Budgeting", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Short-Term Decisions", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Risk & Uncertainty", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "p2-advanced-management-accounting") {
+      return [
+        { subject: "A: Managing Costs", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Capital Investment", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Business Units", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Risk & Control", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "p3-risk-management") {
+      return [
+        { subject: "A: Enterprise Risk", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Strategic Risk", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Internal Controls", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Cyber Risks", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "f1-financial-reporting") {
+      return [
+        { subject: "A: Regulatory", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "B: Financial Statements", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Taxation", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Working Capital", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "f2-advanced-financial-reporting") {
+      return [
+        { subject: "A: Long-Term Finance", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Reporting Standards", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Group Accounts", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Integrated Reporting", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "E: Analysis", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "f3-financial-strategy") {
+      return [
+        { subject: "A: Financial Policy", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Long-Term Finance", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
+        { subject: "C: Financial Risks", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Business Valuation", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+      ];
+    }
     // Default fallback for other courses
     return [
       { subject: "Topic A", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
@@ -149,7 +266,6 @@ const CourseDetail = () => {
   const correctTotal = courseQuizAttempts.reduce((acc, a) => acc + a.score, 0);
   const incorrectTotal = courseQuizAttempts.reduce((acc, a) => acc + (a.max_score - a.score), 0);
 
-  const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
   const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
   const totalLessons = lessons?.length || 0;
   const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
