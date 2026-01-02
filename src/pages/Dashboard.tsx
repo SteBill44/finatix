@@ -140,24 +140,17 @@ const Dashboard = () => {
                   : "Get started by enrolling in your first course."}
               </p>
             </div>
-            <div className="flex gap-3">
-              {totalEnrollments > 0 ? (
-                <Button variant="outline" size="lg" className="gap-2">
-                  <Play className="w-5 h-5" />
-                  Continue Learning
-                </Button>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="gap-2"
-                  onClick={() => navigate("/courses")}
-                >
-                  <GraduationCap className="w-5 h-5" />
-                  Browse Courses
-                </Button>
-              )}
-            </div>
+            {totalEnrollments === 0 && (
+              <Button
+                variant="outline"
+                size="lg"
+                className="gap-2"
+                onClick={() => navigate("/courses")}
+              >
+                <GraduationCap className="w-5 h-5" />
+                Browse Courses
+              </Button>
+            )}
           </div>
         </div>
 
