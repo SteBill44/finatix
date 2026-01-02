@@ -503,12 +503,12 @@ const ResourceManagement = () => {
         {/* Filters */}
         <div className="flex gap-4 mb-6">
           <div className="w-48">
-            <Select value={filterCourse} onValueChange={(v) => { setFilterCourse(v); setFilterLesson(""); }}>
+          <Select value={filterCourse || "all"} onValueChange={(v) => { setFilterCourse(v === "all" ? "" : v); setFilterLesson(""); }}>
               <SelectTrigger>
                 <SelectValue placeholder="Filter by course" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All courses</SelectItem>
+                <SelectItem value="all">All courses</SelectItem>
                 {courses?.map((course) => (
                   <SelectItem key={course.id} value={course.id}>{course.title}</SelectItem>
                 ))}
@@ -517,12 +517,12 @@ const ResourceManagement = () => {
           </div>
           {filterCourse && (
             <div className="w-48">
-              <Select value={filterLesson} onValueChange={setFilterLesson}>
+              <Select value={filterLesson || "all"} onValueChange={(v) => setFilterLesson(v === "all" ? "" : v)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by lesson" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All lessons</SelectItem>
+                  <SelectItem value="all">All lessons</SelectItem>
                   {lessons?.map((lesson) => (
                     <SelectItem key={lesson.id} value={lesson.id}>{lesson.title}</SelectItem>
                   ))}
