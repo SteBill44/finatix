@@ -116,14 +116,34 @@ const CourseDetail = () => {
       score: Math.round((attempt.score / attempt.max_score) * 100),
     }));
 
-  // Course-specific competency data (based on quiz performance topics)
-  const competencyData = [
-    { subject: "Understanding", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
-    { subject: "Application", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-    { subject: "Analysis", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-    { subject: "Recall", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
-    { subject: "Calculation", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-  ];
+  // Syllabus areas for BA1 course
+  const getSyllabusAreas = (slug: string) => {
+    if (slug === "ba1-business-economics") {
+      return [
+        { subject: "A: Macroeconomic (25%)", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+        { subject: "B: Microeconomic (30%)", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Informational (20%)", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
+        { subject: "D: Financial (25%)", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
+      ];
+    }
+    if (slug === "ba2-management-accounting") {
+      return [
+        { subject: "A: Nature of MA (10%)", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
+        { subject: "B: Cost Accounting (30%)", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+        { subject: "C: Budgeting (25%)", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+        { subject: "D: Performance (35%)", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
+      ];
+    }
+    // Default fallback for other courses
+    return [
+      { subject: "Topic A", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
+      { subject: "Topic B", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
+      { subject: "Topic C", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
+      { subject: "Topic D", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
+    ];
+  };
+
+  const competencyData = getSyllabusAreas(course?.slug || "");
 
   // Question history based on attempts
   const correctTotal = courseQuizAttempts.reduce((acc, a) => acc + a.score, 0);
