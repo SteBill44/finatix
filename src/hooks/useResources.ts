@@ -97,6 +97,7 @@ export const useCreateResource = () => {
       file_url: string;
       file_type: string;
       file_size?: number;
+      order_index?: number;
     }) => {
       const { data, error } = await supabase
         .from("lesson_resources")
@@ -110,6 +111,7 @@ export const useCreateResource = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lesson_resources"] });
       queryClient.invalidateQueries({ queryKey: ["all_resources"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-resources"] });
     },
   });
 };
