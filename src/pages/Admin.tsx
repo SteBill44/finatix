@@ -16,9 +16,10 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
+import QuestionManagement from "@/components/admin/QuestionManagement";
 
 interface Course {
   id: string;
@@ -484,10 +485,14 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
-              Courses & Lessons
+              Courses
+            </TabsTrigger>
+            <TabsTrigger value="questions" className="flex items-center gap-2">
+              <ClipboardList className="h-4 w-4" />
+              Questions
             </TabsTrigger>
             <TabsTrigger value="resources" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
@@ -498,6 +503,11 @@ const Admin = () => {
               Users
             </TabsTrigger>
           </TabsList>
+
+          {/* Questions Tab */}
+          <TabsContent value="questions">
+            <QuestionManagement />
+          </TabsContent>
 
           {/* Resources Tab */}
           <TabsContent value="resources">
