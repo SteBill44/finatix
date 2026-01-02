@@ -40,6 +40,33 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+// Helper function to detect exam level from quiz title
+const detectExamLevel = (title: string): "BA1" | "BA2" | "BA3" | "BA4" | "P1" | "P2" | "P3" | "F2" | "F3" => {
+  const upperTitle = title.toUpperCase();
+  
+  // Check for BA levels
+  if (upperTitle.includes("BA1") || upperTitle.includes("BA 1")) return "BA1";
+  if (upperTitle.includes("BA2") || upperTitle.includes("BA 2")) return "BA2";
+  if (upperTitle.includes("BA3") || upperTitle.includes("BA 3")) return "BA3";
+  if (upperTitle.includes("BA4") || upperTitle.includes("BA 4")) return "BA4";
+  
+  // Check for Professional levels
+  if (upperTitle.includes("P1") || upperTitle.includes("P 1")) return "P1";
+  if (upperTitle.includes("P2") || upperTitle.includes("P 2")) return "P2";
+  if (upperTitle.includes("P3") || upperTitle.includes("P 3")) return "P3";
+  if (upperTitle.includes("F2") || upperTitle.includes("F 2")) return "F2";
+  if (upperTitle.includes("F3") || upperTitle.includes("F 3")) return "F3";
+  
+  // Check for subject keywords as fallback
+  if (upperTitle.includes("ECONOMICS") || upperTitle.includes("MICROECONOMICS") || upperTitle.includes("MACROECONOMICS")) return "BA1";
+  if (upperTitle.includes("COST ACCOUNTING") || upperTitle.includes("FUNDAMENTALS OF MANAGEMENT ACCOUNTING")) return "BA2";
+  if (upperTitle.includes("FINANCIAL STATEMENTS") || upperTitle.includes("FUNDAMENTALS OF FINANCIAL ACCOUNTING")) return "BA3";
+  if (upperTitle.includes("ETHICS") || upperTitle.includes("FUNDAMENTALS OF ETHICS")) return "BA4";
+  
+  // Default to BA1 if no match
+  return "BA1";
+};
+
 type ExamType = "objective" | "case_study" | null;
 
 const MockExam = () => {
@@ -612,7 +639,10 @@ const MockExam = () => {
 
       {/* Formula Sheet */}
       {showFormulaSheet && (
-        <FormulaSheet examLevel="BA1" onClose={() => setShowFormulaSheet(false)} />
+        <FormulaSheet 
+          examLevel={detectExamLevel(quiz?.title || "")} 
+          onClose={() => setShowFormulaSheet(false)} 
+        />
       )}
 
       {/* Submit Confirmation Dialog */}
