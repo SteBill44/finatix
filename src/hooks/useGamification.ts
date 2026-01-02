@@ -150,26 +150,51 @@ export const useUpdateStreak = () => {
   });
 };
 
+export interface LeaderboardEntry {
+  id: string;
+  user_id: string;
+  current_streak: number | null;
+  longest_streak: number | null;
+  profile?: {
+    full_name: string | null;
+    first_name: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 export const useLeaderboard = (limit = 10) => {
   return useQuery({
     queryKey: ["leaderboard", limit],
-    queryFn: async () => {
-      const { data, error } = await supabase
+    queryFn: async (): Promise<LeaderboardEntry[]> => {
+      // First get streaks
+      const { data: streaks, error: streaksError } = await supabase
         .from("user_streaks")
-        .select(`
-          *,
-          profiles:user_id (
-            full_name,
-            first_name,
-            last_name,
-            avatar_url
-          )
-        `)
+        .select("*")
         .order("current_streak", { ascending: false })
         .limit(limit);
       
-      if (error) throw error;
-      return data;
+      if (streaksError) throw streaksError;
+      if (!streaks || streaks.length === 0) return [];
+
+      // Get user profiles for these users
+      const userIds = streaks.map(s => s.user_id);
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, first_name, avatar_url")
+        .in("user_id", userIds);
+      
+      if (profilesError) throw profilesError;
+
+      // Map profiles to streaks
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+      
+      return streaks.map(streak => ({
+        id: streak.id,
+        user_id: streak.user_id,
+        current_streak: streak.current_streak,
+        longest_streak: streak.longest_streak,
+        profile: profileMap.get(streak.user_id) || null,
+      }));
     },
   });
 };
