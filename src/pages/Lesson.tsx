@@ -14,6 +14,7 @@ import {
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
 import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
+import VideoPlayer from "@/components/lesson/VideoPlayer";
 import {
   ArrowLeft,
   ArrowRight,
@@ -25,7 +26,6 @@ import {
   Menu,
   X,
   Download,
-  FileIcon,
   File,
   FileSpreadsheet,
   FileImage,
@@ -299,18 +299,14 @@ const Lesson = () => {
 
         {/* Lesson Content */}
         <div className="p-6 lg:p-8 max-w-4xl mx-auto">
-          {/* Video Placeholder */}
-          <Card className="aspect-video bg-charcoal rounded-xl overflow-hidden mb-8 flex items-center justify-center">
-            <div className="text-center text-primary-foreground">
-              <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
-                <Play className="w-10 h-10 text-primary" />
-              </div>
-              <p className="text-lg font-medium">Video Content</p>
-              <p className="text-sm text-primary-foreground/60 mt-1">
-                {currentLesson.duration_minutes} minutes
-              </p>
-            </div>
-          </Card>
+          {/* Video Player */}
+          <div className="mb-8">
+            <VideoPlayer
+              videoUrl={null}
+              title={currentLesson.title}
+              duration={currentLesson.duration_minutes || 0}
+            />
+          </div>
 
           {/* Lesson Info */}
           <div className="mb-8">
