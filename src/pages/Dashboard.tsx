@@ -367,12 +367,17 @@ const Dashboard = () => {
               {/* Sidebar */}
               <div className="space-y-6">
                 {/* Enrolled Courses */}
-                <Card className="p-6">
-                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-primary" />
-                    Your Courses
-                  </h3>
-                  <div className="space-y-3">
+                <Card className="p-6 border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent shadow-lg">
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-foreground text-lg">Your Courses</h3>
+                      <p className="text-xs text-muted-foreground">Continue where you left off</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mt-4">
                     {enrollments?.map((enrollment) => (
                       <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
                     ))}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Play, CheckCircle } from "lucide-react";
+import { Play, CheckCircle, ArrowRight } from "lucide-react";
 import { useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
 
 interface CourseProgressCardProps {
@@ -44,7 +44,7 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   const isCompleted = enrollment.completed_at !== null;
 
   return (
-    <div className="p-4 bg-secondary/50 rounded-xl hover:bg-secondary/70 transition-colors">
+    <div className="p-4 bg-secondary/50 rounded-xl hover:bg-secondary/70 transition-all border border-transparent hover:border-primary/20 group">
       <div className="flex justify-between items-start mb-2">
         <div className="flex-1">
           <h4 className="font-semibold text-foreground text-sm line-clamp-1">
@@ -79,11 +79,20 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
         )}
       </div>
       
-      <div className="mt-3 flex gap-2">
-        <Link to={`/courses/${enrollment.courses.slug}`} className="flex-1">
-          <Button variant="outline" size="sm" className="w-full gap-1.5 text-xs">
-            <Play className="w-3.5 h-3.5" />
-            {isCompleted ? "Review" : "Continue"}
+      <div className="mt-4">
+        <Link to={`/courses/${enrollment.courses.slug}`} className="block">
+          <Button 
+            variant={isCompleted ? "outline" : "default"} 
+            size="sm" 
+            className={`w-full gap-2 font-semibold ${
+              !isCompleted 
+                ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all group-hover:scale-[1.02]" 
+                : ""
+            }`}
+          >
+            <Play className={`w-4 h-4 ${!isCompleted ? "animate-pulse" : ""}`} />
+            {isCompleted ? "Review Course" : "Continue Learning"}
+            <ArrowRight className="w-4 h-4 ml-auto" />
           </Button>
         </Link>
       </div>
