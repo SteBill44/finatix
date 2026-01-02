@@ -360,6 +360,138 @@ const Lesson = () => {
 
         {/* Lesson Content */}
         <div className="p-6 lg:p-8 max-w-4xl mx-auto">
+          {/* Course Analytics Section - Displayed First */}
+          {totalAttempts > 0 && (
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-6">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <h3 className="text-lg font-semibold text-foreground">
+                  Your Performance in This Course
+                </h3>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Score Progress Chart */}
+                {scoreProgressData.length > 1 && (
+                  <Card className="p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-medium text-foreground flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-primary" />
+                        Score Progress
+                      </h4>
+                      <span className="text-xs text-muted-foreground">Last {scoreProgressData.length} attempts</span>
+                    </div>
+                    <div className="h-48">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={scoreProgressData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis
+                            dataKey="attempt"
+                            stroke="hsl(var(--muted-foreground))"
+                            fontSize={11}
+                          />
+                          <YAxis
+                            stroke="hsl(var(--muted-foreground))"
+                            fontSize={11}
+                            domain={[0, 100]}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "hsl(var(--card))",
+                              border: "1px solid hsl(var(--border))",
+                              borderRadius: "8px",
+                            }}
+                            formatter={(value) => [`${value}%`, "Score"]}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="score"
+                            stroke="hsl(var(--primary))"
+                            strokeWidth={2}
+                            dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </Card>
+                )}
+
+                {/* Competency Radar */}
+                <Card className="p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-medium text-foreground flex items-center gap-2">
+                      <Brain className="w-4 h-4 text-accent" />
+                      Competency Analysis
+                    </h4>
+                  </div>
+                  <div className="h-48">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart data={competencyData}>
+                        <PolarGrid stroke="hsl(var(--border))" />
+                        <PolarAngleAxis
+                          dataKey="subject"
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={10}
+                        />
+                        <PolarRadiusAxis
+                          angle={30}
+                          domain={[0, 100]}
+                          stroke="hsl(var(--muted-foreground))"
+                          fontSize={9}
+                        />
+                        <Radar
+                          name="Score"
+                          dataKey="score"
+                          stroke="hsl(var(--primary))"
+                          fill="hsl(var(--primary))"
+                          fillOpacity={0.3}
+                          strokeWidth={2}
+                        />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </Card>
+
+                {/* Question History */}
+                <Card className="p-5 md:col-span-2">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-medium text-foreground flex items-center gap-2">
+                      <BarChart2 className="w-4 h-4 text-teal" />
+                      Practice Question History
+                    </h4>
+                    <div className="flex gap-4 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded bg-accent" />
+                        <span className="text-muted-foreground">Correct ({correctTotal})</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-3 h-3 rounded bg-destructive" />
+                        <span className="text-muted-foreground">Incorrect ({incorrectTotal})</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-8">
+                    <div className="text-center">
+                      <p className="text-4xl font-bold text-foreground">{averageScore}%</p>
+                      <p className="text-sm text-muted-foreground">Average Score</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-4xl font-bold text-foreground">{totalAttempts}</p>
+                      <p className="text-sm text-muted-foreground">Quiz Attempts</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-4xl font-bold text-accent">{correctTotal}</p>
+                      <p className="text-sm text-muted-foreground">Correct Answers</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              <Separator className="my-8" />
+            </div>
+          )}
+
           {/* Video Player */}
           <div className="mb-8">
             <VideoPlayer
@@ -560,139 +692,6 @@ const Lesson = () => {
                       </div>
                     </Card>
                   ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Course Analytics Section */}
-          {totalAttempts > 0 && (
-            <>
-              <Separator className="my-8" />
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Your Performance in This Course
-                  </h3>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Score Progress Chart */}
-                  {scoreProgressData.length > 1 && (
-                    <Card className="p-5">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-medium text-foreground flex items-center gap-2">
-                          <TrendingUp className="w-4 h-4 text-primary" />
-                          Score Progress
-                        </h4>
-                        <span className="text-xs text-muted-foreground">Last {scoreProgressData.length} attempts</span>
-                      </div>
-                      <div className="h-48">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={scoreProgressData}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                            <XAxis
-                              dataKey="attempt"
-                              stroke="hsl(var(--muted-foreground))"
-                              fontSize={11}
-                            />
-                            <YAxis
-                              stroke="hsl(var(--muted-foreground))"
-                              fontSize={11}
-                              domain={[0, 100]}
-                            />
-                            <Tooltip
-                              contentStyle={{
-                                backgroundColor: "hsl(var(--card))",
-                                border: "1px solid hsl(var(--border))",
-                                borderRadius: "8px",
-                              }}
-                              formatter={(value) => [`${value}%`, "Score"]}
-                            />
-                            <Line
-                              type="monotone"
-                              dataKey="score"
-                              stroke="hsl(var(--primary))"
-                              strokeWidth={2}
-                              dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6 }}
-                            />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </Card>
-                  )}
-
-                  {/* Competency Radar */}
-                  <Card className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-medium text-foreground flex items-center gap-2">
-                        <Brain className="w-4 h-4 text-accent" />
-                        Competency Analysis
-                      </h4>
-                    </div>
-                    <div className="h-48">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart data={competencyData}>
-                          <PolarGrid stroke="hsl(var(--border))" />
-                          <PolarAngleAxis
-                            dataKey="subject"
-                            stroke="hsl(var(--muted-foreground))"
-                            fontSize={10}
-                          />
-                          <PolarRadiusAxis
-                            angle={30}
-                            domain={[0, 100]}
-                            stroke="hsl(var(--muted-foreground))"
-                            fontSize={9}
-                          />
-                          <Radar
-                            name="Score"
-                            dataKey="score"
-                            stroke="hsl(var(--primary))"
-                            fill="hsl(var(--primary))"
-                            fillOpacity={0.3}
-                            strokeWidth={2}
-                          />
-                        </RadarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </Card>
-
-                  {/* Question History */}
-                  <Card className="p-5 md:col-span-2">
-                    <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-medium text-foreground flex items-center gap-2">
-                        <BarChart2 className="w-4 h-4 text-teal" />
-                        Practice Question History
-                      </h4>
-                      <div className="flex gap-4 text-xs">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-3 h-3 rounded bg-accent" />
-                          <span className="text-muted-foreground">Correct ({correctTotal})</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-3 h-3 rounded bg-destructive" />
-                          <span className="text-muted-foreground">Incorrect ({incorrectTotal})</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center gap-8">
-                      <div className="text-center">
-                        <p className="text-4xl font-bold text-foreground">{averageScore}%</p>
-                        <p className="text-sm text-muted-foreground">Average Score</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-4xl font-bold text-foreground">{totalAttempts}</p>
-                        <p className="text-sm text-muted-foreground">Quiz Attempts</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-4xl font-bold text-accent">{correctTotal}</p>
-                        <p className="text-sm text-muted-foreground">Correct Answers</p>
-                      </div>
-                    </div>
-                  </Card>
                 </div>
               </div>
             </>
