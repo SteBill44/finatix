@@ -607,8 +607,8 @@ const CourseDetail = () => {
               {quizzes && quizzes.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <GraduationCap className="w-6 h-6 text-primary" />
-                    Practice Quizzes & Exams
+                    <ClipboardList className="w-6 h-6 text-primary" />
+                    Quizzes
                   </h2>
                   <div className="space-y-4">
                     {quizzes.map((quiz) => (
@@ -633,7 +633,7 @@ const CourseDetail = () => {
                               </span>
                               <span className="flex items-center gap-1">
                                 <Timer className="w-3.5 h-3.5" />
-                                Timed exam available
+                                Timed quiz available
                               </span>
                             </div>
                           </div>
@@ -645,18 +645,57 @@ const CourseDetail = () => {
                               </Button>
                             </Link>
                             <Link to={`/exam/${quiz.id}`}>
-                              <Button variant="outline" size="sm" className="gap-2">
-                                <Timer className="w-4 h-4" />
-                                Quick Exam
-                              </Button>
-                            </Link>
-                            <Link to={`/mock-exam/${quiz.id}`}>
                               <Button size="sm" className="gap-2">
-                                <GraduationCap className="w-4 h-4" />
-                                Mock Exam
+                                <Timer className="w-4 h-4" />
+                                Quiz
                               </Button>
                             </Link>
                           </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Mock Exams Section */}
+              {quizzes && quizzes.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <GraduationCap className="w-6 h-6 text-primary" />
+                    Mock Exams
+                  </h2>
+                  <div className="space-y-4">
+                    {quizzes.map((quiz) => (
+                      <div
+                        key={quiz.id}
+                        className="bg-card rounded-xl border border-border p-6 hover:border-primary/50 transition-colors"
+                      >
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-foreground text-lg mb-1">
+                              {quiz.title} - Mock Exam
+                            </h3>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              Full exam simulation with timer, formula sheet, and calculator
+                            </p>
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Timer className="w-3.5 h-3.5" />
+                                Timed exam conditions
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <BookOpen className="w-3.5 h-3.5" />
+                                Formula sheet included
+                              </span>
+                            </div>
+                          </div>
+                          <Link to={`/mock-exam/${quiz.id}`}>
+                            <Button size="sm" className="gap-2">
+                              <GraduationCap className="w-4 h-4" />
+                              Start Mock Exam
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     ))}
