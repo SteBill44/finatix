@@ -575,8 +575,8 @@ const CourseDetail = () => {
         </div>
       </section>
 
-      {/* Course Analytics Section */}
-      {isEnrolled && totalAttempts > 0 && (
+      {/* Course Analytics Section - shown for all enrolled users */}
+      {isEnrolled && (
         <section className="py-12 bg-secondary/30">
           <div className="container mx-auto px-4">
             <div className="flex items-center gap-2 mb-6">
@@ -588,16 +588,18 @@ const CourseDetail = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Score Progress Chart */}
-              {scoreProgressData.length > 1 && (
-                <Card className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-medium text-foreground flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-primary" />
-                      Score Progress
-                    </h4>
+              <Card className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-medium text-foreground flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-primary" />
+                    Score Progress
+                  </h4>
+                  {scoreProgressData.length > 0 && (
                     <span className="text-xs text-muted-foreground">Last {scoreProgressData.length} attempts</span>
-                  </div>
-                  <div className="h-48">
+                  )}
+                </div>
+                <div className="h-48">
+                  {scoreProgressData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={scoreProgressData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -629,9 +631,13 @@ const CourseDetail = () => {
                         />
                       </LineChart>
                     </ResponsiveContainer>
-                  </div>
-                </Card>
-              )}
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                      Complete quizzes to see your progress
+                    </div>
+                  )}
+                </div>
+              </Card>
 
               {/* Competency Radar */}
               <Card className="p-5">
