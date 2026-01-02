@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -13,6 +13,7 @@ import {
   useLessonProgress,
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
+import { useLessonResources } from "@/hooks/useResources";
 import {
   ArrowLeft,
   ArrowRight,
@@ -20,11 +21,16 @@ import {
   Circle,
   Play,
   Clock,
-  BookOpen,
   FileText,
   Menu,
   X,
-  Lock,
+  Download,
+  FileIcon,
+  File,
+  FileSpreadsheet,
+  FileImage,
+  FileVideo,
+  FileAudio,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -54,6 +60,25 @@ const Lesson = () => {
   // Fetch lessons for this course
   const { data: lessons, isLoading: lessonsLoading } = useLessons(courseId);
   const { data: progress } = useLessonProgress(courseId);
+  const { data: resources } = useLessonResources(lessonId || "");
+
+  // Helper to get file icon based on type
+  const getFileIcon = (fileType: string) => {
+    if (fileType.includes("pdf")) return FileText;
+    if (fileType.includes("spreadsheet") || fileType.includes("excel") || fileType.includes("csv")) return FileSpreadsheet;
+    if (fileType.includes("image")) return FileImage;
+    if (fileType.includes("video")) return FileVideo;
+    if (fileType.includes("audio")) return FileAudio;
+    return File;
+  };
+
+  // Format file size
+  const formatFileSize = (bytes: number | null) => {
+    if (!bytes) return "Unknown size";
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
 
   // Current lesson
   const currentLesson = lessons?.find((l) => l.id === lessonId);
@@ -308,6 +333,71 @@ const Lesson = () => {
               </Card>
             )}
           </div>
+
+          {/* Downloadable Resources */}
+          {resources && resources.length > 0 && (
+            <>
+              <Separator className="my-8" />
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Download className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Downloadable Resources
+                  </h3>
+                </div>
+                <div className="grid gap-3">
+                  {resources.map((resource) => {
+                    const IconComponent = getFileIcon(resource.file_type);
+                    return (
+                      <Card
+                        key={resource.id}
+                        className="p-4 hover:bg-secondary/50 transition-colors"
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <IconComponent className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-foreground truncate">
+                              {resource.title}
+                            </h4>
+                            {resource.description && (
+                              <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">
+                                {resource.description}
+                              </p>
+                            )}
+                            <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                              <span className="uppercase">{resource.file_type}</span>
+                              <span>•</span>
+                              <span>{formatFileSize(resource.file_size)}</span>
+                              <span>•</span>
+                              <span>{resource.download_count} downloads</span>
+                            </div>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-2 flex-shrink-0"
+                            asChild
+                          >
+                            <a
+                              href={resource.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              <Download className="w-4 h-4" />
+                              Download
+                            </a>
+                          </Button>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
 
           <Separator className="my-8" />
 
