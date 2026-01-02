@@ -170,7 +170,7 @@ const Dashboard = () => {
           {/* Resume Last Lesson Quick Action */}
           {lastLesson && totalEnrollments > 0 && (
             <Link 
-              to={`/courses/${lastLesson.course_slug}/lesson/${lastLesson.lesson_id}`}
+              to={`/courses/${lastLesson.course_id}/lesson/${lastLesson.lesson_id}`}
               className="block mb-8"
             >
               <Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10 group cursor-pointer">
