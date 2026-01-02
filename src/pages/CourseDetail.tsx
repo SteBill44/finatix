@@ -186,13 +186,25 @@ const CourseDetail = () => {
       const variance = ((index * 7) % 20) - 10; // Range: -10 to +10
       const value = Math.max(0, Math.min(100, avgPerformance + variance));
       
-      // Truncate long titles for the chart
-      const shortTitle = area.title.length > 15 
-        ? area.title.substring(0, 15) + "..." 
-        : area.title;
+      // Create abbreviated title - take first letter of each word or use area code (A, B, C, etc.)
+      const words = area.title.split(/\s+/);
+      let shortTitle: string;
+      
+      if (words.length >= 2) {
+        // Use initials/acronym for multi-word titles (e.g., "Business Economics" -> "Bus. Econ.")
+        shortTitle = words.slice(0, 2).map(w => w.substring(0, 4)).join(" ");
+      } else if (area.title.length > 8) {
+        // Single long word - abbreviate
+        shortTitle = area.title.substring(0, 8);
+      } else {
+        shortTitle = area.title;
+      }
+      
+      // Add area letter prefix for clarity (A:, B:, etc.)
+      const areaLabel = `${String.fromCharCode(65 + index)}: ${shortTitle}`;
       
       return {
-        subject: shortTitle,
+        subject: areaLabel,
         fullTitle: area.title,
         value,
         weight: area.weight,
