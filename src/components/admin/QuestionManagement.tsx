@@ -11,16 +11,24 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GripVertical, X, Check } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GripVertical, X, Check, Link } from "lucide-react";
 import { QuestionType, HotspotRegion, DragItem, DragTarget } from "@/hooks/useQuizzes";
 
 interface Quiz {
   id: string;
   course_id: string;
+  lesson_id: string | null;
   title: string;
   description: string | null;
   order_index: number;
   courses?: { title: string };
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  course_id: string;
+  order_index: number;
 }
 
 interface QuizQuestion {
@@ -52,6 +60,7 @@ const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
 const QuestionManagement = () => {
   const { toast } = useToast();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
   const [questions, setQuestions] = useState<Record<string, QuizQuestion[]>>({});
   const [expandedQuizzes, setExpandedQuizzes] = useState<Set<string>>(new Set());
   const [loadingQuizzes, setLoadingQuizzes] = useState(true);
@@ -78,7 +87,21 @@ const QuestionManagement = () => {
 
   useEffect(() => {
     fetchQuizzes();
+    fetchLessons();
   }, []);
+
+  const fetchLessons = async () => {
+    const { data, error } = await supabase
+      .from("lessons")
+      .select("id, title, course_id, order_index")
+      .order("order_index", { ascending: true });
+
+    if (error) {
+      toast({ title: "Error fetching lessons", description: error.message, variant: "destructive" });
+    } else {
+      setLessons(data || []);
+    }
+  };
 
   const fetchQuizzes = async () => {
     setLoadingQuizzes(true);
@@ -125,6 +148,27 @@ const QuestionManagement = () => {
       }));
       setQuestions((prev) => ({ ...prev, [quizId]: transformedData }));
     }
+  };
+
+  const handleLinkLesson = async (quizId: string, lessonId: string | null) => {
+    const { error } = await supabase
+      .from("quizzes")
+      .update({ lesson_id: lessonId })
+      .eq("id", quizId);
+
+    if (error) {
+      toast({ title: "Error linking lesson", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: lessonId ? "Quiz linked to lesson" : "Quiz unlinked from lesson" });
+      // Update local state
+      setQuizzes(prev => prev.map(q => 
+        q.id === quizId ? { ...q, lesson_id: lessonId } : q
+      ));
+    }
+  };
+
+  const getLessonsForCourse = (courseId: string) => {
+    return lessons.filter(l => l.course_id === courseId);
   };
 
   const toggleQuizExpanded = (quizId: string) => {
@@ -385,6 +429,11 @@ const QuestionManagement = () => {
                         <h4 className="font-medium">{quiz.title}</h4>
                         <p className="text-sm text-muted-foreground">
                           {quiz.courses?.title || "Unknown Course"}
+                          {quiz.lesson_id && (
+                            <span className="ml-2 text-primary">
+                              • Linked to lesson
+                            </span>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -395,6 +444,33 @@ const QuestionManagement = () => {
 
                   <CollapsibleContent>
                     <div className="border-t p-4">
+                      {/* Lesson Linking Section */}
+                      <div className="mb-4 p-3 bg-secondary/30 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Link className="h-4 w-4 text-primary" />
+                          <Label className="text-sm font-medium">Link to Lesson</Label>
+                        </div>
+                        <Select
+                          value={quiz.lesson_id || "none"}
+                          onValueChange={(value) => handleLinkLesson(quiz.id, value === "none" ? null : value)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a lesson..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">No lesson (course-level quiz)</SelectItem>
+                            {getLessonsForCourse(quiz.course_id).map((lesson) => (
+                              <SelectItem key={lesson.id} value={lesson.id}>
+                                {lesson.order_index + 1}. {lesson.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Link this quiz to a specific lesson to track lesson-level performance.
+                        </p>
+                      </div>
+
                       <div className="flex justify-end mb-4">
                         <Button size="sm" onClick={() => handleAddQuestion(quiz.id)} className="gap-2">
                           <Plus className="h-4 w-4" />

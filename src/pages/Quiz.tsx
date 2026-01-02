@@ -109,6 +109,7 @@ const Quiz = () => {
     try {
       await recordAttempt.mutateAsync({
         courseId: quiz.course_id,
+        quizId: quiz.id,
         score,
         maxScore: questions.length,
       });
