@@ -524,133 +524,175 @@ const CourseDetail = () => {
                     <TrendingUp className="w-6 h-6 text-primary" />
                     Your Performance Analytics
                   </h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Score Progress Chart */}
-                    <Card className="p-5">
-                      <div className="flex items-center gap-2 mb-4">
-                        <TrendingUp className="w-5 h-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">Score Progress</h3>
-                      </div>
-                      <ChartContainer
-                        config={{
-                          score: {
-                            label: "Score %",
-                            color: "hsl(var(--primary))",
-                          },
-                        }}
-                        className="h-[180px]"
-                      >
-                        <LineChart
-                          data={quizAttempts.slice(-10).map((attempt, idx) => ({
-                            attempt: `#${idx + 1}`,
-                            score: Math.round((attempt.score / attempt.max_score) * 100),
-                          }))}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                        >
-                          <XAxis dataKey="attempt" tick={{ fontSize: 11 }} />
-                          <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} />
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                          <Line
-                            type="monotone"
-                            dataKey="score"
-                            stroke="hsl(var(--primary))"
-                            strokeWidth={2}
-                            dot={{ fill: "hsl(var(--primary))", strokeWidth: 2 }}
-                          />
-                        </LineChart>
-                      </ChartContainer>
-                    </Card>
-
-                    {/* Competency Analysis Radar - Based on Syllabus Areas */}
-                    <Card className="p-5">
+                  <div className="grid lg:grid-cols-5 gap-6">
+                    {/* Course Competency Radar - Prominent Left Side */}
+                    <Card className="p-6 lg:col-span-3">
                       <div className="flex items-center gap-2 mb-4">
                         <Target className="w-5 h-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">Syllabus Competency</h3>
+                        <h3 className="font-semibold text-foreground text-lg">Course Competency</h3>
                       </div>
                       {competencyData && competencyData.length > 0 ? (
-                        <ChartContainer
-                          config={{
-                            competency: {
-                              label: "Competency %",
-                              color: "hsl(var(--primary))",
-                            },
-                          }}
-                          className="h-[180px]"
-                        >
-                          <RadarChart
-                            data={competencyData}
-                            margin={{ top: 10, right: 30, bottom: 10, left: 30 }}
+                        <>
+                          <ChartContainer
+                            config={{
+                              competency: {
+                                label: "Competency %",
+                                color: "hsl(var(--primary))",
+                              },
+                            }}
+                            className="h-[280px]"
                           >
-                            <PolarGrid />
-                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9 }} />
-                            <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 8 }} />
-                            <ChartTooltip 
-                              content={({ active, payload }) => {
-                                if (active && payload?.length) {
-                                  const data = payload[0].payload;
-                                  return (
-                                    <div className="bg-popover border border-border rounded-lg p-2 shadow-lg">
-                                      <p className="font-medium text-foreground text-xs">{data.fullTitle}</p>
-                                      <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
-                                      <p className="text-primary text-xs font-semibold">{data.value}% competency</p>
-                                    </div>
-                                  );
-                                }
-                                return null;
-                              }}
-                            />
-                            <Radar
-                              name="Competency"
-                              dataKey="value"
-                              stroke="hsl(var(--primary))"
-                              fill="hsl(var(--primary))"
-                              fillOpacity={0.4}
-                            />
-                          </RadarChart>
-                        </ChartContainer>
+                            <RadarChart
+                              data={competencyData}
+                              margin={{ top: 20, right: 40, bottom: 20, left: 40 }}
+                            >
+                              <PolarGrid />
+                              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
+                              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
+                              <ChartTooltip 
+                                content={({ active, payload }) => {
+                                  if (active && payload?.length) {
+                                    const data = payload[0].payload;
+                                    return (
+                                      <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
+                                        <p className="font-medium text-foreground text-sm">{data.fullTitle}</p>
+                                        <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
+                                        <p className="text-primary text-sm font-semibold mt-1">{data.value}% competency</p>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                }}
+                              />
+                              <Radar
+                                name="Competency"
+                                dataKey="value"
+                                stroke="hsl(var(--primary))"
+                                fill="hsl(var(--primary))"
+                                fillOpacity={0.4}
+                                strokeWidth={2}
+                              />
+                            </RadarChart>
+                          </ChartContainer>
+                          {/* Legend */}
+                          <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                            {competencyData.map((item, idx) => (
+                              <div key={idx} className="flex items-center gap-2">
+                                <span className="font-semibold text-foreground">{String.fromCharCode(65 + idx)}:</span>
+                                <span className="truncate">{item.fullTitle}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </>
                       ) : (
-                        <div className="h-[180px] flex items-center justify-center text-muted-foreground text-sm">
-                          Complete quizzes to see syllabus competency
+                        <div className="h-[280px] flex items-center justify-center text-muted-foreground text-sm">
+                          Complete quizzes to see course competency
                         </div>
                       )}
                     </Card>
 
-                    {/* Practice Questions History */}
-                    <Card className="p-5">
-                      <div className="flex items-center gap-2 mb-4">
-                        <BarChart3 className="w-5 h-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">Practice History</h3>
-                      </div>
-                      <ChartContainer
-                        config={{
-                          correct: {
-                            label: "Correct",
-                            color: "hsl(var(--primary))",
-                          },
-                          incorrect: {
-                            label: "Incorrect",
-                            color: "hsl(var(--destructive))",
-                          },
-                        }}
-                        className="h-[180px]"
-                      >
-                        <BarChart
-                          data={quizAttempts.slice(-5).map((attempt, idx) => ({
-                            quiz: `Q${idx + 1}`,
-                            correct: attempt.score,
-                            incorrect: attempt.max_score - attempt.score,
-                          }))}
-                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    {/* Right Side - Score Progress & Practice Insights */}
+                    <div className="lg:col-span-2 space-y-6">
+                      {/* Score Progress Chart */}
+                      <Card className="p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <TrendingUp className="w-5 h-5 text-primary" />
+                          <h3 className="font-semibold text-foreground">Score Progress</h3>
+                        </div>
+                        <ChartContainer
+                          config={{
+                            score: {
+                              label: "Score %",
+                              color: "hsl(var(--primary))",
+                            },
+                          }}
+                          className="h-[120px]"
                         >
-                          <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                          <XAxis dataKey="quiz" tick={{ fontSize: 11 }} />
-                          <YAxis tick={{ fontSize: 11 }} />
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                          <Bar dataKey="correct" stackId="a" fill="hsl(var(--primary))" radius={[0, 0, 0, 0]} />
-                          <Bar dataKey="incorrect" stackId="a" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                      </ChartContainer>
-                    </Card>
+                          <LineChart
+                            data={quizAttempts.slice(-10).map((attempt, idx) => ({
+                              attempt: `#${idx + 1}`,
+                              score: Math.round((attempt.score / attempt.max_score) * 100),
+                            }))}
+                            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                          >
+                            <XAxis dataKey="attempt" tick={{ fontSize: 10 }} />
+                            <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
+                            <ChartTooltip content={<ChartTooltipContent />} />
+                            <Line
+                              type="monotone"
+                              dataKey="score"
+                              stroke="hsl(var(--primary))"
+                              strokeWidth={2}
+                              dot={{ fill: "hsl(var(--primary))", r: 3 }}
+                            />
+                          </LineChart>
+                        </ChartContainer>
+                      </Card>
+
+                      {/* Practice Insights - Improved */}
+                      <Card className="p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <BarChart3 className="w-5 h-5 text-primary" />
+                          <h3 className="font-semibold text-foreground">Practice Insights</h3>
+                        </div>
+                        {(() => {
+                          const totalAttempts = quizAttempts.length;
+                          const totalCorrect = quizAttempts.reduce((sum, a) => sum + a.score, 0);
+                          const totalQuestions = quizAttempts.reduce((sum, a) => sum + a.max_score, 0);
+                          const overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+                          const recentAttempts = quizAttempts.slice(-5);
+                          const recentCorrect = recentAttempts.reduce((sum, a) => sum + a.score, 0);
+                          const recentTotal = recentAttempts.reduce((sum, a) => sum + a.max_score, 0);
+                          const recentAccuracy = recentTotal > 0 ? Math.round((recentCorrect / recentTotal) * 100) : 0;
+                          const trend = recentAccuracy - overallAccuracy;
+                          
+                          return (
+                            <div className="space-y-4">
+                              {/* Key Stats */}
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="bg-secondary/50 rounded-lg p-3 text-center">
+                                  <p className="text-2xl font-bold text-foreground">{totalAttempts}</p>
+                                  <p className="text-xs text-muted-foreground">Total Attempts</p>
+                                </div>
+                                <div className="bg-secondary/50 rounded-lg p-3 text-center">
+                                  <p className="text-2xl font-bold text-foreground">{overallAccuracy}%</p>
+                                  <p className="text-xs text-muted-foreground">Overall Accuracy</p>
+                                </div>
+                              </div>
+                              
+                              {/* Trend Indicator */}
+                              <div className="bg-secondary/30 rounded-lg p-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm text-muted-foreground">Recent Trend</span>
+                                  <span className={`text-sm font-semibold flex items-center gap-1 ${trend >= 0 ? 'text-green-500' : 'text-destructive'}`}>
+                                    {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
+                                  </span>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {trend >= 5 ? "Great improvement! Keep it up." : 
+                                   trend >= 0 ? "Steady progress. You're on track." :
+                                   trend >= -5 ? "Slight dip. Review recent topics." :
+                                   "Consider revisiting challenging areas."}
+                                </p>
+                              </div>
+
+                              {/* Questions Breakdown */}
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1 bg-primary/20 rounded-full h-2 overflow-hidden">
+                                  <div 
+                                    className="bg-primary h-full rounded-full transition-all"
+                                    style={{ width: `${overallAccuracy}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                  {totalCorrect}/{totalQuestions} correct
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </Card>
+                    </div>
                   </div>
                 </div>
               )}
