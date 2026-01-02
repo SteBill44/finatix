@@ -447,9 +447,9 @@ const ExamMode = () => {
         )}
       </div>
 
-      {/* Calculator Modal */}
+      {/* Calculator Modal - positioned on left to avoid navigator overlap */}
       {showCalculator && (
-        <div className="fixed bottom-20 right-4 z-50">
+        <div className="fixed bottom-20 left-4 z-50">
           <ExamCalculator onClose={() => setShowCalculator(false)} />
         </div>
       )}
