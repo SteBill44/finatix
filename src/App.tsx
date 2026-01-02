@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import Quiz from "./pages/Quiz";
 import ExamMode from "./pages/ExamMode";
+import MockExam from "./pages/MockExam";
 import Admin from "./pages/Admin";
 import Achievements from "./pages/Achievements";
 import Discussions from "./pages/Discussions";
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/quiz/:quizId" element={<Quiz />} />
               <Route path="/exam/:quizId" element={<ExamMode />} />
+              <Route path="/mock-exam/:quizId" element={<MockExam />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/discussions" element={<Discussions />} />
