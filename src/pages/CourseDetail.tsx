@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -157,126 +157,35 @@ const CourseDetail = () => {
     autoEnrollAdmin();
   }, [isAdmin, user, course, isEnrolled, autoEnrolled]);
 
-  // Syllabus areas for all courses
-  const getSyllabusAreas = (slug: string) => {
-    if (slug === "ba1-business-economics") {
-      return [
-        { subject: "A: Macroeconomic", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Microeconomic", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Informational", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
-        { subject: "D: Financial", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
+  // Generate competency data from database syllabus areas
+  const competencyData = useMemo(() => {
+    if (syllabusData && Array.isArray(syllabusData.syllabus_areas) && syllabusData.syllabus_areas.length > 0) {
+      const areas = syllabusData.syllabus_areas as Array<{ title: string; weight: string; topics: string[] }>;
+      // Add slight variations to scores based on area index for visual interest
+      const variations = [5, -5, 10, -8, 3, -3, 8, -10];
+      return areas.map((area, index) => {
+        // Extract short label from title (e.g., "A: Regulatory Environment" -> "A: Regulatory")
+        const shortLabel = area.title.split(' ').slice(0, 2).join(' ').replace(/,$/, '');
+        const variation = variations[index % variations.length];
+        const score = averageScore > 0 
+          ? Math.min(100, Math.max(0, averageScore + variation)) 
+          : 0;
+        return {
+          subject: shortLabel,
+          score,
+          fullMark: 100,
+        };
+      });
     }
-    if (slug === "ba2-management-accounting") {
-      return [
-        { subject: "A: Nature of MA", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "B: Cost Accounting", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Budgeting", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Performance", score: averageScore > 0 ? Math.max(0, averageScore - 10) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "ba3-financial-accounting") {
-      return [
-        { subject: "A: Principles", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "B: Recording", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Preparation", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Analysis", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "ba4-ethics-governance-law") {
-      return [
-        { subject: "A: Business Ethics", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Corporate Governance", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "C: Legal Framework", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "D: Contract Law", score: averageScore > 0 ? Math.min(100, averageScore + 3) : 0, fullMark: 100 },
-        { subject: "E: Employment Law", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "e1-managing-finance") {
-      return [
-        { subject: "A: Role of Finance", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Technology", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "C: Data & Info", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "D: Structure", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "E: Interacting", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "e2-managing-performance") {
-      return [
-        { subject: "A: Business Models", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Managing People", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Managing Projects", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "e3-strategic-management") {
-      return [
-        { subject: "A: Strategy Process", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Digital Strategy", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "C: Finance & Org", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "D: Strategic Control", score: averageScore > 0 ? Math.min(100, averageScore + 3) : 0, fullMark: 100 },
-        { subject: "E: Strategic Options", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-        { subject: "F: Ecosystem", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "p1-management-accounting") {
-      return [
-        { subject: "A: Cost Accounting", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Budgeting", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Short-Term Decisions", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Risk & Uncertainty", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "p2-advanced-management-accounting") {
-      return [
-        { subject: "A: Managing Costs", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Capital Investment", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-        { subject: "C: Business Units", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Risk & Control", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "p3-risk-management") {
-      return [
-        { subject: "A: Enterprise Risk", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Strategic Risk", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Internal Controls", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Cyber Risks", score: averageScore > 0 ? Math.max(0, averageScore - 8) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "f1-financial-reporting") {
-      return [
-        { subject: "A: Regulatory", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "B: Financial Statements", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Taxation", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Working Capital", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "f2-advanced-financial-reporting") {
-      return [
-        { subject: "A: Long-Term Finance", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Reporting Standards", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Group Accounts", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Integrated Reporting", score: averageScore > 0 ? Math.min(100, averageScore + 8) : 0, fullMark: 100 },
-        { subject: "E: Analysis", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-      ];
-    }
-    if (slug === "f3-financial-strategy") {
-      return [
-        { subject: "A: Financial Policy", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-        { subject: "B: Long-Term Finance", score: averageScore > 0 ? Math.max(0, averageScore - 3) : 0, fullMark: 100 },
-        { subject: "C: Financial Risks", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-        { subject: "D: Business Valuation", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-      ];
-    }
-    // Default fallback for other courses
+    
+    // Default fallback for courses without syllabus data
     return [
       { subject: "Topic A", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
       { subject: "Topic B", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
       { subject: "Topic C", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
       { subject: "Topic D", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
     ];
-  };
-
-  const competencyData = getSyllabusAreas(course?.slug || "");
+  }, [syllabusData, averageScore]);
 
   // Question history based on attempts
   const correctTotal = courseQuizAttempts.reduce((acc, a) => acc + a.score, 0);
