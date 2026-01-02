@@ -603,32 +603,56 @@ export type Database = {
       quiz_questions: {
         Row: {
           correct_answer: number
+          correct_answers: number[] | null
           created_at: string
+          drag_items: Json | null
+          drag_targets: Json | null
           explanation: string | null
+          hotspot_regions: Json | null
           id: string
+          image_url: string | null
+          number_answer: number | null
+          number_tolerance: number | null
           options: Json
           order_index: number
           question: string
+          question_type: string
           quiz_id: string
         }
         Insert: {
           correct_answer: number
+          correct_answers?: number[] | null
           created_at?: string
+          drag_items?: Json | null
+          drag_targets?: Json | null
           explanation?: string | null
+          hotspot_regions?: Json | null
           id?: string
+          image_url?: string | null
+          number_answer?: number | null
+          number_tolerance?: number | null
           options?: Json
           order_index?: number
           question: string
+          question_type?: string
           quiz_id: string
         }
         Update: {
           correct_answer?: number
+          correct_answers?: number[] | null
           created_at?: string
+          drag_items?: Json | null
+          drag_targets?: Json | null
           explanation?: string | null
+          hotspot_regions?: Json | null
           id?: string
+          image_url?: string | null
+          number_answer?: number | null
+          number_tolerance?: number | null
           options?: Json
           order_index?: number
           question?: string
+          question_type?: string
           quiz_id?: string
         }
         Relationships: [
