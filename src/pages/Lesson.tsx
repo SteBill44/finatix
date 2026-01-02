@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -14,7 +14,7 @@ import {
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
 import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
-import { useQuizzes, useLessonQuizAttempts } from "@/hooks/useQuizzes";
+import { useQuizzes } from "@/hooks/useQuizzes";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
 import {
   ArrowLeft,
@@ -36,14 +36,10 @@ import {
   Timer,
   ClipboardList,
   AlertTriangle,
-  TrendingUp,
-  Target,
-  History,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
 
 const Lesson = () => {
   const { courseId, lessonId } = useParams();
@@ -73,38 +69,7 @@ const Lesson = () => {
   const { data: resources } = useLessonResources(lessonId || "");
   const { data: lessonQuizzes } = useQuizzes(courseId, lessonId);
   const { data: courseQuizzes } = useQuizzes(courseId);
-  const { data: lessonQuizAttempts } = useLessonQuizAttempts(lessonId);
   const incrementDownload = useIncrementDownloadCount();
-
-  // Calculate lesson quiz performance stats
-  const quizStats = useMemo(() => {
-    if (!lessonQuizAttempts || lessonQuizAttempts.length === 0) {
-      return null;
-    }
-
-    const totalAttempts = lessonQuizAttempts.length;
-    const avgScore = lessonQuizAttempts.reduce((sum, a) => sum + (a.score / a.max_score) * 100, 0) / totalAttempts;
-    const bestScore = Math.max(...lessonQuizAttempts.map(a => (a.score / a.max_score) * 100));
-    
-    // Prepare chart data - last 10 attempts
-    const chartData = lessonQuizAttempts
-      .slice(0, 10)
-      .reverse()
-      .map((attempt, index) => ({
-        attempt: index + 1,
-        score: Math.round((attempt.score / attempt.max_score) * 100),
-        date: format(new Date(attempt.attempted_at), "MMM d"),
-      }));
-
-    return {
-      totalAttempts,
-      avgScore: Math.round(avgScore),
-      bestScore: Math.round(bestScore),
-      chartData,
-      recentAttempts: lessonQuizAttempts.slice(0, 5),
-    };
-  }, [lessonQuizAttempts]);
-
   // Use lesson-specific quizzes if available, otherwise fall back to course quizzes
   const quizzesToShow = lessonQuizzes && lessonQuizzes.length > 0 ? lessonQuizzes : courseQuizzes;
 
@@ -440,128 +405,6 @@ const Lesson = () => {
             </>
           )}
 
-          {/* Lesson Quiz Performance */}
-          {quizStats && (
-            <>
-              <Separator className="my-8" />
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Your Lesson Performance
-                  </h3>
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <Card className="p-4 bg-primary/5 border-primary/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Target className="w-5 h-5 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-2xl font-bold text-foreground">{quizStats.avgScore}%</p>
-                        <p className="text-xs text-muted-foreground">Average Score</p>
-                      </div>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-accent/5 border-accent/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                        <TrendingUp className="w-5 h-5 text-accent" />
-                      </div>
-                      <div>
-                        <p className="text-2xl font-bold text-foreground">{quizStats.bestScore}%</p>
-                        <p className="text-xs text-muted-foreground">Best Score</p>
-                      </div>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-secondary">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                        <History className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-2xl font-bold text-foreground">{quizStats.totalAttempts}</p>
-                        <p className="text-xs text-muted-foreground">Total Attempts</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-
-                {/* Score Progress Chart */}
-                {quizStats.chartData.length > 1 && (
-                  <Card className="p-4 mb-6">
-                    <h4 className="text-sm font-medium text-foreground mb-4">Score Progress</h4>
-                    <div className="h-48">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={quizStats.chartData}>
-                          <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                          <XAxis 
-                            dataKey="date" 
-                            tick={{ fontSize: 12 }}
-                            className="text-muted-foreground"
-                          />
-                          <YAxis 
-                            domain={[0, 100]}
-                            tick={{ fontSize: 12 }}
-                            className="text-muted-foreground"
-                          />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'hsl(var(--card))',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: '8px'
-                            }}
-                            formatter={(value: number) => [`${value}%`, 'Score']}
-                          />
-                          <Line 
-                            type="monotone" 
-                            dataKey="score" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={2}
-                            dot={{ fill: 'hsl(var(--primary))' }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </Card>
-                )}
-
-                {/* Recent Attempts */}
-                <Card className="p-4">
-                  <h4 className="text-sm font-medium text-foreground mb-3">Recent Attempts</h4>
-                  <div className="space-y-2">
-                    {quizStats.recentAttempts.map((attempt: any) => (
-                      <div key={attempt.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                        <div className="flex items-center gap-3">
-                          <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium",
-                            (attempt.score / attempt.max_score) >= 0.7 
-                              ? "bg-accent/10 text-accent" 
-                              : "bg-destructive/10 text-destructive"
-                          )}>
-                            {Math.round((attempt.score / attempt.max_score) * 100)}%
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {attempt.quizzes?.title || "Quiz"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {format(new Date(attempt.attempted_at), "MMM d, yyyy 'at' h:mm a")}
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          {attempt.score}/{attempt.max_score}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-            </>
-          )}
 
           {/* Practice Quizzes Section */}
           {quizzesToShow && quizzesToShow.length > 0 && (

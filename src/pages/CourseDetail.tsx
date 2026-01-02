@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress, useQuizAttempts } from "@/hooks/useStudentProgress";
+import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -21,7 +21,6 @@ import {
   BookOpen, 
   FileText,
   Award,
-  BarChart2,
   ArrowLeft,
   ShoppingCart,
   Lock,
@@ -29,8 +28,6 @@ import {
   GraduationCap,
   Timer,
   ClipboardList,
-  TrendingUp,
-  Brain,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
 import CourseSideNav from "@/components/course/CourseSideNav";
@@ -41,20 +38,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-} from "recharts";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
@@ -116,81 +99,9 @@ const CourseDetail = () => {
   const { data: lessonProgress } = useLessonProgress(course?.id);
   const { data: quizzes } = useQuizzes(course?.id);
   const { data: ratingData } = useCourseRating(course?.id || "");
-  const { data: quizAttempts } = useQuizAttempts();
-
-  // Filter quiz attempts for this course
-  const courseQuizAttempts = quizAttempts?.filter(a => a.course_id === course?.id) || [];
-  
-  // Calculate course-specific analytics
-  const totalAttempts = courseQuizAttempts.length;
-  const averageScore = totalAttempts > 0
-    ? Math.round(courseQuizAttempts.reduce((acc, q) => acc + (q.score / q.max_score) * 100, 0) / totalAttempts)
-    : 0;
-
-  // Generate score progress data from actual attempts (last 8)
-  const scoreProgressData = courseQuizAttempts
-    .slice(0, 8)
-    .reverse()
-    .map((attempt, index) => ({
-      attempt: `#${index + 1}`,
-      score: Math.round((attempt.score / attempt.max_score) * 100),
-    }));
 
   // Check enrollment status
   const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
-
-  // Auto-enroll admins in courses
-  useEffect(() => {
-    const autoEnrollAdmin = async () => {
-      if (isAdmin && user && course && !isEnrolled && !autoEnrolled) {
-        try {
-          await enrollMutation.mutateAsync(course.id);
-          setAutoEnrolled(true);
-          refetchEnrollments();
-        } catch (error: any) {
-          // Ignore duplicate enrollment errors
-          if (!error.message?.includes("duplicate")) {
-            console.error("Auto-enroll failed:", error);
-          }
-        }
-      }
-    };
-    autoEnrollAdmin();
-  }, [isAdmin, user, course, isEnrolled, autoEnrolled]);
-
-  // Generate competency data from database syllabus areas
-  const competencyData = useMemo(() => {
-    if (syllabusData && Array.isArray(syllabusData.syllabus_areas) && syllabusData.syllabus_areas.length > 0) {
-      const areas = syllabusData.syllabus_areas as Array<{ title: string; weight: string; topics: string[] }>;
-      // Add slight variations to scores based on area index for visual interest
-      const variations = [5, -5, 10, -8, 3, -3, 8, -10];
-      return areas.map((area, index) => {
-        // Extract short label from title (e.g., "A: Regulatory Environment" -> "A: Regulatory")
-        const shortLabel = area.title.split(' ').slice(0, 2).join(' ').replace(/,$/, '');
-        const variation = variations[index % variations.length];
-        const score = averageScore > 0 
-          ? Math.min(100, Math.max(0, averageScore + variation)) 
-          : 0;
-        return {
-          subject: shortLabel,
-          score,
-          fullMark: 100,
-        };
-      });
-    }
-    
-    // Default fallback for courses without syllabus data
-    return [
-      { subject: "Topic A", score: averageScore > 0 ? Math.min(100, averageScore + 10) : 0, fullMark: 100 },
-      { subject: "Topic B", score: averageScore > 0 ? Math.max(0, averageScore - 5) : 0, fullMark: 100 },
-      { subject: "Topic C", score: averageScore > 0 ? Math.min(100, averageScore + 5) : 0, fullMark: 100 },
-      { subject: "Topic D", score: averageScore > 0 ? averageScore : 0, fullMark: 100 },
-    ];
-  }, [syllabusData, averageScore]);
-
-  // Question history based on attempts
-  const correctTotal = courseQuizAttempts.reduce((acc, a) => acc + a.score, 0);
-  const incorrectTotal = courseQuizAttempts.reduce((acc, a) => acc + (a.max_score - a.score), 0);
 
   const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
   const totalLessons = lessons?.length || 0;
@@ -487,140 +398,6 @@ const CourseDetail = () => {
         </div>
       </section>
 
-      {/* Course Analytics Section - shown for all enrolled users */}
-      {isEnrolled && (
-        <section className="py-12 bg-secondary/30">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="w-6 h-6 text-primary" />
-              <h2 className="text-2xl font-bold text-foreground">
-                Your Performance
-              </h2>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-6">
-              {/* Competency Radar - Full width on left */}
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-medium text-foreground flex items-center gap-2">
-                    <Brain className="w-5 h-5 text-accent" />
-                    Competency Analysis
-                  </h4>
-                </div>
-                <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RadarChart data={competencyData}>
-                      <PolarGrid stroke="hsl(var(--border))" />
-                      <PolarAngleAxis
-                        dataKey="subject"
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={11}
-                      />
-                      <PolarRadiusAxis
-                        angle={30}
-                        domain={[0, 100]}
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={10}
-                      />
-                      <Radar
-                        name="Score"
-                        dataKey="score"
-                        stroke="hsl(var(--primary))"
-                        fill="hsl(var(--primary))"
-                        fillOpacity={0.3}
-                        strokeWidth={2}
-                      />
-                    </RadarChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Stacked: Practice Summary + Score Progress */}
-              <div className="flex flex-col gap-6">
-                {/* Practice Summary */}
-                <Card className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-medium text-foreground flex items-center gap-2">
-                      <BarChart2 className="w-4 h-4 text-primary" />
-                      Practice Summary
-                    </h4>
-                  </div>
-                  <div className="flex flex-wrap items-center justify-around gap-4">
-                    <div className="text-center">
-                      <p className="text-4xl font-bold text-foreground">{averageScore}%</p>
-                      <p className="text-sm text-muted-foreground">Average Score</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-foreground">{totalAttempts}</p>
-                      <p className="text-xs text-muted-foreground">Quiz Attempts</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-accent">{correctTotal}</p>
-                      <p className="text-xs text-muted-foreground">Correct</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-2xl font-bold text-destructive">{incorrectTotal}</p>
-                      <p className="text-xs text-muted-foreground">Incorrect</p>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Score Progress Chart */}
-                <Card className="p-5 flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-medium text-foreground flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-primary" />
-                      Score Progress
-                    </h4>
-                    {scoreProgressData.length > 0 && (
-                      <span className="text-xs text-muted-foreground">Last {scoreProgressData.length} attempts</span>
-                    )}
-                  </div>
-                  <div className="h-40">
-                    {scoreProgressData.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={scoreProgressData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                          <XAxis
-                            dataKey="attempt"
-                            stroke="hsl(var(--muted-foreground))"
-                            fontSize={11}
-                          />
-                          <YAxis
-                            stroke="hsl(var(--muted-foreground))"
-                            fontSize={11}
-                            domain={[0, 100]}
-                          />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: "hsl(var(--card))",
-                              border: "1px solid hsl(var(--border))",
-                              borderRadius: "8px",
-                            }}
-                            formatter={(value) => [`${value}%`, "Score"]}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="score"
-                            stroke="hsl(var(--primary))"
-                            strokeWidth={2}
-                            dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                        Complete quizzes to see your progress
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Course Content */}
       <section className="py-16 lg:py-24">
@@ -778,22 +555,6 @@ const CourseDetail = () => {
                 </div>
               )}
 
-              <div className="bg-card rounded-2xl border border-border p-8">
-                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                  <BarChart2 className="w-6 h-6 text-primary" />
-                  Smart Analytics Preview
-                </h2>
-                <div className="bg-secondary/50 rounded-xl p-6">
-                  <img 
-                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop" 
-                    alt="Analytics Dashboard Preview"
-                    className="w-full rounded-lg shadow-lg"
-                  />
-                  <p className="text-center text-muted-foreground mt-4">
-                    Track your progress across competencies, identify weak areas, and get personalized study recommendations.
-                  </p>
-                </div>
-              </div>
 
               {/* Course Reviews Section */}
               <div className="bg-card rounded-2xl border border-border p-8">
