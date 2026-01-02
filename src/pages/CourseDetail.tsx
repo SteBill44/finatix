@@ -186,26 +186,26 @@ const CourseDetail = () => {
       const variance = ((index * 7) % 20) - 10; // Range: -10 to +10
       const value = Math.max(0, Math.min(100, avgPerformance + variance));
       
-      // Create abbreviated title - take first letter of each word or use area code (A, B, C, etc.)
-      const words = area.title.split(/\s+/);
+      // Extract clean title - remove existing "A:", "B:" prefix if present
+      let cleanTitle = area.title.replace(/^[A-Z]:\s*/, '').trim();
+      
+      // Create short label for chart axis
+      const words = cleanTitle.split(/\s+/);
       let shortTitle: string;
       
-      if (words.length >= 2) {
-        // Use initials/acronym for multi-word titles (e.g., "Business Economics" -> "Bus. Econ.")
-        shortTitle = words.slice(0, 2).map(w => w.substring(0, 4)).join(" ");
-      } else if (area.title.length > 8) {
-        // Single long word - abbreviate
-        shortTitle = area.title.substring(0, 8);
+      if (words.length >= 3) {
+        // Take first word only for long titles
+        shortTitle = words[0].length > 10 ? words[0].substring(0, 10) : words[0];
+      } else if (words.length === 2) {
+        // Two words - abbreviate each
+        shortTitle = words.map(w => w.substring(0, 5)).join(" ");
       } else {
-        shortTitle = area.title;
+        shortTitle = cleanTitle.length > 12 ? cleanTitle.substring(0, 12) : cleanTitle;
       }
       
-      // Add area letter prefix for clarity (A:, B:, etc.)
-      const areaLabel = `${String.fromCharCode(65 + index)}: ${shortTitle}`;
-      
       return {
-        subject: areaLabel,
-        fullTitle: area.title,
+        subject: shortTitle,
+        fullTitle: cleanTitle,
         value,
         weight: area.weight,
       };
@@ -527,65 +527,54 @@ const CourseDetail = () => {
                   <div className="grid lg:grid-cols-5 gap-6">
                     {/* Course Competency Radar - Prominent Left Side */}
                     <Card className="p-6 lg:col-span-3">
-                      <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center gap-2 mb-2">
                         <Target className="w-5 h-5 text-primary" />
                         <h3 className="font-semibold text-foreground text-lg">Course Competency</h3>
                       </div>
                       {competencyData && competencyData.length > 0 ? (
-                        <>
-                          <ChartContainer
-                            config={{
-                              competency: {
-                                label: "Competency %",
-                                color: "hsl(var(--primary))",
-                              },
-                            }}
-                            className="h-[280px]"
+                        <ChartContainer
+                          config={{
+                            competency: {
+                              label: "Competency %",
+                              color: "hsl(var(--primary))",
+                            },
+                          }}
+                          className="h-[340px]"
+                        >
+                          <RadarChart
+                            data={competencyData}
+                            margin={{ top: 30, right: 60, bottom: 30, left: 60 }}
                           >
-                            <RadarChart
-                              data={competencyData}
-                              margin={{ top: 20, right: 40, bottom: 20, left: 40 }}
-                            >
-                              <PolarGrid />
-                              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-                              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
-                              <ChartTooltip 
-                                content={({ active, payload }) => {
-                                  if (active && payload?.length) {
-                                    const data = payload[0].payload;
-                                    return (
-                                      <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
-                                        <p className="font-medium text-foreground text-sm">{data.fullTitle}</p>
-                                        <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
-                                        <p className="text-primary text-sm font-semibold mt-1">{data.value}% competency</p>
-                                      </div>
-                                    );
-                                  }
-                                  return null;
-                                }}
-                              />
-                              <Radar
-                                name="Competency"
-                                dataKey="value"
-                                stroke="hsl(var(--primary))"
-                                fill="hsl(var(--primary))"
-                                fillOpacity={0.4}
-                                strokeWidth={2}
-                              />
-                            </RadarChart>
-                          </ChartContainer>
-                          {/* Legend */}
-                          <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
-                            {competencyData.map((item, idx) => (
-                              <div key={idx} className="flex items-center gap-2">
-                                <span className="font-semibold text-foreground">{String.fromCharCode(65 + idx)}:</span>
-                                <span className="truncate">{item.fullTitle}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </>
+                            <PolarGrid />
+                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: "hsl(var(--foreground))" }} />
+                            <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
+                            <ChartTooltip 
+                              content={({ active, payload }) => {
+                                if (active && payload?.length) {
+                                  const data = payload[0].payload;
+                                  return (
+                                    <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
+                                      <p className="font-medium text-foreground text-sm">{data.fullTitle}</p>
+                                      <p className="text-muted-foreground text-xs">Weight: {data.weight}</p>
+                                      <p className="text-primary text-sm font-semibold mt-1">{data.value}% competency</p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              }}
+                            />
+                            <Radar
+                              name="Competency"
+                              dataKey="value"
+                              stroke="hsl(var(--primary))"
+                              fill="hsl(var(--primary))"
+                              fillOpacity={0.4}
+                              strokeWidth={2}
+                            />
+                          </RadarChart>
+                        </ChartContainer>
                       ) : (
-                        <div className="h-[280px] flex items-center justify-center text-muted-foreground text-sm">
+                        <div className="h-[340px] flex items-center justify-center text-muted-foreground text-sm">
                           Complete quizzes to see course competency
                         </div>
                       )}
