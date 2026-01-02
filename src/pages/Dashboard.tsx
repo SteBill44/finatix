@@ -9,6 +9,7 @@ import {
   useLessonProgress,
   useQuizAttempts,
   useTotalStudyTime,
+  useLastAccessedLesson,
 } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
@@ -26,6 +27,7 @@ import {
   GraduationCap,
   FileQuestion,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import {
   LineChart,
@@ -51,6 +53,7 @@ const Dashboard = () => {
   const { data: lessonProgress } = useLessonProgress();
   const { data: quizAttempts } = useQuizAttempts();
   const { formatted: studyTimeFormatted } = useTotalStudyTime();
+  const { data: lastLesson } = useLastAccessedLesson();
 
   // Get quizzes for enrolled courses
   const enrolledCourseIds = enrollments?.map((e) => e.course_id) || [];
@@ -210,6 +213,33 @@ const Dashboard = () => {
               </Card>
             ))}
           </div>
+
+          {/* Resume Last Lesson Quick Action */}
+          {lastLesson && totalEnrollments > 0 && (
+            <Link 
+              to={`/courses/${lastLesson.course_slug}/lesson/${lastLesson.lesson_id}`}
+              className="block mb-8"
+            >
+              <Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10 group cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <Play className="w-7 h-7 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground font-medium">Resume where you left off</p>
+                      <h3 className="text-lg font-bold text-foreground">{lastLesson.lesson_title}</h3>
+                      <p className="text-sm text-muted-foreground">{lastLesson.course_title}</p>
+                    </div>
+                  </div>
+                  <Button size="lg" className="gap-2 shadow-md group-hover:shadow-lg transition-all">
+                    Continue Learning
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              </Card>
+            </Link>
+          )}
 
           {totalEnrollments === 0 ? (
             <Card className="p-12 text-center">

@@ -140,6 +140,139 @@ export const useLessonProgress = (courseId?: string) => {
   });
 };
 
+export interface LastLesson {
+  lesson_id: string;
+  lesson_title: string;
+  course_id: string;
+  course_slug: string;
+  course_title: string;
+}
+
+export const useLastAccessedLesson = () => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["last_accessed_lesson", user?.id],
+    queryFn: async (): Promise<LastLesson | null> => {
+      if (!user) return null;
+      
+      // Get the most recent lesson progress entry
+      const { data: progressData, error: progressError } = await supabase
+        .from("lesson_progress")
+        .select(`
+          lesson_id,
+          completed_at,
+          lessons (
+            id,
+            title,
+            course_id,
+            order_index
+          )
+        `)
+        .eq("user_id", user.id)
+        .order("completed_at", { ascending: false })
+        .limit(1);
+
+      if (progressError) throw progressError;
+
+      // If we have progress, find the next uncompleted lesson or return the last one
+      if (progressData && progressData.length > 0) {
+        const lastProgress = progressData[0] as any;
+        const courseId = lastProgress.lessons?.course_id;
+        
+        if (courseId) {
+          // Get course info
+          const { data: courseData } = await supabase
+            .from("courses")
+            .select("id, title, slug")
+            .eq("id", courseId)
+            .single();
+
+          // Get all lessons for this course
+          const { data: allLessons } = await supabase
+            .from("lessons")
+            .select("id, title, order_index")
+            .eq("course_id", courseId)
+            .order("order_index", { ascending: true });
+
+          // Get completed lesson IDs
+          const { data: completedProgress } = await supabase
+            .from("lesson_progress")
+            .select("lesson_id")
+            .eq("user_id", user.id)
+            .eq("completed", true);
+
+          const completedIds = new Set(completedProgress?.map(p => p.lesson_id) || []);
+
+          // Find the first uncompleted lesson
+          const nextLesson = allLessons?.find(l => !completedIds.has(l.id));
+
+          if (nextLesson && courseData) {
+            return {
+              lesson_id: nextLesson.id,
+              lesson_title: nextLesson.title,
+              course_id: courseData.id,
+              course_slug: courseData.slug,
+              course_title: courseData.title,
+            };
+          }
+
+          // If all completed, return the last lesson
+          if (allLessons && allLessons.length > 0 && courseData) {
+            const lastLesson = allLessons[allLessons.length - 1];
+            return {
+              lesson_id: lastLesson.id,
+              lesson_title: lastLesson.title,
+              course_id: courseData.id,
+              course_slug: courseData.slug,
+              course_title: courseData.title,
+            };
+          }
+        }
+      }
+
+      // Fallback: get the first lesson of the first enrolled course
+      const { data: enrollments } = await supabase
+        .from("enrollments")
+        .select(`
+          course_id,
+          courses (
+            id,
+            title,
+            slug
+          )
+        `)
+        .eq("user_id", user.id)
+        .order("enrolled_at", { ascending: false })
+        .limit(1);
+
+      if (enrollments && enrollments.length > 0) {
+        const enrollment = enrollments[0] as any;
+        const { data: firstLesson } = await supabase
+          .from("lessons")
+          .select("id, title")
+          .eq("course_id", enrollment.course_id)
+          .order("order_index", { ascending: true })
+          .limit(1)
+          .single();
+
+        if (firstLesson && enrollment.courses) {
+          return {
+            lesson_id: firstLesson.id,
+            lesson_title: firstLesson.title,
+            course_id: enrollment.courses.id,
+            course_slug: enrollment.courses.slug,
+            course_title: enrollment.courses.title,
+          };
+        }
+      }
+
+      return null;
+    },
+    enabled: !!user,
+  });
+};
+
 export const useCourseProgress = (courseId: string) => {
   const { data: lessons } = useLessons(courseId);
   const { data: progress } = useLessonProgress(courseId);
