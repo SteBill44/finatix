@@ -663,6 +663,7 @@ export type Database = {
           question: string
           question_type: string
           quiz_id: string
+          syllabus_area_index: number | null
         }
         Insert: {
           correct_answer: number
@@ -681,6 +682,7 @@ export type Database = {
           question: string
           question_type?: string
           quiz_id: string
+          syllabus_area_index?: number | null
         }
         Update: {
           correct_answer?: number
@@ -699,6 +701,7 @@ export type Database = {
           question?: string
           question_type?: string
           quiz_id?: string
+          syllabus_area_index?: number | null
         }
         Relationships: [
           {
