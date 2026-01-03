@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export interface CIMAProfileData {
   cima_id: string | null;
-  siebel_id: string | null;
   first_name: string | null;
   last_name: string | null;
   cima_start_date: string | null;
@@ -13,7 +12,6 @@ export interface CIMAProfileData {
 
 export interface CIMAProfileUpdate {
   cima_id?: string;
-  siebel_id?: string;
   first_name?: string;
   last_name?: string;
   cima_start_date?: string;
@@ -30,7 +28,7 @@ export const useCIMAProfile = () => {
 
       const { data, error } = await supabase
         .from("profiles")
-        .select("cima_id, siebel_id, first_name, last_name, cima_start_date, cima_end_date")
+        .select("cima_id, first_name, last_name, cima_start_date, cima_end_date")
         .eq("user_id", user.id)
         .maybeSingle();
 
