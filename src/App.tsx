@@ -21,6 +21,7 @@ import MockExam from "./pages/MockExam";
 import Admin from "./pages/Admin";
 import Achievements from "./pages/Achievements";
 import Discussions from "./pages/Discussions";
+import ManageAccount from "./pages/ManageAccount";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/achievements" element={<Achievements />} />
               <Route path="/discussions" element={<Discussions />} />
+              <Route path="/account" element={<ManageAccount />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
