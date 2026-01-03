@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEnrollments, useEnrollInCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
+import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Target,
   BarChart3,
+  UserMinus,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -61,6 +62,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const CourseDetail = () => {
   const { courseId } = useParams();
@@ -68,11 +80,13 @@ const CourseDetail = () => {
   const { user } = useAuth();
   const { data: enrollments, refetch: refetchEnrollments } = useEnrollments();
   const enrollMutation = useEnrollInCourse();
+  const unenrollMutation = useUnenrollFromCourse();
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
   const { isAdmin } = useIsAdmin();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
+  const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -273,6 +287,17 @@ const CourseDetail = () => {
     }
   };
 
+  const handleUnenroll = async () => {
+    if (!course) return;
+    try {
+      await unenrollMutation.mutateAsync(course.id);
+      toast.success(`Unenrolled from ${course.title}`);
+      setShowUnenrollDialog(false);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to unenroll");
+    }
+  };
+
   if (isLoading) {
     return (
       <Layout>
@@ -461,9 +486,41 @@ const CourseDetail = () => {
                       <Play className="w-5 h-5" />
                       {progressPercentage > 0 ? "Continue Learning" : "Start Learning"}
                     </Button>
-                    <p className="text-center text-sm text-accent font-medium">
+                    <p className="text-center text-sm text-accent font-medium mb-3">
                       ✓ You're enrolled in this course
                     </p>
+                    
+                    <AlertDialog open={showUnenrollDialog} onOpenChange={setShowUnenrollDialog}>
+                      <AlertDialogTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-full gap-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <UserMinus className="w-4 h-4" />
+                          Unenroll from Course
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Unenroll from course?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to unenroll from <strong>{course.title}</strong>? 
+                            Your progress will be lost and you'll need to re-enroll to access the course again.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={handleUnenroll}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            disabled={unenrollMutation.isPending}
+                          >
+                            {unenrollMutation.isPending ? "Unenrolling..." : "Unenroll"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </>
                 ) : (
                   <>

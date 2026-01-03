@@ -361,6 +361,30 @@ export const useEnrollInCourse = () => {
   });
 };
 
+export const useUnenrollFromCourse = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (courseId: string) => {
+      if (!user) throw new Error("Must be logged in");
+      
+      const { error } = await supabase
+        .from("enrollments")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("course_id", courseId);
+
+      if (error) throw error;
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["lesson_progress"] });
+    },
+  });
+};
+
 export const useEnrollInMultipleCourses = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();

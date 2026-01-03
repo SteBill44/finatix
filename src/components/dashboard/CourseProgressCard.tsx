@@ -1,8 +1,21 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Play, CheckCircle, ArrowRight } from "lucide-react";
-import { useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
+import { Play, CheckCircle, ArrowRight, UserMinus } from "lucide-react";
+import { useLessons, useLessonProgress, useUnenrollFromCourse } from "@/hooks/useStudentProgress";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface CourseProgressCardProps {
   enrollment: {
@@ -37,11 +50,23 @@ const getLevelBadgeStyle = (level: string) => {
 const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   const { data: lessons } = useLessons(enrollment.course_id);
   const { data: progress } = useLessonProgress(enrollment.course_id);
+  const unenrollMutation = useUnenrollFromCourse();
+  const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
   
   const totalLessons = lessons?.length || 0;
   const completedLessons = progress?.filter((p) => p.completed).length || 0;
   const percentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   const isCompleted = enrollment.completed_at !== null;
+
+  const handleUnenroll = async () => {
+    try {
+      await unenrollMutation.mutateAsync(enrollment.course_id);
+      toast.success(`Unenrolled from ${enrollment.courses.title}`);
+      setShowUnenrollDialog(false);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to unenroll");
+    }
+  };
 
   return (
     <div className="p-4 bg-secondary/50 rounded-xl hover:bg-secondary/70 transition-all border border-transparent hover:border-primary/20 group">
@@ -79,8 +104,8 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
         )}
       </div>
       
-      <div className="mt-4">
-        <Link to={`/courses/${enrollment.courses.slug}`} className="block">
+      <div className="mt-4 flex gap-2">
+        <Link to={`/courses/${enrollment.courses.slug}`} className="flex-1">
           <Button 
             variant={isCompleted ? "outline" : "default"} 
             size="sm" 
@@ -91,10 +116,42 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
             }`}
           >
             <Play className={`w-4 h-4 ${!isCompleted ? "animate-pulse" : ""}`} />
-            {isCompleted ? "Review Course" : "Continue Learning"}
+            {isCompleted ? "Review" : "Continue"}
             <ArrowRight className="w-4 h-4 ml-auto" />
           </Button>
         </Link>
+        
+        <AlertDialog open={showUnenrollDialog} onOpenChange={setShowUnenrollDialog}>
+          <AlertDialogTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="px-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              title="Unenroll from course"
+            >
+              <UserMinus className="w-4 h-4" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Unenroll from course?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to unenroll from <strong>{enrollment.courses.title}</strong>? 
+                Your progress will be lost and you'll need to re-enroll to access the course again.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleUnenroll}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={unenrollMutation.isPending}
+              >
+                {unenrollMutation.isPending ? "Unenrolling..." : "Unenroll"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
