@@ -6,10 +6,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, CreditCard, Shield, Save, Loader2 } from "lucide-react";
+import { User, Mail, CreditCard, Shield, Save, Loader2, Trash2, AlertTriangle } from "lucide-react";
 
 interface ProfileData {
   full_name: string | null;
@@ -20,7 +31,7 @@ interface ProfileData {
 }
 
 const ManageAccount = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -33,6 +44,8 @@ const ManageAccount = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -48,7 +61,7 @@ const ManageAccount = () => {
         .from("profiles")
         .select("full_name, first_name, last_name, cima_id, siebel_id")
         .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setProfile({
@@ -95,6 +108,38 @@ const ManageAccount = () => {
         title: "Success",
         description: "Your profile has been updated.",
       });
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user || deleteConfirmText !== "DELETE") return;
+
+    setDeleting(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('delete-account');
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Account Deleted",
+        description: "Your account has been permanently deleted.",
+      });
+
+      await signOut();
+      navigate("/");
+    } catch (error) {
+      console.error('Delete account error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete account. Please try again or contact support.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteConfirmText("");
     }
   };
 
@@ -245,10 +290,33 @@ const ManageAccount = () => {
             </CardContent>
           </Card>
 
+          {/* Subscription Management */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Subscription
+              </CardTitle>
+              <CardDescription>
+                Manage your subscription and billing
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="p-4 bg-muted/50 rounded-lg border border-border">
+                <p className="text-sm text-muted-foreground">
+                  You currently have no active subscriptions.
+                </p>
+                <Button variant="outline" className="mt-4" onClick={() => navigate("/pricing")}>
+                  View Plans
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <Separator className="my-6" />
 
           {/* Save Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end mb-8">
             <Button onClick={handleSave} disabled={saving}>
               {saving ? (
                 <>
@@ -263,6 +331,96 @@ const ManageAccount = () => {
               )}
             </Button>
           </div>
+
+          {/* Danger Zone */}
+          <Card className="border-destructive/50 bg-destructive/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="w-5 h-5" />
+                Danger Zone
+              </CardTitle>
+              <CardDescription>
+                Irreversible and destructive actions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-foreground mb-1">Delete Account</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Permanently delete your account and all associated data. This action cannot be undone.
+                  </p>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Account
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5 text-destructive" />
+                          Delete Account Permanently
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="space-y-4">
+                          <p>
+                            This will permanently delete your account and all your data, including:
+                          </p>
+                          <ul className="list-disc list-inside text-sm space-y-1">
+                            <li>Your profile information</li>
+                            <li>All course enrollments and progress</li>
+                            <li>Quiz attempts and scores</li>
+                            <li>Certificates earned</li>
+                            <li>Discussion posts and comments</li>
+                            <li>Badges and achievements</li>
+                          </ul>
+                          <p className="font-medium text-destructive">
+                            This action cannot be undone.
+                          </p>
+                          <div className="pt-2">
+                            <Label htmlFor="deleteConfirm" className="text-foreground">
+                              Type <span className="font-mono font-bold">DELETE</span> to confirm:
+                            </Label>
+                            <Input
+                              id="deleteConfirm"
+                              value={deleteConfirmText}
+                              onChange={(e) => setDeleteConfirmText(e.target.value.toUpperCase())}
+                              placeholder="DELETE"
+                              className="mt-2"
+                            />
+                          </div>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteConfirmText("")}>
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDeleteAccount}
+                          disabled={deleteConfirmText !== "DELETE" || deleting}
+                          className="bg-destructive hover:bg-destructive/90"
+                        >
+                          {deleting ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Deleting...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete Forever
+                            </>
+                          )}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Layout>
