@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +21,16 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, CreditCard, Shield, Save, Loader2, Trash2, AlertTriangle } from "lucide-react";
+import { User, Mail, CreditCard, Shield, Save, Loader2, Trash2, AlertTriangle, Bell } from "lucide-react";
+
+interface NotificationPreferences {
+  progress_reminders: boolean;
+  enrollment_confirmation: boolean;
+  weekly_digest: boolean;
+  discussion_replies: boolean;
+  new_content: boolean;
+  course_completion: boolean;
+}
 
 interface ProfileData {
   full_name: string | null;
@@ -42,8 +52,17 @@ const ManageAccount = () => {
     cima_id: "",
     siebel_id: "",
   });
+  const [notifications, setNotifications] = useState<NotificationPreferences>({
+    progress_reminders: true,
+    enrollment_confirmation: true,
+    weekly_digest: true,
+    discussion_replies: true,
+    new_content: true,
+    course_completion: true,
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingNotifications, setSavingNotifications] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
@@ -54,29 +73,49 @@ const ManageAccount = () => {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const fetchData = async () => {
       if (!user) return;
       
-      const { data, error } = await supabase
+      // Fetch profile
+      const { data: profileData } = await supabase
         .from("profiles")
         .select("full_name, first_name, last_name, cima_id, siebel_id")
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (data) {
+      if (profileData) {
         setProfile({
-          full_name: data.full_name || "",
-          first_name: data.first_name || "",
-          last_name: data.last_name || "",
-          cima_id: data.cima_id || "",
-          siebel_id: data.siebel_id || "",
+          full_name: profileData.full_name || "",
+          first_name: profileData.first_name || "",
+          last_name: profileData.last_name || "",
+          cima_id: profileData.cima_id || "",
+          siebel_id: profileData.siebel_id || "",
         });
       }
+
+      // Fetch notification preferences
+      const { data: notifData } = await supabase
+        .from("notification_preferences")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (notifData) {
+        setNotifications({
+          progress_reminders: notifData.progress_reminders ?? true,
+          enrollment_confirmation: notifData.enrollment_confirmation ?? true,
+          weekly_digest: notifData.weekly_digest ?? true,
+          discussion_replies: notifData.discussion_replies ?? true,
+          new_content: notifData.new_content ?? true,
+          course_completion: notifData.course_completion ?? true,
+        });
+      }
+
       setLoading(false);
     };
 
     if (user) {
-      fetchProfile();
+      fetchData();
     }
   }, [user]);
 
@@ -107,6 +146,33 @@ const ManageAccount = () => {
       toast({
         title: "Success",
         description: "Your profile has been updated.",
+      });
+    }
+  };
+
+  const handleNotificationChange = async (key: keyof NotificationPreferences, value: boolean) => {
+    if (!user) return;
+
+    const newNotifications = { ...notifications, [key]: value };
+    setNotifications(newNotifications);
+
+    setSavingNotifications(true);
+    const { error } = await supabase
+      .from("notification_preferences")
+      .upsert({
+        user_id: user.id,
+        ...newNotifications,
+      }, { onConflict: 'user_id' });
+
+    setSavingNotifications(false);
+
+    if (error) {
+      // Revert on error
+      setNotifications(notifications);
+      toast({
+        title: "Error",
+        description: "Failed to update notification preferences.",
+        variant: "destructive",
       });
     }
   };
@@ -287,6 +353,117 @@ const ManageAccount = () => {
               <Button variant="outline" onClick={() => navigate("/auth?mode=reset")}>
                 Reset Password
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Email Notification Preferences */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
+                Email Notifications
+                {savingNotifications && (
+                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                )}
+              </CardTitle>
+              <CardDescription>
+                Choose which emails you want to receive
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="enrollment_confirmation">Enrollment Confirmation</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive confirmation when you enroll in a new course
+                  </p>
+                </div>
+                <Switch
+                  id="enrollment_confirmation"
+                  checked={notifications.enrollment_confirmation}
+                  onCheckedChange={(checked) => handleNotificationChange('enrollment_confirmation', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="course_completion">Course Completion</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get notified when you complete a course
+                  </p>
+                </div>
+                <Switch
+                  id="course_completion"
+                  checked={notifications.course_completion}
+                  onCheckedChange={(checked) => handleNotificationChange('course_completion', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="progress_reminders">Progress Reminders</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive reminders to continue your learning journey
+                  </p>
+                </div>
+                <Switch
+                  id="progress_reminders"
+                  checked={notifications.progress_reminders}
+                  onCheckedChange={(checked) => handleNotificationChange('progress_reminders', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="weekly_digest">Weekly Digest</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get a weekly summary of your learning progress
+                  </p>
+                </div>
+                <Switch
+                  id="weekly_digest"
+                  checked={notifications.weekly_digest}
+                  onCheckedChange={(checked) => handleNotificationChange('weekly_digest', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="new_content">New Content</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Be notified when new lessons or courses are added
+                  </p>
+                </div>
+                <Switch
+                  id="new_content"
+                  checked={notifications.new_content}
+                  onCheckedChange={(checked) => handleNotificationChange('new_content', checked)}
+                />
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="discussion_replies">Discussion Replies</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get notified when someone replies to your discussions
+                  </p>
+                </div>
+                <Switch
+                  id="discussion_replies"
+                  checked={notifications.discussion_replies}
+                  onCheckedChange={(checked) => handleNotificationChange('discussion_replies', checked)}
+                />
+              </div>
             </CardContent>
           </Card>
 
