@@ -625,15 +625,15 @@ const CourseDetail = () => {
                 </div>
               </div>
 
-              {/* Quizzes Section */}
-              {quizzes && quizzes.length > 0 && (
+              {/* Lesson Quizzes Section */}
+              {quizzes && quizzes.filter(q => q.lesson_id).length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                     <ClipboardList className="w-6 h-6 text-primary" />
-                    Quizzes
+                    Lesson Quizzes
                   </h2>
                   <div className="space-y-4">
-                    {quizzes.map((quiz) => (
+                    {quizzes.filter(q => q.lesson_id).map((quiz) => (
                       <div
                         key={quiz.id}
                         className="bg-card rounded-xl border border-border p-6 hover:border-primary/50 transition-colors"
@@ -680,47 +680,70 @@ const CourseDetail = () => {
                 </div>
               )}
 
-              {/* Mock Exams Section */}
-              {quizzes && quizzes.length > 0 && (
+              {/* Mock Exams Section - Course-level exams without lesson_id */}
+              {quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
                 <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <GraduationCap className="w-6 h-6 text-primary" />
-                    Mock Exams
-                  </h2>
-                  <div className="space-y-4">
-                    {quizzes.map((quiz) => (
-                      <div
-                        key={quiz.id}
-                        className="bg-card rounded-xl border border-border p-6 hover:border-primary/50 transition-colors"
-                      >
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-foreground text-lg mb-1">
-                              {quiz.title} - Mock Exam
-                            </h3>
-                            <p className="text-sm text-muted-foreground mb-3">
-                              Full exam simulation with timer, formula sheet, and calculator
-                            </p>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <Timer className="w-3.5 h-3.5" />
-                                Timed exam conditions
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <BookOpen className="w-3.5 h-3.5" />
-                                Formula sheet included
-                              </span>
-                            </div>
-                          </div>
-                          <Link to={`/mock-exam/${quiz.id}`}>
-                            <Button size="sm" className="gap-2">
-                              <GraduationCap className="w-4 h-4" />
-                              Start Mock Exam
-                            </Button>
-                          </Link>
-                        </div>
+                  <div className="bg-gradient-to-br from-accent/10 via-primary/5 to-background rounded-2xl border border-accent/30 p-8">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
+                        <GraduationCap className="w-6 h-6 text-accent" />
                       </div>
-                    ))}
+                      <div>
+                        <h2 className="text-2xl font-bold text-foreground">
+                          Mock Exams
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Simulate real CIMA exam conditions
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <p className="text-muted-foreground mb-6 mt-4">
+                      Practice under exam conditions with timed assessments, formula sheets, and a non-programmable calculator. 
+                      Each mock exam mirrors the format and difficulty of the actual CIMA exam.
+                    </p>
+
+                    <div className="grid gap-4">
+                      {quizzes.filter(q => !q.lesson_id).map((quiz, index) => (
+                        <div
+                          key={quiz.id}
+                          className="bg-card rounded-xl border border-border p-5 hover:border-accent/50 hover:shadow-md transition-all"
+                        >
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-start gap-4">
+                              <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                                <span className="text-accent font-bold">{index + 1}</span>
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-foreground text-lg mb-1">
+                                  {quiz.title}
+                                </h3>
+                                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                                  <span className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-full">
+                                    <Timer className="w-3.5 h-3.5" />
+                                    90 minutes
+                                  </span>
+                                  <span className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-full">
+                                    <BookOpen className="w-3.5 h-3.5" />
+                                    Formula sheet
+                                  </span>
+                                  <span className="flex items-center gap-1 px-2 py-1 bg-accent/20 text-accent rounded-full">
+                                    <Target className="w-3.5 h-3.5" />
+                                    Focus tracking
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <Link to={`/mock-exam/${quiz.id}`}>
+                              <Button className="gap-2 bg-accent hover:bg-accent/90 text-accent-foreground">
+                                <GraduationCap className="w-4 h-4" />
+                                Start Exam
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
