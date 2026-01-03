@@ -38,7 +38,6 @@ interface ProfileData {
   first_name: string | null;
   last_name: string | null;
   cima_id: string | null;
-  siebel_id: string | null;
   avatar_url: string | null;
 }
 
@@ -53,7 +52,6 @@ const ManageAccount = () => {
     first_name: "",
     last_name: "",
     cima_id: "",
-    siebel_id: "",
     avatar_url: null,
   });
   const [notifications, setNotifications] = useState<NotificationPreferences>({
@@ -84,7 +82,7 @@ const ManageAccount = () => {
       // Fetch profile
       const { data: profileData } = await supabase
         .from("profiles")
-        .select("full_name, first_name, last_name, cima_id, siebel_id, avatar_url")
+        .select("full_name, first_name, last_name, cima_id, avatar_url")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -94,7 +92,6 @@ const ManageAccount = () => {
           first_name: profileData.first_name || "",
           last_name: profileData.last_name || "",
           cima_id: profileData.cima_id || "",
-          siebel_id: profileData.siebel_id || "",
           avatar_url: profileData.avatar_url || null,
         });
       }
@@ -137,7 +134,6 @@ const ManageAccount = () => {
         first_name: profile.first_name,
         last_name: profile.last_name,
         cima_id: profile.cima_id,
-        siebel_id: profile.siebel_id,
       }, { onConflict: 'user_id' });
 
     setSaving(false);
@@ -508,15 +504,6 @@ const ManageAccount = () => {
                   value={profile.cima_id || ""}
                   onChange={(e) => setProfile({ ...profile, cima_id: e.target.value })}
                   placeholder="Enter your CIMA ID"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="siebelId">Siebel ID (Optional)</Label>
-                <Input
-                  id="siebelId"
-                  value={profile.siebel_id || ""}
-                  onChange={(e) => setProfile({ ...profile, siebel_id: e.target.value })}
-                  placeholder="Enter your Siebel ID"
                 />
               </div>
             </CardContent>

@@ -18,7 +18,6 @@ const cimaProfileSchema = z.object({
   cima_id: z.string().trim().min(1, "CIMA ID is required").max(20, "CIMA ID must be 20 characters or less"),
   first_name: z.string().trim().min(1, "First name is required").max(100, "First name must be 100 characters or less"),
   last_name: z.string().trim().min(1, "Last name is required").max(100, "Last name must be 100 characters or less"),
-  siebel_id: z.string().trim().max(20, "Siebel ID must be 20 characters or less").optional(),
 });
 
 interface CIMAProfileModalProps {
@@ -37,7 +36,6 @@ const CIMAProfileModal = ({
   initialLastName = "",
 }: CIMAProfileModalProps) => {
   const [cimaId, setCimaId] = useState("");
-  const [siebelId, setSiebelId] = useState("");
   const [firstName, setFirstName] = useState(initialFirstName);
   const [lastName, setLastName] = useState(initialLastName);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -57,7 +55,6 @@ const CIMAProfileModal = ({
       cima_id: cimaId,
       first_name: firstName,
       last_name: lastName,
-      siebel_id: siebelId || undefined,
     });
 
     if (!result.success) {
@@ -74,7 +71,6 @@ const CIMAProfileModal = ({
         cima_id: cimaId.trim(),
         first_name: firstName.trim(),
         last_name: lastName.trim(),
-        siebel_id: siebelId.trim() || undefined,
         cima_start_date: new Date().toISOString().split("T")[0],
       });
 
@@ -118,19 +114,6 @@ const CIMAProfileModal = ({
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="siebelId">Siebel ID (Optional)</Label>
-            <Input
-              id="siebelId"
-              type="text"
-              placeholder="e.g., 1-482715"
-              value={siebelId}
-              onChange={(e) => setSiebelId(e.target.value)}
-            />
-            {errors.siebel_id && (
-              <p className="text-sm text-destructive">{errors.siebel_id}</p>
-            )}
-          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
