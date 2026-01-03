@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
@@ -28,16 +30,17 @@ const Navbar = () => {
       if (user) {
         const { data } = await supabase
           .from("profiles")
-          .select("full_name")
+          .select("full_name, first_name, avatar_url")
           .eq("user_id", user.id)
-          .single();
+          .maybeSingle();
         
-        if (data?.full_name) {
-          // Get first name from full name
-          setFirstName(data.full_name.split(" ")[0]);
+        if (data) {
+          setFirstName(data.first_name || data.full_name?.split(" ")[0] || null);
+          setAvatarUrl(data.avatar_url);
         }
       } else {
         setFirstName(null);
+        setAvatarUrl(null);
       }
     };
     
@@ -109,9 +112,12 @@ const Navbar = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 px-3 py-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
-                    <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                      <User className="w-4 h-4 text-primary" />
-                    </div>
+                    <Avatar className="w-7 h-7">
+                      <AvatarImage src={avatarUrl || undefined} alt="Profile" />
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                        {firstName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
                       {firstName || user.email?.split("@")[0]}
                     </span>
