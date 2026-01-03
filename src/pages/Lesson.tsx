@@ -35,7 +35,6 @@ import {
   GraduationCap,
   Timer,
   ClipboardList,
-  AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -461,59 +460,6 @@ const Lesson = () => {
             </>
           )}
 
-          {/* Mock Exams Section */}
-          {quizzesToShow && quizzesToShow.length > 0 && (
-            <>
-              <Separator className="my-8" />
-              <div className="mb-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <AlertTriangle className="w-5 h-5 text-accent" />
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Mock Exams
-                  </h3>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Simulate real CIMA exam conditions with timed assessments, focus monitoring, and a non-programmable calculator.
-                </p>
-                <div className="grid gap-3">
-                  {quizzesToShow.map((quiz) => (
-                    <Card key={quiz.id} className="p-4 border-accent/30 bg-accent/5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                            <GraduationCap className="w-5 h-5 text-accent" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-foreground">{quiz.title} - Mock Exam</h4>
-                            <div className="flex flex-wrap gap-2 mt-1">
-                              <span className="text-xs px-2 py-0.5 bg-secondary rounded-full text-muted-foreground">
-                                Objective: 90 min
-                              </span>
-                              <span className="text-xs px-2 py-0.5 bg-secondary rounded-full text-muted-foreground">
-                                Case Study: 3 hrs
-                              </span>
-                              <span className="text-xs px-2 py-0.5 bg-accent/20 rounded-full text-accent">
-                                Focus Tracking
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="gap-2 bg-accent hover:bg-accent/90 flex-shrink-0"
-                          onClick={() => navigate(`/mock-exam/${quiz.id}`)}
-                        >
-                          <AlertTriangle className="w-4 h-4" />
-                          Start Mock Exam
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
 
           <Separator className="my-8" />
 
