@@ -6,13 +6,26 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Mail, Lock, User, CreditCard } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X } from "lucide-react";
 import { z } from "zod";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 
+// Password validation helper
+const passwordRequirements = [
+  { label: "At least 8 characters", test: (pwd: string) => pwd.length >= 8 },
+  { label: "One uppercase letter", test: (pwd: string) => /[A-Z]/.test(pwd) },
+  { label: "One lowercase letter", test: (pwd: string) => /[a-z]/.test(pwd) },
+  { label: "One number", test: (pwd: string) => /[0-9]/.test(pwd) },
+  { label: "One special character (!@#$%^&*)", test: (pwd: string) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd) },
+];
+
+const validatePassword = (password: string) => {
+  return passwordRequirements.every((req) => req.test(password));
+};
+
 const loginSchema = z.object({
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 const signupSchema = z.object({
@@ -20,7 +33,12 @@ const signupSchema = z.object({
   lastName: z.string().trim().min(1, { message: "Last name is required" }).max(100),
   cimaId: z.string().trim().min(1, { message: "CIMA ID is required" }).max(20),
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z.string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .refine((pwd) => /[A-Z]/.test(pwd), { message: "Password must contain an uppercase letter" })
+    .refine((pwd) => /[a-z]/.test(pwd), { message: "Password must contain a lowercase letter" })
+    .refine((pwd) => /[0-9]/.test(pwd), { message: "Password must contain a number" })
+    .refine((pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd), { message: "Password must contain a special character" }),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
@@ -253,6 +271,30 @@ const Auth = () => {
                   </div>
                   {errors.password && (
                     <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
+                  
+                  {/* Password requirements indicator - only show on signup */}
+                  {!isLogin && password.length > 0 && (
+                    <div className="mt-3 p-3 bg-muted/50 rounded-lg border border-border">
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Password requirements:</p>
+                      <div className="space-y-1">
+                        {passwordRequirements.map((req, index) => {
+                          const passed = req.test(password);
+                          return (
+                            <div key={index} className="flex items-center gap-2">
+                              {passed ? (
+                                <Check className="w-3.5 h-3.5 text-green-500" />
+                              ) : (
+                                <X className="w-3.5 h-3.5 text-muted-foreground" />
+                              )}
+                              <span className={`text-xs ${passed ? 'text-green-500' : 'text-muted-foreground'}`}>
+                                {req.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   )}
                 </div>
 
