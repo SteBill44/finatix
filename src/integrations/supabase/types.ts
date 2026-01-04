@@ -608,6 +608,7 @@ export type Database = {
           max_score: number
           quiz_id: string | null
           score: number
+          time_taken_seconds: number | null
           user_id: string
         }
         Insert: {
@@ -617,6 +618,7 @@ export type Database = {
           max_score: number
           quiz_id?: string | null
           score: number
+          time_taken_seconds?: number | null
           user_id: string
         }
         Update: {
@@ -626,6 +628,7 @@ export type Database = {
           max_score?: number
           quiz_id?: string | null
           score?: number
+          time_taken_seconds?: number | null
           user_id?: string
         }
         Relationships: [

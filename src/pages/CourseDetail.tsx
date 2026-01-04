@@ -32,6 +32,7 @@ import {
   Target,
   BarChart3,
   UserMinus,
+  History,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -54,6 +55,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import CourseReviews from "@/components/CourseReviews";
+import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
@@ -748,7 +750,20 @@ const CourseDetail = () => {
                 </div>
               )}
 
-              {/* Performance Analytics - Only show if enrolled with quiz attempts */}
+              {/* Mock Exam Results History - Only show if enrolled with mock exam attempts */}
+              {isEnrolled && quizAttempts && quizAttempts.length > 0 && quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <History className="w-6 h-6 text-accent" />
+                    Mock Exam Results
+                  </h2>
+                  <MockExamHistory 
+                    attempts={quizAttempts} 
+                    quizzes={quizzes} 
+                  />
+                </div>
+              )}
+
               {isEnrolled && quizAttempts && quizAttempts.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
