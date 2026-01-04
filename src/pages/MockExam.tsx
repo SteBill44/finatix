@@ -79,6 +79,7 @@ const MockExam = () => {
   // Exam setup state
   const [examType, setExamType] = useState<ExamType>(null);
   const [examStarted, setExamStarted] = useState(false);
+  const [examStartTime, setExamStartTime] = useState<Date | null>(null);
   
   // Quiz state
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -117,6 +118,7 @@ const MockExam = () => {
   const startExam = (type: ExamType) => {
     setExamType(type);
     setExamStarted(true);
+    setExamStartTime(new Date());
   };
 
   if (isLoading) {
@@ -294,6 +296,10 @@ const MockExam = () => {
     }
 
     const score = calculateScore();
+    const timeTakenSeconds = examStartTime 
+      ? Math.round((new Date().getTime() - examStartTime.getTime()) / 1000)
+      : null;
+    
     setSubmitted(true);
     setShowResults(true);
     setShowSubmitDialog(false);
@@ -304,6 +310,7 @@ const MockExam = () => {
         quizId: quiz.id,
         score,
         maxScore: questions.length,
+        timeTakenSeconds: timeTakenSeconds || undefined,
       });
       await refetchQuestions();
       toast.success("Mock exam completed! Your score has been saved.");
@@ -320,6 +327,7 @@ const MockExam = () => {
     setSubmitted(false);
     setExamStarted(false);
     setExamType(null);
+    setExamStartTime(null);
     setFocusViolations(0);
   };
 

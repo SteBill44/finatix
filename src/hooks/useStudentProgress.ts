@@ -485,7 +485,13 @@ export const useRecordQuizAttempt = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ courseId, quizId, score, maxScore }: { courseId: string; quizId?: string; score: number; maxScore: number }) => {
+    mutationFn: async ({ courseId, quizId, score, maxScore, timeTakenSeconds }: { 
+      courseId: string; 
+      quizId?: string; 
+      score: number; 
+      maxScore: number;
+      timeTakenSeconds?: number;
+    }) => {
       if (!user) throw new Error("Must be logged in");
       
       const { data, error } = await supabase
@@ -496,6 +502,7 @@ export const useRecordQuizAttempt = () => {
           quiz_id: quizId || null,
           score,
           max_score: maxScore,
+          time_taken_seconds: timeTakenSeconds || null,
         })
         .select()
         .single();
