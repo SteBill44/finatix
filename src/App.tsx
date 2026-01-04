@@ -27,7 +27,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider defaultTheme="dark" attribute="class" enableSystem={false}>
+  <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
