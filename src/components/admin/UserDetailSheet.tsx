@@ -77,15 +77,14 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
     if (!userId) return;
     setLoading(true);
 
-    // Fetch profile
-    const { data: profileData } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .maybeSingle();
+    // Fetch profile using audited function (logs admin access)
+    const { data: profileData, error: profileError } = await supabase
+      .rpc("get_user_profile_with_audit", { p_user_id: userId });
 
-    if (profileData) {
-      setProfile(profileData);
+    if (profileData && profileData.length > 0) {
+      setProfile(profileData[0]);
+    } else if (profileError) {
+      console.error("Failed to fetch profile:", profileError);
     }
 
     // Fetch enrollments with course details

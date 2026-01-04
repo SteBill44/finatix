@@ -555,6 +555,36 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_access_logs: {
+        Row: {
+          access_type: string
+          accessed_at: string
+          accessed_by: string
+          id: string
+          ip_address: string | null
+          profile_user_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          access_type?: string
+          accessed_at?: string
+          accessed_by: string
+          id?: string
+          ip_address?: string | null
+          profile_user_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_at?: string
+          accessed_by?: string
+          id?: string
+          ip_address?: string | null
+          profile_user_id?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -915,6 +945,22 @@ export type Database = {
           quiz_id: string
         }[]
       }
+      get_user_profile_with_audit: {
+        Args: { p_user_id: string }
+        Returns: {
+          avatar_url: string
+          cima_end_date: string
+          cima_id: string
+          cima_start_date: string
+          created_at: string
+          first_name: string
+          full_name: string
+          id: string
+          last_name: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
       has_attempted_quiz: {
         Args: { _quiz_id: string; _user_id: string }
         Returns: boolean
@@ -927,6 +973,10 @@ export type Database = {
         Returns: boolean
       }
       is_master_admin: { Args: { _user_id: string }; Returns: boolean }
+      log_profile_access: {
+        Args: { p_access_type?: string; p_profile_user_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "master_admin"
