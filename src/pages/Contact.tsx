@@ -100,6 +100,42 @@ const Contact = () => {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-16 lg:py-24 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              FAQ
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground">
+              Find quick answers to common questions about our platform
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto">
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqs.map((faq, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`faq-${index}`}
+                  className="bg-card rounded-xl border border-border px-6"
+                >
+                  <AccordionTrigger className="hover:no-underline py-5 text-left">
+                    <span className="font-medium text-foreground">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-5 text-muted-foreground">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Section */}
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4 overflow-hidden">
@@ -207,42 +243,6 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section id="faq" className="py-16 lg:py-24 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              FAQ
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-base sm:text-lg text-muted-foreground">
-              Find quick answers to common questions about our platform
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
-                  value={`faq-${index}`}
-                  className="bg-card rounded-xl border border-border px-6"
-                >
-                  <AccordionTrigger className="hover:no-underline py-5 text-left">
-                    <span className="font-medium text-foreground">{faq.question}</span>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-muted-foreground">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
           </div>
         </div>
       </section>
