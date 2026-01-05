@@ -35,11 +35,6 @@ const About = () => {
     },
   ];
 
-  const stats = [
-    { value: "10,000+", label: "Students" },
-    { value: "50+", label: "Countries" },
-    { value: "4.9/5", label: "Rating" },
-  ];
 
   return (
     <Layout>
@@ -100,14 +95,6 @@ const About = () => {
                 </Link>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="bg-card rounded-2xl border border-border p-8 text-center hover-lift">
-                  <p className="text-4xl font-bold gradient-text mb-2">{stat.value}</p>
-                  <p className="text-muted-foreground">{stat.label}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -152,7 +139,7 @@ const About = () => {
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Our competency-based learning approach, combined with advanced analytics and personalized 
-              study paths, helps thousands of students achieve their CIMA qualification.
+              study paths, helps students achieve their CIMA qualification.
             </p>
             <Link to="/courses">
               <Button size="lg" className="gap-2">
