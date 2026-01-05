@@ -34,17 +34,21 @@ const QuickActions = () => {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
       {actions.map((action) => (
         <Link key={action.label} to={action.to}>
           <Card 
-            className={`p-4 text-center hover-lift cursor-pointer transition-all ${action.hoverBg} border-transparent hover:border-${action.color.split('-')[1]}/20`}
+            className={`p-4 hover-lift cursor-pointer transition-all ${action.hoverBg} border-transparent hover:border-${action.color.split('-')[1]}/20`}
           >
-            <div className={`w-12 h-12 mx-auto rounded-xl ${action.bgColor} flex items-center justify-center mb-3`}>
-              <action.icon className={`w-6 h-6 ${action.color}`} />
+            <div className="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-0">
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 sm:mx-auto rounded-xl ${action.bgColor} flex items-center justify-center sm:mb-3 flex-shrink-0`}>
+                <action.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${action.color}`} />
+              </div>
+              <div>
+                <p className="font-semibold text-foreground text-sm">{action.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{action.description}</p>
+              </div>
             </div>
-            <p className="font-semibold text-foreground text-sm">{action.label}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{action.description}</p>
           </Card>
         </Link>
       ))}

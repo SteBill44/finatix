@@ -127,7 +127,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
               {
-                label: "Courses Enrolled",
+                label: "Courses",
                 value: totalEnrollments.toString(),
                 icon: BookOpen,
                 color: "text-primary",
@@ -139,28 +139,28 @@ const Dashboard = () => {
                 color: "text-teal",
               },
               {
-                label: "Lessons Completed",
+                label: "Lessons",
                 value: completedLessons.toString(),
                 icon: Target,
                 color: "text-accent",
               },
               {
-                label: "Quiz Avg Score",
+                label: "Quiz Avg",
                 value: averageScore > 0 ? `${averageScore}%` : "N/A",
                 icon: Zap,
                 color: "text-yellow-500",
               },
             ].map((stat) => (
-              <Card key={stat.label} className="p-6 hover-lift">
-                <div className="flex items-center gap-4">
+              <Card key={stat.label} className="p-3 sm:p-6 hover-lift">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <div
-                    className={`w-12 h-12 rounded-xl bg-secondary flex items-center justify-center ${stat.color}`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary flex items-center justify-center ${stat.color} flex-shrink-0`}
                   >
-                    <stat.icon className="w-6 h-6" />
+                    <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <div className="min-w-0">
+                    <p className="text-lg sm:text-2xl font-bold text-foreground truncate">{stat.value}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{stat.label}</p>
                   </div>
                 </div>
               </Card>
@@ -173,21 +173,21 @@ const Dashboard = () => {
               to={`/courses/${lastLesson.course_id}/lesson/${lastLesson.lesson_id}`}
               className="block mb-8"
             >
-              <Card className="p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10 group cursor-pointer">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <Play className="w-7 h-7 text-primary-foreground" />
+              <Card className="p-4 sm:p-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 hover:border-primary/50 transition-all hover:shadow-lg hover:shadow-primary/10 group cursor-pointer">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                      <Play className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground" />
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground font-medium">Resume where you left off</p>
-                      <h3 className="text-lg font-bold text-foreground">{lastLesson.lesson_title}</h3>
-                      <p className="text-sm text-muted-foreground">{lastLesson.course_title}</p>
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm text-muted-foreground font-medium">Resume where you left off</p>
+                      <h3 className="text-base sm:text-lg font-bold text-foreground truncate">{lastLesson.lesson_title}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate">{lastLesson.course_title}</p>
                     </div>
                   </div>
-                  <Button size="lg" className="gap-2 shadow-md group-hover:shadow-lg transition-all">
-                    Continue Learning
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Button size="default" className="gap-2 shadow-md group-hover:shadow-lg transition-all w-full sm:w-auto">
+                    Continue
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
               </Card>

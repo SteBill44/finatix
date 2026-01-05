@@ -49,7 +49,7 @@ const StreakWidget = () => {
       </div>
 
       {/* Weekly Progress */}
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-1">
         {daysOfWeek.map((day, index) => {
           const isToday = index === today;
           const isPast = index < today;
@@ -59,7 +59,7 @@ const StreakWidget = () => {
           return (
             <div
               key={index}
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium transition-all ${
                 isToday
                   ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
                   : isActive
