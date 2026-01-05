@@ -8,9 +8,9 @@ const Hero = () => {
       <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent pointer-events-none z-[1]" />
       
       {/* Animated gradient orbs for light mode visual interest */}
-      <div className="gradient-orb gradient-orb-primary w-[500px] h-[500px] -top-20 -left-20 pointer-events-none" />
-      <div className="gradient-orb gradient-orb-accent w-[400px] h-[400px] top-1/3 right-0 pointer-events-none" />
-      <div className="gradient-orb gradient-orb-primary w-[350px] h-[350px] bottom-20 left-1/4 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-primary w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] -top-20 -left-20 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-accent w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] top-1/3 -right-20 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-primary w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] bottom-20 left-1/4 pointer-events-none" />
       
       {/* Tech/Finance Background Graphic */}
       <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none opacity-30 dark:opacity-10">

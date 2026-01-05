@@ -77,7 +77,7 @@ const Dashboard = () => {
       {/* Header */}
       <section className="relative py-12 lg:py-16 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
-        <div className="absolute top-10 right-20 w-64 h-64 bg-accent/30 rounded-full blur-3xl" />
+        <div className="absolute top-10 right-0 w-64 h-64 bg-accent/30 rounded-full blur-3xl translate-x-1/2" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
