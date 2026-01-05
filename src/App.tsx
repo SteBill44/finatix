@@ -3,11 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
+import PageTransition from "@/components/PageTransition";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -28,6 +30,34 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+        <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
+        <Route path="/courses/:courseId" element={<PageTransition><CourseDetail /></PageTransition>} />
+        <Route path="/courses/:courseId/lesson/:lessonId" element={<PageTransition><Lesson /></PageTransition>} />
+        <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
+        <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+        <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
+        <Route path="/quiz/:quizId" element={<PageTransition><Quiz /></PageTransition>} />
+        <Route path="/exam/:quizId" element={<PageTransition><ExamMode /></PageTransition>} />
+        <Route path="/mock-exam/:quizId" element={<PageTransition><MockExam /></PageTransition>} />
+        <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
+        <Route path="/achievements" element={<PageTransition><Achievements /></PageTransition>} />
+        <Route path="/discussions" element={<PageTransition><Discussions /></PageTransition>} />
+        <Route path="/account" element={<PageTransition><ManageAccount /></PageTransition>} />
+        <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,26 +73,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:courseId" element={<CourseDetail />} />
-                <Route path="/courses/:courseId/lesson/:lessonId" element={<Lesson />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/quiz/:quizId" element={<Quiz />} />
-                <Route path="/exam/:quizId" element={<ExamMode />} />
-                <Route path="/mock-exam/:quizId" element={<MockExam />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/achievements" element={<Achievements />} />
-                <Route path="/discussions" element={<Discussions />} />
-                <Route path="/account" element={<ManageAccount />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AnimatedRoutes />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
