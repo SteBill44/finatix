@@ -3,13 +3,13 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Mail, 
   Phone, 
   MapPin, 
   MessageSquare,
   Send,
-  ChevronDown
 } from "lucide-react";
 import {
   Accordion,
@@ -18,6 +18,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().min(1, "Email is required").email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
+  subject: z.string().trim().min(1, "Subject is required").max(200, "Subject must be less than 200 characters"),
+  message: z.string().trim().min(1, "Message is required").max(2000, "Message must be less than 2000 characters"),
+});
+
+type FormErrors = Partial<Record<keyof z.infer<typeof contactSchema> | 'humanCheck', string>>;
 
 const Contact = () => {
   const { toast } = useToast();
@@ -27,14 +37,65 @@ const Contact = () => {
     subject: "",
     message: ""
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isHuman, setIsHuman] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const validateField = (field: keyof typeof formData, value: string) => {
+    try {
+      contactSchema.shape[field].parse(value);
+      setErrors(prev => ({ ...prev, [field]: undefined }));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setErrors(prev => ({ ...prev, [field]: error.errors[0].message }));
+      }
+    }
+  };
+
+  const handleBlur = (field: keyof typeof formData) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    validateField(field, formData[field]);
+  };
+
+  const handleChange = (field: keyof typeof formData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (touched[field]) {
+      validateField(field, value);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const result = contactSchema.safeParse(formData);
+    
+    if (!result.success) {
+      const fieldErrors: FormErrors = {};
+      result.error.errors.forEach(err => {
+        const field = err.path[0] as keyof typeof formData;
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = err.message;
+        }
+      });
+      setErrors(fieldErrors);
+      setTouched({ name: true, email: true, subject: true, message: true });
+      return;
+    }
+
+    if (!isHuman) {
+      setErrors(prev => ({ ...prev, humanCheck: "Please confirm you are human" }));
+      return;
+    }
+
     toast({
       title: "Message sent!",
       description: "We'll get back to you within 24 hours.",
     });
     setFormData({ name: "", email: "", subject: "", message: "" });
+    setErrors({});
+    setIsHuman(false);
+    setTouched({});
   };
 
   const faqs = [
@@ -150,9 +211,13 @@ const Contact = () => {
                     <Input
                       placeholder="Your name"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
+                      onChange={(e) => handleChange('name', e.target.value)}
+                      onBlur={() => handleBlur('name')}
+                      className={errors.name && touched.name ? "border-destructive" : ""}
                     />
+                    {errors.name && touched.name && (
+                      <p className="text-sm text-destructive mt-1">{errors.name}</p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Email</label>
@@ -160,9 +225,13 @@ const Contact = () => {
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      onBlur={() => handleBlur('email')}
+                      className={errors.email && touched.email ? "border-destructive" : ""}
                     />
+                    {errors.email && touched.email && (
+                      <p className="text-sm text-destructive mt-1">{errors.email}</p>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -170,9 +239,13 @@ const Contact = () => {
                   <Input
                     placeholder="How can we help?"
                     value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    required
+                    onChange={(e) => handleChange('subject', e.target.value)}
+                    onBlur={() => handleBlur('subject')}
+                    className={errors.subject && touched.subject ? "border-destructive" : ""}
                   />
+                  {errors.subject && touched.subject && (
+                    <p className="text-sm text-destructive mt-1">{errors.subject}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Message</label>
@@ -180,10 +253,44 @@ const Contact = () => {
                     placeholder="Tell us more about your question..."
                     rows={6}
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
+                    onChange={(e) => handleChange('message', e.target.value)}
+                    onBlur={() => handleBlur('message')}
+                    className={errors.message && touched.message ? "border-destructive" : ""}
                   />
+                  {errors.message && touched.message && (
+                    <p className="text-sm text-destructive mt-1">{errors.message}</p>
+                  )}
                 </div>
+                
+                {/* Human verification checkbox */}
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="humanCheck"
+                    checked={isHuman}
+                    onCheckedChange={(checked) => {
+                      setIsHuman(checked === true);
+                      if (checked) {
+                        setErrors(prev => ({ ...prev, humanCheck: undefined }));
+                      }
+                    }}
+                    className={errors.humanCheck ? "border-destructive" : ""}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="humanCheck"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      I am a human
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      Please confirm you're not a robot
+                    </p>
+                    {errors.humanCheck && (
+                      <p className="text-sm text-destructive">{errors.humanCheck}</p>
+                    )}
+                  </div>
+                </div>
+                
                 <Button type="submit" size="lg" className="gap-2">
                   <Send className="w-5 h-5" />
                   Send Message
