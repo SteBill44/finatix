@@ -32,7 +32,7 @@ const loginSchema = z.object({
 const signupSchema = z.object({
   firstName: z.string().trim().min(1, { message: "First name is required" }).max(100),
   lastName: z.string().trim().min(1, { message: "Last name is required" }).max(100),
-  cimaId: z.string().trim().min(1, { message: "CIMA ID is required" }).max(20),
+  cimaId: z.string().trim().max(20).optional(),
   email: z.string().trim().email({ message: "Please enter a valid email address" }),
   password: z.string()
     .min(8, { message: "Password must be at least 8 characters" })
