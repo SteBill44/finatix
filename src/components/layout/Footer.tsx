@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Twitter, Youtube, Facebook } from "lucide-react";
+import finaptixLogo from "@/assets/finaptix-logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -45,9 +46,7 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
-              <span className="text-xl font-bold">
-                Fin<span className="text-primary">aptix</span>
-              </span>
+              <img src={finaptixLogo} alt="Finaptix" className="h-10 w-auto" />
             </Link>
             <p className="text-background/60 text-sm mb-6">
               Smarter CIMA study. Modern tools. Real insights.
