@@ -121,9 +121,9 @@ const Courses = () => {
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
         {/* Animated gradient orbs for light mode visual interest */}
-        <div className="gradient-orb gradient-orb-primary w-[400px] h-[400px] -top-20 -left-20 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[300px] h-[300px] top-1/4 right-0 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] bottom-10 left-1/3 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-primary w-[150px] h-[150px] sm:w-[250px] sm:h-[250px] bottom-10 left-1/4 pointer-events-none" />
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
@@ -175,7 +175,7 @@ const Courses = () => {
 
       {/* Filters and Courses */}
       <section className="py-12 lg:py-20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 overflow-hidden">
           {/* Filter Bar */}
           <div className="flex flex-col md:flex-row gap-4 mb-12">
             {/* Search */}
@@ -190,7 +190,7 @@ const Courses = () => {
             </div>
 
             {/* Level Filter */}
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap overflow-x-auto pb-2 -mx-1 px-1">
               <Button
                 variant={selectedLevel === "all" ? "default" : "outline"}
                 onClick={() => setSelectedLevel("all")}
