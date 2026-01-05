@@ -112,14 +112,12 @@ const About = () => {
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
                 Traditional CIMA study methods haven't evolved with technology. Students were stuck with 
-                outdated interfaces, generic content, and no real insight into their progress — all while 
-                paying premium prices that put self-funders at a disadvantage.
+                outdated interfaces, generic content, and no real insight into their progress.
               </p>
               <p className="text-lg text-muted-foreground mb-8">
-                We built Finaptics to change that. By combining modern learning science with beautiful 
-                technology, we've created an affordable platform that doesn't just teach — it adapts, analyzes, 
-                and guides each student to success. We believe quality CIMA education shouldn't break the bank, 
-                especially for self-funders investing in their own future.
+                We built Finaptix to change that. By combining modern learning science with beautiful 
+                technology, we've created a platform that doesn't just teach — it adapts, analyzes, 
+                and guides each student to success.
               </p>
               <div className="flex gap-4">
                 <Link to="/courses">
