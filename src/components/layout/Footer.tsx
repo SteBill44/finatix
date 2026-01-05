@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { Linkedin, Twitter, Youtube, Facebook } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const Footer = () => {
+interface FooterProps {
+  className?: string;
+}
+
+const Footer = ({ className }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
@@ -37,7 +42,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-charcoal text-background">
+    <footer className={cn("bg-charcoal text-background", className)}>
       <div className="container mx-auto px-4 py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
