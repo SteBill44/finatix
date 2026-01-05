@@ -85,7 +85,7 @@ const Dashboard = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/80 text-sm font-medium mb-3">
                 Student Dashboard
               </span>
-              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
                 Welcome back, {userName}! 👋
               </h1>
               <p className="text-primary-foreground/70">

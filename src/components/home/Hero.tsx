@@ -139,14 +139,14 @@ const Hero = () => {
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl">
           {/* Heading */}
-          <h1 className="animate-fade-up text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-tight">
+          <h1 className="animate-fade-up text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 tracking-tight">
             KICKSTART{" "}
             <span className="text-primary drop-shadow-sm">YOUR CAREER</span>{" "}
             IN MANAGEMENT ACCOUNTING
           </h1>
 
           {/* Subheading */}
-          <p className="animate-fade-up-delay-1 text-lg md:text-xl text-muted-foreground max-w-2xl mb-10">
+          <p className="animate-fade-up-delay-1 text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mb-8 sm:mb-10">
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </p>
 
