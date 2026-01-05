@@ -292,10 +292,12 @@ const Courses = () => {
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-1 text-yellow-500">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span className="text-xs font-medium text-foreground">4.8</span>
-                          </div>
+                          {course.level === "certificate" && (
+                            <div className="flex items-center gap-1 text-yellow-500">
+                              <Star className="w-3.5 h-3.5 fill-current" />
+                              <span className="text-xs font-medium text-foreground">4.8</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Title */}
@@ -314,10 +316,14 @@ const Courses = () => {
                         {/* Price & CTA */}
                         <div className="flex items-center justify-between pt-3 border-t border-border">
                           <div className="flex items-baseline gap-1.5">
-                            {course.price === 0 ? (
-                              <span className="text-lg font-bold text-primary">Free</span>
+                            {course.level === "certificate" ? (
+                              course.price === 0 ? (
+                                <span className="text-lg font-bold text-primary">Free</span>
+                              ) : (
+                                <span className="text-lg font-bold text-foreground">£{course.price}</span>
+                              )
                             ) : (
-                              <span className="text-lg font-bold text-foreground">£{course.price}</span>
+                              <span className="text-sm font-medium text-muted-foreground">Coming Soon</span>
                             )}
                           </div>
                           <span className="text-xs font-medium text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">
