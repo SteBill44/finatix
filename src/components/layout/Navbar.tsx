@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import finaptixLogo from "@/assets/finaptix-logo.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,9 +73,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-foreground">
-              Fin<span className="text-primary">aptix</span>
-            </span>
+            <img src={finaptixLogo} alt="Finaptix" className="h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
