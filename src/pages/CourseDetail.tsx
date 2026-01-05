@@ -33,6 +33,7 @@ import {
   BarChart3,
   UserMinus,
   History,
+  ChevronsUpDown,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -77,6 +78,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+const SECTION_KEYS = ['lessons', 'lessonQuizzes', 'mockExams', 'mockExamResults', 'analytics', 'reviews'] as const;
+type SectionKey = typeof SECTION_KEYS[number];
+
+const getStorageKey = (courseId: string) => `course-sections-${courseId}`;
+
 const CourseDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
@@ -90,6 +96,38 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
+
+  // Collapsible section states with localStorage persistence
+  const [sectionStates, setSectionStates] = useState<Record<SectionKey, boolean>>(() => {
+    if (typeof window !== 'undefined' && courseId) {
+      const stored = localStorage.getItem(getStorageKey(courseId));
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch {
+          // Fall through to default
+        }
+      }
+    }
+    return SECTION_KEYS.reduce((acc, key) => ({ ...acc, [key]: true }), {} as Record<SectionKey, boolean>);
+  });
+
+  // Persist section states to localStorage
+  useEffect(() => {
+    if (courseId) {
+      localStorage.setItem(getStorageKey(courseId), JSON.stringify(sectionStates));
+    }
+  }, [sectionStates, courseId]);
+
+  const handleSectionToggle = (key: SectionKey) => (open: boolean) => {
+    setSectionStates(prev => ({ ...prev, [key]: open }));
+  };
+
+  const allExpanded = Object.values(sectionStates).every(v => v);
+  const toggleAllSections = () => {
+    const newState = !allExpanded;
+    setSectionStates(SECTION_KEYS.reduce((acc, key) => ({ ...acc, [key]: newState }), {} as Record<SectionKey, boolean>));
+  };
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -577,12 +615,26 @@ const CourseDetail = () => {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2">
+              {/* Expand/Collapse All Button */}
+              <div className="flex justify-end mb-6">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={toggleAllSections}
+                  className="gap-2"
+                >
+                  <ChevronsUpDown className="w-4 h-4" />
+                  {allExpanded ? "Collapse All" : "Expand All"}
+                </Button>
+              </div>
 
               {/* Lessons */}
               <CollapsibleSection
                 title="Course Lessons"
                 icon={<BookOpen className="w-6 h-6 text-primary" />}
                 className="mb-12"
+                isOpen={sectionStates.lessons}
+                onOpenChange={handleSectionToggle('lessons')}
               >
                 <div className="space-y-3">
                   {lessons && lessons.length > 0 ? (
@@ -634,6 +686,8 @@ const CourseDetail = () => {
                   title="Lesson Quizzes"
                   icon={<ClipboardList className="w-6 h-6 text-primary" />}
                   className="mb-12"
+                  isOpen={sectionStates.lessonQuizzes}
+                  onOpenChange={handleSectionToggle('lessonQuizzes')}
                 >
                   <div className="space-y-4">
                     {quizzes.filter(q => q.lesson_id).map((quiz) => (
@@ -689,6 +743,8 @@ const CourseDetail = () => {
                   title="Mock Exams"
                   icon={<GraduationCap className="w-6 h-6 text-accent" />}
                   className="mb-12"
+                  isOpen={sectionStates.mockExams}
+                  onOpenChange={handleSectionToggle('mockExams')}
                 >
                   <div className="bg-gradient-to-br from-accent/10 via-primary/5 to-background rounded-2xl border border-accent/30 p-8">
                     <p className="text-muted-foreground mb-6">
@@ -747,6 +803,8 @@ const CourseDetail = () => {
                   title="Mock Exam Results"
                   icon={<History className="w-6 h-6 text-accent" />}
                   className="mb-12"
+                  isOpen={sectionStates.mockExamResults}
+                  onOpenChange={handleSectionToggle('mockExamResults')}
                 >
                   <MockExamHistory 
                     attempts={quizAttempts} 
@@ -760,6 +818,8 @@ const CourseDetail = () => {
                   title="Your Performance Analytics"
                   icon={<TrendingUp className="w-6 h-6 text-primary" />}
                   className="mb-12"
+                  isOpen={sectionStates.analytics}
+                  onOpenChange={handleSectionToggle('analytics')}
                 >
                   <div className="grid lg:grid-cols-5 gap-6">
                     {/* Course Competency Radar - Prominent Left Side */}
@@ -928,6 +988,8 @@ const CourseDetail = () => {
                 <CollapsibleSection
                   title="Student Reviews"
                   icon={<MessageSquare className="w-6 h-6 text-primary" />}
+                  isOpen={sectionStates.reviews}
+                  onOpenChange={handleSectionToggle('reviews')}
                 >
                   <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
                 </CollapsibleSection>
