@@ -57,6 +57,7 @@ import {
 import CourseReviews from "@/components/CourseReviews";
 import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
+import CollapsibleSection from "@/components/course/CollapsibleSection";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
@@ -578,11 +579,11 @@ const CourseDetail = () => {
             <div className="lg:col-span-2">
 
               {/* Lessons */}
-              <div className="mb-12">
-                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                  <BookOpen className="w-6 h-6 text-primary" />
-                  Course Lessons
-                </h2>
+              <CollapsibleSection
+                title="Course Lessons"
+                icon={<BookOpen className="w-6 h-6 text-primary" />}
+                className="mb-12"
+              >
                 <div className="space-y-3">
                   {lessons && lessons.length > 0 ? (
                     lessons.map((lesson, index) => {
@@ -625,15 +626,15 @@ const CourseDetail = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </CollapsibleSection>
 
               {/* Lesson Quizzes Section */}
               {quizzes && quizzes.filter(q => q.lesson_id).length > 0 && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <ClipboardList className="w-6 h-6 text-primary" />
-                    Lesson Quizzes
-                  </h2>
+                <CollapsibleSection
+                  title="Lesson Quizzes"
+                  icon={<ClipboardList className="w-6 h-6 text-primary" />}
+                  className="mb-12"
+                >
                   <div className="space-y-4">
                     {quizzes.filter(q => q.lesson_id).map((quiz) => (
                       <div
@@ -679,28 +680,18 @@ const CourseDetail = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {/* Mock Exams Section - Course-level exams without lesson_id */}
               {quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
-                <div className="mb-12">
+                <CollapsibleSection
+                  title="Mock Exams"
+                  icon={<GraduationCap className="w-6 h-6 text-accent" />}
+                  className="mb-12"
+                >
                   <div className="bg-gradient-to-br from-accent/10 via-primary/5 to-background rounded-2xl border border-accent/30 p-8">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
-                        <GraduationCap className="w-6 h-6 text-accent" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-foreground">
-                          Mock Exams
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                          Simulate real CIMA exam conditions
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <p className="text-muted-foreground mb-6 mt-4">
+                    <p className="text-muted-foreground mb-6">
                       Practice under exam conditions with timed assessments, formula sheets, and a non-programmable calculator. 
                       Each mock exam mirrors the format and difficulty of the actual CIMA exam.
                     </p>
@@ -747,29 +738,29 @@ const CourseDetail = () => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {/* Mock Exam Results History - Only show if enrolled with mock exam attempts */}
               {isEnrolled && quizAttempts && quizAttempts.length > 0 && quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <History className="w-6 h-6 text-accent" />
-                    Mock Exam Results
-                  </h2>
+                <CollapsibleSection
+                  title="Mock Exam Results"
+                  icon={<History className="w-6 h-6 text-accent" />}
+                  className="mb-12"
+                >
                   <MockExamHistory 
                     attempts={quizAttempts} 
                     quizzes={quizzes} 
                   />
-                </div>
+                </CollapsibleSection>
               )}
 
               {isEnrolled && quizAttempts && quizAttempts.length > 0 && (
-                <div className="mb-12">
-                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                    <TrendingUp className="w-6 h-6 text-primary" />
-                    Your Performance Analytics
-                  </h2>
+                <CollapsibleSection
+                  title="Your Performance Analytics"
+                  icon={<TrendingUp className="w-6 h-6 text-primary" />}
+                  className="mb-12"
+                >
                   <div className="grid lg:grid-cols-5 gap-6">
                     {/* Course Competency Radar - Prominent Left Side */}
                     <Card className="p-4 lg:col-span-3 flex flex-col">
@@ -928,17 +919,18 @@ const CourseDetail = () => {
                       </Card>
                     </div>
                   </div>
-                </div>
+                </CollapsibleSection>
               )}
 
 
               {/* Course Reviews Section */}
               <div className="bg-card rounded-2xl border border-border p-8">
-                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                  <MessageSquare className="w-6 h-6 text-primary" />
-                  Student Reviews
-                </h2>
-                <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
+                <CollapsibleSection
+                  title="Student Reviews"
+                  icon={<MessageSquare className="w-6 h-6 text-primary" />}
+                >
+                  <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
+                </CollapsibleSection>
               </div>
             </div>
 
