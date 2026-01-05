@@ -26,6 +26,8 @@ import Admin from "./pages/Admin";
 import Achievements from "./pages/Achievements";
 import Discussions from "./pages/Discussions";
 import ManageAccount from "./pages/ManageAccount";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +54,8 @@ const AnimatedRoutes = () => {
         <Route path="/achievements" element={<PageTransition><Achievements /></PageTransition>} />
         <Route path="/discussions" element={<PageTransition><Discussions /></PageTransition>} />
         <Route path="/account" element={<PageTransition><ManageAccount /></PageTransition>} />
+        <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
+        <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
