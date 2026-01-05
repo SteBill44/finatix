@@ -115,7 +115,7 @@ const About = () => {
                 outdated interfaces, generic content, and no real insight into their progress.
               </p>
               <p className="text-lg text-muted-foreground mb-8">
-                We built Finaptix to change that. By combining modern learning science with beautiful 
+                We built Finaptics to change that. By combining modern learning science with beautiful 
                 technology, we've created a platform that doesn't just teach — it adapts, analyzes, 
                 and guides each student to success.
               </p>
@@ -151,7 +151,7 @@ const About = () => {
               What Drives Us
             </h2>
             <p className="text-lg text-muted-foreground">
-              These core principles guide everything we do at Finaptix
+              These core principles guide everything we do at Finaptics
             </p>
           </div>
 
