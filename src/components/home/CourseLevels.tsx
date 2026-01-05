@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
 import stepSuccessImg from "@/assets/course-step-3-success.jpg";
 
 const CourseLevels = () => {
+  const { user } = useAuth();
+
   const steps = [
     {
       number: "01",
@@ -16,8 +19,8 @@ const CourseLevels = () => {
         "No credit card details required",
         "Quick and easy setup"
       ],
-      cta: "Register for Free",
-      ctaLink: "/auth?mode=signup",
+      cta: user ? "Go to Dashboard" : "Register for Free",
+      ctaLink: user ? "/dashboard" : "/auth?mode=signup",
       imagePosition: "right",
       image: stepAccountImg
     },
@@ -44,8 +47,8 @@ const CourseLevels = () => {
         "Share your professional accomplishments",
         "Validate your certification on our website"
       ],
-      cta: "View Certifications",
-      ctaLink: "/courses",
+      cta: user ? "View Achievements" : "View Certifications",
+      ctaLink: user ? "/achievements" : "/courses",
       imagePosition: "right",
       image: stepSuccessImg
     },
