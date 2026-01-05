@@ -37,6 +37,7 @@ const Contact = () => {
     subject: "",
     message: ""
   });
+  const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [isHuman, setIsHuman] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -67,6 +68,14 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Honeypot check - if filled, silently reject (bot detected)
+    if (honeypot) {
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you within 24 hours.",
+      });
+      return;
+    }
     // Validate all fields
     const result = contactSchema.safeParse(formData);
     
@@ -96,6 +105,7 @@ const Contact = () => {
     setErrors({});
     setIsHuman(false);
     setTouched({});
+    setHoneypot("");
   };
 
   const faqs = [
@@ -205,6 +215,19 @@ const Contact = () => {
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6">Send Us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field - hidden from users, catches bots */}
+                <div className="absolute -left-[9999px] opacity-0 pointer-events-none" aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">Name</label>
