@@ -78,17 +78,18 @@ const About = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Our Vision
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                Transforming CIMA Education for the Digital Age
-              </h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                Traditional CIMA study methods haven't evolved with technology. Students were stuck with 
-                outdated interfaces, generic content, and no real insight into their progress.
-              </p>
-              <p className="text-lg text-muted-foreground mb-8">
-                We built Finaptics to change that. By combining modern learning science with beautiful 
-                technology, we've created a platform that doesn't just teach — it adapts, analyzes, 
-                and guides each student to success.
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Transforming CIMA Education for the Digital Age
+            </h2>
+            <p className="text-lg text-muted-foreground mb-6">
+              At Finaptics, we combine modern learning science with beautiful technology to create 
+              an intuitive, engaging study experience. Our platform adapts to your learning style, 
+              provides real-time insights into your progress, and delivers content that truly resonates.
+            </p>
+            <p className="text-lg text-muted-foreground mb-8">
+              We're passionate about helping every student succeed. That's why we've built a platform 
+              that doesn't just teach — it adapts, analyzes, and guides you every step of the way 
+              towards your CIMA qualification.
               </p>
               <div className="flex gap-4">
                 <Link to="/courses">
