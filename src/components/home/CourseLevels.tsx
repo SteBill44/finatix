@@ -17,7 +17,7 @@ const CourseLevels = () => {
         "Quick and easy setup"
       ],
       cta: "Register for Free",
-      ctaLink: "/courses",
+      ctaLink: "/auth?mode=signup",
       imagePosition: "right",
       image: stepAccountImg
     },
