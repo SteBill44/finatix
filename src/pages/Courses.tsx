@@ -127,10 +127,10 @@ const Courses = () => {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="animate-fade-up text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
               EXPLORE <span className="text-primary">CIMA COURSES</span>
             </h1>
-            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
+            <p className="animate-fade-up-delay-1 text-base sm:text-lg text-muted-foreground">
               From the Certificate in Business Accounting to the Strategic Case Study, we've got comprehensive courses to help you ace every CIMA exam.
             </p>
           </div>

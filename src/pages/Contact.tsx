@@ -85,10 +85,10 @@ const Contact = () => {
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
             Get in Touch
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
             We're Here to Help
           </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
             Have a question about our courses or need support? Our team is ready to assist you.
           </p>
         </div>
@@ -106,7 +106,7 @@ const Contact = () => {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-6">Send Us a Message</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6">Send Us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -157,7 +157,7 @@ const Contact = () => {
 
             {/* Contact Info */}
             <div className="space-y-8">
-              <h2 className="text-2xl font-bold text-foreground mb-6">Contact Information</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-6">Contact Information</h2>
               
               <div className="space-y-6">
                 <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
@@ -218,10 +218,10 @@ const Contact = () => {
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
               FAQ
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-base sm:text-lg text-muted-foreground">
               Find quick answers to common questions about our platform
             </p>
           </div>
