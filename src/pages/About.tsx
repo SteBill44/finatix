@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { 
   Target, 
-  Users, 
   Award, 
   TrendingUp,
   GraduationCap,
@@ -36,35 +35,7 @@ const About = () => {
     },
   ];
 
-  const team = [
-    {
-      name: "Dr. Sarah Williams",
-      role: "Head of Economics",
-      experience: "15+ years CIMA teaching",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face"
-    },
-    {
-      name: "James Chen",
-      role: "Lead Management Accounting",
-      experience: "Former Big 4 Manager",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face"
-    },
-    {
-      name: "Emily Parker",
-      role: "Financial Reporting Expert",
-      experience: "CIMA qualified, 12 years",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face"
-    },
-    {
-      name: "Michael Thompson",
-      role: "Strategic Level Lead",
-      experience: "CFO background, 20 years",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face"
-    },
-  ];
-
   const stats = [
-    { value: "94%", label: "Pass Rate" },
     { value: "10,000+", label: "Students" },
     { value: "50+", label: "Countries" },
     { value: "4.9/5", label: "Rating" },
@@ -169,41 +140,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              Expert Instructors
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Learn From the Best
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Our team of CIMA-qualified experts bring decades of real-world experience to every lesson
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member) => (
-              <div key={member.name} className="bg-card rounded-2xl border border-border overflow-hidden hover-lift group">
-                <div className="aspect-square overflow-hidden">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="font-semibold text-foreground">{member.name}</h3>
-                  <p className="text-primary text-sm mb-2">{member.role}</p>
-                  <p className="text-sm text-muted-foreground">{member.experience}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Success Rate Section */}
       <section className="py-16 lg:py-24 bg-gradient-to-br from-primary/5 to-accent/5">
@@ -211,11 +147,11 @@ const About = () => {
           <div className="max-w-4xl mx-auto text-center">
             <Award className="w-16 h-16 text-primary mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              94% of Our Students Pass First Time
+              Our Students Pass First Time
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Our competency-based learning approach, combined with advanced analytics and personalized 
-              study paths, has helped thousands of students achieve their CIMA qualification.
+              study paths, helps thousands of students achieve their CIMA qualification.
             </p>
             <Link to="/courses">
               <Button size="lg" className="gap-2">
