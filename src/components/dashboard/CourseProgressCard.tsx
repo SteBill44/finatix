@@ -69,9 +69,9 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   };
 
   return (
-    <div className="p-4 bg-secondary/50 rounded-xl hover:bg-secondary/70 transition-all border border-transparent hover:border-primary/20 group">
-      <div className="flex justify-between items-start mb-2">
-        <div className="flex-1">
+    <div className="p-4 bg-secondary/50 rounded-xl hover:bg-secondary/70 transition-all border border-transparent hover:border-primary/20 group w-full overflow-hidden">
+      <div className="flex justify-between items-start mb-2 gap-2">
+        <div className="flex-1 min-w-0">
           <h4 className="font-semibold text-foreground text-sm line-clamp-1">
             {enrollment.courses.title}
           </h4>

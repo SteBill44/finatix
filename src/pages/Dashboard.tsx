@@ -122,7 +122,7 @@ const Dashboard = () => {
 
       {/* Dashboard Content */}
       <section className="py-8 lg:py-12">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 overflow-hidden">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
@@ -206,9 +206,9 @@ const Dashboard = () => {
               </Button>
             </Card>
           ) : (
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
+              <div className="lg:col-span-2 space-y-6 min-w-0">
                 {/* My Courses Grid */}
                 <div>
                   <div className="flex items-center gap-3 mb-4">
@@ -263,7 +263,7 @@ const Dashboard = () => {
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
+              <div className="space-y-6 min-w-0">
                 {/* Streak Widget */}
                 <StreakWidget />
 
