@@ -73,7 +73,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-bold text-foreground">
-              cima<span className="text-primary">Study</span>
+              Fin<span className="text-primary">aptix</span>
             </span>
           </Link>
 
