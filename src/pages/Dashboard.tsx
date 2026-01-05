@@ -15,6 +15,8 @@ import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import QuickActions from "@/components/dashboard/QuickActions";
 import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
+import { DashboardSkeleton } from "@/components/skeletons/ContentSkeletons";
+import { FadeIn } from "@/components/PageTransition";
 import {
   BookOpen,
   Clock,
@@ -65,9 +67,30 @@ const Dashboard = () => {
   if (enrollmentsLoading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        </div>
+        {/* Header skeleton */}
+        <section className="relative py-12 lg:py-16 overflow-hidden">
+          <div className="absolute inset-0 gradient-bg opacity-95" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="space-y-3">
+                <div className="h-6 w-32 bg-primary-foreground/20 rounded-full animate-pulse" />
+                <div className="h-10 w-64 bg-primary-foreground/20 rounded-lg animate-pulse" />
+                <div className="h-5 w-48 bg-primary-foreground/20 rounded animate-pulse" />
+              </div>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 40" fill="none" className="w-full">
+              <path d="M0 40L1440 40L1440 0C1200 30 720 40 0 15L0 40Z" fill="hsl(var(--background))" />
+            </svg>
+          </div>
+        </section>
+        
+        <section className="py-8 lg:py-12">
+          <div className="container mx-auto px-4">
+            <DashboardSkeleton />
+          </div>
+        </section>
       </Layout>
     );
   }
