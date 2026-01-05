@@ -46,7 +46,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
               <span className="text-xl font-bold">
-                Fin<span className="text-primary">aptix</span>
+                Fin<span className="text-primary">aptics</span>
               </span>
             </Link>
             <p className="text-background/60 text-sm mb-6">
@@ -138,7 +138,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-background/10 text-center">
           <p className="text-sm text-background/40">
-            © {currentYear} Finaptix. All rights reserved.
+            © {currentYear} Finaptics. All rights reserved.
           </p>
         </div>
       </div>
