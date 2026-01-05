@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
@@ -34,6 +35,9 @@ import {
   UserMinus,
   History,
   ChevronsUpDown,
+  Bell,
+  Mail,
+  Loader2,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -77,6 +81,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { z } from "zod";
 
 const SECTION_KEYS = ['lessons', 'lessonQuizzes', 'mockExams', 'mockExamResults', 'analytics', 'reviews'] as const;
 type SectionKey = typeof SECTION_KEYS[number];
@@ -96,6 +101,50 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
+  
+  // Interest registration state
+  const [interestEmail, setInterestEmail] = useState("");
+  const [interestSubmitted, setInterestSubmitted] = useState(false);
+  const [interestError, setInterestError] = useState("");
+  
+  const emailSchema = z.string().email("Please enter a valid email address");
+  
+  const registerInterestMutation = useMutation({
+    mutationFn: async (email: string) => {
+      const { error } = await supabase
+        .from("interest_registrations")
+        .insert({ email: email.trim() });
+      if (error) {
+        if (error.code === "23505") {
+          throw new Error("This email is already registered for updates.");
+        }
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      setInterestSubmitted(true);
+      setInterestEmail("");
+      toast.success("Thanks! We'll notify you when this course launches.");
+    },
+    onError: (error: Error) => {
+      setInterestError(error.message);
+    },
+  });
+  
+  const handleRegisterInterest = (e: React.FormEvent) => {
+    e.preventDefault();
+    setInterestError("");
+    
+    const result = emailSchema.safeParse(interestEmail);
+    if (!result.success) {
+      setInterestError(result.error.errors[0].message);
+      return;
+    }
+    
+    registerInterestMutation.mutate(interestEmail);
+  };
+  
+  const isCertificateLevel = (level: string) => level?.toLowerCase() === "certificate";
 
   // Collapsible section states with localStorage persistence
   const [sectionStates, setSectionStates] = useState<Record<SectionKey, boolean>>(() => {
@@ -513,11 +562,23 @@ const CourseDetail = () => {
             {/* Pricing Card - Hide price when enrolled */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                {!isEnrolled && (
+                {!isEnrolled && isCertificateLevel(course.level) && (
                   <div className="flex items-baseline gap-3 mb-6">
                     <span className="text-4xl font-bold text-foreground">
                       {Number(course.price ?? 0) === 0 ? "Free" : `£${Number(course.price).toFixed(0)}`}
                     </span>
+                  </div>
+                )}
+                
+                {!isCertificateLevel(course.level) && !isEnrolled && (
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Bell className="w-5 h-5 text-primary" />
+                      <span className="text-lg font-semibold text-foreground">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Be the first to know when this course launches. Register your interest below.
+                    </p>
                   </div>
                 )}
 
@@ -563,7 +624,7 @@ const CourseDetail = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </>
-                ) : (
+                ) : isCertificateLevel(course.level) ? (
                   <>
                     <Button 
                       size="lg" 
@@ -574,16 +635,65 @@ const CourseDetail = () => {
                       <ShoppingCart className="w-5 h-5" />
                       {enrollMutation.isPending ? "Enrolling..." : "Enroll Now"}
                     </Button>
-                    <Button variant="outline" size="lg" className="w-full gap-2" onClick={handleStartLearning}>
-                      <Play className="w-5 h-5" />
-                      Try Free Lesson
-                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {interestSubmitted ? (
+                      <div className="text-center py-4">
+                        <CheckCircle className="w-12 h-12 text-primary mx-auto mb-3" />
+                        <p className="font-medium text-foreground">You're on the list!</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          We'll email you when this course launches.
+                        </p>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleRegisterInterest} className="space-y-3">
+                        <div>
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              type="email"
+                              placeholder="Enter your email"
+                              value={interestEmail}
+                              onChange={(e) => {
+                                setInterestEmail(e.target.value);
+                                setInterestError("");
+                              }}
+                              className="pl-10"
+                            />
+                          </div>
+                          {interestError && (
+                            <p className="text-sm text-destructive mt-1">{interestError}</p>
+                          )}
+                        </div>
+                        <Button 
+                          type="submit"
+                          size="lg" 
+                          className="w-full gap-2" 
+                          disabled={registerInterestMutation.isPending}
+                        >
+                          {registerInterestMutation.isPending ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                              Registering...
+                            </>
+                          ) : (
+                            <>
+                              <Bell className="w-5 h-5" />
+                              Register Your Interest
+                            </>
+                          )}
+                        </Button>
+                      </form>
+                    )}
                   </>
                 )}
 
-                <p className="text-center text-sm text-muted-foreground mt-4">
-                  30-day money-back guarantee
-                </p>
+                {isCertificateLevel(course.level) && (
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    30-day money-back guarantee
+                  </p>
+                )}
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
