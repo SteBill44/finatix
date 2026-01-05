@@ -51,7 +51,7 @@ const Contact = () => {
       answer: "Our mock exams mirror the real CIMA exam format and difficulty. Each mock includes detailed explanations for every question, performance analytics, and identifies your weak areas for targeted revision."
     },
     {
-      question: "How is CIMAStudy different from Kaplan?",
+      question: "How is Finaptix different from Kaplan?",
       answer: "We offer modern competency-based analytics that identify your weak areas, adaptive learning paths, a more intuitive interface, and competitive pricing. Our platform is built for today's students who expect modern technology."
     },
     {
@@ -166,8 +166,8 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                    <p className="text-muted-foreground">hello@cimastudy.com</p>
-                    <p className="text-muted-foreground">support@cimastudy.com</p>
+                    <p className="text-muted-foreground">hello@finaptix.com</p>
+                    <p className="text-muted-foreground">support@finaptix.com</p>
                   </div>
                 </div>
 
