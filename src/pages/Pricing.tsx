@@ -243,7 +243,7 @@ const Pricing = () => {
       {/* Individual Courses by Level */}
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
         <section className="py-16 lg:py-20 bg-secondary/30">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 overflow-hidden">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Individual Courses
@@ -287,13 +287,13 @@ const Pricing = () => {
                 return (
                   <div key={level} className="bg-card rounded-2xl border border-border overflow-hidden">
                     {/* Level Header */}
-                    <div className={`px-6 py-4 ${
+                    <div className={`px-4 sm:px-6 py-4 ${
                       level === 'certificate' ? 'bg-orange/10' : 
                       level === 'operational' ? 'bg-primary/10' : 
                       level === 'management' ? 'bg-purple/10' : 
                       'bg-red/10'
                     } border-b border-border`}>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                           <h3 className="text-xl font-bold text-foreground">{levelNames[level]}</h3>
                           <p className="text-sm text-muted-foreground">
@@ -344,14 +344,14 @@ const Pricing = () => {
                         const isFree = Number(course.price) === 0;
 
                         return (
-                          <div key={course.id} className="px-6 py-4 flex items-center justify-between hover:bg-secondary/30 transition-colors">
-                            <div className="flex-1">
-                              <h4 className="font-medium text-foreground">{course.title}</h4>
+                          <div key={course.id} className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-secondary/30 transition-colors">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-foreground truncate">{course.title}</h4>
                               <p className="text-sm text-muted-foreground line-clamp-1">
                                 {course.description}
                               </p>
                             </div>
-                            <div className="flex items-center gap-4 ml-4">
+                            <div className="flex items-center gap-3 sm:gap-4 sm:ml-4">
                               <span className={`text-lg font-bold ${
                                 isFree ? 'text-orange' : 'text-foreground'
                               }`}>

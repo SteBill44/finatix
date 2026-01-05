@@ -64,7 +64,7 @@ const Achievements = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-24">
+      <div className="container mx-auto px-4 py-24 overflow-hidden">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-3">Achievements</h1>
@@ -116,9 +116,9 @@ const Achievements = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Badges Section */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 min-w-0">
             <h2 className="text-2xl font-bold flex items-center gap-2">
               <Award className="w-6 h-6 text-primary" />
               Badges
@@ -170,7 +170,7 @@ const Achievements = () => {
           </div>
 
           {/* Leaderboard Section */}
-          <div>
+          <div className="min-w-0">
             <h2 className="text-2xl font-bold flex items-center gap-2 mb-6">
               <Trophy className="w-6 h-6 text-yellow-500" />
               Leaderboard

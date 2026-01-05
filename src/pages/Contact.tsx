@@ -77,9 +77,9 @@ const Contact = () => {
       {/* Hero */}
       <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />
-        <div className="gradient-orb gradient-orb-primary w-[400px] h-[400px] -top-20 right-10 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[300px] h-[300px] top-1/4 left-0 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] bottom-0 right-1/3 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -right-20 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -left-20 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-primary w-[150px] h-[150px] sm:w-[250px] sm:h-[250px] bottom-0 right-1/4 pointer-events-none" />
         
         <div className="container mx-auto px-4 relative z-10 text-center">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
@@ -102,7 +102,7 @@ const Contact = () => {
 
       {/* Contact Section */}
       <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
