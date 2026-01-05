@@ -28,7 +28,7 @@ const MobileBottomNav = () => {
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/95 backdrop-blur-md border-t border-border safe-area-bottom shadow-lg"
+      className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-card/95 backdrop-blur-md border-t border-border safe-area-bottom shadow-lg"
     >
       <div className="flex items-center justify-around h-16 px-1">
         {navItems.map((item) => {
