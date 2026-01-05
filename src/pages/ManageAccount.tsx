@@ -302,7 +302,18 @@ const ManageAccount = () => {
     setDeleting(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('delete-account');
+      // Get fresh session to ensure valid JWT
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session) {
+        throw new Error("Session expired. Please log in again.");
+      }
+
+      const { data, error } = await supabase.functions.invoke('delete-account', {
+        headers: {
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
+      });
 
       if (error) {
         throw error;
@@ -319,7 +330,7 @@ const ManageAccount = () => {
       console.error('Delete account error:', error);
       toast({
         title: "Error",
-        description: "Failed to delete account. Please try again or contact support.",
+        description: error instanceof Error ? error.message : "Failed to delete account. Please try again or contact support.",
         variant: "destructive",
       });
     } finally {
