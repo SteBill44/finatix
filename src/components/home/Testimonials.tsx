@@ -16,7 +16,7 @@ const Testimonials = () => {
       name: "Chris T.",
       role: "Cyber Threat and Risk Manager",
       initials: "CT",
-      quote: "The courses provided by Finaptix are the best in terms of content and structure I have come across. An absolute must for anyone wanting to pursue their CIMA certification but also anyone wanting to gain a solid baseline knowledge set for a career in management accounting.",
+      quote: "The courses provided by Finaptics are the best in terms of content and structure I have come across. An absolute must for anyone wanting to pursue their CIMA certification but also anyone wanting to gain a solid baseline knowledge set for a career in management accounting.",
     },
     {
       name: "Brod K.",
