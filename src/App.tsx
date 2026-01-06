@@ -31,6 +31,12 @@ import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
+import Flashcards from "./pages/Flashcards";
+import FlashcardStudy from "./pages/FlashcardStudy";
+import FlashcardEdit from "./pages/FlashcardEdit";
+import StudyPlanner from "./pages/StudyPlanner";
+import Certificates from "./pages/Certificates";
+import ForEmployers from "./pages/ForEmployers";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +66,12 @@ const AnimatedRoutes = () => {
         <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
         <Route path="/cookies" element={<PageTransition><Cookies /></PageTransition>} />
         <Route path="/help" element={<PageTransition><Help /></PageTransition>} />
+        <Route path="/flashcards" element={<PageTransition><Flashcards /></PageTransition>} />
+        <Route path="/flashcards/:deckId/study" element={<PageTransition><FlashcardStudy /></PageTransition>} />
+        <Route path="/flashcards/:deckId/edit" element={<PageTransition><FlashcardEdit /></PageTransition>} />
+        <Route path="/study-planner" element={<PageTransition><StudyPlanner /></PageTransition>} />
+        <Route path="/certificates" element={<PageTransition><Certificates /></PageTransition>} />
+        <Route path="/for-employers" element={<PageTransition><ForEmployers /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

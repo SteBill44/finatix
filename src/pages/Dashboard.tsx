@@ -15,6 +15,8 @@ import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import QuickActions from "@/components/dashboard/QuickActions";
 import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
+import ExamReadinessWidget from "@/components/dashboard/ExamReadinessWidget";
+import StudyPlanWidget from "@/components/dashboard/StudyPlanWidget";
 import { DashboardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import { FadeIn } from "@/components/PageTransition";
 import {
@@ -287,6 +289,12 @@ const Dashboard = () => {
 
               {/* Sidebar */}
               <div className="space-y-6 min-w-0">
+                {/* Study Plan Widget */}
+                <StudyPlanWidget />
+
+                {/* Exam Readiness Widget */}
+                <ExamReadinessWidget />
+
                 {/* Streak Widget */}
                 <StreakWidget />
 

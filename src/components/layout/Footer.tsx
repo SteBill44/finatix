@@ -19,6 +19,7 @@ const Footer = ({ className }: FooterProps) => {
     company: [
       { name: "About Us", path: "/about" },
       { name: "Pricing", path: "/pricing" },
+      { name: "For Employers", path: "/for-employers" },
       { name: "Blog", path: "/blog" },
     ],
     support: [
