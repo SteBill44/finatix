@@ -377,24 +377,35 @@ export type Database = {
       }
       interest_registrations: {
         Row: {
+          course_id: string | null
           created_at: string
           email: string
           full_name: string | null
           id: string
         }
         Insert: {
+          course_id?: string | null
           created_at?: string
           email: string
           full_name?: string | null
           id?: string
         }
         Update: {
+          course_id?: string | null
           created_at?: string
           email?: string
           full_name?: string | null
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "interest_registrations_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lesson_progress: {
         Row: {

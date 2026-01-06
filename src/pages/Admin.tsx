@@ -16,11 +16,12 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
 import SyllabusManagement from "@/components/admin/SyllabusManagement";
+import InterestManagement from "@/components/admin/InterestManagement";
 
 interface Course {
   id: string;
@@ -486,7 +487,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-5">
+          <TabsList className="grid w-full max-w-4xl grid-cols-6">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
@@ -502,6 +503,10 @@ const Admin = () => {
             <TabsTrigger value="resources" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               Resources
+            </TabsTrigger>
+            <TabsTrigger value="interest" className="flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              Interest
             </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -522,6 +527,11 @@ const Admin = () => {
           {/* Resources Tab */}
           <TabsContent value="resources">
             <ResourceManagement />
+          </TabsContent>
+
+          {/* Interest Tab */}
+          <TabsContent value="interest">
+            <InterestManagement />
           </TabsContent>
 
           {/* Courses Tab */}
