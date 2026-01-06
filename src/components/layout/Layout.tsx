@@ -4,12 +4,14 @@ import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
 import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
+import AIChatWidget from "../AIChatWidget";
 
 interface LayoutProps {
   children: ReactNode;
+  courseId?: string;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, courseId }: LayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <ScrollProgressBar />
@@ -20,6 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer className="hidden lg:block" />
       <MobileBottomNav />
+      <AIChatWidget courseId={courseId} />
     </div>
   );
 };
