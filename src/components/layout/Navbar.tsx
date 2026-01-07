@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy, MessageSquare, Settings, LayoutDashboard } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Layers, CalendarDays, Award } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -135,6 +135,24 @@ const Navbar = () => {
                     <Link to="/achievements" className="cursor-pointer flex items-center">
                       <Trophy className="w-4 h-4 mr-2" />
                       Achievements
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/flashcards" className="cursor-pointer flex items-center">
+                      <Layers className="w-4 h-4 mr-2" />
+                      Flashcards
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/study-planner" className="cursor-pointer flex items-center">
+                      <CalendarDays className="w-4 h-4 mr-2" />
+                      Study Planner
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/certificates" className="cursor-pointer flex items-center">
+                      <Award className="w-4 h-4 mr-2" />
+                      Certificates
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -298,6 +316,24 @@ const Navbar = () => {
                         <Button variant="ghost" className="w-full justify-start gap-2 h-11">
                           <Trophy className="w-4 h-4" />
                           Achievements
+                        </Button>
+                      </Link>
+                      <Link to="/flashcards" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
+                          <Layers className="w-4 h-4" />
+                          Flashcards
+                        </Button>
+                      </Link>
+                      <Link to="/study-planner" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
+                          <CalendarDays className="w-4 h-4" />
+                          Study Planner
+                        </Button>
+                      </Link>
+                      <Link to="/certificates" onClick={() => setIsOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
+                          <Award className="w-4 h-4" />
+                          Certificates
                         </Button>
                       </Link>
                       <Link to="/discussions" onClick={() => setIsOpen(false)}>
