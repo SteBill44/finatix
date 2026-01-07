@@ -14,9 +14,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const [firstName, setFirstName] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const location = useLocation();
@@ -62,6 +73,8 @@ const Navbar = () => {
   };
 
   const handleSignOut = async () => {
+    setShowSignOutDialog(false);
+    setIsOpen(false);
     await signOut();
     navigate("/");
   };
@@ -157,7 +170,10 @@ const Navbar = () => {
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+                  <DropdownMenuItem 
+                    onClick={() => setShowSignOutDialog(true)} 
+                    className="cursor-pointer text-destructive"
+                  >
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
                   </DropdownMenuItem>
@@ -254,10 +270,7 @@ const Navbar = () => {
                     <Button
                       variant="ghost"
                       className="w-full text-destructive"
-                      onClick={() => {
-                        handleSignOut();
-                        setIsOpen(false);
-                      }}
+                      onClick={() => setShowSignOutDialog(true)}
                     >
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
@@ -280,6 +293,23 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      {/* Sign Out Confirmation Dialog */}
+      <AlertDialog open={showSignOutDialog} onOpenChange={setShowSignOutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to sign out of your account?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSignOut} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Sign Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </nav>
   );
 };
