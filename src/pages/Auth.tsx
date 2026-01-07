@@ -62,7 +62,7 @@ const resetPasswordSchema = z.object({
 type AuthMode = "login" | "signup" | "forgot" | "reset";
 
 const Auth = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [mode, setMode] = useState<AuthMode>(() => {
     const urlMode = searchParams.get("mode");
     if (urlMode === "signup") return "signup";
@@ -70,6 +70,15 @@ const Auth = () => {
     if (urlMode === "forgot") return "forgot";
     return "login";
   });
+
+  // Sync mode with URL changes
+  useEffect(() => {
+    const urlMode = searchParams.get("mode");
+    if (urlMode === "signup") setMode("signup");
+    else if (urlMode === "reset") setMode("reset");
+    else if (urlMode === "forgot") setMode("forgot");
+    else setMode("login");
+  }, [searchParams]);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
