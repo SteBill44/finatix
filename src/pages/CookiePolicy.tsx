@@ -5,7 +5,7 @@ const CookiePolicy = () => {
     <Layout>
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         <h1 className="text-4xl font-bold mb-8">Cookie Policy</h1>
-        <p className="text-muted-foreground mb-8">Last updated: January 2025</p>
+        <p className="text-muted-foreground mb-8">Last updated: January 2026</p>
 
         <div className="prose prose-lg dark:prose-invert max-w-none space-y-8">
           <section>
