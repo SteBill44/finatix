@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
@@ -74,18 +75,20 @@ const App = () => {
     <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <TooltipProvider>
-            {isLoading && (
-              <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
-            )}
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <ScrollToTop />
-              <AnimatedRoutes />
-              <CookieConsent />
-            </BrowserRouter>
-          </TooltipProvider>
+          <CookieConsentProvider>
+            <TooltipProvider>
+              {isLoading && (
+                <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+              )}
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <ScrollToTop />
+                <AnimatedRoutes />
+                <CookieConsent />
+              </BrowserRouter>
+            </TooltipProvider>
+          </CookieConsentProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
