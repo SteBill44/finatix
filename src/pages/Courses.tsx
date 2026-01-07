@@ -127,10 +127,10 @@ const Courses = () => {
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="animate-fade-up text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
               EXPLORE <span className="text-primary">CIMA COURSES</span>
             </h1>
-            <p className="animate-fade-up-delay-1 text-base sm:text-lg text-muted-foreground">
+            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
               From the Certificate in Business Accounting to the Strategic Case Study, we've got comprehensive courses to help you ace every CIMA exam.
             </p>
           </div>
@@ -215,36 +215,8 @@ const Courses = () => {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="space-y-12">
-              {["certificate", "operational", "management", "strategic"].map((level) => (
-                <div key={level} className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-                    <div className="space-y-2">
-                      <div className="h-5 w-32 bg-muted rounded animate-pulse" />
-                      <div className="h-3 w-24 bg-muted rounded animate-pulse" />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div key={i} className="bg-card rounded-xl border border-border p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="h-5 w-12 bg-muted rounded-full animate-pulse" />
-                          <div className="h-4 w-8 bg-muted rounded animate-pulse" />
-                        </div>
-                        <div className="h-10 w-full bg-muted rounded animate-pulse" />
-                        <div className="flex items-center gap-3">
-                          <div className="h-4 w-20 bg-muted rounded animate-pulse" />
-                        </div>
-                        <div className="flex items-center justify-between pt-3 border-t border-border">
-                          <div className="h-6 w-12 bg-muted rounded animate-pulse" />
-                          <div className="h-4 w-12 bg-muted rounded animate-pulse" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           )}
 
@@ -292,12 +264,10 @@ const Courses = () => {
                               </span>
                             )}
                           </div>
-                          {course.level === "certificate" && (
-                            <div className="flex items-center gap-1 text-yellow-500">
-                              <Star className="w-3.5 h-3.5 fill-current" />
-                              <span className="text-xs font-medium text-foreground">4.8</span>
-                            </div>
-                          )}
+                          <div className="flex items-center gap-1 text-yellow-500">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            <span className="text-xs font-medium text-foreground">4.8</span>
+                          </div>
                         </div>
 
                         {/* Title */}
@@ -316,14 +286,10 @@ const Courses = () => {
                         {/* Price & CTA */}
                         <div className="flex items-center justify-between pt-3 border-t border-border">
                           <div className="flex items-baseline gap-1.5">
-                            {course.level === "certificate" ? (
-                              course.price === 0 ? (
-                                <span className="text-lg font-bold text-primary">Free</span>
-                              ) : (
-                                <span className="text-lg font-bold text-foreground">£{course.price}</span>
-                              )
+                            {course.price === 0 ? (
+                              <span className="text-lg font-bold text-primary">Free</span>
                             ) : (
-                              <span className="text-sm font-medium text-muted-foreground">Coming Soon</span>
+                              <span className="text-lg font-bold text-foreground">£{course.price}</span>
                             )}
                           </div>
                           <span className="text-xs font-medium text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
@@ -34,10 +33,6 @@ import {
   BarChart3,
   UserMinus,
   History,
-  ChevronsUpDown,
-  Bell,
-  Mail,
-  Loader2,
 } from "lucide-react";
 import {
   ChartContainer,
@@ -62,7 +57,6 @@ import {
 import CourseReviews from "@/components/CourseReviews";
 import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
-import CollapsibleSection from "@/components/course/CollapsibleSection";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
@@ -81,12 +75,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { z } from "zod";
-
-const SECTION_KEYS = ['lessons', 'lessonQuizzes', 'mockExams', 'mockExamResults', 'analytics', 'reviews'] as const;
-type SectionKey = typeof SECTION_KEYS[number];
-
-const getStorageKey = (courseId: string) => `course-sections-${courseId}`;
 
 const CourseDetail = () => {
   const { courseId } = useParams();
@@ -101,82 +89,6 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
-  
-  // Interest registration state
-  const [interestEmail, setInterestEmail] = useState("");
-  const [interestSubmitted, setInterestSubmitted] = useState(false);
-  const [interestError, setInterestError] = useState("");
-  
-  const emailSchema = z.string().email("Please enter a valid email address");
-  
-  const registerInterestMutation = useMutation({
-    mutationFn: async (email: string) => {
-      const { error } = await supabase
-        .from("interest_registrations")
-        .insert({ email: email.trim() });
-      if (error) {
-        if (error.code === "23505") {
-          throw new Error("This email is already registered for updates.");
-        }
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      setInterestSubmitted(true);
-      setInterestEmail("");
-      toast.success("Thanks! We'll notify you when this course launches.");
-    },
-    onError: (error: Error) => {
-      setInterestError(error.message);
-    },
-  });
-  
-  const handleRegisterInterest = (e: React.FormEvent) => {
-    e.preventDefault();
-    setInterestError("");
-    
-    const result = emailSchema.safeParse(interestEmail);
-    if (!result.success) {
-      setInterestError(result.error.errors[0].message);
-      return;
-    }
-    
-    registerInterestMutation.mutate(interestEmail);
-  };
-  
-  const isCertificateLevel = (level: string) => level?.toLowerCase() === "certificate";
-
-  // Collapsible section states with localStorage persistence
-  const [sectionStates, setSectionStates] = useState<Record<SectionKey, boolean>>(() => {
-    if (typeof window !== 'undefined' && courseId) {
-      const stored = localStorage.getItem(getStorageKey(courseId));
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch {
-          // Fall through to default
-        }
-      }
-    }
-    return SECTION_KEYS.reduce((acc, key) => ({ ...acc, [key]: true }), {} as Record<SectionKey, boolean>);
-  });
-
-  // Persist section states to localStorage
-  useEffect(() => {
-    if (courseId) {
-      localStorage.setItem(getStorageKey(courseId), JSON.stringify(sectionStates));
-    }
-  }, [sectionStates, courseId]);
-
-  const handleSectionToggle = (key: SectionKey) => (open: boolean) => {
-    setSectionStates(prev => ({ ...prev, [key]: open }));
-  };
-
-  const allExpanded = Object.values(sectionStates).every(v => v);
-  const toggleAllSections = () => {
-    const newState = !allExpanded;
-    setSectionStates(SECTION_KEYS.reduce((acc, key) => ({ ...acc, [key]: newState }), {} as Record<SectionKey, boolean>));
-  };
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -562,23 +474,11 @@ const CourseDetail = () => {
             {/* Pricing Card - Hide price when enrolled */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                {!isEnrolled && isCertificateLevel(course.level) && (
+                {!isEnrolled && (
                   <div className="flex items-baseline gap-3 mb-6">
                     <span className="text-4xl font-bold text-foreground">
                       {Number(course.price ?? 0) === 0 ? "Free" : `£${Number(course.price).toFixed(0)}`}
                     </span>
-                  </div>
-                )}
-                
-                {!isCertificateLevel(course.level) && !isEnrolled && (
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Bell className="w-5 h-5 text-primary" />
-                      <span className="text-lg font-semibold text-foreground">Coming Soon</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Be the first to know when this course launches. Register your interest below.
-                    </p>
                   </div>
                 )}
 
@@ -624,7 +524,7 @@ const CourseDetail = () => {
                       </AlertDialogContent>
                     </AlertDialog>
                   </>
-                ) : isCertificateLevel(course.level) ? (
+                ) : (
                   <>
                     <Button 
                       size="lg" 
@@ -635,65 +535,16 @@ const CourseDetail = () => {
                       <ShoppingCart className="w-5 h-5" />
                       {enrollMutation.isPending ? "Enrolling..." : "Enroll Now"}
                     </Button>
-                  </>
-                ) : (
-                  <>
-                    {interestSubmitted ? (
-                      <div className="text-center py-4">
-                        <CheckCircle className="w-12 h-12 text-primary mx-auto mb-3" />
-                        <p className="font-medium text-foreground">You're on the list!</p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          We'll email you when this course launches.
-                        </p>
-                      </div>
-                    ) : (
-                      <form onSubmit={handleRegisterInterest} className="space-y-3">
-                        <div>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input
-                              type="email"
-                              placeholder="Enter your email"
-                              value={interestEmail}
-                              onChange={(e) => {
-                                setInterestEmail(e.target.value);
-                                setInterestError("");
-                              }}
-                              className="pl-10"
-                            />
-                          </div>
-                          {interestError && (
-                            <p className="text-sm text-destructive mt-1">{interestError}</p>
-                          )}
-                        </div>
-                        <Button 
-                          type="submit"
-                          size="lg" 
-                          className="w-full gap-2" 
-                          disabled={registerInterestMutation.isPending}
-                        >
-                          {registerInterestMutation.isPending ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                              Registering...
-                            </>
-                          ) : (
-                            <>
-                              <Bell className="w-5 h-5" />
-                              Register Your Interest
-                            </>
-                          )}
-                        </Button>
-                      </form>
-                    )}
+                    <Button variant="outline" size="lg" className="w-full gap-2" onClick={handleStartLearning}>
+                      <Play className="w-5 h-5" />
+                      Try Free Lesson
+                    </Button>
                   </>
                 )}
 
-                {isCertificateLevel(course.level) && (
-                  <p className="text-center text-sm text-muted-foreground mt-4">
-                    30-day money-back guarantee
-                  </p>
-                )}
+                <p className="text-center text-sm text-muted-foreground mt-4">
+                  30-day money-back guarantee
+                </p>
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
@@ -725,27 +576,13 @@ const CourseDetail = () => {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              {/* Expand/Collapse All Button */}
-              <div className="flex justify-end mb-6">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={toggleAllSections}
-                  className="gap-2"
-                >
-                  <ChevronsUpDown className="w-4 h-4" />
-                  {allExpanded ? "Collapse All" : "Expand All"}
-                </Button>
-              </div>
 
               {/* Lessons */}
-              <CollapsibleSection
-                title="Course Lessons"
-                icon={<BookOpen className="w-6 h-6 text-primary" />}
-                className="mb-12"
-                isOpen={sectionStates.lessons}
-                onOpenChange={handleSectionToggle('lessons')}
-              >
+              <div className="mb-12">
+                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <BookOpen className="w-6 h-6 text-primary" />
+                  Course Lessons
+                </h2>
                 <div className="space-y-3">
                   {lessons && lessons.length > 0 ? (
                     lessons.map((lesson, index) => {
@@ -788,17 +625,15 @@ const CourseDetail = () => {
                     </div>
                   )}
                 </div>
-              </CollapsibleSection>
+              </div>
 
               {/* Lesson Quizzes Section */}
               {quizzes && quizzes.filter(q => q.lesson_id).length > 0 && (
-                <CollapsibleSection
-                  title="Lesson Quizzes"
-                  icon={<ClipboardList className="w-6 h-6 text-primary" />}
-                  className="mb-12"
-                  isOpen={sectionStates.lessonQuizzes}
-                  onOpenChange={handleSectionToggle('lessonQuizzes')}
-                >
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <ClipboardList className="w-6 h-6 text-primary" />
+                    Lesson Quizzes
+                  </h2>
                   <div className="space-y-4">
                     {quizzes.filter(q => q.lesson_id).map((quiz) => (
                       <div
@@ -844,20 +679,28 @@ const CourseDetail = () => {
                       </div>
                     ))}
                   </div>
-                </CollapsibleSection>
+                </div>
               )}
 
               {/* Mock Exams Section - Course-level exams without lesson_id */}
               {quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
-                <CollapsibleSection
-                  title="Mock Exams"
-                  icon={<GraduationCap className="w-6 h-6 text-accent" />}
-                  className="mb-12"
-                  isOpen={sectionStates.mockExams}
-                  onOpenChange={handleSectionToggle('mockExams')}
-                >
+                <div className="mb-12">
                   <div className="bg-gradient-to-br from-accent/10 via-primary/5 to-background rounded-2xl border border-accent/30 p-8">
-                    <p className="text-muted-foreground mb-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
+                        <GraduationCap className="w-6 h-6 text-accent" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-foreground">
+                          Mock Exams
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          Simulate real CIMA exam conditions
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <p className="text-muted-foreground mb-6 mt-4">
                       Practice under exam conditions with timed assessments, formula sheets, and a non-programmable calculator. 
                       Each mock exam mirrors the format and difficulty of the actual CIMA exam.
                     </p>
@@ -904,33 +747,29 @@ const CourseDetail = () => {
                       ))}
                     </div>
                   </div>
-                </CollapsibleSection>
+                </div>
               )}
 
               {/* Mock Exam Results History - Only show if enrolled with mock exam attempts */}
               {isEnrolled && quizAttempts && quizAttempts.length > 0 && quizzes && quizzes.filter(q => !q.lesson_id).length > 0 && (
-                <CollapsibleSection
-                  title="Mock Exam Results"
-                  icon={<History className="w-6 h-6 text-accent" />}
-                  className="mb-12"
-                  isOpen={sectionStates.mockExamResults}
-                  onOpenChange={handleSectionToggle('mockExamResults')}
-                >
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <History className="w-6 h-6 text-accent" />
+                    Mock Exam Results
+                  </h2>
                   <MockExamHistory 
                     attempts={quizAttempts} 
                     quizzes={quizzes} 
                   />
-                </CollapsibleSection>
+                </div>
               )}
 
               {isEnrolled && quizAttempts && quizAttempts.length > 0 && (
-                <CollapsibleSection
-                  title="Your Performance Analytics"
-                  icon={<TrendingUp className="w-6 h-6 text-primary" />}
-                  className="mb-12"
-                  isOpen={sectionStates.analytics}
-                  onOpenChange={handleSectionToggle('analytics')}
-                >
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <TrendingUp className="w-6 h-6 text-primary" />
+                    Your Performance Analytics
+                  </h2>
                   <div className="grid lg:grid-cols-5 gap-6">
                     {/* Course Competency Radar - Prominent Left Side */}
                     <Card className="p-4 lg:col-span-3 flex flex-col">
@@ -1089,20 +928,17 @@ const CourseDetail = () => {
                       </Card>
                     </div>
                   </div>
-                </CollapsibleSection>
+                </div>
               )}
 
 
               {/* Course Reviews Section */}
               <div className="bg-card rounded-2xl border border-border p-8">
-                <CollapsibleSection
-                  title="Student Reviews"
-                  icon={<MessageSquare className="w-6 h-6 text-primary" />}
-                  isOpen={sectionStates.reviews}
-                  onOpenChange={handleSectionToggle('reviews')}
-                >
-                  <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
-                </CollapsibleSection>
+                <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <MessageSquare className="w-6 h-6 text-primary" />
+                  Student Reviews
+                </h2>
+                <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
               </div>
             </div>
 

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
@@ -16,10 +15,6 @@ import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import QuickActions from "@/components/dashboard/QuickActions";
 import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
-import ExamReadinessWidget from "@/components/dashboard/ExamReadinessWidget";
-import StudyPlanWidget from "@/components/dashboard/StudyPlanWidget";
-import { DashboardSkeleton } from "@/components/skeletons/ContentSkeletons";
-import { FadeIn } from "@/components/PageTransition";
 import {
   BookOpen,
   Clock,
@@ -67,41 +62,12 @@ const Dashboard = () => {
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
 
-  useEffect(() => {
-    console.info("[Dashboard] mounted", {
-      userId: user?.id ?? null,
-      enrollmentsLoading,
-      enrollmentsCount: enrollments?.length ?? null,
-    });
-  }, [user?.id, enrollmentsLoading, enrollments?.length]);
-
   if (enrollmentsLoading) {
     return (
       <Layout>
-        {/* Header skeleton */}
-        <section className="relative py-12 lg:py-16 overflow-hidden">
-          <div className="absolute inset-0 gradient-bg opacity-95" />
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div className="space-y-3">
-                <div className="h-6 w-32 bg-primary-foreground/20 rounded-full animate-pulse" />
-                <div className="h-10 w-64 bg-primary-foreground/20 rounded-lg animate-pulse" />
-                <div className="h-5 w-48 bg-primary-foreground/20 rounded animate-pulse" />
-              </div>
-            </div>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 40" fill="none" className="w-full">
-              <path d="M0 40L1440 40L1440 0C1200 30 720 40 0 15L0 40Z" fill="hsl(var(--background))" />
-            </svg>
-          </div>
-        </section>
-        
-        <section className="py-8 lg:py-12">
-          <div className="container mx-auto px-4">
-            <DashboardSkeleton />
-          </div>
-        </section>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
       </Layout>
     );
   }
@@ -119,7 +85,7 @@ const Dashboard = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/80 text-sm font-medium mb-3">
                 Student Dashboard
               </span>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
                 Welcome back, {userName}! 👋
               </h1>
               <p className="text-primary-foreground/70">
@@ -298,12 +264,6 @@ const Dashboard = () => {
 
               {/* Sidebar */}
               <div className="space-y-6 min-w-0">
-                {/* Study Plan Widget */}
-                <StudyPlanWidget />
-
-                {/* Exam Readiness Widget */}
-                <ExamReadinessWidget />
-
                 {/* Streak Widget */}
                 <StreakWidget />
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
-import AppErrorBoundary from "@/components/AppErrorBoundary";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
@@ -27,17 +26,7 @@ import Admin from "./pages/Admin";
 import Achievements from "./pages/Achievements";
 import Discussions from "./pages/Discussions";
 import ManageAccount from "./pages/ManageAccount";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Cookies from "./pages/Cookies";
-import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
-import Flashcards from "./pages/Flashcards";
-import FlashcardStudy from "./pages/FlashcardStudy";
-import FlashcardEdit from "./pages/FlashcardEdit";
-import StudyPlanner from "./pages/StudyPlanner";
-import Certificates from "./pages/Certificates";
-import ForEmployers from "./pages/ForEmployers";
 
 const queryClient = new QueryClient();
 
@@ -63,16 +52,6 @@ const AnimatedRoutes = () => {
         <Route path="/achievements" element={<PageTransition><Achievements /></PageTransition>} />
         <Route path="/discussions" element={<PageTransition><Discussions /></PageTransition>} />
         <Route path="/account" element={<PageTransition><ManageAccount /></PageTransition>} />
-        <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
-        <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
-        <Route path="/cookies" element={<PageTransition><Cookies /></PageTransition>} />
-        <Route path="/help" element={<PageTransition><Help /></PageTransition>} />
-        <Route path="/flashcards" element={<PageTransition><Flashcards /></PageTransition>} />
-        <Route path="/flashcards/:deckId/study" element={<PageTransition><FlashcardStudy /></PageTransition>} />
-        <Route path="/flashcards/:deckId/edit" element={<PageTransition><FlashcardEdit /></PageTransition>} />
-        <Route path="/study-planner" element={<PageTransition><StudyPlanner /></PageTransition>} />
-        <Route path="/certificates" element={<PageTransition><Certificates /></PageTransition>} />
-        <Route path="/for-employers" element={<PageTransition><ForEmployers /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -82,37 +61,19 @@ const AnimatedRoutes = () => {
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setIsLoading((prev) => {
-        if (prev) console.warn("[LoadingScreen] force-dismiss after 6s timeout");
-        return false;
-      });
-    }, 6000);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
-
-  const handleLoadingComplete = useCallback(() => {
-    console.info("[LoadingScreen] completed");
-    setIsLoading(false);
-  }, []);
-
   return (
     <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>
             {isLoading && (
-              <LoadingScreen onLoadingComplete={handleLoadingComplete} />
+              <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
             )}
             <Toaster />
             <Sonner />
             <BrowserRouter>
               <ScrollToTop />
-              <AppErrorBoundary>
-                <AnimatedRoutes />
-              </AppErrorBoundary>
+              <AnimatedRoutes />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>

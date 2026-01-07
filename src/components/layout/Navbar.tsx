@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Layers, CalendarDays, Award } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy, MessageSquare, Settings, LayoutDashboard } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -131,25 +130,6 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/flashcards" className="cursor-pointer flex items-center">
-                      <Layers className="w-4 h-4 mr-2" />
-                      Flashcards
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/study-planner" className="cursor-pointer flex items-center">
-                      <CalendarDays className="w-4 h-4 mr-2" />
-                      Study Planner
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/certificates" className="cursor-pointer flex items-center">
-                      <Award className="w-4 h-4 mr-2" />
-                      Certificates
-                    </Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/achievements" className="cursor-pointer flex items-center">
                       <Trophy className="w-4 h-4 mr-2" />
@@ -162,7 +142,6 @@ const Navbar = () => {
                       Discussions
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/account" className="cursor-pointer flex items-center">
                       <Settings className="w-4 h-4 mr-2" />
@@ -186,7 +165,7 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Link to="/auth?mode=login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   SIGN IN
                 </Link>
                 <Link to="/auth?mode=signup">
@@ -198,195 +177,108 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="flex lg:hidden items-center gap-2">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
+            <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
             >
-              <AnimatePresence mode="wait">
-                {theme === "dark" ? (
-                  <motion.div
-                    key="sun"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Sun className="w-5 h-5 text-muted-foreground" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="moon"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Moon className="w-5 h-5 text-muted-foreground" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              className="p-2 text-foreground rounded-lg hover:bg-secondary transition-colors"
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 text-muted-foreground" />
+              ) : (
+                <Moon className="w-5 h-5 text-muted-foreground" />
+              )}
+            </button>
+            <button
+              className="p-2 text-foreground"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
             >
-              <AnimatePresence mode="wait">
-                {isOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <X className="w-6 h-6" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    <Menu className="w-6 h-6" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="lg:hidden overflow-hidden border-t border-border"
-            >
-              <motion.div 
-                initial={{ y: -10 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.2, delay: 0.05 }}
-                className="py-4 max-h-[calc(100vh-4rem)] overflow-y-auto"
-              >
-                <div className="flex flex-col gap-1">
-                  {navLinks.map((link, index) => (
-                    <motion.div
-                      key={link.path}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
-                    >
-                      <Link
-                        to={link.path}
-                        onClick={() => setIsOpen(false)}
-                        className={`block px-4 py-3 text-sm font-medium tracking-wide rounded-lg mx-2 transition-all duration-200 ${
-                          isActive(link.path)
-                            ? "text-primary bg-primary/10"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                        }`}
-                      >
-                        {link.name}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
-                
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2, delay: 0.2 }}
-                  className="flex flex-col gap-2 pt-4 mt-2 mx-2 border-t border-border"
+        {isOpen && (
+          <div className="lg:hidden py-4 border-t border-border animate-fade-up">
+            <div className="flex flex-col gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`px-4 py-3 text-xs font-medium tracking-wide transition-colors duration-200 ${
+                    isActive(link.path)
+                      ? "text-foreground bg-secondary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
-                  {user ? (
-                    <>
-                      <Link to="/dashboard" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <LayoutDashboard className="w-4 h-4" />
-                          Dashboard
-                        </Button>
-                      </Link>
-                      <Link to="/achievements" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <Trophy className="w-4 h-4" />
-                          Achievements
-                        </Button>
-                      </Link>
-                      <Link to="/flashcards" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <Layers className="w-4 h-4" />
-                          Flashcards
-                        </Button>
-                      </Link>
-                      <Link to="/study-planner" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <CalendarDays className="w-4 h-4" />
-                          Study Planner
-                        </Button>
-                      </Link>
-                      <Link to="/certificates" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <Award className="w-4 h-4" />
-                          Certificates
-                        </Button>
-                      </Link>
-                      <Link to="/discussions" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <MessageSquare className="w-4 h-4" />
-                          Discussions
-                        </Button>
-                      </Link>
-                      <Link to="/account" onClick={() => setIsOpen(false)}>
-                        <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                          <Settings className="w-4 h-4" />
-                          Manage Account
-                        </Button>
-                      </Link>
-                      {isAdmin && (
-                        <Link to="/admin" onClick={() => setIsOpen(false)}>
-                          <Button variant="ghost" className="w-full justify-start gap-2 h-11">
-                            <Shield className="w-4 h-4" />
-                            Admin Dashboard
-                          </Button>
-                        </Link>
-                      )}
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-2 h-11 text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => {
-                          handleSignOut();
-                          setIsOpen(false);
-                        }}
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
+                  {link.name}
+                </Link>
+              ))}
+              <div className="flex flex-col gap-2 pt-4 border-t border-border">
+                {user ? (
+                  <>
+                    <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <LayoutDashboard className="w-4 h-4" />
+                        Dashboard
                       </Button>
-                    </>
-                  ) : (
-                    <div className="flex flex-col gap-2">
-                      <Link to="/auth?mode=login" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full h-11">
-                          Sign In
+                    </Link>
+                    <Link to="/achievements" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Trophy className="w-4 h-4" />
+                        Achievements
+                      </Button>
+                    </Link>
+                    <Link to="/discussions" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        Discussions
+                      </Button>
+                    </Link>
+                    <Link to="/account" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Settings className="w-4 h-4" />
+                        Manage Account
+                      </Button>
+                    </Link>
+                    {isAdmin && (
+                      <Link to="/admin" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
+                          Admin Dashboard
                         </Button>
                       </Link>
-                      <Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full h-11">Get Started</Button>
-                      </Link>
-                    </div>
-                  )}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                    )}
+                    <Button
+                      variant="ghost"
+                      className="w-full text-destructive"
+                      onClick={() => {
+                        handleSignOut();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>
+                      <Button className="w-full">Get Started</Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

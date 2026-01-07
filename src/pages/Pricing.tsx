@@ -225,10 +225,10 @@ const Pricing = () => {
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
             Simple, Transparent Pricing
           </span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
             Invest in Your CIMA Success
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
             Choose the plan that fits your goals. All plans include our modern analytics and learning tools.
           </p>
         </div>
@@ -248,10 +248,10 @@ const Pricing = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                 Individual Courses
               </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 CIMA Qualification Structure
               </h2>
-            <p className="text-base sm:text-lg text-muted-foreground mb-6">
+            <p className="text-lg text-muted-foreground mb-6">
               Choose individual modules or bundle an entire level for maximum savings.
             </p>
             
@@ -382,10 +382,10 @@ const Pricing = () => {
       <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Bundle Plans
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground">
+            <p className="text-lg text-muted-foreground">
               Save more with our comprehensive bundle plans.
             </p>
           </div>

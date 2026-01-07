@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, BookOpen, LayoutDashboard, User, GraduationCap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
 
 const MobileBottomNav = () => {
   const location = useLocation();
@@ -24,64 +23,24 @@ const MobileBottomNav = () => {
   };
 
   return (
-    <motion.nav 
-      initial={{ y: 100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-card/95 backdrop-blur-md border-t border-border safe-area-bottom shadow-lg"
-    >
-      <div className="flex items-center justify-around h-16 px-1">
-        {navItems.map((item) => {
-          const active = isActive(item.path);
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="relative flex flex-col items-center justify-center flex-1 py-2 px-1 group"
-            >
-              {/* Active indicator pill */}
-              {active && (
-                <motion.div
-                  layoutId="activeTab"
-                  className="absolute inset-x-2 top-1 bottom-1 bg-primary/10 rounded-xl"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
-              
-              <motion.div
-                whileTap={{ scale: 0.9 }}
-                className="relative z-10 flex flex-col items-center"
-              >
-                <motion.div
-                  animate={{ 
-                    scale: active ? 1.15 : 1,
-                    y: active ? -2 : 0
-                  }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                >
-                  <item.icon 
-                    className={`w-5 h-5 mb-0.5 transition-colors duration-200 ${
-                      active 
-                        ? "text-primary" 
-                        : "text-muted-foreground group-hover:text-foreground"
-                    }`} 
-                  />
-                </motion.div>
-                <span 
-                  className={`text-[10px] font-medium truncate max-w-full transition-colors duration-200 ${
-                    active 
-                      ? "text-primary" 
-                      : "text-muted-foreground group-hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </motion.div>
-            </Link>
-          );
-        })}
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-card/95 backdrop-blur-sm border-t border-border safe-area-bottom">
+      <div className="flex items-center justify-around h-16 px-2">
+        {navItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`flex flex-col items-center justify-center flex-1 py-2 px-1 transition-colors ${
+              isActive(item.path)
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <item.icon className={`w-5 h-5 mb-1 ${isActive(item.path) ? "scale-110" : ""} transition-transform`} />
+            <span className="text-[10px] font-medium truncate max-w-full">{item.label}</span>
+          </Link>
+        ))}
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 

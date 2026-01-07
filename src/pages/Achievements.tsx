@@ -66,9 +66,9 @@ const Achievements = () => {
     <Layout>
       <div className="container mx-auto px-4 py-24 overflow-hidden">
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-3">Achievements</h1>
-          <p className="text-muted-foreground text-base sm:text-lg">Track your progress and compete with fellow students</p>
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold mb-3">Achievements</h1>
+          <p className="text-muted-foreground text-lg">Track your progress and compete with fellow students</p>
         </div>
 
         {/* Streak Stats */}

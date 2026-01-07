@@ -4,7 +4,6 @@ import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
 import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
-import DevHud from "@/components/DevHud";
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,7 +15,6 @@ const Layout = ({ children }: LayoutProps) => {
       <ScrollProgressBar />
       <DynamicBackground />
       <Navbar />
-      <DevHud />
       <main className="flex-1 pt-16 lg:pt-20 pb-20 lg:pb-0">
         {children}
       </main>

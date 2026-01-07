@@ -19,7 +19,7 @@ const Footer = ({ className }: FooterProps) => {
     company: [
       { name: "About Us", path: "/about" },
       { name: "Pricing", path: "/pricing" },
-      { name: "For Employers", path: "/for-employers" },
+      { name: "Blog", path: "/blog" },
     ],
     support: [
       { name: "Contact Us", path: "/contact" },
@@ -72,7 +72,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Courses */}
           <div>
-            <h3 className="font-bold text-base mb-5 text-background uppercase tracking-wider">Courses</h3>
+            <h4 className="font-semibold mb-4 text-sm">Courses</h4>
             <ul className="space-y-3">
               {footerLinks.courses.map((link) => (
                 <li key={link.name}>
@@ -89,7 +89,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Company */}
           <div>
-            <h3 className="font-bold text-base mb-5 text-background uppercase tracking-wider">Company</h3>
+            <h4 className="font-semibold mb-4 text-sm">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -106,7 +106,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Support */}
           <div>
-            <h3 className="font-bold text-base mb-5 text-background uppercase tracking-wider">Support</h3>
+            <h4 className="font-semibold mb-4 text-sm">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
@@ -123,7 +123,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Legal */}
           <div>
-            <h3 className="font-bold text-base mb-5 text-background uppercase tracking-wider">Legal</h3>
+            <h4 className="font-semibold mb-4 text-sm">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>

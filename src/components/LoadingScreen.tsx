@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface LoadingScreenProps {
   onLoadingComplete?: () => void;
@@ -7,22 +7,17 @@ interface LoadingScreenProps {
 
 const LoadingScreen = ({ onLoadingComplete, minDuration = 1500 }: LoadingScreenProps) => {
   const [isExiting, setIsExiting] = useState(false);
-  const onCompleteRef = useRef<LoadingScreenProps["onLoadingComplete"]>(onLoadingComplete);
-
-  useEffect(() => {
-    onCompleteRef.current = onLoadingComplete;
-  }, [onLoadingComplete]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsExiting(true);
       setTimeout(() => {
-        onCompleteRef.current?.();
+        onLoadingComplete?.();
       }, 500);
     }, minDuration);
 
     return () => clearTimeout(timer);
-  }, [minDuration]);
+  }, [minDuration, onLoadingComplete]);
 
   return (
     <div
