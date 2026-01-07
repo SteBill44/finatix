@@ -25,8 +25,10 @@ export interface ReadinessScore {
   averageMockScore: number;
   level: "not-started" | "beginning" | "developing" | "proficient" | "ready";
   weakAreas: WeakArea[];
-  recencyBonus: number;
+  confidence: number; // 0-100 representing how confident we are in the score
+  confidenceLevel: "high" | "medium" | "low" | "very-low";
   lastActivityDays: number | null;
+  dataPoints: number; // How many data points (completed lessons, quiz attempts) contribute to score
 }
 
 const getReadinessLevel = (score: number): ReadinessScore["level"] => {
@@ -37,13 +39,45 @@ const getReadinessLevel = (score: number): ReadinessScore["level"] => {
   return "ready";
 };
 
-// Calculate recency weight - more recent activity gets higher weight
+// Calculate recency weight for individual attempts - more recent = higher weight
 const getRecencyWeight = (daysAgo: number): number => {
-  if (daysAgo <= 7) return 1.0; // Full weight for last week
-  if (daysAgo <= 14) return 0.9; // 90% for 1-2 weeks
-  if (daysAgo <= 30) return 0.75; // 75% for 2-4 weeks
-  if (daysAgo <= 60) return 0.5; // 50% for 1-2 months
-  return 0.25; // 25% for older than 2 months
+  if (daysAgo <= 7) return 1.0;
+  if (daysAgo <= 14) return 0.9;
+  if (daysAgo <= 30) return 0.75;
+  if (daysAgo <= 60) return 0.5;
+  return 0.25;
+};
+
+// Calculate confidence based on recency and data points
+const calculateConfidence = (
+  lastActivityDays: number | null,
+  dataPoints: number,
+  totalPossiblePoints: number
+): { confidence: number; level: ReadinessScore["confidenceLevel"] } => {
+  // Base confidence from data coverage (0-60 points)
+  const coverageRatio = totalPossiblePoints > 0 ? dataPoints / totalPossiblePoints : 0;
+  const coverageConfidence = Math.min(60, coverageRatio * 80);
+
+  // Recency confidence (0-40 points)
+  let recencyConfidence = 0;
+  if (lastActivityDays !== null) {
+    if (lastActivityDays <= 3) recencyConfidence = 40;
+    else if (lastActivityDays <= 7) recencyConfidence = 35;
+    else if (lastActivityDays <= 14) recencyConfidence = 28;
+    else if (lastActivityDays <= 30) recencyConfidence = 18;
+    else if (lastActivityDays <= 60) recencyConfidence = 8;
+    else recencyConfidence = 3;
+  }
+
+  const confidence = Math.round(coverageConfidence + recencyConfidence);
+
+  let level: ReadinessScore["confidenceLevel"];
+  if (confidence >= 70) level = "high";
+  else if (confidence >= 50) level = "medium";
+  else if (confidence >= 30) level = "low";
+  else level = "very-low";
+
+  return { confidence, level };
 };
 
 const getDaysSince = (dateString: string): number => {
@@ -73,8 +107,10 @@ export const useReadinessScore = (courseId: string) => {
           averageMockScore: 0,
           level: "not-started",
           weakAreas: [],
-          recencyBonus: 0,
+          confidence: 0,
+          confidenceLevel: "very-low",
           lastActivityDays: null,
+          dataPoints: 0,
         };
       }
 
@@ -207,7 +243,7 @@ export const useReadinessScore = (courseId: string) => {
         averageMockScore = totalWeightedScore / totalWeight;
       }
 
-      // Calculate last activity and recency bonus
+      // Calculate last activity
       let lastActivityDays: number | null = null;
       const allAttemptDates = quizAttempts?.map((a) => getDaysSince(a.attempted_at)) || [];
       const lessonCompletionDates = lessonProgress
@@ -219,51 +255,45 @@ export const useReadinessScore = (courseId: string) => {
         lastActivityDays = Math.min(...allActivityDays);
       }
 
-      // Recency bonus: up to 10% boost for recent activity
-      let recencyBonus = 0;
-      if (lastActivityDays !== null) {
-        if (lastActivityDays <= 3) recencyBonus = 10;
-        else if (lastActivityDays <= 7) recencyBonus = 7;
-        else if (lastActivityDays <= 14) recencyBonus = 4;
-        else if (lastActivityDays <= 30) recencyBonus = 2;
-      }
+      // Calculate data points for confidence
+      const dataPoints = completedLessons + quizzesTaken + mockExamsTaken;
+      const totalPossiblePoints = totalLessons + regularQuizzes.length + mockExams.length;
 
       // Calculate component scores
       const lessonProgressScore = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
       const quizPerformanceScore = averageQuizScore;
       const mockExamPerformanceScore = averageMockScore;
 
-      // Weight the scores: Lessons 35%, Quizzes 35%, Mock Exams 20%, Recency 10%
-      let lessonWeight = 0.35;
-      let quizWeight = 0.35;
+      // Weight the scores: Lessons 40%, Quizzes 40%, Mock Exams 20%
+      let lessonWeight = 0.4;
+      let quizWeight = 0.4;
       let mockWeight = 0.2;
-      let recencyWeight = 0.1;
 
       if (regularQuizIds.length === 0 && mockExamIds.length === 0) {
-        lessonWeight = 0.9;
+        lessonWeight = 1.0;
         quizWeight = 0;
         mockWeight = 0;
-        recencyWeight = 0.1;
       } else if (regularQuizIds.length === 0) {
-        lessonWeight = 0.5;
+        lessonWeight = 0.6;
         quizWeight = 0;
         mockWeight = 0.4;
-        recencyWeight = 0.1;
       } else if (mockExamIds.length === 0) {
-        lessonWeight = 0.45;
-        quizWeight = 0.45;
+        lessonWeight = 0.5;
+        quizWeight = 0.5;
         mockWeight = 0;
-        recencyWeight = 0.1;
       }
 
-      const overallScore = Math.min(
-        100,
-        Math.round(
-          lessonProgressScore * lessonWeight +
-            quizPerformanceScore * quizWeight +
-            mockExamPerformanceScore * mockWeight +
-            recencyBonus * recencyWeight * 10
-        )
+      const overallScore = Math.round(
+        lessonProgressScore * lessonWeight +
+          quizPerformanceScore * quizWeight +
+          mockExamPerformanceScore * mockWeight
+      );
+
+      // Calculate confidence
+      const { confidence, level: confidenceLevel } = calculateConfidence(
+        lastActivityDays,
+        dataPoints,
+        totalPossiblePoints
       );
 
       // Identify weak areas for recommendations
@@ -360,8 +390,10 @@ export const useReadinessScore = (courseId: string) => {
         averageMockScore: Math.round(averageMockScore),
         level: getReadinessLevel(overallScore),
         weakAreas: weakAreas.slice(0, 5),
-        recencyBonus,
+        confidence,
+        confidenceLevel,
         lastActivityDays,
+        dataPoints,
       };
     },
     enabled: !!user && !!courseId,
