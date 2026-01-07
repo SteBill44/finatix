@@ -101,7 +101,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    // Clear local state first to ensure UI updates immediately
+    setUser(null);
+    setSession(null);
+    
+    // Then attempt to sign out from Supabase (ignore errors if session already invalid)
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Session may already be invalid, which is fine
+      console.log("Sign out completed");
+    }
   };
 
   return (
