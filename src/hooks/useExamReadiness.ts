@@ -65,15 +65,20 @@ export const useExamReadiness = (courseId: string | undefined) => {
       let syllabusAreaMastery: SyllabusAreaMastery[] = [];
       let totalSyllabusAreas = 0;
       
-      if (syllabus?.syllabus_areas && quizIds.length > 0) {
+      if (syllabus?.syllabus_areas) {
         const areas = syllabus.syllabus_areas as Array<{ title: string }>;
         totalSyllabusAreas = areas.length;
         
-        // Get all quiz questions for the user's attempted quizzes
-        const { data: questions } = await supabase
-          .from("quiz_questions")
-          .select("id, quiz_id, syllabus_area_index, correct_answer")
-          .in("quiz_id", quizIds);
+        // Get all quiz questions for the user's attempted quizzes (only if there are quizzes)
+        let questions: Array<{ id: string; quiz_id: string; syllabus_area_index: number | null; correct_answer: number }> | null = null;
+        
+        if (quizIds.length > 0) {
+          const { data } = await supabase
+            .from("quiz_questions")
+            .select("id, quiz_id, syllabus_area_index, correct_answer")
+            .in("quiz_id", quizIds);
+          questions = data;
+        }
         
         if (questions && questions.length > 0) {
           // For simplicity, we'll estimate mastery based on overall quiz performance per area
@@ -219,62 +224,66 @@ export const useOverallReadiness = () => {
       if (syllabuses && syllabuses.length > 0) {
         const quizIds = [...new Set(quizAttempts?.map(a => a.quiz_id).filter(Boolean) || [])];
         
+        // Get quiz questions only if there are quiz IDs to query
+        let questions: Array<{ id: string; quiz_id: string; syllabus_area_index: number | null }> | null = null;
+        
         if (quizIds.length > 0) {
-          const { data: questions } = await supabase
+          const { data } = await supabase
             .from("quiz_questions")
             .select("id, quiz_id, syllabus_area_index")
             .in("quiz_id", quizIds);
+          questions = data;
+        }
+        
+        // Aggregate all syllabus areas across courses
+        const allAreas: Array<{ title: string; courseId: string }> = [];
+        for (const syl of syllabuses) {
+          const areas = syl.syllabus_areas as Array<{ title: string }>;
+          if (areas) {
+            areas.forEach((area, idx) => {
+              allAreas.push({ title: area.title || `Area ${idx + 1}`, courseId: syl.course_id });
+            });
+          }
+        }
+        totalSyllabusAreas = allAreas.length;
+        
+        if (questions && questions.length > 0) {
+          const areaPerformance: Map<string, { total: number; correct: number }> = new Map();
           
-          // Aggregate all syllabus areas across courses
-          const allAreas: Array<{ title: string; courseId: string }> = [];
+          for (const q of questions) {
+            const quizAttempt = quizAttempts?.find(a => a.quiz_id === q.quiz_id);
+            if (!quizAttempt) continue;
+            
+            const areaKey = `${quizAttempt.course_id}-${q.syllabus_area_index ?? 0}`;
+            if (!areaPerformance.has(areaKey)) {
+              areaPerformance.set(areaKey, { total: 0, correct: 0 });
+            }
+            const area = areaPerformance.get(areaKey)!;
+            area.total += 1;
+            
+            if (quizAttempt.max_score > 0) {
+              const successRate = quizAttempt.score / quizAttempt.max_score;
+              area.correct += successRate;
+            }
+          }
+          
+          let areaIndex = 0;
           for (const syl of syllabuses) {
             const areas = syl.syllabus_areas as Array<{ title: string }>;
             if (areas) {
               areas.forEach((area, idx) => {
-                allAreas.push({ title: area.title || `Area ${idx + 1}`, courseId: syl.course_id });
-              });
-            }
-          }
-          totalSyllabusAreas = allAreas.length;
-          
-          if (questions && questions.length > 0) {
-            const areaPerformance: Map<string, { total: number; correct: number }> = new Map();
-            
-            for (const q of questions) {
-              const quizAttempt = quizAttempts?.find(a => a.quiz_id === q.quiz_id);
-              if (!quizAttempt) continue;
-              
-              const areaKey = `${quizAttempt.course_id}-${q.syllabus_area_index ?? 0}`;
-              if (!areaPerformance.has(areaKey)) {
-                areaPerformance.set(areaKey, { total: 0, correct: 0 });
-              }
-              const area = areaPerformance.get(areaKey)!;
-              area.total += 1;
-              
-              if (quizAttempt.max_score > 0) {
-                const successRate = quizAttempt.score / quizAttempt.max_score;
-                area.correct += successRate;
-              }
-            }
-            
-            let areaIndex = 0;
-            for (const syl of syllabuses) {
-              const areas = syl.syllabus_areas as Array<{ title: string }>;
-              if (areas) {
-                areas.forEach((area, idx) => {
-                  const areaKey = `${syl.course_id}-${idx}`;
-                  const perf = areaPerformance.get(areaKey);
-                  syllabusAreaMastery.push({
-                    areaIndex: areaIndex++,
-                    areaName: area.title || `Area ${idx + 1}`,
-                    totalQuestions: perf?.total || 0,
-                    correctAnswers: Math.round(perf?.correct || 0),
-                    masteryPercentage: perf && perf.total > 0 
-                      ? (perf.correct / perf.total) * 100 
-                      : 0,
-                  });
+                const areaKey = `${syl.course_id}-${idx}`;
+                const perf = areaPerformance.get(areaKey);
+                syllabusAreaMastery.push({
+                  areaIndex: areaIndex++,
+                  areaName: area.title || `Area ${idx + 1}`,
+                  totalQuestions: perf?.total || 0,
+                  correctAnswers: Math.round(perf?.correct || 0),
+                  masteryPercentage: perf && perf.total > 0 
+                    ? (perf.correct / perf.total) * 100 
+                    : 0,
                 });
-              }
+              });
             }
           }
         }
