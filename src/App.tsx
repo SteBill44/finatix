@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -81,13 +81,17 @@ const AnimatedRoutes = () => {
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleLoadingComplete = useCallback(() => {
+    setIsLoading(false);
+  }, []);
+
   return (
     <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <TooltipProvider>
             {isLoading && (
-              <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+              <LoadingScreen onLoadingComplete={handleLoadingComplete} />
             )}
             <Toaster />
             <Sonner />
