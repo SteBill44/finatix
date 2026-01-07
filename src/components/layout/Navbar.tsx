@@ -275,7 +275,7 @@ const Navbar = () => {
                 initial={{ y: -10 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.2, delay: 0.05 }}
-                className="py-4"
+                className="py-4 max-h-[calc(100vh-4rem)] overflow-y-auto"
               >
                 <div className="flex flex-col gap-1">
                   {navLinks.map((link, index) => (
