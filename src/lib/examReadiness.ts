@@ -28,6 +28,19 @@ export interface ReadinessData {
   totalSyllabusAreas?: number; // Total number of syllabus areas
 }
 
+export interface ConfidenceIndicator {
+  level: 'low' | 'medium' | 'high';
+  percentage: number;
+  message: string;
+  dataPoints: {
+    quizAttempts: number;
+    lessonsCompleted: number;
+    studySessions: boolean;
+    mockExams: number;
+    syllabusAreas: number;
+  };
+}
+
 export interface ReadinessResult {
   score: number;
   level: 'low' | 'medium' | 'high' | 'ready';
@@ -42,6 +55,7 @@ export interface ReadinessResult {
     syllabusMastery: number;
   };
   recommendations: string[];
+  confidence: ConfidenceIndicator;
 }
 
 /**
@@ -158,6 +172,62 @@ export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
     ? mockExamScores.reduce((a, b) => a + b, 0) / mockExamScores.length
     : quizPerformance; // Fallback to quiz performance if no mock exams
 
+  // Calculate confidence indicator based on data volume
+  const quizAttemptCount = quizAttemptsWithDates?.length || quizScores.length;
+  const syllabusAreasWithData = syllabusAreaMastery?.filter(a => a.totalQuestions > 0).length || 0;
+  
+  const confidenceDataPoints = {
+    quizAttempts: quizAttemptCount,
+    lessonsCompleted: completedLessons,
+    studySessions: studyHoursThisMonth > 0,
+    mockExams: mockExamScores.length,
+    syllabusAreas: syllabusAreasWithData,
+  };
+  
+  // Calculate confidence score (0-100)
+  let confidenceScore = 0;
+  
+  // Quiz attempts: need at least 10 for high confidence (max 30 points)
+  confidenceScore += Math.min(quizAttemptCount / 10, 1) * 30;
+  
+  // Lessons completed: need at least 50% for high confidence (max 20 points)
+  if (totalLessons > 0) {
+    confidenceScore += Math.min((completedLessons / totalLessons) / 0.5, 1) * 20;
+  }
+  
+  // Study sessions: any tracked time adds confidence (max 10 points)
+  confidenceScore += studyHoursThisMonth > 0 ? 10 : 0;
+  
+  // Mock exams: need at least 2 for high confidence (max 25 points)
+  confidenceScore += Math.min(mockExamScores.length / 2, 1) * 25;
+  
+  // Syllabus coverage: need data from at least 50% of areas (max 15 points)
+  if (totalSyllabusAreas && totalSyllabusAreas > 0) {
+    confidenceScore += Math.min((syllabusAreasWithData / totalSyllabusAreas) / 0.5, 1) * 15;
+  }
+  
+  // Determine confidence level
+  let confidenceLevel: ConfidenceIndicator['level'];
+  let confidenceMessage: string;
+  
+  if (confidenceScore >= 70) {
+    confidenceLevel = 'high';
+    confidenceMessage = 'Score based on substantial learning data';
+  } else if (confidenceScore >= 40) {
+    confidenceLevel = 'medium';
+    confidenceMessage = 'More activity will improve accuracy';
+  } else {
+    confidenceLevel = 'low';
+    confidenceMessage = 'Limited data - complete more activities';
+  }
+  
+  const confidence: ConfidenceIndicator = {
+    level: confidenceLevel,
+    percentage: Math.round(confidenceScore),
+    message: confidenceMessage,
+    dataPoints: confidenceDataPoints,
+  };
+
   // Calculate weighted score with new weights
   const score = Math.round(
     lessonProgress * 0.15 +      // 15%
@@ -246,6 +316,7 @@ export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
       syllabusMastery: Math.round(syllabusMastery),
     },
     recommendations: recommendations.slice(0, 3), // Max 3 recommendations
+    confidence,
   };
 }
 
