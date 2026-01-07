@@ -13,6 +13,7 @@ import {
   GraduationCap,
   Info,
   TrendingUp,
+  Clock,
 } from "lucide-react";
 
 interface ReadinessScoreCardProps {
@@ -104,10 +105,10 @@ const ReadinessScoreCard = ({
             <TooltipTrigger>
               <Info className="w-4 h-4 text-muted-foreground" />
             </TooltipTrigger>
-            <TooltipContent className="max-w-[250px]">
+            <TooltipContent className="max-w-[280px]">
               <p className="text-xs">
-                Based on lesson completion (40%), quiz performance (40%), and
-                mock exam results (20%)
+                Based on lesson completion (35%), quiz performance (35%), mock
+                exam results (20%), and recent activity bonus (10%)
               </p>
             </TooltipContent>
           </Tooltip>
@@ -151,9 +152,10 @@ const ReadinessScoreCard = ({
           <TooltipContent className="max-w-[280px]">
             <p className="text-xs mb-2 font-medium">How is this calculated?</p>
             <ul className="text-xs space-y-1 text-muted-foreground">
-              <li>• Lesson Completion: 40%</li>
-              <li>• Quiz Performance: 40%</li>
+              <li>• Lesson Completion: 35%</li>
+              <li>• Quiz Performance: 35%</li>
               <li>• Mock Exam Results: 20%</li>
+              <li>• Recent Activity Bonus: 10%</li>
             </ul>
           </TooltipContent>
         </Tooltip>
@@ -278,6 +280,32 @@ const ReadinessScoreCard = ({
             {readiness.mockExamPerformance}%
           </span>
         </div>
+
+        {/* Recency Indicator */}
+        {readiness.lastActivityDays !== null && (
+          <div className="flex items-center gap-3 pt-2 border-t border-border/50">
+            <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Last Activity</span>
+                <span className="font-medium">
+                  {readiness.lastActivityDays === 0
+                    ? "Today"
+                    : readiness.lastActivityDays === 1
+                      ? "Yesterday"
+                      : `${readiness.lastActivityDays} days ago`}
+                </span>
+              </div>
+            </div>
+            {readiness.recencyBonus > 0 && (
+              <span className="text-xs text-accent font-medium">
+                +{readiness.recencyBonus}% bonus
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </Card>
   );

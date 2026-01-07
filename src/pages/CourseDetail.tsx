@@ -59,6 +59,8 @@ import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
+import StudyRecommendations from "@/components/course/StudyRecommendations";
+import { useReadinessScore } from "@/hooks/useReadinessScore";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
@@ -140,6 +142,7 @@ const CourseDetail = () => {
   const { data: lessonProgress } = useLessonProgress(course?.id);
   const { data: quizzes } = useQuizzes(course?.id);
   const { data: ratingData } = useCourseRating(course?.id || "");
+  const { data: readinessScore } = useReadinessScore(course?.id || "");
 
   // Fetch quiz attempts for analytics
   const { data: quizAttempts } = useQuery({
@@ -981,7 +984,16 @@ const CourseDetail = () => {
             <div className="space-y-6">
               {/* Readiness Score - Only for enrolled users */}
               {isEnrolled && (
-                <ReadinessScoreCard courseId={course.id} />
+                <>
+                  <ReadinessScoreCard courseId={course.id} />
+                  {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
+                    <StudyRecommendations
+                      courseSlug={course.slug}
+                      weakAreas={readinessScore.weakAreas}
+                      overallScore={readinessScore.overall}
+                    />
+                  )}
+                </>
               )}
 
               {/* Course Content Navigation */}
