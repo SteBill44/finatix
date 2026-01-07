@@ -63,13 +63,22 @@ type AuthMode = "login" | "signup" | "forgot" | "reset";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
-  const [mode, setMode] = useState<AuthMode>(() => {
+  
+  // Determine mode from URL params
+  const getModeFromParams = (): AuthMode => {
     const urlMode = searchParams.get("mode");
     if (urlMode === "signup") return "signup";
     if (urlMode === "reset") return "reset";
     if (urlMode === "forgot") return "forgot";
     return "login";
-  });
+  };
+  
+  const [mode, setMode] = useState<AuthMode>(getModeFromParams);
+  
+  // Sync mode with URL params when they change
+  useEffect(() => {
+    setMode(getModeFromParams());
+  }, [searchParams]);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
