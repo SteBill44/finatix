@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
+import AppErrorBoundary from "@/components/AppErrorBoundary";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
@@ -97,7 +98,9 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <ScrollToTop />
-              <AnimatedRoutes />
+              <AppErrorBoundary>
+                <AnimatedRoutes />
+              </AppErrorBoundary>
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
