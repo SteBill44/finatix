@@ -125,7 +125,8 @@ const ExamReadinessWidget = () => {
         <div className="space-y-2 text-xs">
           <BreakdownItem label="Lessons" value={readiness.breakdown.lessonProgress} />
           <BreakdownItem label="Quiz Scores" value={readiness.breakdown.quizPerformance} />
-          <BreakdownItem label="Study Time" value={readiness.breakdown.studyTime} />
+          <BreakdownItem label="Syllabus Mastery" value={readiness.breakdown.syllabusMastery} />
+          <BreakdownItem label="Mock Exams" value={readiness.breakdown.mockExams} />
           <BreakdownItem label="Trend" value={readiness.breakdown.trend} />
         </div>
 

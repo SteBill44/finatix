@@ -1,13 +1,31 @@
 // Exam Readiness Score Calculator
 // Calculates a score from 0-100 predicting exam readiness
 
+export interface QuizAttemptWithDate {
+  score: number;
+  maxScore: number;
+  attemptedAt: Date;
+  syllabusAreaIndex?: number | null;
+}
+
+export interface SyllabusAreaMastery {
+  areaIndex: number;
+  areaName: string;
+  totalQuestions: number;
+  correctAnswers: number;
+  masteryPercentage: number;
+}
+
 export interface ReadinessData {
   completedLessons: number;
   totalLessons: number;
-  quizScores: number[]; // Array of scores as percentages
+  quizScores: number[]; // Array of scores as percentages (legacy support)
+  quizAttemptsWithDates?: QuizAttemptWithDate[]; // Quiz attempts with dates for recency
   studyHoursThisMonth: number;
   recommendedHoursPerMonth: number;
   mockExamScores?: number[]; // Optional mock exam scores
+  syllabusAreaMastery?: SyllabusAreaMastery[]; // Mastery per syllabus area
+  totalSyllabusAreas?: number; // Total number of syllabus areas
 }
 
 export interface ReadinessResult {
@@ -21,70 +39,133 @@ export interface ReadinessResult {
     studyTime: number;
     trend: number;
     mockExams: number;
+    syllabusMastery: number;
   };
   recommendations: string[];
 }
 
 /**
+ * Apply recency weighting to scores - more recent scores count more
+ * Uses exponential decay: score * e^(-decay * weeksAgo)
+ */
+function calculateRecencyWeightedAverage(attempts: QuizAttemptWithDate[]): number {
+  if (attempts.length === 0) return 0;
+  
+  const now = new Date();
+  const DECAY_RATE = 0.1; // Decay factor per week
+  
+  let weightedSum = 0;
+  let totalWeight = 0;
+  
+  for (const attempt of attempts) {
+    const weeksAgo = (now.getTime() - attempt.attemptedAt.getTime()) / (7 * 24 * 60 * 60 * 1000);
+    const weight = Math.exp(-DECAY_RATE * weeksAgo);
+    const scorePercent = attempt.maxScore > 0 ? (attempt.score / attempt.maxScore) * 100 : 0;
+    
+    weightedSum += scorePercent * weight;
+    totalWeight += weight;
+  }
+  
+  return totalWeight > 0 ? weightedSum / totalWeight : 0;
+}
+
+/**
+ * Calculate syllabus area mastery score
+ * Returns percentage of areas where student has achieved >= 70% (passing threshold)
+ */
+function calculateSyllabusMasteryScore(
+  mastery: SyllabusAreaMastery[] | undefined,
+  totalAreas: number | undefined
+): number {
+  if (!mastery || mastery.length === 0 || !totalAreas || totalAreas === 0) {
+    return 0;
+  }
+  
+  const PASSING_THRESHOLD = 70; // 70% required for mastery
+  const masteredAreas = mastery.filter(area => area.masteryPercentage >= PASSING_THRESHOLD).length;
+  
+  return (masteredAreas / totalAreas) * 100;
+}
+
+/**
  * Calculate the exam readiness score
  * 
- * Weights:
- * - Lesson completion: 25%
- * - Average quiz scores: 35%
- * - Study time: 15%
+ * Weights (updated):
+ * - Lesson completion: 15%
+ * - Quiz performance (recency-weighted): 25%
+ * - Syllabus area mastery: 15%
+ * - Study time: 10%
  * - Performance trend: 15%
- * - Mock exam performance: 10%
+ * - Mock exam performance: 20%
  */
 export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
   const {
     completedLessons,
     totalLessons,
     quizScores,
+    quizAttemptsWithDates,
     studyHoursThisMonth,
     recommendedHoursPerMonth,
     mockExamScores = [],
+    syllabusAreaMastery,
+    totalSyllabusAreas,
   } = data;
 
-  // 1. Lesson Progress (25%)
+  // 1. Lesson Progress (15%)
   const lessonProgress = totalLessons > 0 
     ? (completedLessons / totalLessons) * 100 
     : 0;
 
-  // 2. Quiz Performance (35%)
-  const quizPerformance = quizScores.length > 0
-    ? quizScores.reduce((a, b) => a + b, 0) / quizScores.length
-    : 0;
+  // 2. Quiz Performance with Recency Weighting (25%)
+  let quizPerformance: number;
+  if (quizAttemptsWithDates && quizAttemptsWithDates.length > 0) {
+    // Use recency-weighted average
+    quizPerformance = calculateRecencyWeightedAverage(quizAttemptsWithDates);
+  } else if (quizScores.length > 0) {
+    // Fallback to simple average for legacy support
+    quizPerformance = quizScores.reduce((a, b) => a + b, 0) / quizScores.length;
+  } else {
+    quizPerformance = 0;
+  }
 
-  // 3. Study Time (15%)
+  // 3. Syllabus Area Mastery (15%)
+  const syllabusMastery = calculateSyllabusMasteryScore(syllabusAreaMastery, totalSyllabusAreas);
+
+  // 4. Study Time (10%)
   const studyTimeRatio = recommendedHoursPerMonth > 0
     ? Math.min((studyHoursThisMonth / recommendedHoursPerMonth) * 100, 100)
     : 0;
 
-  // 4. Performance Trend (15%)
-  // Compare last 3 quiz scores to first 3 (if available)
+  // 5. Performance Trend (15%)
+  // Compare recent vs early performance
   let trend = 50; // Neutral baseline
-  if (quizScores.length >= 6) {
-    const recentAvg = quizScores.slice(-3).reduce((a, b) => a + b, 0) / 3;
-    const earlyAvg = quizScores.slice(0, 3).reduce((a, b) => a + b, 0) / 3;
+  const scoresForTrend = quizAttemptsWithDates?.map(a => 
+    a.maxScore > 0 ? (a.score / a.maxScore) * 100 : 0
+  ) || quizScores;
+  
+  if (scoresForTrend.length >= 6) {
+    const recentAvg = scoresForTrend.slice(-3).reduce((a, b) => a + b, 0) / 3;
+    const earlyAvg = scoresForTrend.slice(0, 3).reduce((a, b) => a + b, 0) / 3;
     const improvement = recentAvg - earlyAvg;
     trend = Math.min(100, Math.max(0, 50 + improvement));
-  } else if (quizScores.length >= 2) {
-    const improvement = quizScores[quizScores.length - 1] - quizScores[0];
+  } else if (scoresForTrend.length >= 2) {
+    const improvement = scoresForTrend[scoresForTrend.length - 1] - scoresForTrend[0];
     trend = Math.min(100, Math.max(0, 50 + improvement / 2));
   }
 
-  // 5. Mock Exam Performance (10%)
+  // 6. Mock Exam Performance (20%)
   const mockExamAvg = mockExamScores.length > 0
     ? mockExamScores.reduce((a, b) => a + b, 0) / mockExamScores.length
     : quizPerformance; // Fallback to quiz performance if no mock exams
 
-  // Calculate weighted score
+  // Calculate weighted score with new weights
   const score = Math.round(
-    lessonProgress * 0.25 +
-    quizPerformance * 0.35 +
-    studyTimeRatio * 0.15 +
-    trend * 0.15 +
-    mockExamAvg * 0.10
+    lessonProgress * 0.15 +      // 15%
+    quizPerformance * 0.25 +     // 25%
+    syllabusMastery * 0.15 +     // 15%
+    studyTimeRatio * 0.10 +      // 10%
+    trend * 0.15 +               // 15%
+    mockExamAvg * 0.20           // 20%
   );
 
   // Determine level and color
@@ -117,8 +198,19 @@ export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
     recommendations.push(`Complete ${Math.ceil((0.8 - completedLessons / totalLessons) * totalLessons)} more lessons`);
   }
   
-  if (quizPerformance < 70 && quizScores.length > 0) {
+  if (quizPerformance < 70 && (quizScores.length > 0 || quizAttemptsWithDates?.length)) {
     recommendations.push('Review topics where you scored below 70%');
+  }
+  
+  // Syllabus mastery recommendations
+  if (syllabusAreaMastery && syllabusAreaMastery.length > 0) {
+    const weakAreas = syllabusAreaMastery
+      .filter(area => area.masteryPercentage < 70)
+      .sort((a, b) => a.masteryPercentage - b.masteryPercentage);
+    
+    if (weakAreas.length > 0) {
+      recommendations.push(`Focus on weak area: ${weakAreas[0].areaName}`);
+    }
   }
   
   if (studyTimeRatio < 80) {
@@ -128,7 +220,7 @@ export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
     }
   }
   
-  if (quizScores.length < 5) {
+  if ((quizScores.length + (quizAttemptsWithDates?.length || 0)) < 5) {
     recommendations.push('Take more practice quizzes');
   }
   
@@ -151,6 +243,7 @@ export function calculateReadinessScore(data: ReadinessData): ReadinessResult {
       studyTime: Math.round(studyTimeRatio),
       trend: Math.round(trend),
       mockExams: Math.round(mockExamAvg),
+      syllabusMastery: Math.round(syllabusMastery),
     },
     recommendations: recommendations.slice(0, 3), // Max 3 recommendations
   };
