@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -82,7 +82,19 @@ const AnimatedRoutes = () => {
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setIsLoading((prev) => {
+        if (prev) console.warn("[LoadingScreen] force-dismiss after 6s timeout");
+        return false;
+      });
+    }, 6000);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
   const handleLoadingComplete = useCallback(() => {
+    console.info("[LoadingScreen] completed");
     setIsLoading(false);
   }, []);
 

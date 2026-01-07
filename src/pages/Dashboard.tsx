@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
@@ -65,6 +66,14 @@ const Dashboard = () => {
 
   const userName =
     user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Student";
+
+  useEffect(() => {
+    console.info("[Dashboard] mounted", {
+      userId: user?.id ?? null,
+      enrollmentsLoading,
+      enrollmentsCount: enrollments?.length ?? null,
+    });
+  }, [user?.id, enrollmentsLoading, enrollments?.length]);
 
   if (enrollmentsLoading) {
     return (
