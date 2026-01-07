@@ -71,7 +71,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Courses */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4">Courses</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white">Courses</h4>
             <ul className="space-y-3">
               {footerLinks.courses.map((link) => (
                 <li key={link.name}>
@@ -88,7 +88,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Company */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4">Company</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
@@ -105,7 +105,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Support */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4">Support</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
@@ -122,7 +122,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4">Legal</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
