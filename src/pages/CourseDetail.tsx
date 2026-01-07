@@ -58,6 +58,7 @@ import CourseReviews from "@/components/CourseReviews";
 import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
+import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
 import { useCourseRating } from "@/hooks/useReviews";
 import {
   Accordion,
@@ -452,22 +453,25 @@ const CourseDetail = () => {
                 </Accordion>
               </div>
 
-              {/* Progress for enrolled users */}
+              {/* Progress and Readiness for enrolled users */}
               {isEnrolled && (
-                <div className="p-4 bg-primary-foreground/10 rounded-xl backdrop-blur-sm">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-primary-foreground">Your Progress</span>
-                    <span className="text-sm text-primary-foreground">{progressPercentage}%</span>
+                <div className="space-y-4">
+                  <div className="p-4 bg-primary-foreground/10 rounded-xl backdrop-blur-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-primary-foreground">Your Progress</span>
+                      <span className="text-sm text-primary-foreground">{progressPercentage}%</span>
+                    </div>
+                    <div className="w-full bg-primary-foreground/20 rounded-full h-2">
+                      <div 
+                        className={`${levelBgColor} h-2 rounded-full transition-all duration-300`}
+                        style={{ width: `${progressPercentage}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-primary-foreground/70 mt-2">
+                      {completedLessons} of {totalLessons} lessons completed
+                    </p>
                   </div>
-                  <div className="w-full bg-primary-foreground/20 rounded-full h-2">
-                    <div 
-                      className={`${levelBgColor} h-2 rounded-full transition-all duration-300`}
-                      style={{ width: `${progressPercentage}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-primary-foreground/70 mt-2">
-                    {completedLessons} of {totalLessons} lessons completed
-                  </p>
+                  <ReadinessScoreCard courseId={course.id} compact />
                 </div>
               )}
             </div>
@@ -975,6 +979,11 @@ const CourseDetail = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
+              {/* Readiness Score - Only for enrolled users */}
+              {isEnrolled && (
+                <ReadinessScoreCard courseId={course.id} />
+              )}
+
               {/* Course Content Navigation */}
               <CourseSideNav
                 courseId={course.id}

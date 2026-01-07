@@ -2,9 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Play, CheckCircle, ArrowRight, UserMinus } from "lucide-react";
+import { Play, CheckCircle, ArrowRight, UserMinus, Target } from "lucide-react";
 import { useLessons, useLessonProgress, useUnenrollFromCourse } from "@/hooks/useStudentProgress";
+import { useReadinessScore } from "@/hooks/useReadinessScore";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,6 +56,7 @@ const getLevelBadgeStyle = (level: string) => {
 const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   const { data: lessons } = useLessons(enrollment.course_id);
   const { data: progress } = useLessonProgress(enrollment.course_id);
+  const { data: readiness } = useReadinessScore(enrollment.course_id);
   const unenrollMutation = useUnenrollFromCourse();
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
   
@@ -57,6 +64,13 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   const completedLessons = progress?.filter((p) => p.completed).length || 0;
   const percentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   const isCompleted = enrollment.completed_at !== null;
+
+  const getReadinessColor = (score: number) => {
+    if (score >= 75) return "text-accent";
+    if (score >= 50) return "text-primary";
+    if (score >= 25) return "text-yellow-500";
+    return "text-muted-foreground";
+  };
 
   const handleUnenroll = async () => {
     try {
@@ -90,14 +104,48 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
       
       <div className="mt-3">
         {isCompleted ? (
-          <div className="flex items-center gap-2 text-xs text-accent font-medium">
-            <span>Completed</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs text-accent font-medium">
+              <span>Completed</span>
+            </div>
+            {readiness && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-secondary">
+                    <Target className="w-3.5 h-3.5 text-primary" />
+                    <span className={`text-xs font-semibold ${getReadinessColor(readiness.overall)}`}>
+                      {readiness.overall}%
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">Readiness Score</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
         ) : (
           <>
             <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
               <span>{completedLessons} of {totalLessons} lessons</span>
-              <span className="font-medium text-foreground">{percentage}%</span>
+              <div className="flex items-center gap-2">
+                {readiness && readiness.overall > 0 && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1">
+                        <Target className="w-3 h-3 text-primary" />
+                        <span className={`font-medium ${getReadinessColor(readiness.overall)}`}>
+                          {readiness.overall}%
+                        </span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="text-xs">Readiness Score</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+                <span className="font-medium text-foreground">{percentage}%</span>
+              </div>
             </div>
             <Progress value={percentage} className="h-2" />
           </>
