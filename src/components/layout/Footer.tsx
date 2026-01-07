@@ -20,7 +20,6 @@ const Footer = ({ className }: FooterProps) => {
       { name: "About Us", path: "/about" },
       { name: "Pricing", path: "/pricing" },
       { name: "For Employers", path: "/for-employers" },
-      { name: "Blog", path: "/blog" },
     ],
     support: [
       { name: "Contact Us", path: "/contact" },
