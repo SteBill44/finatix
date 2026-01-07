@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
+import CookieConsent from "@/components/CookieConsent";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -82,6 +83,7 @@ const App = () => {
             <BrowserRouter>
               <ScrollToTop />
               <AnimatedRoutes />
+              <CookieConsent />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
