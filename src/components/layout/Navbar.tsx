@@ -131,12 +131,7 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/achievements" className="cursor-pointer flex items-center">
-                      <Trophy className="w-4 h-4 mr-2" />
-                      Achievements
-                    </Link>
-                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/flashcards" className="cursor-pointer flex items-center">
                       <Layers className="w-4 h-4 mr-2" />
@@ -156,11 +151,18 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link to="/achievements" className="cursor-pointer flex items-center">
+                      <Trophy className="w-4 h-4 mr-2" />
+                      Achievements
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link to="/discussions" className="cursor-pointer flex items-center">
                       <MessageSquare className="w-4 h-4 mr-2" />
                       Discussions
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link to="/account" className="cursor-pointer flex items-center">
                       <Settings className="w-4 h-4 mr-2" />
