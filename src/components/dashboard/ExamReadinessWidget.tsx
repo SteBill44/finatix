@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Info, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
+import { Info, TrendingUp, AlertCircle, CheckCircle, ShieldCheck, ShieldAlert, Shield } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -8,8 +8,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useOverallReadiness } from "@/hooks/useExamReadiness";
-import { READINESS_DISCLAIMER } from "@/lib/examReadiness";
+import { READINESS_DISCLAIMER, type ConfidenceIndicator } from "@/lib/examReadiness";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const ExamReadinessWidget = () => {
   const { data: readiness, isLoading } = useOverallReadiness();
@@ -116,13 +117,16 @@ const ExamReadinessWidget = () => {
         </div>
 
         {/* Level indicator */}
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="flex items-center justify-center gap-2 mb-3">
           {getLevelIcon()}
           <span className="font-medium">{readiness.message}</span>
         </div>
 
+        {/* Confidence Indicator */}
+        <ConfidenceBadge confidence={readiness.confidence} />
+
         {/* Breakdown */}
-        <div className="space-y-2 text-xs">
+        <div className="space-y-2 text-xs mt-4">
           <BreakdownItem label="Lessons" value={readiness.breakdown.lessonProgress} />
           <BreakdownItem label="Quiz Scores" value={readiness.breakdown.quizPerformance} />
           <BreakdownItem label="Syllabus Mastery" value={readiness.breakdown.syllabusMastery} />
@@ -137,8 +141,61 @@ const ExamReadinessWidget = () => {
             <p className="text-sm">{readiness.recommendations[0]}</p>
           </div>
         )}
+
+        {/* Disclaimer */}
+        <Alert variant="default" className="mt-4 bg-muted/50">
+          <Info className="h-3 w-3" />
+          <AlertDescription className="text-xs text-muted-foreground">
+            This is an estimate only and does not guarantee exam results.
+          </AlertDescription>
+        </Alert>
       </CardContent>
     </Card>
+  );
+};
+
+const ConfidenceBadge = ({ confidence }: { confidence: ConfidenceIndicator }) => {
+  const getConfidenceIcon = () => {
+    switch (confidence.level) {
+      case 'high':
+        return <ShieldCheck className="h-3.5 w-3.5 text-green-500" />;
+      case 'medium':
+        return <Shield className="h-3.5 w-3.5 text-yellow-500" />;
+      default:
+        return <ShieldAlert className="h-3.5 w-3.5 text-orange-500" />;
+    }
+  };
+
+  const getConfidenceColor = () => {
+    switch (confidence.level) {
+      case 'high':
+        return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20';
+      case 'medium':
+        return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20';
+      default:
+        return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20';
+    }
+  };
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className={`flex items-center justify-center gap-1.5 mx-auto px-3 py-1.5 rounded-full border text-xs font-medium cursor-help ${getConfidenceColor()}`}>
+          {getConfidenceIcon()}
+          <span>{confidence.percentage}% confidence</span>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs">
+        <p className="font-medium mb-1">{confidence.message}</p>
+        <div className="text-xs space-y-0.5 text-muted-foreground">
+          <p>• Quiz attempts: {confidence.dataPoints.quizAttempts}</p>
+          <p>• Lessons completed: {confidence.dataPoints.lessonsCompleted}</p>
+          <p>• Mock exams taken: {confidence.dataPoints.mockExams}</p>
+          <p>• Syllabus areas covered: {confidence.dataPoints.syllabusAreas}</p>
+          <p>• Study time tracked: {confidence.dataPoints.studySessions ? 'Yes' : 'No'}</p>
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
