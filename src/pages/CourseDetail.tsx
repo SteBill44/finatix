@@ -55,6 +55,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import CourseReviews from "@/components/CourseReviews";
+import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import MockExamHistory from "@/components/course/MockExamHistory";
 import CourseSideNav from "@/components/course/CourseSideNav";
 import { useCourseRating } from "@/hooks/useReviews";
@@ -471,16 +472,15 @@ const CourseDetail = () => {
               )}
             </div>
 
-            {/* Pricing Card - Hide price when enrolled */}
+            {/* Pricing Card */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                {!isEnrolled && (
-                  <div className="flex items-baseline gap-3 mb-6">
-                    <span className="text-4xl font-bold text-foreground">
-                      {Number(course.price ?? 0) === 0 ? "Free" : `£${Number(course.price).toFixed(0)}`}
-                    </span>
-                  </div>
-                )}
+                {/* Coming Soon Badge */}
+                <div className="flex items-center justify-center mb-6">
+                  <span className="px-4 py-2 rounded-full bg-accent/20 text-accent font-semibold text-lg">
+                    Coming Soon
+                  </span>
+                </div>
 
                 {isEnrolled ? (
                   <>
@@ -526,25 +526,18 @@ const CourseDetail = () => {
                   </>
                 ) : (
                   <>
-                    <Button 
-                      size="lg" 
-                      className="w-full mb-3 gap-2" 
-                      onClick={handleEnroll}
-                      disabled={enrollMutation.isPending}
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      {enrollMutation.isPending ? "Enrolling..." : "Enroll Now"}
-                    </Button>
-                    <Button variant="outline" size="lg" className="w-full gap-2" onClick={handleStartLearning}>
-                      <Play className="w-5 h-5" />
-                      Try Free Lesson
-                    </Button>
+                    <h3 className="text-lg font-semibold text-foreground mb-2 text-center">
+                      Be the first to know
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-6 text-center">
+                      Register your interest and we'll notify you when this course launches.
+                    </p>
+                    <InterestRegistrationForm 
+                      courseId={course.id} 
+                      courseName={course.title} 
+                    />
                   </>
                 )}
-
-                <p className="text-center text-sm text-muted-foreground mt-4">
-                  30-day money-back guarantee
-                </p>
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
