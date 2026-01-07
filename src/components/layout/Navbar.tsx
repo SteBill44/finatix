@@ -166,7 +166,7 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/auth?mode=login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   SIGN IN
                 </Link>
                 <Link to="/auth?mode=signup">
@@ -334,7 +334,7 @@ const Navbar = () => {
                     </>
                   ) : (
                     <div className="flex flex-col gap-2">
-                      <Link to="/auth" onClick={() => setIsOpen(false)}>
+                      <Link to="/auth?mode=login" onClick={() => setIsOpen(false)}>
                         <Button variant="outline" className="w-full h-11">
                           Sign In
                         </Button>
