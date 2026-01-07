@@ -3,34 +3,34 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const COOKIE_CONSENT_KEY = "cookie-consent";
-
-type ConsentStatus = "accepted" | "declined" | null;
+import { useCookieConsent } from "@/contexts/CookieConsentContext";
 
 const CookieConsent = () => {
   const [showBanner, setShowBanner] = useState(false);
+  const { hasConsented, acceptAll, declineAll } = useCookieConsent();
 
   useEffect(() => {
-    const consent = localStorage.getItem(COOKIE_CONSENT_KEY) as ConsentStatus;
-    if (!consent) {
+    if (!hasConsented) {
       // Small delay to avoid showing immediately on page load
       const timer = setTimeout(() => setShowBanner(true), 1000);
       return () => clearTimeout(timer);
+    } else {
+      setShowBanner(false);
     }
-  }, []);
+  }, [hasConsented]);
 
   const handleAccept = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    acceptAll();
     setShowBanner(false);
   };
 
   const handleDecline = () => {
-    localStorage.setItem(COOKIE_CONSENT_KEY, "declined");
+    declineAll();
     setShowBanner(false);
   };
 
   const handleClose = () => {
+    // Just hide banner temporarily - will show again on next page load
     setShowBanner(false);
   };
 
@@ -58,8 +58,8 @@ const CookieConsent = () => {
                 <div className="flex-1 pr-8 md:pr-0">
                   <h3 className="font-semibold text-lg mb-1">We value your privacy</h3>
                   <p className="text-sm text-muted-foreground">
-                    We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. 
-                    By clicking "Accept All", you consent to our use of cookies.{" "}
+                    We use cookies to enhance your browsing experience and analyze our traffic. 
+                    Declining will block non-essential cookies and analytics.{" "}
                     <Link to="/cookies" className="text-primary hover:underline">
                       Learn more
                     </Link>
