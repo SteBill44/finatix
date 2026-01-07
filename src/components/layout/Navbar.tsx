@@ -11,8 +11,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -137,38 +139,45 @@ const Navbar = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-popover border border-border">
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="cursor-pointer flex items-center">
-                      <LayoutDashboard className="w-4 h-4 mr-2" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/achievements" className="cursor-pointer flex items-center">
-                      <Trophy className="w-4 h-4 mr-2" />
-                      Achievements
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/discussions" className="cursor-pointer flex items-center">
-                      <MessageSquare className="w-4 h-4 mr-2" />
-                      Discussions
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/account" className="cursor-pointer flex items-center">
-                      <Settings className="w-4 h-4 mr-2" />
-                      Manage Account
-                    </Link>
-                  </DropdownMenuItem>
-                  {isAdmin && (
+                  <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Navigation</DropdownMenuLabel>
+                  <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="cursor-pointer flex items-center">
-                        <Shield className="w-4 h-4 mr-2" />
-                        Admin Dashboard
+                      <Link to="/dashboard" className="cursor-pointer flex items-center">
+                        <LayoutDashboard className="w-4 h-4 mr-2" />
+                        Dashboard
                       </Link>
                     </DropdownMenuItem>
-                  )}
+                    <DropdownMenuItem asChild>
+                      <Link to="/achievements" className="cursor-pointer flex items-center">
+                        <Trophy className="w-4 h-4 mr-2" />
+                        Achievements
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/discussions" className="cursor-pointer flex items-center">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Discussions
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Account</DropdownMenuLabel>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Link to="/account" className="cursor-pointer flex items-center">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Manage Account
+                      </Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer flex items-center">
+                          <Shield className="w-4 h-4 mr-2" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => setShowSignOutDialog(true)} 
