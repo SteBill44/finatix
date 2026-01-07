@@ -13,8 +13,11 @@ serve(async (req) => {
 
   try {
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      throw new Error("No authorization header");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const supabase = createClient(
@@ -23,10 +26,17 @@ serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      throw new Error("Unauthorized");
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      console.error("JWT validation error:", claimsError);
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
+
+    const userId = claimsData.claims.sub as string;
 
     const { messages, courseId } = await req.json();
     
@@ -115,7 +125,7 @@ Be concise, accurate, and encouraging. Use examples where helpful. If you don't 
     const lastUserMessage = messages[messages.length - 1];
     if (lastUserMessage?.role === "user") {
       await supabase.from("ai_chat_messages").insert({
-        user_id: user.id,
+        user_id: userId,
         course_id: courseId || null,
         role: "user",
         content: lastUserMessage.content,
