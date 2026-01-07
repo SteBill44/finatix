@@ -27,6 +27,9 @@ import Achievements from "./pages/Achievements";
 import Discussions from "./pages/Discussions";
 import ManageAccount from "./pages/ManageAccount";
 import NotFound from "./pages/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiePolicy from "./pages/CookiePolicy";
+import HelpCentre from "./pages/HelpCentre";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +55,9 @@ const AnimatedRoutes = () => {
         <Route path="/achievements" element={<PageTransition><Achievements /></PageTransition>} />
         <Route path="/discussions" element={<PageTransition><Discussions /></PageTransition>} />
         <Route path="/account" element={<PageTransition><ManageAccount /></PageTransition>} />
+        <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+        <Route path="/cookies" element={<PageTransition><CookiePolicy /></PageTransition>} />
+        <Route path="/help" element={<PageTransition><HelpCentre /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
