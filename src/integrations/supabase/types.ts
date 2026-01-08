@@ -773,6 +773,36 @@ export type Database = {
         }
         Relationships: []
       }
+      performance_logs: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profile_access_logs: {
         Row: {
           access_type: string
@@ -1009,6 +1039,33 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          created_at: string
+          id: string
+          request_count: number
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          id?: string
+          request_count?: number
+          user_id: string
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          id?: string
+          request_count?: number
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
@@ -1235,6 +1292,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          p_action_type: string
+          p_max_per_hour?: number
+          p_max_per_minute?: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      cleanup_rate_limits: { Args: never; Returns: undefined }
+      get_platform_analytics: { Args: never; Returns: Json }
       get_quiz_questions: {
         Args: { _quiz_id: string }
         Returns: {

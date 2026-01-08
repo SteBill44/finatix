@@ -16,13 +16,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2 } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2, Activity } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
 import SyllabusManagement from "@/components/admin/SyllabusManagement";
 import InterestManagement from "@/components/admin/InterestManagement";
 import CorporateManagement from "@/components/admin/CorporateManagement";
+import { PerformanceMonitoring } from "@/components/admin/PerformanceMonitoring";
 
 interface Course {
   id: string;
@@ -488,7 +489,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-5xl grid-cols-7">
+          <TabsList className="grid w-full max-w-6xl grid-cols-8">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
@@ -513,6 +514,10 @@ const Admin = () => {
               <Building2 className="h-4 w-4" />
               Corporate
             </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center gap-2">
+              <Activity className="h-4 w-4" />
+              Performance
+            </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Users
@@ -527,6 +532,24 @@ const Admin = () => {
           {/* Corporate Tab */}
           <TabsContent value="corporate">
             <CorporateManagement />
+          </TabsContent>
+
+          {/* Performance Tab */}
+          <TabsContent value="performance">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5" />
+                  Performance Monitoring
+                </CardTitle>
+                <CardDescription>
+                  Monitor API response times, error rates, and user activity
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PerformanceMonitoring />
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Syllabus Tab */}

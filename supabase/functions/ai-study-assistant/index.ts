@@ -28,6 +28,37 @@ serve(async (req) => {
       throw new Error("Unauthorized");
     }
 
+    // Check rate limit before processing
+    const { data: rateLimitResult, error: rateLimitError } = await supabase.rpc(
+      "check_rate_limit",
+      {
+        p_user_id: user.id,
+        p_action_type: "ai_chat",
+        p_max_per_minute: 20,
+        p_max_per_hour: 100,
+      }
+    );
+
+    if (rateLimitError) {
+      console.error("Rate limit check error:", rateLimitError);
+    } else if (rateLimitResult && !rateLimitResult.allowed) {
+      const retryAfter = rateLimitResult.retryAfter || 60;
+      console.log(`Rate limit exceeded for user ${user.id}. Retry after ${retryAfter}s`);
+      return new Response(
+        JSON.stringify({
+          error: `Rate limit exceeded. Please try again in ${retryAfter > 60 ? Math.ceil(retryAfter / 60) + " minutes" : retryAfter + " seconds"}.`,
+        }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Retry-After": String(retryAfter),
+          },
+        }
+      );
+    }
+
     const { messages, courseId } = await req.json();
     
     if (!messages || !Array.isArray(messages)) {
