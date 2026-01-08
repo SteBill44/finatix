@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePerformanceMetrics } from "@/hooks/usePerformanceMonitoring";
 import { useActiveUsers } from "@/hooks/useActiveUsers";
+import { useVisitorTrends, useRecordVisitorSnapshot } from "@/hooks/useVisitorTrends";
 import { Activity, AlertTriangle, Clock, TrendingUp, Users, Zap, Radio } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, LineChart, Line, Legend } from "recharts";
 
 const chartConfig = {
   requests: {
@@ -22,12 +23,24 @@ const chartConfig = {
     label: "Errors",
     color: "hsl(var(--destructive))",
   },
+  visitors: {
+    label: "All Visitors",
+    color: "hsl(var(--primary))",
+  },
+  users: {
+    label: "Logged In",
+    color: "hsl(142 76% 36%)", // green
+  },
 };
 
 export const PerformanceMonitoring = () => {
   const [timeRange, setTimeRange] = useState<"1h" | "24h" | "7d">("24h");
   const { data: metrics, isLoading, error } = usePerformanceMetrics(timeRange);
   const { activeUserCount, activeVisitorCount, isConnected } = useActiveUsers();
+  const { data: visitorTrends, isLoading: trendsLoading } = useVisitorTrends(timeRange);
+
+  // Record snapshots when admin views the page
+  useRecordVisitorSnapshot(activeVisitorCount, activeUserCount, isConnected);
 
   if (isLoading) {
     return (
@@ -178,6 +191,51 @@ export const PerformanceMonitoring = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Visitor Trends Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <TrendingUp className="h-5 w-5" />
+            Visitor Trends
+          </CardTitle>
+          <CardDescription>Historical visitor and user counts over time</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {trendsLoading ? (
+            <Skeleton className="h-[200px] w-full" />
+          ) : visitorTrends && visitorTrends.length > 0 ? (
+            <ChartContainer config={chartConfig} className="h-[200px] w-full">
+              <LineChart data={visitorTrends}>
+                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="visitors"
+                  name="All Visitors"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  name="Logged In"
+                  stroke="hsl(142 76% 36%)"
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ChartContainer>
+          ) : (
+            <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+              <p className="text-sm">No visitor data yet. Snapshots are recorded every 5 minutes.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
