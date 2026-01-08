@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Users, UserMinus, UserPlus, Loader2 } from "lucide-react";
+import { Users, UserMinus, UserPlus, Loader2, Search, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Course {
@@ -45,6 +46,8 @@ const BulkEnrollmentManagement = () => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [enrollDialogOpen, setEnrollDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("enrolled");
+  const [enrolledSearchQuery, setEnrolledSearchQuery] = useState("");
+  const [availableSearchQuery, setAvailableSearchQuery] = useState("");
 
   useEffect(() => {
     fetchCourses();
@@ -60,7 +63,27 @@ const BulkEnrollmentManagement = () => {
       setSelectedUsers(new Set());
       setSelectedUsersToEnroll(new Set());
     }
+    // Reset search when course changes
+    setEnrolledSearchQuery("");
+    setAvailableSearchQuery("");
   }, [selectedCourseId]);
+
+  // Filtered lists based on search
+  const filteredEnrolledUsers = useMemo(() => {
+    if (!enrolledSearchQuery.trim()) return enrolledUsers;
+    const query = enrolledSearchQuery.toLowerCase();
+    return enrolledUsers.filter(u => 
+      u.full_name?.toLowerCase().includes(query)
+    );
+  }, [enrolledUsers, enrolledSearchQuery]);
+
+  const filteredAvailableUsers = useMemo(() => {
+    if (!availableSearchQuery.trim()) return availableUsers;
+    const query = availableSearchQuery.toLowerCase();
+    return availableUsers.filter(u => 
+      u.full_name?.toLowerCase().includes(query)
+    );
+  }, [availableUsers, availableSearchQuery]);
 
   const fetchCourses = async () => {
     const { data, error } = await supabase
@@ -170,18 +193,38 @@ const BulkEnrollmentManagement = () => {
   };
 
   const toggleSelectAll = () => {
-    if (selectedUsers.size === enrolledUsers.length) {
-      setSelectedUsers(new Set());
+    const currentFiltered = filteredEnrolledUsers;
+    const allFilteredIds = new Set(currentFiltered.map(u => u.enrollment_id));
+    const allSelected = currentFiltered.every(u => selectedUsers.has(u.enrollment_id));
+    
+    if (allSelected) {
+      // Deselect all filtered
+      setSelectedUsers(prev => {
+        const next = new Set(prev);
+        allFilteredIds.forEach(id => next.delete(id));
+        return next;
+      });
     } else {
-      setSelectedUsers(new Set(enrolledUsers.map(u => u.enrollment_id)));
+      // Select all filtered
+      setSelectedUsers(prev => new Set([...prev, ...allFilteredIds]));
     }
   };
 
   const toggleSelectAllToEnroll = () => {
-    if (selectedUsersToEnroll.size === availableUsers.length) {
-      setSelectedUsersToEnroll(new Set());
+    const currentFiltered = filteredAvailableUsers;
+    const allFilteredIds = new Set(currentFiltered.map(u => u.user_id));
+    const allSelected = currentFiltered.every(u => selectedUsersToEnroll.has(u.user_id));
+    
+    if (allSelected) {
+      // Deselect all filtered
+      setSelectedUsersToEnroll(prev => {
+        const next = new Set(prev);
+        allFilteredIds.forEach(id => next.delete(id));
+        return next;
+      });
     } else {
-      setSelectedUsersToEnroll(new Set(availableUsers.map(u => u.user_id)));
+      // Select all filtered
+      setSelectedUsersToEnroll(prev => new Set([...prev, ...allFilteredIds]));
     }
   };
 
@@ -303,9 +346,28 @@ const BulkEnrollmentManagement = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="enrolled" className="mt-4">
-              {selectedUsers.size > 0 && (
-                <div className="mb-4">
+            <TabsContent value="enrolled" className="mt-4 space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="relative flex-1 max-w-sm">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search enrolled users..."
+                    value={enrolledSearchQuery}
+                    onChange={(e) => setEnrolledSearchQuery(e.target.value)}
+                    className="pl-9 pr-9"
+                  />
+                  {enrolledSearchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                      onClick={() => setEnrolledSearchQuery("")}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                {selectedUsers.size > 0 && (
                   <Button
                     variant="destructive"
                     onClick={() => setConfirmDialogOpen(true)}
@@ -318,17 +380,17 @@ const BulkEnrollmentManagement = () => {
                     )}
                     Unenroll Selected ({selectedUsers.size})
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
 
               {loading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
-              ) : enrolledUsers.length === 0 ? (
+              ) : filteredEnrolledUsers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground border rounded-lg">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No users enrolled in this course</p>
+                  <p>{enrolledSearchQuery ? "No users match your search" : "No users enrolled in this course"}</p>
                 </div>
               ) : (
                 <div className="border rounded-lg">
@@ -337,7 +399,7 @@ const BulkEnrollmentManagement = () => {
                       <TableRow>
                         <TableHead className="w-12">
                           <Checkbox
-                            checked={selectedUsers.size === enrolledUsers.length && enrolledUsers.length > 0}
+                            checked={filteredEnrolledUsers.length > 0 && filteredEnrolledUsers.every(u => selectedUsers.has(u.enrollment_id))}
                             onCheckedChange={toggleSelectAll}
                           />
                         </TableHead>
@@ -347,7 +409,7 @@ const BulkEnrollmentManagement = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {enrolledUsers.map((user) => (
+                      {filteredEnrolledUsers.map((user) => (
                         <TableRow key={user.enrollment_id}>
                           <TableCell>
                             <Checkbox
@@ -376,9 +438,28 @@ const BulkEnrollmentManagement = () => {
               )}
             </TabsContent>
 
-            <TabsContent value="enroll" className="mt-4">
-              {selectedUsersToEnroll.size > 0 && (
-                <div className="mb-4">
+            <TabsContent value="enroll" className="mt-4 space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="relative flex-1 max-w-sm">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search users to enroll..."
+                    value={availableSearchQuery}
+                    onChange={(e) => setAvailableSearchQuery(e.target.value)}
+                    className="pl-9 pr-9"
+                  />
+                  {availableSearchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                      onClick={() => setAvailableSearchQuery("")}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                {selectedUsersToEnroll.size > 0 && (
                   <Button
                     onClick={() => setEnrollDialogOpen(true)}
                     disabled={enrolling}
@@ -390,17 +471,17 @@ const BulkEnrollmentManagement = () => {
                     )}
                     Enroll Selected ({selectedUsersToEnroll.size})
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
 
               {loadingAvailable ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                 </div>
-              ) : availableUsers.length === 0 ? (
+              ) : filteredAvailableUsers.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground border rounded-lg">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>All users are already enrolled in this course</p>
+                  <p>{availableSearchQuery ? "No users match your search" : "All users are already enrolled in this course"}</p>
                 </div>
               ) : (
                 <div className="border rounded-lg">
@@ -409,7 +490,7 @@ const BulkEnrollmentManagement = () => {
                       <TableRow>
                         <TableHead className="w-12">
                           <Checkbox
-                            checked={selectedUsersToEnroll.size === availableUsers.length && availableUsers.length > 0}
+                            checked={filteredAvailableUsers.length > 0 && filteredAvailableUsers.every(u => selectedUsersToEnroll.has(u.user_id))}
                             onCheckedChange={toggleSelectAllToEnroll}
                           />
                         </TableHead>
@@ -418,7 +499,7 @@ const BulkEnrollmentManagement = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {availableUsers.map((user) => (
+                      {filteredAvailableUsers.map((user) => (
                         <TableRow key={user.user_id}>
                           <TableCell>
                             <Checkbox
