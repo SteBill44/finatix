@@ -24,6 +24,7 @@ import SyllabusManagement from "@/components/admin/SyllabusManagement";
 import InterestManagement from "@/components/admin/InterestManagement";
 import CorporateManagement from "@/components/admin/CorporateManagement";
 import { PerformanceMonitoring } from "@/components/admin/PerformanceMonitoring";
+import BulkEnrollmentManagement from "@/components/admin/BulkEnrollmentManagement";
 
 interface Course {
   id: string;
@@ -489,7 +490,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-6xl grid-cols-8">
+          <TabsList className="grid w-full max-w-7xl grid-cols-9">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
@@ -505,6 +506,10 @@ const Admin = () => {
             <TabsTrigger value="resources" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               Resources
+            </TabsTrigger>
+            <TabsTrigger value="enrollments" className="flex items-center gap-2">
+              <GraduationCap className="h-4 w-4" />
+              Enrollments
             </TabsTrigger>
             <TabsTrigger value="interest" className="flex items-center gap-2">
               <Mail className="h-4 w-4" />
@@ -523,6 +528,11 @@ const Admin = () => {
               Users
             </TabsTrigger>
           </TabsList>
+
+          {/* Enrollments Tab */}
+          <TabsContent value="enrollments">
+            <BulkEnrollmentManagement />
+          </TabsContent>
 
           {/* Interest Tab */}
           <TabsContent value="interest">
