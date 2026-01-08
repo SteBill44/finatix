@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { queryConfigs } from "@/lib/queryConfig";
 
 export interface AnalyticsData {
   totalStudents: number;
@@ -25,70 +26,42 @@ export const useAnalytics = () => {
   return useQuery({
     queryKey: ["analytics"],
     queryFn: async () => {
-      // Get total unique students (users with enrollments)
-      const { count: totalStudents } = await supabase
-        .from("enrollments")
-        .select("user_id", { count: "exact", head: true });
+      // Use optimized database function for better performance
+      const { data, error } = await supabase.rpc("get_platform_analytics");
 
-      // Get total enrollments
-      const { count: totalEnrollments } = await supabase
-        .from("enrollments")
-        .select("id", { count: "exact", head: true });
+      if (error) {
+        console.error("Analytics error:", error);
+        throw error;
+      }
 
-      // Get total completions
-      const { count: totalCompletions } = await supabase
-        .from("enrollments")
-        .select("id", { count: "exact", head: true })
-        .not("completed_at", "is", null);
-
-      // Get course stats
-      const { data: courses } = await supabase
-        .from("courses")
-        .select("id, title");
-
-      const courseStats = await Promise.all(
-        (courses || []).map(async (course) => {
-          const { count: enrollments } = await supabase
-            .from("enrollments")
-            .select("id", { count: "exact", head: true })
-            .eq("course_id", course.id);
-
-          const { count: completions } = await supabase
-            .from("enrollments")
-            .select("id", { count: "exact", head: true })
-            .eq("course_id", course.id)
-            .not("completed_at", "is", null);
-
-          const { data: reviews } = await supabase
-            .from("course_reviews")
-            .select("rating")
-            .eq("course_id", course.id);
-
-          const averageRating = reviews && reviews.length > 0
-            ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-            : 0;
-
-          return {
-            course_id: course.id,
-            course_title: course.title,
-            enrollments: enrollments || 0,
-            completions: completions || 0,
-            averageRating,
-          };
-        })
-      );
+      const analytics = data as {
+        totalStudents: number;
+        totalEnrollments: number;
+        totalCompletions: number;
+        courseStats: {
+          course_id: string;
+          course_title: string;
+          enrollments: number;
+          completions: number;
+          averageRating: number;
+        }[];
+      };
 
       return {
-        totalStudents: totalStudents || 0,
-        totalEnrollments: totalEnrollments || 0,
-        totalCompletions: totalCompletions || 0,
-        averageProgress: totalEnrollments && totalCompletions 
-          ? Math.round((totalCompletions / totalEnrollments) * 100) 
-          : 0,
-        courseStats,
+        totalStudents: analytics.totalStudents || 0,
+        totalEnrollments: analytics.totalEnrollments || 0,
+        totalCompletions: analytics.totalCompletions || 0,
+        averageProgress:
+          analytics.totalEnrollments && analytics.totalCompletions
+            ? Math.round(
+                (analytics.totalCompletions / analytics.totalEnrollments) * 100
+              )
+            : 0,
+        courseStats: analytics.courseStats || [],
         weeklyActivity: [],
       } as AnalyticsData;
     },
+    ...queryConfigs.analytics,
   });
 };
 
