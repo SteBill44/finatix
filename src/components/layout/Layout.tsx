@@ -4,12 +4,16 @@ import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
 import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
+import { useTrackUserPresence } from "@/hooks/useActiveUsers";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  // Track user presence for real-time active users counter
+  useTrackUserPresence();
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <ScrollProgressBar />
