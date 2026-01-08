@@ -1,83 +1,111 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
-interface ActiveUser {
-  oderId: string;
-  onlineAt: string;
-}
+// Generate a stable visitor ID for anonymous tracking
+const getVisitorId = () => {
+  let visitorId = sessionStorage.getItem('visitor_id');
+  if (!visitorId) {
+    visitorId = 'visitor-' + Math.random().toString(36).substring(2, 15);
+    sessionStorage.setItem('visitor_id', visitorId);
+  }
+  return visitorId;
+};
 
 export const useActiveUsers = () => {
   const { user } = useAuth();
-  const [activeCount, setActiveCount] = useState(0);
+  const [activeUserCount, setActiveUserCount] = useState(0);
+  const [activeVisitorCount, setActiveVisitorCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const channel = supabase.channel('active-users-presence', {
-      config: {
-        presence: {
-          key: user?.id || 'anonymous-' + Math.random().toString(36).substring(7),
-        },
-      },
-    });
+    // Channel for tracking authenticated users only
+    const usersChannel = supabase.channel('authenticated-users-presence');
+    
+    // Channel for tracking all visitors (including anonymous)
+    const visitorsChannel = supabase.channel('all-visitors-presence');
 
-    channel
+    usersChannel
       .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState();
+        const state = usersChannel.presenceState();
         const count = Object.keys(state).length;
-        setActiveCount(count);
-        console.log('Active users synced:', count);
+        setActiveUserCount(count);
       })
-      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('User joined:', key, newPresences);
-      })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('User left:', key, leftPresences);
+      .subscribe();
+
+    visitorsChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = visitorsChannel.presenceState();
+        const count = Object.keys(state).length;
+        setActiveVisitorCount(count);
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           setIsConnected(true);
-          await channel.track({
-            userId: user?.id || 'anonymous',
-            onlineAt: new Date().toISOString(),
-          });
         }
       });
 
     return () => {
-      channel.unsubscribe();
+      usersChannel.unsubscribe();
+      visitorsChannel.unsubscribe();
     };
-  }, [user?.id]);
+  }, []);
 
-  return { activeCount, isConnected };
+  return { activeUserCount, activeVisitorCount, isConnected };
 };
 
 // Hook for tracking user presence globally (to be used in Layout)
 export const useTrackUserPresence = () => {
   const { user } = useAuth();
+  const visitorIdRef = useRef<string>(getVisitorId());
 
   useEffect(() => {
-    if (!user?.id) return;
-
-    const channel = supabase.channel('active-users-presence', {
+    const visitorId = visitorIdRef.current;
+    
+    // Always track in visitors channel (all site visitors)
+    const visitorsChannel = supabase.channel('all-visitors-presence', {
       config: {
         presence: {
-          key: user.id,
+          key: visitorId,
         },
       },
     });
 
-    channel.subscribe(async (status) => {
+    visitorsChannel.subscribe(async (status) => {
       if (status === 'SUBSCRIBED') {
-        await channel.track({
-          userId: user.id,
+        await visitorsChannel.track({
+          visitorId,
+          isAuthenticated: !!user?.id,
           onlineAt: new Date().toISOString(),
         });
       }
     });
 
+    // If authenticated, also track in users channel
+    let usersChannel: ReturnType<typeof supabase.channel> | null = null;
+    
+    if (user?.id) {
+      usersChannel = supabase.channel('authenticated-users-presence', {
+        config: {
+          presence: {
+            key: user.id,
+          },
+        },
+      });
+
+      usersChannel.subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await usersChannel!.track({
+            userId: user.id,
+            onlineAt: new Date().toISOString(),
+          });
+        }
+      });
+    }
+
     return () => {
-      channel.unsubscribe();
+      visitorsChannel.unsubscribe();
+      usersChannel?.unsubscribe();
     };
   }, [user?.id]);
 };

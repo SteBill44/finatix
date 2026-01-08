@@ -27,7 +27,7 @@ const chartConfig = {
 export const PerformanceMonitoring = () => {
   const [timeRange, setTimeRange] = useState<"1h" | "24h" | "7d">("24h");
   const { data: metrics, isLoading, error } = usePerformanceMetrics(timeRange);
-  const { activeCount, isConnected } = useActiveUsers();
+  const { activeUserCount, activeVisitorCount, isConnected } = useActiveUsers();
 
   if (isLoading) {
     return (
@@ -77,25 +77,41 @@ export const PerformanceMonitoring = () => {
         ))}
       </div>
 
-      {/* Real-Time Active Users Banner */}
+      {/* Real-Time Presence Banner */}
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <Radio className="h-6 w-6 text-primary" />
+            <div className="flex items-center gap-6">
+              {/* All Visitors */}
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="p-3 rounded-full bg-primary/10">
+                    <Radio className="h-6 w-6 text-primary" />
+                  </div>
+                  {isConnected && (
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                  )}
                 </div>
-                {isConnected && (
-                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                  </span>
-                )}
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">On Site Now</p>
+                  <p className="text-3xl font-bold">{activeVisitorCount}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Users Online Right Now</p>
-                <p className="text-3xl font-bold">{activeCount}</p>
+
+              <div className="h-12 w-px bg-border" />
+
+              {/* Authenticated Users */}
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-full bg-green-500/10">
+                  <Users className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Logged In Users</p>
+                  <p className="text-3xl font-bold">{activeUserCount}</p>
+                </div>
               </div>
             </div>
             <Badge variant={isConnected ? "default" : "secondary"} className="gap-1">
