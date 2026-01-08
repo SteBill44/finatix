@@ -188,6 +188,42 @@ export type Database = {
           },
         ]
       }
+      cost_estimates: {
+        Row: {
+          ai_cost: number
+          created_at: string
+          date: string
+          db_cost: number
+          edge_function_cost: number
+          id: string
+          storage_cost: number
+          total_cost: number
+          usage_data: Json | null
+        }
+        Insert: {
+          ai_cost?: number
+          created_at?: string
+          date?: string
+          db_cost?: number
+          edge_function_cost?: number
+          id?: string
+          storage_cost?: number
+          total_cost?: number
+          usage_data?: Json | null
+        }
+        Update: {
+          ai_cost?: number
+          created_at?: string
+          date?: string
+          db_cost?: number
+          edge_function_cost?: number
+          id?: string
+          storage_cost?: number
+          total_cost?: number
+          usage_data?: Json | null
+        }
+        Relationships: []
+      }
       course_reviews: {
         Row: {
           content: string | null
@@ -1209,6 +1245,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      usage_metrics: {
+        Row: {
+          count: number
+          created_at: string
+          date: string
+          id: string
+          metadata: Json | null
+          metric_type: string
+        }
+        Insert: {
+          count?: number
+          created_at?: string
+          date?: string
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+        }
+        Update: {
+          count?: number
+          created_at?: string
+          date?: string
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+        }
+        Relationships: []
       }
       user_badges: {
         Row: {
