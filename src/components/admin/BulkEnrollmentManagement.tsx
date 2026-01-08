@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Users, UserMinus, UserPlus, Loader2, Search, X } from "lucide-react";
+import { Users, UserMinus, UserPlus, Loader2, Search, X, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 interface Course {
@@ -24,6 +24,8 @@ interface EnrolledUser {
   full_name: string | null;
   enrolled_at: string;
   completed_at: string | null;
+  lessons_completed: number;
+  total_lessons: number;
 }
 
 interface AvailableUser {
@@ -31,6 +33,8 @@ interface AvailableUser {
   full_name: string | null;
   created_at: string;
 }
+
+const ITEMS_PER_PAGE = 20;
 
 const BulkEnrollmentManagement = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -43,11 +47,14 @@ const BulkEnrollmentManagement = () => {
   const [loadingAvailable, setLoadingAvailable] = useState(false);
   const [unenrolling, setUnenrolling] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [enrollDialogOpen, setEnrollDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("enrolled");
   const [enrolledSearchQuery, setEnrolledSearchQuery] = useState("");
   const [availableSearchQuery, setAvailableSearchQuery] = useState("");
+  const [enrolledPage, setEnrolledPage] = useState(1);
+  const [availablePage, setAvailablePage] = useState(1);
 
   useEffect(() => {
     fetchCourses();
@@ -63,10 +70,21 @@ const BulkEnrollmentManagement = () => {
       setSelectedUsers(new Set());
       setSelectedUsersToEnroll(new Set());
     }
-    // Reset search when course changes
+    // Reset search and pagination when course changes
     setEnrolledSearchQuery("");
     setAvailableSearchQuery("");
+    setEnrolledPage(1);
+    setAvailablePage(1);
   }, [selectedCourseId]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setEnrolledPage(1);
+  }, [enrolledSearchQuery]);
+
+  useEffect(() => {
+    setAvailablePage(1);
+  }, [availableSearchQuery]);
 
   // Filtered lists based on search
   const filteredEnrolledUsers = useMemo(() => {
@@ -85,6 +103,20 @@ const BulkEnrollmentManagement = () => {
     );
   }, [availableUsers, availableSearchQuery]);
 
+  // Paginated lists
+  const paginatedEnrolledUsers = useMemo(() => {
+    const start = (enrolledPage - 1) * ITEMS_PER_PAGE;
+    return filteredEnrolledUsers.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredEnrolledUsers, enrolledPage]);
+
+  const paginatedAvailableUsers = useMemo(() => {
+    const start = (availablePage - 1) * ITEMS_PER_PAGE;
+    return filteredAvailableUsers.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredAvailableUsers, availablePage]);
+
+  const totalEnrolledPages = Math.ceil(filteredEnrolledUsers.length / ITEMS_PER_PAGE);
+  const totalAvailablePages = Math.ceil(filteredAvailableUsers.length / ITEMS_PER_PAGE);
+
   const fetchCourses = async () => {
     const { data, error } = await supabase
       .from("courses")
@@ -100,7 +132,9 @@ const BulkEnrollmentManagement = () => {
 
   const fetchEnrolledUsers = async (courseId: string) => {
     setLoading(true);
-    const { data, error } = await supabase
+    
+    // Fetch enrollments with profiles
+    const { data: enrollmentsData, error: enrollmentsError } = await supabase
       .from("enrollments")
       .select(`
         id,
@@ -112,19 +146,53 @@ const BulkEnrollmentManagement = () => {
       .eq("course_id", courseId)
       .order("enrolled_at", { ascending: false });
 
-    if (error) {
+    if (enrollmentsError) {
       toast.error("Failed to fetch enrolled users");
       setEnrolledUsers([]);
-    } else {
-      const users: EnrolledUser[] = (data || []).map((enrollment: any) => ({
-        enrollment_id: enrollment.id,
-        user_id: enrollment.user_id,
-        full_name: enrollment.profiles?.full_name || "Unknown User",
-        enrolled_at: enrollment.enrolled_at,
-        completed_at: enrollment.completed_at,
-      }));
-      setEnrolledUsers(users);
+      setLoading(false);
+      return;
     }
+
+    // Fetch total lessons for this course
+    const { data: lessonsData } = await supabase
+      .from("lessons")
+      .select("id")
+      .eq("course_id", courseId);
+    
+    const totalLessons = lessonsData?.length || 0;
+
+    // Fetch lesson progress for all users in this course
+    const userIds = enrollmentsData?.map((e: any) => e.user_id) || [];
+    const lessonIds = lessonsData?.map(l => l.id) || [];
+
+    let progressMap: Record<string, number> = {};
+    
+    if (userIds.length > 0 && lessonIds.length > 0) {
+      const { data: progressData } = await supabase
+        .from("lesson_progress")
+        .select("user_id, lesson_id, completed")
+        .in("user_id", userIds)
+        .in("lesson_id", lessonIds)
+        .eq("completed", true);
+
+      if (progressData) {
+        progressData.forEach(p => {
+          progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
+        });
+      }
+    }
+
+    const users: EnrolledUser[] = (enrollmentsData || []).map((enrollment: any) => ({
+      enrollment_id: enrollment.id,
+      user_id: enrollment.user_id,
+      full_name: enrollment.profiles?.full_name || "Unknown User",
+      enrolled_at: enrollment.enrolled_at,
+      completed_at: enrollment.completed_at,
+      lessons_completed: progressMap[enrollment.user_id] || 0,
+      total_lessons: totalLessons,
+    }));
+    
+    setEnrolledUsers(users);
     setLoading(false);
   };
 
@@ -193,38 +261,34 @@ const BulkEnrollmentManagement = () => {
   };
 
   const toggleSelectAll = () => {
-    const currentFiltered = filteredEnrolledUsers;
-    const allFilteredIds = new Set(currentFiltered.map(u => u.enrollment_id));
-    const allSelected = currentFiltered.every(u => selectedUsers.has(u.enrollment_id));
+    const currentPage = paginatedEnrolledUsers;
+    const allPageIds = new Set(currentPage.map(u => u.enrollment_id));
+    const allSelected = currentPage.every(u => selectedUsers.has(u.enrollment_id));
     
     if (allSelected) {
-      // Deselect all filtered
       setSelectedUsers(prev => {
         const next = new Set(prev);
-        allFilteredIds.forEach(id => next.delete(id));
+        allPageIds.forEach(id => next.delete(id));
         return next;
       });
     } else {
-      // Select all filtered
-      setSelectedUsers(prev => new Set([...prev, ...allFilteredIds]));
+      setSelectedUsers(prev => new Set([...prev, ...allPageIds]));
     }
   };
 
   const toggleSelectAllToEnroll = () => {
-    const currentFiltered = filteredAvailableUsers;
-    const allFilteredIds = new Set(currentFiltered.map(u => u.user_id));
-    const allSelected = currentFiltered.every(u => selectedUsersToEnroll.has(u.user_id));
+    const currentPage = paginatedAvailableUsers;
+    const allPageIds = new Set(currentPage.map(u => u.user_id));
+    const allSelected = currentPage.every(u => selectedUsersToEnroll.has(u.user_id));
     
     if (allSelected) {
-      // Deselect all filtered
       setSelectedUsersToEnroll(prev => {
         const next = new Set(prev);
-        allFilteredIds.forEach(id => next.delete(id));
+        allPageIds.forEach(id => next.delete(id));
         return next;
       });
     } else {
-      // Select all filtered
-      setSelectedUsersToEnroll(prev => new Set([...prev, ...allFilteredIds]));
+      setSelectedUsersToEnroll(prev => new Set([...prev, ...allPageIds]));
     }
   };
 
@@ -286,6 +350,58 @@ const BulkEnrollmentManagement = () => {
     setEnrollDialogOpen(false);
   };
 
+  const handleExportCSV = () => {
+    if (enrolledUsers.length === 0) {
+      toast.error("No enrolled users to export");
+      return;
+    }
+
+    setExporting(true);
+
+    const selectedCourse = courses.find(c => c.id === selectedCourseId);
+    const courseName = selectedCourse?.title || "Unknown Course";
+
+    // CSV headers
+    const headers = ["Name", "Enrolled Date", "Status", "Lessons Completed", "Total Lessons", "Progress %"];
+    
+    // CSV rows
+    const rows = enrolledUsers.map(user => {
+      const progressPercent = user.total_lessons > 0 
+        ? Math.round((user.lessons_completed / user.total_lessons) * 100)
+        : 0;
+      const status = user.completed_at ? "Completed" : "In Progress";
+      
+      return [
+        user.full_name || "Unknown User",
+        new Date(user.enrolled_at).toLocaleDateString(),
+        status,
+        user.lessons_completed.toString(),
+        user.total_lessons.toString(),
+        `${progressPercent}%`
+      ];
+    });
+
+    // Build CSV content
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${courseName.replace(/[^a-z0-9]/gi, "_")}_enrollments.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success(`Exported ${enrolledUsers.length} enrolled users to CSV`);
+    setExporting(false);
+  };
+
   const getLevelBadgeStyle = (level: string) => {
     switch (level.toLowerCase()) {
       case "certificate":
@@ -302,6 +418,56 @@ const BulkEnrollmentManagement = () => {
   };
 
   const selectedCourse = courses.find(c => c.id === selectedCourseId);
+
+  const PaginationControls = ({ 
+    currentPage, 
+    totalPages, 
+    onPageChange,
+    totalItems,
+    itemsPerPage 
+  }: { 
+    currentPage: number; 
+    totalPages: number; 
+    onPageChange: (page: number) => void;
+    totalItems: number;
+    itemsPerPage: number;
+  }) => {
+    const start = (currentPage - 1) * itemsPerPage + 1;
+    const end = Math.min(currentPage * itemsPerPage, totalItems);
+
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex items-center justify-between px-2 py-3 border-t">
+        <div className="text-sm text-muted-foreground">
+          Showing {start}-{end} of {totalItems}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Card>
@@ -347,8 +513,8 @@ const BulkEnrollmentManagement = () => {
             </TabsList>
 
             <TabsContent value="enrolled" className="mt-4 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="relative flex-1 max-w-sm">
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="relative flex-1 min-w-[200px] max-w-sm">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search enrolled users..."
@@ -367,6 +533,18 @@ const BulkEnrollmentManagement = () => {
                     </Button>
                   )}
                 </div>
+                <Button
+                  variant="outline"
+                  onClick={handleExportCSV}
+                  disabled={exporting || enrolledUsers.length === 0}
+                >
+                  {exporting ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Download className="h-4 w-4 mr-2" />
+                  )}
+                  Export CSV
+                </Button>
                 {selectedUsers.size > 0 && (
                   <Button
                     variant="destructive"
@@ -399,41 +577,60 @@ const BulkEnrollmentManagement = () => {
                       <TableRow>
                         <TableHead className="w-12">
                           <Checkbox
-                            checked={filteredEnrolledUsers.length > 0 && filteredEnrolledUsers.every(u => selectedUsers.has(u.enrollment_id))}
+                            checked={paginatedEnrolledUsers.length > 0 && paginatedEnrolledUsers.every(u => selectedUsers.has(u.enrollment_id))}
                             onCheckedChange={toggleSelectAll}
                           />
                         </TableHead>
                         <TableHead>User</TableHead>
                         <TableHead>Enrolled</TableHead>
+                        <TableHead>Progress</TableHead>
                         <TableHead>Status</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredEnrolledUsers.map((user) => (
-                        <TableRow key={user.enrollment_id}>
-                          <TableCell>
-                            <Checkbox
-                              checked={selectedUsers.has(user.enrollment_id)}
-                              onCheckedChange={() => toggleUserSelection(user.enrollment_id)}
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">{user.full_name}</TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {new Date(user.enrolled_at).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>
-                            {user.completed_at ? (
-                              <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                                Completed
-                              </Badge>
-                            ) : (
-                              <Badge variant="outline">In Progress</Badge>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {paginatedEnrolledUsers.map((user) => {
+                        const progressPercent = user.total_lessons > 0 
+                          ? Math.round((user.lessons_completed / user.total_lessons) * 100)
+                          : 0;
+                        
+                        return (
+                          <TableRow key={user.enrollment_id}>
+                            <TableCell>
+                              <Checkbox
+                                checked={selectedUsers.has(user.enrollment_id)}
+                                onCheckedChange={() => toggleUserSelection(user.enrollment_id)}
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium">{user.full_name}</TableCell>
+                            <TableCell className="text-muted-foreground">
+                              {new Date(user.enrolled_at).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm">
+                                {user.lessons_completed}/{user.total_lessons} ({progressPercent}%)
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              {user.completed_at ? (
+                                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
+                                  Completed
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline">In Progress</Badge>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
+                  <PaginationControls
+                    currentPage={enrolledPage}
+                    totalPages={totalEnrolledPages}
+                    onPageChange={setEnrolledPage}
+                    totalItems={filteredEnrolledUsers.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                  />
                 </div>
               )}
             </TabsContent>
@@ -490,7 +687,7 @@ const BulkEnrollmentManagement = () => {
                       <TableRow>
                         <TableHead className="w-12">
                           <Checkbox
-                            checked={filteredAvailableUsers.length > 0 && filteredAvailableUsers.every(u => selectedUsersToEnroll.has(u.user_id))}
+                            checked={paginatedAvailableUsers.length > 0 && paginatedAvailableUsers.every(u => selectedUsersToEnroll.has(u.user_id))}
                             onCheckedChange={toggleSelectAllToEnroll}
                           />
                         </TableHead>
@@ -499,7 +696,7 @@ const BulkEnrollmentManagement = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredAvailableUsers.map((user) => (
+                      {paginatedAvailableUsers.map((user) => (
                         <TableRow key={user.user_id}>
                           <TableCell>
                             <Checkbox
@@ -515,6 +712,13 @@ const BulkEnrollmentManagement = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  <PaginationControls
+                    currentPage={availablePage}
+                    totalPages={totalAvailablePages}
+                    onPageChange={setAvailablePage}
+                    totalItems={filteredAvailableUsers.length}
+                    itemsPerPage={ITEMS_PER_PAGE}
+                  />
                 </div>
               )}
             </TabsContent>
