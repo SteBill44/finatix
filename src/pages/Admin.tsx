@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2, Activity } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2, Activity, DollarSign } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
@@ -25,6 +25,7 @@ import InterestManagement from "@/components/admin/InterestManagement";
 import CorporateManagement from "@/components/admin/CorporateManagement";
 import { PerformanceMonitoring } from "@/components/admin/PerformanceMonitoring";
 import BulkEnrollmentManagement from "@/components/admin/BulkEnrollmentManagement";
+import { CostMonitoringDashboard } from "@/components/admin/CostMonitoringDashboard";
 
 interface Course {
   id: string;
@@ -523,6 +524,10 @@ const Admin = () => {
               <Activity className="h-4 w-4" />
               Performance
             </TabsTrigger>
+            <TabsTrigger value="costs" className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              Costs
+            </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Users
@@ -560,6 +565,11 @@ const Admin = () => {
                 <PerformanceMonitoring />
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Cost Monitoring Tab */}
+          <TabsContent value="costs">
+            <CostMonitoringDashboard />
           </TabsContent>
 
           {/* Syllabus Tab */}
