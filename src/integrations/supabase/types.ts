@@ -1287,6 +1287,27 @@ export type Database = {
         }
         Relationships: []
       }
+      visitor_snapshots: {
+        Row: {
+          id: string
+          recorded_at: string
+          user_count: number
+          visitor_count: number
+        }
+        Insert: {
+          id?: string
+          recorded_at?: string
+          user_count?: number
+          visitor_count?: number
+        }
+        Update: {
+          id?: string
+          recorded_at?: string
+          user_count?: number
+          visitor_count?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
