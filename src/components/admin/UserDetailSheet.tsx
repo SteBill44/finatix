@@ -7,9 +7,16 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield, Crown, UserMinus } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield, Crown, UserMinus, Plus, Loader2 } from "lucide-react";
 import { AppRole } from "@/hooks/useUserRole";
 import { toast } from "sonner";
+
+interface Course {
+  id: string;
+  title: string;
+  level: string;
+}
 
 interface UserProfile {
   user_id: string;
@@ -70,10 +77,14 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
   const [expandedCourses, setExpandedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
   const [unenrolling, setUnenrolling] = useState<string | null>(null);
+  const [allCourses, setAllCourses] = useState<Course[]>([]);
+  const [selectedCourseToEnroll, setSelectedCourseToEnroll] = useState<string>("");
+  const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
     if (userId && open) {
       fetchUserDetails();
+      fetchAllCourses();
     }
   }, [userId, open]);
 
@@ -158,6 +169,17 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
     setLoading(false);
   };
 
+  const fetchAllCourses = async () => {
+    const { data } = await supabase
+      .from("courses")
+      .select("id, title, level")
+      .order("title");
+    
+    if (data) {
+      setAllCourses(data);
+    }
+  };
+
   const toggleCourseExpanded = (courseId: string) => {
     const newExpanded = new Set(expandedCourses);
     if (newExpanded.has(courseId)) {
@@ -219,6 +241,57 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
     }
   };
 
+  const handleEnroll = async () => {
+    if (!userId || !selectedCourseToEnroll) return;
+
+    setEnrolling(true);
+    try {
+      const { data, error } = await supabase
+        .from("enrollments")
+        .insert({
+          user_id: userId,
+          course_id: selectedCourseToEnroll,
+        })
+        .select(`
+          id,
+          course_id,
+          enrolled_at,
+          completed_at,
+          courses (
+            id,
+            title,
+            slug,
+            level,
+            duration_hours
+          )
+        `)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setEnrollments(prev => [...prev, data as Enrollment]);
+        const course = allCourses.find(c => c.id === selectedCourseToEnroll);
+        toast.success(`Successfully enrolled user in ${course?.title}`);
+        setSelectedCourseToEnroll("");
+      }
+    } catch (error: any) {
+      console.error("Failed to enroll:", error);
+      if (error.code === "23505") {
+        toast.error("User is already enrolled in this course");
+      } else {
+        toast.error("Failed to enroll user in course");
+      }
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  // Get courses the user is not enrolled in
+  const availableCourses = allCourses.filter(
+    course => !enrollments.some(e => e.course_id === course.id)
+  );
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
@@ -269,10 +342,46 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
 
             {/* Courses Section */}
             <div>
-              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Enrolled Courses ({enrollments.length})
-              </h4>
-              
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Enrolled Courses ({enrollments.length})
+                </h4>
+              </div>
+
+              {/* Enroll in Course */}
+              {availableCourses.length > 0 && (
+                <div className="flex items-center gap-2 mb-4">
+                  <Select value={selectedCourseToEnroll} onValueChange={setSelectedCourseToEnroll}>
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Enroll in a course..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableCourses.map((course) => (
+                        <SelectItem key={course.id} value={course.id}>
+                          <span className="flex items-center gap-2">
+                            {course.title}
+                            <Badge variant="outline" className={getLevelBadgeStyle(course.level)}>
+                              {course.level}
+                            </Badge>
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    size="sm"
+                    onClick={handleEnroll}
+                    disabled={!selectedCourseToEnroll || enrolling}
+                  >
+                    {enrolling ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              )}
+
               {enrollments.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground border rounded-lg">
                   <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-50" />
