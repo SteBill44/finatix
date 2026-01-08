@@ -31,8 +31,8 @@ const Features = () => {
     },
     {
       icon: Smartphone,
-      title: "Mobile-First Design",
-      description: "Study anywhere, anytime. Our platform is optimized for learning on the go.",
+      title: "Phone Compatible",
+      description: "Access your studies from any device. Our responsive platform works seamlessly on phones, tablets, and desktops.",
     },
     {
       icon: Zap,
