@@ -5,8 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield, Crown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ChevronDown, ChevronRight, BookOpen, CheckCircle2, Clock, User, Calendar, Shield, Crown, UserMinus } from "lucide-react";
 import { AppRole } from "@/hooks/useUserRole";
+import { toast } from "sonner";
 
 interface UserProfile {
   user_id: string;
@@ -66,6 +69,7 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
   const [courseLessons, setCourseLessons] = useState<Record<string, Lesson[]>>({});
   const [expandedCourses, setExpandedCourses] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
+  const [unenrolling, setUnenrolling] = useState<string | null>(null);
 
   useEffect(() => {
     if (userId && open) {
@@ -195,6 +199,26 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
     return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   };
 
+  const handleUnenroll = async (enrollmentId: string, courseTitle: string) => {
+    setUnenrolling(enrollmentId);
+    try {
+      const { error } = await supabase
+        .from("enrollments")
+        .delete()
+        .eq("id", enrollmentId);
+
+      if (error) throw error;
+
+      setEnrollments(prev => prev.filter(e => e.id !== enrollmentId));
+      toast.success(`Successfully unenrolled user from ${courseTitle}`);
+    } catch (error) {
+      console.error("Failed to unenroll:", error);
+      toast.error("Failed to unenroll user from course");
+    } finally {
+      setUnenrolling(null);
+    }
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
@@ -276,6 +300,36 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
                                 <Badge variant="outline" className={getLevelBadgeStyle(enrollment.courses.level)}>
                                   {enrollment.courses.level}
                                 </Badge>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 ml-auto text-destructive hover:text-destructive hover:bg-destructive/10"
+                                      disabled={unenrolling === enrollment.id}
+                                    >
+                                      <UserMinus className="h-4 w-4" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Unenroll from course?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to unenroll {profile?.full_name || "this user"} from "{enrollment.courses.title}"? 
+                                        This will remove all their progress for this course.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        onClick={() => handleUnenroll(enrollment.id, enrollment.courses.title)}
+                                      >
+                                        Unenroll
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                               </div>
                               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                 <span className="flex items-center gap-1">
