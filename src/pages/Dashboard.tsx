@@ -75,7 +75,7 @@ const Dashboard = () => {
   return (
     <Layout>
       {/* Header */}
-      <section className="relative py-12 lg:py-16 overflow-hidden">
+      <section className="relative pt-24 lg:pt-28 pb-12 lg:pb-16 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="absolute top-10 right-0 w-64 h-64 bg-accent/30 rounded-full blur-3xl translate-x-1/2" />
 
