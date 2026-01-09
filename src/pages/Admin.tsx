@@ -484,14 +484,14 @@ const Admin = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto py-8 px-4">
+      <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-2">Manage courses, lessons, users, and site settings</p>
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="grid w-full max-w-7xl grid-cols-9">
+          <TabsList className="flex flex-wrap h-auto gap-1 p-1">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
