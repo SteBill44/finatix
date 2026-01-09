@@ -491,7 +491,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="courses" className="space-y-6">
-          <TabsList className="flex flex-wrap h-auto gap-1 p-1">
+          <TabsList className="flex w-full h-auto gap-1 p-1 overflow-x-auto scrollbar-hide">
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
