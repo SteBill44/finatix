@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, User, Shield, Trophy, MessageSquare, Settings, LayoutDashboard } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import FinatixLogo from "@/components/FinatixLogo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -85,33 +86,8 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo with Geometric F */}
-          <Link to="/" className="group flex items-center gap-2">
-            <div className="relative w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md shadow-teal-500/20 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-teal-500/40 group-hover:scale-110">
-              {/* Glow effect on hover */}
-              <div className="absolute inset-0 rounded-lg bg-teal-400/0 group-hover:bg-teal-400/20 transition-all duration-300" />
-              <div className="absolute -inset-1 rounded-xl bg-teal-500/0 group-hover:bg-teal-500/20 blur-sm transition-all duration-300" />
-              <svg 
-                viewBox="0 0 100 100" 
-                className="relative w-5 h-5 transition-transform duration-300 group-hover:scale-105"
-                fill="none"
-              >
-                <path
-                  d="M25 20 L70 20 L70 32 L45 32 L45 45 L65 45 L65 57 L45 57 L45 80 L33 80 L33 32 L25 32 L25 20 Z"
-                  fill="white"
-                  className="transition-all duration-300"
-                />
-                <path
-                  d="M60 20 L70 20 L70 30 Z"
-                  fill="rgba(255,255,255,0.6)"
-                  className="group-hover:fill-white transition-all duration-300"
-                />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-foreground transition-colors duration-300">
-              Fin<span className="text-primary group-hover:text-teal-400 transition-colors duration-300">atix</span>
-            </span>
-          </Link>
+          {/* Logo */}
+          <FinatixLogo size="sm" />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
