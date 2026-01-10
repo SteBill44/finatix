@@ -150,16 +150,32 @@ const Hero = () => {
             The UK's most modern CIMA study platform. Expert-led courses for BA1-BA4, Operational, Management & Strategic levels with 5,000+ practice questions and realistic mock exams.
           </p>
           
+          {/* Trust indicators */}
+          <div className="animate-fade-up-delay-1 flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-10">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              CIMA Exam Preparation
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-accent" />
+              CGMA Pathway
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-teal" />
+              Management Accounting
+            </span>
+          </div>
+
           {/* CTA Buttons */}
-          <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4 mt-10">
+          <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4">
             <Link to="/auth?mode=signup">
               <Button size="xl" className="shadow-lg shadow-primary/20">
-                Register for Free
+                Start Free CIMA Course
               </Button>
             </Link>
             <Link to="/courses">
               <Button size="xl" variant="outline" className="shadow-sm bg-background/80 backdrop-blur-sm">
-                Explore Courses
+                Browse All CIMA Courses
               </Button>
             </Link>
           </div>
