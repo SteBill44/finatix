@@ -85,8 +85,24 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo with Geometric F */}
           <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center shadow-md shadow-teal-500/20">
+              <svg 
+                viewBox="0 0 100 100" 
+                className="w-5 h-5"
+                fill="none"
+              >
+                <path
+                  d="M25 20 L70 20 L70 32 L45 32 L45 45 L65 45 L65 57 L45 57 L45 80 L33 80 L33 32 L25 32 L25 20 Z"
+                  fill="white"
+                />
+                <path
+                  d="M60 20 L70 20 L70 30 Z"
+                  fill="rgba(255,255,255,0.6)"
+                />
+              </svg>
+            </div>
             <span className="text-xl font-bold text-foreground">
               Fin<span className="text-primary">atix</span>
             </span>
