@@ -11,49 +11,46 @@ const Features = () => {
   const features = [
     {
       icon: Brain,
-      title: "CIMA Competency Analytics",
-      description: "AI-powered analysis identifies your weak areas in each CIMA syllabus and creates personalized study plans.",
+      title: "Competency-Based Analytics",
+      description: "Our AI identifies your weak areas and creates personalized study plans that adapt as you learn.",
     },
     {
       icon: Target,
-      title: "Adaptive CIMA Learning",
-      description: "Focus on topics where you need improvement. Our system adapts to your CIMA exam preparation needs.",
+      title: "Adaptive Learning",
+      description: "Focus on what matters most. Our system prioritizes topics where you need the most improvement.",
     },
     {
       icon: BarChart2,
-      title: "CIMA Progress Tracking",
-      description: "Track your improvement across all CIMA competencies with intuitive charts aligned to exam requirements.",
+      title: "Visual Progress Tracking",
+      description: "See your improvement across all competencies with beautiful, intuitive charts and insights.",
     },
     {
       icon: FileQuestion,
-      title: "CIMA Mock Exams",
-      description: "Practice with 5,000+ CIMA-style questions and realistic mock exams that mirror actual CIMA exam format.",
+      title: "Realistic Mock Exams",
+      description: "Practice with exam-style questions and get instant breakdowns of your performance.",
     },
     {
       icon: Smartphone,
-      title: "Mobile CIMA Study",
-      description: "Study for your CIMA exams anywhere. Fully responsive platform for phone, tablet, and desktop.",
+      title: "Phone Compatible",
+      description: "Access your studies from any device. Our responsive platform works seamlessly on phones, tablets, and desktops.",
     },
     {
       icon: Zap,
-      title: "Instant CIMA Feedback",
-      description: "Get immediate explanations for every CIMA question, helping you learn from mistakes and improve faster.",
+      title: "Instant Feedback",
+      description: "Get immediate explanations for every question, helping you learn from mistakes quickly.",
     },
   ];
 
   return (
     <section className="py-20 lg:py-32 bg-background hex-pattern">
       <div className="container mx-auto px-4">
-        {/* Header - CIMA optimized */}
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
-            CIMA Study Platform
-          </span>
           <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-            Why Choose <span className="text-primary">Finaptics</span> for CIMA
+            Why Choose <span className="text-primary">Finaptics</span>
           </h2>
           <p className="text-lg text-muted-foreground">
-            Our CIMA course platform goes beyond traditional learning with data-driven insights that help you pass your CIMA exams first time.
+            Our platform goes beyond traditional learning with data-driven insights that help you pass first time.
           </p>
         </div>
 

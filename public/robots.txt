@@ -1,23 +1,8 @@
-# Finaptics - CIMA Study Platform
-# https://finaptics.com
-
 User-agent: Googlebot
 Allow: /
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /account
-Disallow: /quiz/
-Disallow: /exam/
-Disallow: /mock-exam/
 
 User-agent: Bingbot
 Allow: /
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /account
-Disallow: /quiz/
-Disallow: /exam/
-Disallow: /mock-exam/
 
 User-agent: Twitterbot
 Allow: /
@@ -27,15 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /account
-Disallow: /quiz/
-Disallow: /exam/
-Disallow: /mock-exam/
-
-# Static sitemap
-Sitemap: https://finaptics.com/sitemap.xml
 
 # Dynamic sitemap generated from database
 Sitemap: https://itsbzlmixdigsbzuzpbi.supabase.co/functions/v1/generate-sitemap

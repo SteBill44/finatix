@@ -5,7 +5,6 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
-import { SEO, breadcrumbSchema } from "@/components/SEO";
 import { 
   Search, 
   Clock, 
@@ -117,19 +116,8 @@ const Courses = () => {
     return slug.includes("case-study");
   };
 
-  const coursesStructuredData = breadcrumbSchema([
-    { name: 'Home', url: 'https://finaptics.com' },
-    { name: 'Courses', url: 'https://finaptics.com/courses' },
-  ]);
-
   return (
     <Layout>
-      <SEO
-        title="CIMA Courses"
-        description="Browse all CIMA courses from Certificate to Strategic level. BA1-BA4, E1-E3, P1-P3, F1-F3, and Case Studies. Expert-led video courses with practice questions and mock exams."
-        keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, E2, E3, P1, P2, P3, F1, F2, F3, case study, CIMA exams, management accounting courses"
-        structuredData={coursesStructuredData}
-      />
       {/* Hero Section */}
       <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
         {/* Animated gradient orbs for light mode visual interest */}

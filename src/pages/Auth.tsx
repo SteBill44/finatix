@@ -10,7 +10,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
-import { SEO } from "@/components/SEO";
 
 // Password validation helper
 const passwordRequirements = [
@@ -321,18 +320,8 @@ const Auth = () => {
 
   const header = getHeaderContent();
 
-  const seoTitle = mode === "signup" ? "Create Account" : mode === "forgot" ? "Reset Password" : "Sign In";
-  const seoDescription = mode === "signup" 
-    ? "Create your Finaptics account to access CIMA courses, practice questions, and mock exams. Start your journey to becoming CIMA qualified."
-    : "Sign in to your Finaptics account to continue your CIMA studies. Access your courses, track progress, and practice exams.";
-
   return (
     <Layout>
-      <SEO
-        title={seoTitle}
-        description={seoDescription}
-        noindex={mode === "reset"}
-      />
       <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20 hex-pattern">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">

@@ -18,7 +18,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
-import { SEO, createFAQSchema, breadcrumbSchema } from "@/components/SEO";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -73,25 +72,8 @@ const Contact = () => {
     },
   ];
 
-  const contactStructuredData = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      createFAQSchema(faqs),
-      breadcrumbSchema([
-        { name: 'Home', url: 'https://finaptics.com' },
-        { name: 'Contact', url: 'https://finaptics.com/contact' },
-      ]),
-    ],
-  };
-
   return (
     <Layout>
-      <SEO
-        title="Contact Us"
-        description="Get in touch with Finaptics support team. Find answers to FAQs about CIMA courses, mock exams, refunds, and platform features. Email, phone, and live chat available."
-        keywords="contact Finaptics, CIMA support, customer service, help, FAQ"
-        structuredData={contactStructuredData}
-      />
       {/* Hero */}
       <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />

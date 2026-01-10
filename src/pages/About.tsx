@@ -10,7 +10,6 @@ import {
   Lightbulb,
   ArrowRight
 } from "lucide-react";
-import { SEO, organizationSchema, breadcrumbSchema } from "@/components/SEO";
 
 const About = () => {
   const values = [
@@ -37,25 +36,8 @@ const About = () => {
   ];
 
 
-  const aboutStructuredData = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      organizationSchema,
-      breadcrumbSchema([
-        { name: 'Home', url: 'https://finaptics.com' },
-        { name: 'About', url: 'https://finaptics.com/about' },
-      ]),
-    ],
-  };
-
   return (
     <Layout>
-      <SEO
-        title="About Us"
-        description="Learn about Finaptics - the modern CIMA study platform helping students pass their exams first time with competency-based analytics and adaptive learning."
-        keywords="about Finaptics, CIMA study platform, CIMA education, management accounting training"
-        structuredData={aboutStructuredData}
-      />
       {/* Hero */}
       <section className="relative py-14 lg:py-20 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
