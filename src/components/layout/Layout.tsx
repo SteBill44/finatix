@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
 import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
+import BackToTop from "../BackToTop";
 import { useTrackUserPresence } from "@/hooks/useActiveUsers";
 
 interface LayoutProps {
@@ -24,6 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <Footer className="hidden lg:block" />
       <MobileBottomNav />
+      <BackToTop />
     </div>
   );
 };
