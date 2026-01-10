@@ -8,6 +8,7 @@ import { useCourses, useEnrollments, useEnrollInCourse, useEnrollInMultipleCours
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
+import { SEO, breadcrumbSchema } from "@/components/SEO";
 
 const Pricing = () => {
   const navigate = useNavigate();
@@ -212,8 +213,19 @@ const Pricing = () => {
     { feature: "Lower pricing", us: true, kaplan: false },
   ];
 
+  const pricingStructuredData = breadcrumbSchema([
+    { name: 'Home', url: 'https://finaptics.com' },
+    { name: 'Pricing', url: 'https://finaptics.com/pricing' },
+  ]);
+
   return (
     <Layout>
+      <SEO
+        title="Pricing"
+        description="Transparent CIMA course pricing. Choose single modules from £149, full level bundles for £449, or unlimited lifetime access for £999. 30-day money-back guarantee."
+        keywords="CIMA course pricing, CIMA exam cost, management accounting course fees, CIMA study materials price"
+        structuredData={pricingStructuredData}
+      />
       {/* Hero */}
       <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />
