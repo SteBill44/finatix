@@ -88,7 +88,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-bold text-foreground">
-              Fin<span className="text-primary">aptics</span>
+              Fin<span className="text-primary">atix</span>
             </span>
           </Link>
 

@@ -13,7 +13,7 @@ const CourseLevels = () => {
     {
       number: "01",
       title: "Create your account",
-      description: "Join the Finaptics platform and benefit from our free and paid training courses.",
+      description: "Join the Finatix platform and benefit from our free and paid training courses.",
       features: [
         "Register your account for free",
         "No credit card details required",

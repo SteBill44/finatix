@@ -76,7 +76,7 @@ const About = () => {
               Transforming CIMA Education for the Digital Age
             </h2>
             <p className="text-muted-foreground mb-4">
-              At Finaptics, we combine modern learning science with beautiful technology to create 
+              At Finatix, we combine modern learning science with beautiful technology to create 
               an intuitive, engaging study experience. Our platform adapts to your learning style, 
               provides real-time insights into your progress, and delivers content that truly resonates.
             </p>
@@ -106,7 +106,7 @@ const About = () => {
               What Drives Us
             </h2>
             <p className="text-muted-foreground">
-              These core principles guide everything we do at Finaptics
+              These core principles guide everything we do at Finatix
             </p>
           </div>
 

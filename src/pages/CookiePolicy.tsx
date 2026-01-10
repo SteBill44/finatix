@@ -99,8 +99,8 @@ const CookiePolicy = () => {
             <h2 className="text-2xl font-semibold mb-4">6. Contact Us</h2>
             <p className="text-muted-foreground">
               If you have questions about our use of cookies, please contact us at{" "}
-              <a href="mailto:privacy@finaptics.com" className="text-primary hover:underline">
-                privacy@finaptics.com
+              <a href="mailto:privacy@finatix.com" className="text-primary hover:underline">
+                privacy@finatix.com
               </a>
             </p>
           </section>

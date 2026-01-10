@@ -15,7 +15,7 @@ const helpCategories = [
   {
     icon: BookOpen,
     title: "Getting Started",
-    description: "Learn the basics of using Finaptics",
+    description: "Learn the basics of using Finatix",
     faqs: [
       {
         question: "How do I create an account?",
@@ -27,7 +27,7 @@ const helpCategories = [
       },
       {
         question: "What are the system requirements?",
-        answer: "Finaptics works on any modern web browser (Chrome, Firefox, Safari, Edge). We recommend a stable internet connection for video content. Mobile devices are fully supported."
+        answer: "Finatix works on any modern web browser (Chrome, Firefox, Safari, Edge). We recommend a stable internet connection for video content. Mobile devices are fully supported."
       }
     ]
   },

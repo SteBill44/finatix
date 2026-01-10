@@ -11,14 +11,14 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
             <p className="text-muted-foreground">
-              By accessing or using Finaptics ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
+              By accessing or using Finatix ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mb-4">2. Description of Service</h2>
             <p className="text-muted-foreground">
-              Finaptics provides online educational content and resources for CIMA (Chartered Institute of Management Accountants) exam preparation, including but not limited to video lessons, practice questions, mock exams, and study materials.
+              Finatix provides online educational content and resources for CIMA (Chartered Institute of Management Accountants) exam preparation, including but not limited to video lessons, practice questions, mock exams, and study materials.
             </p>
           </section>
 
@@ -61,7 +61,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">6. Intellectual Property</h2>
             <p className="text-muted-foreground">
-              All content on Finaptics, including text, graphics, logos, videos, and software, is the property of Finaptics or its content suppliers and is protected by intellectual property laws. Unauthorized use may violate copyright, trademark, and other laws.
+              All content on Finatix, including text, graphics, logos, videos, and software, is the property of Finatix or its content suppliers and is protected by intellectual property laws. Unauthorized use may violate copyright, trademark, and other laws.
             </p>
           </section>
 
@@ -90,7 +90,7 @@ const TermsOfService = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">9. Limitation of Liability</h2>
             <p className="text-muted-foreground">
-              To the maximum extent permitted by law, Finaptics shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or other intangible losses, resulting from your use of the Service.
+              To the maximum extent permitted by law, Finatix shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or other intangible losses, resulting from your use of the Service.
             </p>
           </section>
 
@@ -119,8 +119,8 @@ const TermsOfService = () => {
             <h2 className="text-2xl font-semibold mb-4">13. Contact Information</h2>
             <p className="text-muted-foreground">
               If you have questions about these Terms, please contact us at{" "}
-              <a href="mailto:legal@finaptics.com" className="text-primary hover:underline">
-                legal@finaptics.com
+              <a href="mailto:legal@finatix.com" className="text-primary hover:underline">
+                legal@finatix.com
               </a>
             </p>
           </section>
