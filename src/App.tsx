@@ -12,6 +12,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
+import FaviconManager from "@/components/FaviconManager";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -73,6 +74,7 @@ const App = () => {
 
   return (
     <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
+      <FaviconManager />
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <CookieConsentProvider>
