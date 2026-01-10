@@ -271,7 +271,7 @@ const Auth = () => {
         } else {
           toast({
             title: "Account created!",
-            description: "Welcome to Finaptics. You can now access your dashboard.",
+            description: "Welcome to Finatix. You can now access your dashboard.",
           });
           navigate("/dashboard");
         }

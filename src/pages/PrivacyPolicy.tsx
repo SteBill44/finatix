@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-muted-foreground">
-              Finaptics ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our learning management system and related services.
+              Finatix ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our learning management system and related services.
             </p>
           </section>
 
@@ -80,8 +80,8 @@ const PrivacyPolicy = () => {
             <h2 className="text-2xl font-semibold mb-4">7. Contact Us</h2>
             <p className="text-muted-foreground">
               If you have questions about this Privacy Policy, please contact us at{" "}
-              <a href="mailto:privacy@finaptics.com" className="text-primary hover:underline">
-                privacy@finaptics.com
+              <a href="mailto:privacy@finatix.com" className="text-primary hover:underline">
+                privacy@finatix.com
               </a>
             </p>
           </section>

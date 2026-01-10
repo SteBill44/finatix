@@ -50,7 +50,7 @@ const LoadingScreen = ({ onLoadingComplete, minDuration = 1500 }: LoadingScreenP
         {/* Brand name */}
         <div className="flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: "0.3s" }}>
           <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-            Finaptics
+            Finatix
           </h1>
           <p className="text-sm md:text-base text-muted-foreground">
             CIMA Study Platform

@@ -49,7 +49,7 @@ const Footer = ({ className }: FooterProps) => {
           <div className="lg:col-span-1">
             <Link to="/" className="inline-block mb-4">
               <span className="text-xl font-bold">
-                Fin<span className="text-primary">aptics</span>
+                Fin<span className="text-primary">atix</span>
               </span>
             </Link>
             <p className="text-background/60 text-sm mb-6">
@@ -141,7 +141,7 @@ const Footer = ({ className }: FooterProps) => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-background/10 text-center">
           <p className="text-sm text-background/40">
-            © {currentYear} Finaptics. All rights reserved.
+            © {currentYear} Finatix. All rights reserved.
           </p>
         </div>
       </div>
