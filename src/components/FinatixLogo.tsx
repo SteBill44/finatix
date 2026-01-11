@@ -45,42 +45,95 @@ const FinatixLogo = ({
 
   const LogoIcon = (
     <div className={cn(
-      "relative rounded-2xl bg-teal-600 flex items-center justify-center shadow-xl shadow-teal-500/30",
+      "relative flex items-center justify-center",
       config.container,
       animated && "animate-scale-in",
       className
     )}>
       {animated && (
         <>
-          {/* Pulsing ring */}
-          <div className="absolute inset-0 rounded-2xl border-2 border-teal-400/60 animate-ping" style={{ animationDuration: "2s" }} />
-          {/* Secondary glow ring */}
-          <div className="absolute -inset-2 rounded-3xl border border-teal-500/30 animate-pulse" style={{ animationDuration: "3s" }} />
+          {/* Rotating outer ring */}
+          <div 
+            className="absolute inset-0 rounded-xl border-2 border-primary/40 animate-spin" 
+            style={{ animationDuration: "3s" }} 
+          />
+          {/* Pulsing glow */}
+          <div 
+            className="absolute -inset-1 rounded-xl bg-primary/20 animate-pulse blur-sm" 
+            style={{ animationDuration: "1.5s" }} 
+          />
         </>
       )}
       <svg 
         viewBox="0 0 100 100" 
-        className={cn(config.icon, "transition-transform duration-300")}
+        className={cn(config.container, "transition-transform duration-300")}
         fill="none"
       >
-        {/* Main F shape */}
+        <defs>
+          {/* Modern gradient */}
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(var(--primary))" />
+            <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.7" />
+          </linearGradient>
+          {/* Accent gradient for geometric elements */}
+          <linearGradient id="accentGradient" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
+        
+        {/* Geometric base - hexagonal inspired shape */}
         <path
-          d="M25 20 L70 20 L70 32 L45 32 L45 45 L65 45 L65 57 L45 57 L45 80 L33 80 L33 32 L25 32 L25 20 Z"
-          fill="white"
-          className={animated ? "animate-[pulse_2s_ease-in-out_infinite]" : ""}
-          style={animated ? { animationDelay: "0.2s" } : {}}
+          d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z"
+          fill="url(#logoGradient)"
+          className={animated ? "animate-pulse" : ""}
+          style={animated ? { animationDuration: "2s" } : {}}
         />
-        {/* Accent corner cut */}
+        
+        {/* Angular accent cut - top right */}
         <path
-          d="M60 20 L70 20 L70 30 Z"
-          fill="rgba(255,255,255,0.6)"
+          d="M70 5 L90 25 L90 15 L80 5 Z"
+          fill="hsl(var(--primary))"
+          opacity="0.5"
+        />
+        
+        {/* Modern geometric F */}
+        <g>
+          {/* Vertical bar */}
+          <path
+            d="M32 28 L42 28 L42 72 L32 72 Z"
+            fill="url(#accentGradient)"
+          />
+          
+          {/* Top horizontal bar - angled */}
+          <path
+            d="M42 28 L68 28 L72 33 L68 38 L42 38 Z"
+            fill="url(#accentGradient)"
+          />
+          
+          {/* Middle horizontal bar - shorter, angled */}
+          <path
+            d="M42 46 L58 46 L62 51 L58 56 L42 56 Z"
+            fill="url(#accentGradient)"
+          />
+        </g>
+        
+        {/* Subtle geometric accent line */}
+        <path
+          d="M72 33 L78 40 L78 45 L72 38 Z"
+          fill="hsl(var(--primary-foreground))"
+          opacity="0.3"
         />
       </svg>
     </div>
   );
 
   const LogoText = showText && (
-    <span className={cn("font-bold text-foreground transition-colors duration-300", config.text)}>
+    <span className={cn(
+      "font-bold text-foreground transition-colors duration-300 tracking-tight",
+      config.text
+    )}>
       Fin<span className="text-primary">atix</span>
     </span>
   );
@@ -96,7 +149,7 @@ const FinatixLogo = ({
     return (
       <Link 
         to={linkTo} 
-        className="group inline-flex items-center gap-2 [&>div>div]:group-hover:shadow-lg [&>div>div]:group-hover:shadow-teal-500/40 [&>div>div]:group-hover:scale-110 [&>div>div]:transition-all [&>div>div]:duration-300"
+        className="group inline-flex items-center gap-2 [&_svg]:group-hover:scale-110 [&_svg]:transition-transform [&_svg]:duration-300"
       >
         {content}
       </Link>
