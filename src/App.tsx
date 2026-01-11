@@ -13,6 +13,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
 import FaviconManager from "@/components/FaviconManager";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -35,7 +36,28 @@ import CookiePolicy from "./pages/CookiePolicy";
 import HelpCentre from "./pages/HelpCentre";
 import TermsOfService from "./pages/TermsOfService";
 
-const queryClient = new QueryClient();
+// Configure QueryClient with global error handling
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // Don't retry on auth errors or 4xx errors
+        const err = error as { status?: number; message?: string };
+        if (err.status && err.status >= 400 && err.status < 500) {
+          return false;
+        }
+        // Retry up to 2 times for network/server errors
+        return failureCount < 2;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+      staleTime: 30 * 1000, // 30 seconds default
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: false, // Don't retry mutations by default
+    },
+  },
+});
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -73,27 +95,29 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
-      <FaviconManager />
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <CookieConsentProvider>
-            <TooltipProvider>
-              {isLoading && (
-                <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
-              )}
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <ScrollToTop />
-                <AnimatedRoutes />
-                <CookieConsent />
-              </BrowserRouter>
-            </TooltipProvider>
-          </CookieConsentProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
+        <FaviconManager />
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <CookieConsentProvider>
+              <TooltipProvider>
+                {isLoading && (
+                  <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+                )}
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                  <ScrollToTop />
+                  <AnimatedRoutes />
+                  <CookieConsent />
+                </BrowserRouter>
+              </TooltipProvider>
+            </CookieConsentProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 
