@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
+import FinatixLogo from "@/components/FinatixLogo";
 
 // Password validation helper
 const passwordRequirements = [
@@ -340,6 +341,9 @@ const Auth = () => {
 
               {/* Header */}
               <div className="text-center mb-8">
+                <div className="flex justify-center mb-6">
+                  <FinatixLogo size="lg" showText={false} linkTo={null} />
+                </div>
                 <h1 className="text-2xl font-bold text-foreground mb-2">
                   {header.title}
                 </h1>
