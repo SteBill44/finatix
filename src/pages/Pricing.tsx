@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, X, Zap, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -214,6 +215,11 @@ const Pricing = () => {
 
   return (
     <Layout>
+      <SEOHead 
+        title="Pricing"
+        description="Affordable CIMA training packages. Choose individual modules, full level bundles, or unlimited lifetime access. Competitive pricing with flexible payment options."
+        keywords="CIMA pricing, CIMA course fees, CIMA training cost, affordable CIMA courses"
+      />
       {/* Hero */}
       <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />

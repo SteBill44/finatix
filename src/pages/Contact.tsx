@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,8 +9,7 @@ import {
   Phone, 
   MapPin, 
   MessageSquare,
-  Send,
-  ChevronDown
+  Send
 } from "lucide-react";
 import {
   Accordion,
@@ -74,6 +74,11 @@ const Contact = () => {
 
   return (
     <Layout>
+      <SEOHead 
+        title="Contact Us"
+        description="Get in touch with the Finatix team. We're here to help with your CIMA training questions, technical support, or course inquiries."
+        keywords="contact Finatix, CIMA support, help, customer service"
+      />
       {/* Hero */}
       <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />

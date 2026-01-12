@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -323,6 +324,11 @@ const Auth = () => {
 
   return (
     <Layout>
+      <SEOHead 
+        title={mode === "signup" ? "Sign Up" : mode === "forgot" ? "Reset Password" : "Sign In"}
+        description={mode === "signup" ? "Create your Finatix account and start your CIMA journey today." : "Sign in to access your CIMA courses and track your progress."}
+        noIndex
+      />
       <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20 hex-pattern">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">

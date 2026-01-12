@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { 
@@ -38,6 +39,11 @@ const About = () => {
 
   return (
     <Layout>
+      <SEOHead 
+        title="About Us"
+        description="Learn about Finatix and our mission to help CIMA students succeed. Our student-focused approach and innovative platform transforms CIMA education."
+        keywords="Finatix, about, CIMA training, management accounting education"
+      />
       {/* Hero */}
       <section className="relative py-14 lg:py-20 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
