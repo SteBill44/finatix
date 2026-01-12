@@ -5,6 +5,7 @@ import MobileBottomNav from "./MobileBottomNav";
 import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
 import BackToTop from "../BackToTop";
+import { NetworkStatusIndicator, OfflineBanner } from "../NetworkStatusIndicator";
 import { useTrackUserPresence } from "@/hooks/useActiveUsers";
 
 interface LayoutProps {
@@ -18,6 +19,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <ScrollProgressBar />
+      <NetworkStatusIndicator />
       <DynamicBackground />
       <Navbar />
       <main className="flex-1 pb-20 lg:pb-0">
@@ -26,6 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Footer className="hidden lg:block" />
       <MobileBottomNav />
       <BackToTop />
+      <OfflineBanner />
     </div>
   );
 };
