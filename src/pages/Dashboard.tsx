@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,6 +16,7 @@ import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import QuickActions from "@/components/dashboard/QuickActions";
 import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
+import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import {
   BookOpen,
   Clock,
@@ -65,8 +67,15 @@ const Dashboard = () => {
   if (enrollmentsLoading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <SEOHead title="Dashboard" noIndex />
+        <div className="pt-24 lg:pt-28 pb-12">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {[1, 2, 3, 4].map((i) => (
+                <DashboardCardSkeleton key={i} />
+              ))}
+            </div>
+          </div>
         </div>
       </Layout>
     );
@@ -74,6 +83,7 @@ const Dashboard = () => {
 
   return (
     <Layout>
+      <SEOHead title="Dashboard" noIndex />
       {/* Header */}
       <section className="relative pt-24 lg:pt-28 pb-12 lg:pb-16 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />

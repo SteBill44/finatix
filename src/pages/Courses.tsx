@@ -2,20 +2,20 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { CourseGridSkeleton } from "@/components/skeletons/ContentSkeletons";
 import { 
   Search, 
   Clock, 
-  Users, 
   Star, 
   BookOpen,
   BarChart3,
   Target,
   ArrowRight,
-  Award,
-  Loader2
+  Award
 } from "lucide-react";
 
 interface Course {
@@ -118,6 +118,11 @@ const Courses = () => {
 
   return (
     <Layout>
+      <SEOHead 
+        title="CIMA Courses"
+        description="Explore our comprehensive CIMA courses from Certificate level to Strategic Professional. Prepare for BA1-BA4, E1-E3, P1-P3, F1-F3, and Case Studies."
+        keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA exam prep"
+      />
       {/* Hero Section */}
       <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
         {/* Animated gradient orbs for light mode visual interest */}
@@ -215,8 +220,8 @@ const Courses = () => {
 
           {/* Loading State */}
           {isLoading && (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <div className="py-8">
+              <CourseGridSkeleton count={8} />
             </div>
           )}
 
