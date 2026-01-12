@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { createSanitizedMarkup } from "@/lib/sanitize";
 
 
 const Lesson = () => {
@@ -332,7 +333,7 @@ const Lesson = () => {
           {/* Lesson Content */}
           <div className="prose prose-slate dark:prose-invert max-w-none">
             {currentLesson.content ? (
-              <div dangerouslySetInnerHTML={{ __html: currentLesson.content }} />
+              <div dangerouslySetInnerHTML={createSanitizedMarkup(currentLesson.content)} />
             ) : (
               <Card className="p-8 text-center bg-secondary/30">
                 <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
