@@ -1,4 +1,37 @@
 // Centralized React Query cache configuration for optimal performance
+import { getNetworkStatus } from "@/hooks/useNetworkStatus";
+
+// Network-aware mutation wrapper for offline queuing
+export const withOfflineQueue = async <T>(
+  mutationFn: () => Promise<T>,
+  options?: { skipQueue?: boolean }
+): Promise<T> => {
+  const networkStatus = getNetworkStatus();
+  
+  if (!navigator.onLine && networkStatus && !options?.skipQueue) {
+    // Queue the request for later
+    networkStatus.queueRequest(mutationFn);
+    throw new Error("You're offline. This request has been queued and will be processed when you're back online.");
+  }
+  
+  try {
+    return await mutationFn();
+  } catch (error) {
+    // If it's a network error and we have network status, queue it
+    if (
+      error instanceof Error &&
+      (error.message.includes("Failed to fetch") || 
+       error.message.includes("NetworkError") ||
+       error.message.includes("network")) &&
+      networkStatus &&
+      !options?.skipQueue
+    ) {
+      networkStatus.queueRequest(mutationFn);
+      throw new Error("Network error. This request has been queued and will be processed when connection is restored.");
+    }
+    throw error;
+  }
+};
 
 export const queryConfigs = {
   // Static content - rarely changes
