@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
 import stepSuccessImg from "@/assets/course-step-3-success.jpg";
@@ -87,10 +88,11 @@ const CourseLevels = () => {
             {/* Image */}
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden shadow-lg">
-                <img 
+                <OptimizedImage 
                   src={step.image} 
                   alt={step.title}
-                  className={`w-full h-auto ${step.number === "02" ? "object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" : "object-cover aspect-[4/3]"}`}
+                  aspectRatio={step.number === "02" ? undefined : "video"}
+                  className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
                 />
               </div>
             </div>

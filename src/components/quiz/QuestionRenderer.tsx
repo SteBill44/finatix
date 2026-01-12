@@ -3,6 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import {
   DndContext,
   closestCenter,
@@ -378,10 +379,11 @@ const HotspotQuestion = ({
       </p>
       <div className="relative inline-block">
         {question.image_url ? (
-          <img
+          <OptimizedImage
             src={question.image_url}
             alt="Question image"
             className="max-w-full rounded-lg border border-border"
+            priority
           />
         ) : (
           <div className="w-full h-64 bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
