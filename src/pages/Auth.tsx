@@ -494,7 +494,7 @@ const Auth = () => {
                     {mode === "signup" && (
                       <>
                         <div className="space-y-2">
-                          <Label htmlFor="cimaId">CIMA ID (Optional)</Label>
+                          <Label htmlFor="cimaId">CIMA ID</Label>
                           <div className="relative">
                             <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                             <Input
