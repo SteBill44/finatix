@@ -3,6 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import QualificationTimeline from "@/components/cima/QualificationTimeline";
 import { 
   GraduationCap, 
   Globe, 
@@ -49,44 +50,6 @@ const WhyCIMA = () => {
       icon: Building2,
       title: "Industry Demand",
       description: "CIMA skills are in high demand across sectors including finance, consulting, technology, and manufacturing."
-    }
-  ];
-
-  const qualificationLevels = [
-    {
-      level: "Certificate in Business Accounting",
-      subjects: ["Business Accounting Fundamentals", "Management Accounting Fundamentals", "Ethics, Corporate Governance & Business Law"],
-      description: "Foundation level covering essential accounting and business principles.",
-      duration: "6-12 months",
-      color: "from-blue-500/20 to-cyan-500/20"
-    },
-    {
-      level: "Operational Level",
-      subjects: ["E1 - Managing Finance in a Digital World", "P1 - Management Accounting", "F1 - Financial Reporting"],
-      description: "Focus on operational decision-making and core financial skills.",
-      duration: "12-18 months",
-      color: "from-emerald-500/20 to-green-500/20"
-    },
-    {
-      level: "Management Level",
-      subjects: ["E2 - Managing Performance", "P2 - Advanced Management Accounting", "F2 - Advanced Financial Reporting"],
-      description: "Develop skills for middle management and strategic planning.",
-      duration: "12-18 months",
-      color: "from-amber-500/20 to-orange-500/20"
-    },
-    {
-      level: "Strategic Level",
-      subjects: ["E3 - Strategic Management", "P3 - Risk Management", "F3 - Financial Strategy"],
-      description: "Master strategic leadership and executive decision-making.",
-      duration: "12-18 months",
-      color: "from-purple-500/20 to-pink-500/20"
-    },
-    {
-      level: "Strategic Case Study",
-      subjects: ["Integrated Case Study Exam"],
-      description: "Apply all your knowledge in a realistic business scenario examination.",
-      duration: "3-6 months",
-      color: "from-primary/20 to-primary/10"
     }
   ];
 
@@ -193,7 +156,7 @@ const WhyCIMA = () => {
         </div>
       </section>
 
-      {/* Qualification Pathway */}
+      {/* Interactive Qualification Pathway */}
       <section className="py-16 md:py-24 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -205,38 +168,7 @@ const WhyCIMA = () => {
             </p>
           </div>
           
-          <div className="max-w-4xl mx-auto space-y-6">
-            {qualificationLevels.map((level, index) => (
-              <Card key={index} className={`overflow-hidden bg-gradient-to-r ${level.color} border-0`}>
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-start gap-4">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-foreground/10 text-foreground font-bold shrink-0">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
-                        <h3 className="text-lg font-semibold text-foreground">{level.level}</h3>
-                        <span className="text-sm text-muted-foreground bg-background/50 px-3 py-1 rounded-full w-fit">
-                          {level.duration}
-                        </span>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">{level.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {level.subjects.map((subject, subIndex) => (
-                          <span 
-                            key={subIndex}
-                            className="text-xs bg-background/70 text-foreground px-3 py-1 rounded-full"
-                          >
-                            {subject}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <QualificationTimeline />
         </div>
       </section>
 
