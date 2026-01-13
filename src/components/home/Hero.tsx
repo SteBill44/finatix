@@ -154,20 +154,31 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4">
             <Link to="/auth?mode=signup">
-              <Button size="xl" className="shadow-lg shadow-primary/20 group">
+              <Button 
+                size="xl" 
+                className="shadow-lg shadow-primary/20 group transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
+              >
                 Register for Free
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
             <Link to="/courses">
-              <Button size="xl" variant="outline" className="shadow-sm bg-background/80 backdrop-blur-sm group">
-                <BookOpen className="mr-2 h-5 w-5" />
+              <Button 
+                size="xl" 
+                variant="outline" 
+                className="shadow-sm bg-background/80 backdrop-blur-sm group transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-primary/50"
+              >
+                <BookOpen className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                 Explore courses
               </Button>
             </Link>
             <Link to="/why-cima">
-              <Button size="xl" variant="ghost" className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80 group">
-                <HelpCircle className="mr-2 h-5 w-5" />
+              <Button 
+                size="xl" 
+                variant="ghost" 
+                className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80 group transition-all duration-300 hover:scale-105 hover:shadow-md"
+              >
+                <HelpCircle className="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" />
                 Why CIMA?
               </Button>
             </Link>
