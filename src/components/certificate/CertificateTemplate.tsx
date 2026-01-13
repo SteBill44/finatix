@@ -17,6 +17,9 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
       "MMMM d, yyyy"
     );
 
+    // Remove course code prefix (e.g., "BA1 - ", "P1 - ", etc.)
+    const cleanCourseName = courseName.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "");
+
     return (
       <div
         ref={ref}
@@ -146,7 +149,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               className="text-2xl md:text-3xl font-semibold mt-4"
               style={{ color: "hsl(174, 72%, 35%)" }}
             >
-              {courseName}
+              {cleanCourseName}
             </h3>
             
             <p className="text-gray-500 mt-6">
@@ -168,9 +171,9 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             {/* Signatures and date */}
             <div className="flex justify-between items-end w-full max-w-xl">
               <div className="flex flex-col items-center">
-                <div className="w-40 border-b border-gray-300 mb-2" />
-                <span className="text-sm text-gray-500">Date of Issue</span>
-                <span className="text-sm font-medium text-gray-700">{formattedDate}</span>
+                <span className="text-sm font-medium text-gray-700 mb-1">{formattedDate}</span>
+                <div className="w-40 border-b border-gray-300" />
+                <span className="text-sm text-gray-500 mt-1">Date of Issue</span>
               </div>
 
               <div className="flex flex-col items-center">
@@ -184,11 +187,11 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               </div>
 
               <div className="flex flex-col items-center">
-                <div className="w-40 border-b border-gray-300 mb-2" />
-                <span className="text-sm text-gray-500">Certificate No.</span>
-                <span className="text-sm font-medium text-gray-700 font-mono">
+                <span className="text-sm font-medium text-gray-700 font-mono mb-1">
                   {certificateNumber}
                 </span>
+                <div className="w-40 border-b border-gray-300" />
+                <span className="text-sm text-gray-500 mt-1">Certificate No.</span>
               </div>
             </div>
           </div>
