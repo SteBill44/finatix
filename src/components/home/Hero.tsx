@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, HelpCircle } from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -187,7 +187,7 @@ const Hero = () => {
                 variant="outline" 
                 className="shadow-sm bg-background/80 backdrop-blur-sm group transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-primary/50"
               >
-                <HelpCircle className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
+                <GraduationCap className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                 Why CIMA?
               </Button>
             </Link>
