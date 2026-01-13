@@ -70,61 +70,31 @@ const FinatixLogo = ({
         fill="none"
       >
         <defs>
-          {/* Modern gradient */}
           <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="50%" stopColor="hsl(var(--primary))" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.7" />
-          </linearGradient>
-          {/* Accent gradient for geometric elements */}
-          <linearGradient id="accentGradient" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="hsl(var(--primary-foreground))" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.85" />
           </linearGradient>
         </defs>
         
-        {/* Geometric base - hexagonal inspired shape */}
+        {/* Clean hexagon shape */}
         <path
-          d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z"
+          d="M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z"
           fill="url(#logoGradient)"
           className={animated ? "animate-pulse" : ""}
           style={animated ? { animationDuration: "2s" } : {}}
         />
         
-        {/* Angular accent cut - top right */}
-        <path
-          d="M70 5 L90 25 L90 15 L80 5 Z"
-          fill="hsl(var(--primary))"
-          opacity="0.5"
-        />
-        
-        {/* Modern geometric F */}
-        <g>
+        {/* Clean geometric F */}
+        <g fill="hsl(var(--primary-foreground))">
           {/* Vertical bar */}
-          <path
-            d="M32 28 L42 28 L42 72 L32 72 Z"
-            fill="url(#accentGradient)"
-          />
+          <rect x="30" y="28" width="12" height="44" />
           
-          {/* Top horizontal bar - angled */}
-          <path
-            d="M42 28 L68 28 L72 33 L68 38 L42 38 Z"
-            fill="url(#accentGradient)"
-          />
+          {/* Top horizontal bar */}
+          <rect x="42" y="28" width="28" height="10" />
           
-          {/* Middle horizontal bar - shorter, angled */}
-          <path
-            d="M42 46 L58 46 L62 51 L58 56 L42 56 Z"
-            fill="url(#accentGradient)"
-          />
+          {/* Middle horizontal bar */}
+          <rect x="42" y="46" width="20" height="10" />
         </g>
-        
-        {/* Subtle geometric accent line */}
-        <path
-          d="M72 33 L78 40 L78 45 L72 38 Z"
-          fill="hsl(var(--primary-foreground))"
-          opacity="0.3"
-        />
       </svg>
     </div>
   );
