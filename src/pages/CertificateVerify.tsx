@@ -80,7 +80,7 @@ const CertificateVerify = () => {
 
   return (
     <Layout>
-      <div className="container max-w-2xl py-12">
+      <div className="container max-w-2xl pt-20 pb-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
             Certificate Verification
