@@ -17,6 +17,7 @@ import { Loader2 } from "lucide-react";
 
 // Lazy load all page components
 const Index = lazy(() => import("./pages/Index"));
+const WhyCIMA = lazy(() => import("./pages/WhyCIMA"));
 const Courses = lazy(() => import("./pages/Courses"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const Lesson = lazy(() => import("./pages/Lesson"));
@@ -79,6 +80,7 @@ const AnimatedRoutes = () => {
       <Suspense fallback={<PageLoader />}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+          <Route path="/why-cima" element={<PageTransition><WhyCIMA /></PageTransition>} />
           <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
           <Route path="/courses/:courseId" element={<PageTransition><CourseDetail /></PageTransition>} />
           <Route path="/courses/:courseId/lesson/:lessonId" element={<PageTransition><Lesson /></PageTransition>} />
