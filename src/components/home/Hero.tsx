@@ -162,6 +162,11 @@ const Hero = () => {
                 Explore courses
               </Button>
             </Link>
+            <Link to="/why-cima">
+              <Button size="xl" variant="ghost" className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80">
+                Why CIMA?
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
