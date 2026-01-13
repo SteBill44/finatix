@@ -184,10 +184,10 @@ const Hero = () => {
             >
               <Button 
                 size="xl" 
-                variant="ghost" 
-                className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80 group transition-all duration-300 hover:scale-105 hover:shadow-md"
+                variant="outline" 
+                className="shadow-sm bg-background/80 backdrop-blur-sm group transition-all duration-300 hover:scale-105 hover:shadow-md hover:border-primary/50"
               >
-                <HelpCircle className="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" />
+                <HelpCircle className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                 Why CIMA?
               </Button>
             </Link>
