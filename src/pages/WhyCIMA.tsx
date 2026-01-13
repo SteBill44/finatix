@@ -24,7 +24,7 @@ const WhyCIMA = () => {
     {
       icon: Globe,
       title: "Global Recognition",
-      description: "CIMA is recognised in over 100 countries worldwide, opening doors to international career opportunities."
+      description: "CIMA is recognised in over 188 countries worldwide, opening doors to international career opportunities."
     },
     {
       icon: TrendingUp,
@@ -55,9 +55,9 @@ const WhyCIMA = () => {
 
   const salaryStats = [
     { label: "Average UK Salary", value: "£65,000+", icon: DollarSign },
-    { label: "Salary Premium", value: "25-40%", icon: TrendingUp },
-    { label: "Global Members", value: "150,000+", icon: Globe },
-    { label: "Countries", value: "100+", icon: Building2 }
+    { label: "Salary Premium", value: "Up to 25%", icon: TrendingUp },
+    { label: "Global Members", value: "150,000+", icon: Users },
+    { label: "Countries", value: "188+", icon: Globe }
   ];
 
   const careerPaths = [
