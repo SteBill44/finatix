@@ -131,6 +131,15 @@ const Pricing = () => {
     return acc;
   }, {} as Record<string, typeof courses>);
 
+  // Calculate total price of all courses dynamically
+  const totalAllCoursesPrice = courses?.reduce((sum, c) => sum + Number(c.price || 0), 0) || 0;
+  const allCoursesBundlePrice = 999;
+  const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
+  const allCoursesCount = courses?.length || 0;
+
+  // Level bundle price
+  const levelBundlePrice = 449;
+
   const levelOrder = ['certificate', 'operational', 'management', 'strategic'];
   const levelNames: Record<string, string> = {
     certificate: 'Certificate Level (Entry Level)',
@@ -261,25 +270,27 @@ const Pricing = () => {
               Choose individual modules or bundle an entire level for maximum savings.
             </p>
             
-            {/* Buy All 15 Courses Banner */}
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 bg-gradient-to-r from-primary/20 via-purple/20 to-red/20 rounded-2xl border border-primary/30">
-              <div className="text-center sm:text-left">
-                <p className="text-lg font-bold text-foreground">Complete CIMA Bundle - All 15 Courses</p>
-                <p className="text-sm text-muted-foreground">
-                  <span className="line-through">£2,235</span>
-                  <span className="ml-2 text-primary font-semibold">£999 lifetime access</span>
-                  <span className="ml-2 text-primary">Save £1,236!</span>
-                </p>
+            {/* Buy All Courses Banner */}
+            {totalAllCoursesPrice > 0 && (
+              <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 bg-gradient-to-r from-primary/20 via-purple/20 to-red/20 rounded-2xl border border-primary/30">
+                <div className="text-center sm:text-left">
+                  <p className="text-lg font-bold text-foreground">Complete CIMA Bundle - All {allCoursesCount} Courses</p>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="line-through">£{totalAllCoursesPrice.toLocaleString()}</span>
+                    <span className="ml-2 text-primary font-semibold">£{allCoursesBundlePrice.toLocaleString()} lifetime access</span>
+                    <span className="ml-2 text-primary">Save £{allCoursesSavings.toLocaleString()}!</span>
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
+                  disabled={enrollMultipleMutation.isPending}
+                  onClick={handleBuyAllCourses}
+                >
+                  {enrollMultipleMutation.isPending ? "Enrolling..." : `Buy All ${allCoursesCount} Courses`}
+                </Button>
               </div>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
-                disabled={enrollMultipleMutation.isPending}
-                onClick={handleBuyAllCourses}
-              >
-                {enrollMultipleMutation.isPending ? "Enrolling..." : "Buy All 15 Courses"}
-              </Button>
-            </div>
+            )}
           </div>
 
           <div className="max-w-4xl mx-auto space-y-8 mt-8">
@@ -317,7 +328,10 @@ const Pricing = () => {
                                 level === 'management' ? 'text-purple' : 
                                 'text-red'
                               }`}>
-                                £449 as bundle
+                                £{levelBundlePrice} as bundle
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Save £{levelTotal - levelBundlePrice}
                               </div>
                             </div>
                             <Button
