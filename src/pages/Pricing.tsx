@@ -9,6 +9,33 @@ import { useCourses, useEnrollments, useEnrollInCourse, useEnrollInMultipleCours
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+const AnimatedCard = ({ 
+  children, 
+  index, 
+  className = "" 
+}: { 
+  children: React.ReactNode; 
+  index: number; 
+  className?: string;
+}) => {
+  const { isVisible, elementRef } = useScrollAnimation({ threshold: 0.1 });
+  
+  return (
+    <div
+      ref={elementRef}
+      className={`transition-all duration-700 ${
+        isVisible 
+          ? 'opacity-100 translate-y-0' 
+          : 'opacity-0 translate-y-12'
+      } ${className}`}
+      style={{ transitionDelay: `${index * 150}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Pricing = () => {
   const navigate = useNavigate();
@@ -411,61 +438,62 @@ const Pricing = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan) => (
-              <div
-                key={plan.name}
-                className={`relative bg-card rounded-2xl border ${
-                  plan.popular ? "border-primary shadow-glow" : "border-border"
-                } p-8 hover-lift`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                  <p className="text-muted-foreground mb-6">{plan.description}</p>
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-5xl font-bold text-foreground">£{plan.price}</span>
-                    <span className="text-muted-foreground">/{plan.period}</span>
-                  </div>
-                  {plan.originalPrice && (
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      <span className="line-through">£{plan.originalPrice}</span>
-                      <span className="ml-2 text-primary font-medium">
-                        Save £{plan.originalPrice - plan.price}
-                      </span>
-                    </p>
-                  )}
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      {feature.included ? (
-                        <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      ) : (
-                        <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
-                      )}
-                      <span className={feature.included ? "text-foreground" : "text-muted-foreground/50"}>
-                        {feature.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  variant={plan.popular ? "default" : "outline"}
-                  size="lg"
-                  className="w-full"
+            {plans.map((plan, index) => (
+              <AnimatedCard key={plan.name} index={index}>
+                <div
+                  className={`relative bg-card rounded-2xl border ${
+                    plan.popular ? "border-primary shadow-glow" : "border-border"
+                  } p-8 hover-lift h-full`}
                 >
-                  {plan.cta}
-                </Button>
-              </div>
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
+                    <p className="text-muted-foreground mb-6">{plan.description}</p>
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-5xl font-bold text-foreground">£{plan.price}</span>
+                      <span className="text-muted-foreground">/{plan.period}</span>
+                    </div>
+                    {plan.originalPrice && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        <span className="line-through">£{plan.originalPrice}</span>
+                        <span className="ml-2 text-primary font-medium">
+                          Save £{plan.originalPrice - plan.price}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+
+                  <ul className="space-y-4 mb-8">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        {feature.included ? (
+                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                        ) : (
+                          <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
+                        )}
+                        <span className={feature.included ? "text-foreground" : "text-muted-foreground/50"}>
+                          {feature.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    variant={plan.popular ? "default" : "outline"}
+                    size="lg"
+                    className="w-full"
+                  >
+                    {plan.cta}
+                  </Button>
+                </div>
+              </AnimatedCard>
             ))}
           </div>
 
