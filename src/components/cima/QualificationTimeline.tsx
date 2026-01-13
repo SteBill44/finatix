@@ -16,6 +16,7 @@ interface TimelineLevel {
   id: string;
   title: string;
   shortTitle: string;
+  levelLabel: string;
   duration: string;
   totalMonths: number;
   cumulativeMonths: number;
@@ -32,6 +33,7 @@ const timelineLevels: TimelineLevel[] = [
     id: "certificate",
     title: "Certificate in Business Accounting",
     shortTitle: "Certificate",
+    levelLabel: "Foundation",
     duration: "6-12 months",
     totalMonths: 9,
     cumulativeMonths: 9,
@@ -51,6 +53,7 @@ const timelineLevels: TimelineLevel[] = [
     id: "operational",
     title: "Operational Level",
     shortTitle: "Operational",
+    levelLabel: "Level 1",
     duration: "12-18 months",
     totalMonths: 15,
     cumulativeMonths: 24,
@@ -70,6 +73,7 @@ const timelineLevels: TimelineLevel[] = [
     id: "management",
     title: "Management Level",
     shortTitle: "Management",
+    levelLabel: "Level 2",
     duration: "12-18 months",
     totalMonths: 15,
     cumulativeMonths: 39,
@@ -89,6 +93,7 @@ const timelineLevels: TimelineLevel[] = [
     id: "strategic",
     title: "Strategic Level",
     shortTitle: "Strategic",
+    levelLabel: "Level 3",
     duration: "12-18 months",
     totalMonths: 15,
     cumulativeMonths: 54,
@@ -252,7 +257,7 @@ const QualificationTimeline = () => {
                             "text-xs font-medium px-2 py-0.5 rounded-full",
                             level.bgColor
                           )}>
-                            Level {index + 1}
+                            {level.levelLabel}
                           </span>
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Clock className="w-3 h-3" />
