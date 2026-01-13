@@ -138,7 +138,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           {/* Main content */}
-          <div className="flex flex-col items-center text-center max-w-2xl">
+          <div className="flex flex-col items-center text-center max-w-2xl flex-1 justify-center">
             <p className="text-gray-500 text-lg">This is to certify that</p>
             
             <h2 className="text-3xl md:text-4xl font-semibold text-gray-800 mt-4 mb-2">
@@ -162,9 +162,9 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full pt-8">
             {/* Achievement badge */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-8">
               <Award className="w-5 h-5" style={{ color: "hsl(174, 72%, 40%)" }} />
               <span className="text-sm font-medium text-gray-600">
                 Professional Certification
@@ -172,32 +172,32 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               <CheckCircle2 className="w-5 h-5 text-green-500" />
             </div>
 
-            {/* Signatures and date */}
-            <div className="flex justify-between items-end w-full max-w-xl">
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-medium text-gray-700 mb-1">{formattedDate}</span>
-                <div className="w-40 border-b border-gray-300" />
-                <span className="text-sm text-gray-500 mt-1">Date of Issue</span>
+            {/* Signatures, QR code, and date */}
+            <div className="flex justify-between items-center w-full max-w-2xl px-4">
+              <div className="flex flex-col items-center min-w-[140px]">
+                <span className="text-sm font-medium text-gray-700 mb-2">{formattedDate}</span>
+                <div className="w-32 border-b border-gray-300" />
+                <span className="text-xs text-gray-500 mt-2">Date of Issue</span>
               </div>
 
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center mx-8">
                 <div className="p-2 bg-white rounded-lg shadow-sm border border-gray-200">
                   <QRCode
                     value={verificationUrl}
-                    size={56}
+                    size={64}
                     level="M"
                     fgColor="hsl(174, 72%, 35%)"
                   />
                 </div>
-                <span className="text-xs text-gray-400 mt-1">Scan to verify</span>
+                <span className="text-xs text-gray-400 mt-2">Scan to verify</span>
               </div>
 
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-medium text-gray-700 font-mono mb-1">
+              <div className="flex flex-col items-center min-w-[140px]">
+                <span className="text-xs font-medium text-gray-700 font-mono mb-2">
                   {certificateNumber}
                 </span>
-                <div className="w-40 border-b border-gray-300" />
-                <span className="text-sm text-gray-500 mt-1">Certificate No.</span>
+                <div className="w-32 border-b border-gray-300" />
+                <span className="text-xs text-gray-500 mt-2">Certificate No.</span>
               </div>
             </div>
           </div>
