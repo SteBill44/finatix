@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, BookOpen, HelpCircle } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -153,17 +154,20 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4">
             <Link to="/auth?mode=signup">
-              <Button size="xl" className="shadow-lg shadow-primary/20">
+              <Button size="xl" className="shadow-lg shadow-primary/20 group">
                 Register for Free
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
             <Link to="/courses">
-              <Button size="xl" variant="outline" className="shadow-sm bg-background/80 backdrop-blur-sm">
+              <Button size="xl" variant="outline" className="shadow-sm bg-background/80 backdrop-blur-sm group">
+                <BookOpen className="mr-2 h-5 w-5" />
                 Explore courses
               </Button>
             </Link>
             <Link to="/why-cima">
-              <Button size="xl" variant="ghost" className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80">
+              <Button size="xl" variant="ghost" className="shadow-sm bg-background/50 backdrop-blur-sm hover:bg-background/80 group">
+                <HelpCircle className="mr-2 h-5 w-5" />
                 Why CIMA?
               </Button>
             </Link>
