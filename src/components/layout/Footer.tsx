@@ -18,6 +18,7 @@ const Footer = ({ className }: FooterProps) => {
       { name: "Case Study", path: "/courses?level=case-study" },
     ],
     company: [
+      { name: "Why CIMA?", path: "/why-cima" },
       { name: "About Us", path: "/about" },
       { name: "Pricing", path: "/pricing" },
     ],
