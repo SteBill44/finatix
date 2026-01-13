@@ -1,20 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, GraduationCap, Users, Award, TrendingUp } from "lucide-react";
-import { useCountUp } from "@/hooks/useCountUp";
-
-const StatCounter = ({ end, suffix, label, delay }: { end: number; suffix: string; label: string; delay: number }) => {
-  const { count, elementRef } = useCountUp({ end, duration: 2000, delay });
-  
-  return (
-    <div ref={elementRef} className="text-center">
-      <div className="text-3xl md:text-4xl font-bold text-primary">
-        {count.toLocaleString()}{suffix}
-      </div>
-      <div className="text-sm text-muted-foreground mt-1">{label}</div>
-    </div>
-  );
-};
+import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -207,27 +193,6 @@ const Hero = () => {
             </Link>
           </div>
 
-          {/* Stats Counter */}
-          <div className="mt-16 grid grid-cols-3 gap-8 max-w-xl opacity-0 animate-[fade-in_0.6s_ease-out_1s_forwards]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Users className="w-5 h-5 text-primary" />
-              </div>
-              <StatCounter end={10000} suffix="+" label="Students" delay={200} />
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Award className="w-5 h-5 text-primary" />
-              </div>
-              <StatCounter end={15} suffix="" label="Courses" delay={400} />
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-primary" />
-              </div>
-              <StatCounter end={94} suffix="%" label="Pass Rate" delay={600} />
-            </div>
-          </div>
         </div>
       </div>
     </section>
