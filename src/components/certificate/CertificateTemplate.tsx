@@ -27,7 +27,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
     return (
       <div
         ref={ref}
-        className={`relative w-full aspect-[1.414/1] bg-white overflow-hidden ${className}`}
+        className={`relative w-full aspect-[1.6/1] bg-white overflow-hidden ${className}`}
         style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {/* Subtle background pattern */}
