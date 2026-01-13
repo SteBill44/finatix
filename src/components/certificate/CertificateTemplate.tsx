@@ -54,7 +54,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         </div>
 
         {/* Decorative corner accents - responsive sizing */}
-        <div className="absolute top-0 left-0 w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32">
+        <div className="absolute top-0 left-0 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <path
               d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z"
@@ -62,7 +62,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             />
           </svg>
         </div>
-        <div className="absolute top-0 right-0 w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 rotate-90">
+        <div className="absolute top-0 right-0 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rotate-90">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <path
               d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z"
@@ -70,7 +70,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             />
           </svg>
         </div>
-        <div className="absolute bottom-0 left-0 w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 -rotate-90">
+        <div className="absolute bottom-0 left-0 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 -rotate-90">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <path
               d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z"
@@ -78,7 +78,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             />
           </svg>
         </div>
-        <div className="absolute bottom-0 right-0 w-10 h-10 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 rotate-180">
+        <div className="absolute bottom-0 right-0 w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 rotate-180">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <path
               d="M0 0 L100 0 L100 10 L10 10 L10 100 L0 100 Z"
@@ -88,16 +88,16 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         </div>
 
         {/* Elegant border frame - responsive inset */}
-        <div className="absolute inset-2 sm:inset-3 md:inset-4 lg:inset-6 border-2 border-primary/20 rounded-lg" />
-        <div className="absolute inset-3 sm:inset-4 md:inset-5 lg:inset-8 border border-primary/10 rounded-lg" />
+        <div className="absolute inset-2 sm:inset-4 md:inset-6 border-2 border-primary/20 rounded-lg" />
+        <div className="absolute inset-3 sm:inset-5 md:inset-8 border border-primary/10 rounded-lg" />
 
         {/* Content - responsive padding */}
-        <div className="relative z-10 flex flex-col items-center justify-between h-full px-2 py-2 sm:px-4 sm:py-3 md:px-8 md:py-6 lg:px-12 lg:py-8">
+        <div className="relative z-10 flex flex-col items-center justify-between h-full px-3 py-3 sm:px-6 sm:py-5 md:px-10 md:py-8 lg:px-12 lg:py-10">
           {/* Header */}
-          <div className="flex flex-col items-center gap-0.5 sm:gap-1 md:gap-2">
+          <div className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3">
             {/* Logo */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="relative w-5 h-5 sm:w-7 sm:h-7 md:w-10 md:h-10 lg:w-12 lg:h-12">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14">
                 <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
                   <defs>
                     <linearGradient id="certLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -116,20 +116,20 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                   </g>
                 </svg>
               </div>
-              <span className="text-sm sm:text-base md:text-xl lg:text-2xl font-bold text-gray-800 tracking-tight">
+              <span className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
                 Fin<span style={{ color: "hsl(174, 72%, 40%)" }}>atix</span>
               </span>
             </div>
 
             {/* Certificate title */}
-            <div className="flex flex-col items-center mt-0.5 sm:mt-1 md:mt-2">
-              <div className="hidden sm:flex items-center gap-1 md:gap-2 text-primary/60 text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] uppercase">
-                <span className="w-3 sm:w-4 md:w-6 lg:w-8 h-px bg-primary/40" />
+            <div className="flex flex-col items-center mt-1 sm:mt-2 md:mt-3">
+              <div className="flex items-center gap-1 sm:gap-2 text-primary/60 text-[9px] sm:text-xs md:text-sm font-medium tracking-[0.2em] sm:tracking-[0.3em] uppercase">
+                <span className="w-4 sm:w-6 md:w-8 h-px bg-primary/40" />
                 Official Document
-                <span className="w-3 sm:w-4 md:w-6 lg:w-8 h-px bg-primary/40" />
+                <span className="w-4 sm:w-6 md:w-8 h-px bg-primary/40" />
               </div>
               <h1
-                className="text-sm sm:text-lg md:text-2xl lg:text-4xl font-light tracking-wide mt-0.5 sm:mt-1"
+                className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-light tracking-wide mt-1 sm:mt-2"
                 style={{ color: "hsl(174, 72%, 35%)" }}
               >
                 Certificate of Completion
@@ -138,25 +138,25 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           {/* Main content */}
-          <div className="flex flex-col items-center text-center max-w-2xl flex-1 justify-center py-1 sm:py-2 md:py-4">
-            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm lg:text-base">This is to certify that</p>
+          <div className="flex flex-col items-center text-center max-w-2xl flex-1 justify-center py-2 sm:py-3 md:py-4">
+            <p className="text-gray-500 text-xs sm:text-sm md:text-base lg:text-lg">This is to certify that</p>
             
-            <h2 className="text-sm sm:text-base md:text-xl lg:text-3xl font-semibold text-gray-800 mt-0.5 sm:mt-1 md:mt-2 mb-0.5 sm:mb-1">
+            <h2 className="text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold text-gray-800 mt-1 sm:mt-2 md:mt-4 mb-1 sm:mb-2">
               {studentName}
             </h2>
             
-            <div className="w-20 sm:w-32 md:w-48 lg:w-64 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+            <div className="w-28 sm:w-40 md:w-56 lg:w-64 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
             
-            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm lg:text-base mt-1 sm:mt-2 md:mt-3">has successfully completed the course</p>
+            <p className="text-gray-500 text-xs sm:text-sm md:text-base lg:text-lg mt-2 sm:mt-4 md:mt-6">has successfully completed the course</p>
             
             <h3
-              className="text-xs sm:text-sm md:text-lg lg:text-2xl font-semibold mt-0.5 sm:mt-1 md:mt-2 px-1 sm:px-2"
+              className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-semibold mt-1 sm:mt-2 md:mt-4 px-2"
               style={{ color: "hsl(174, 72%, 35%)" }}
             >
               {cleanCourseName}
             </h3>
             
-            <p className="text-gray-500 text-[8px] sm:text-[10px] md:text-xs lg:text-sm mt-1 sm:mt-2 md:mt-3 px-2 sm:px-4 hidden md:block">
+            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm mt-2 sm:mt-4 md:mt-6 px-4 hidden sm:block">
               and has demonstrated the knowledge and skills required for professional competency
             </p>
           </div>
@@ -164,42 +164,42 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           {/* Footer */}
           <div className="flex flex-col items-center w-full">
             {/* Achievement badge */}
-            <div className="flex items-center gap-0.5 sm:gap-1 md:gap-2 mb-1 sm:mb-2 md:mb-3">
-              <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4" style={{ color: "hsl(174, 72%, 40%)" }} />
-              <span className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-medium text-gray-600">
+            <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4 md:mb-6">
+              <Award className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" style={{ color: "hsl(174, 72%, 40%)" }} />
+              <span className="text-[10px] sm:text-xs md:text-sm font-medium text-gray-600">
                 Professional Certification
               </span>
-              <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-green-500" />
+              <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-500" />
             </div>
 
             {/* Signatures, QR code, and date */}
-            <div className="flex justify-between items-center w-full max-w-2xl px-1 sm:px-2 md:px-4">
+            <div className="flex justify-between items-center w-full max-w-2xl px-2 sm:px-4">
               <div className="flex flex-col items-center flex-1">
-                <span className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-medium text-gray-700 mb-0.5 sm:mb-1">{formattedDate}</span>
-                <div className="w-12 sm:w-16 md:w-24 lg:w-32 border-b border-gray-300" />
-                <span className="text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs text-gray-500 mt-0.5 sm:mt-1">Date of Issue</span>
+                <span className="text-[10px] sm:text-xs md:text-sm font-medium text-gray-700 mb-1 sm:mb-2">{formattedDate}</span>
+                <div className="w-16 sm:w-24 md:w-32 lg:w-40 border-b border-gray-300" />
+                <span className="text-[8px] sm:text-[10px] md:text-xs text-gray-500 mt-1 sm:mt-2">Date of Issue</span>
               </div>
 
-              <div className="flex flex-col items-center mx-1 sm:mx-2 md:mx-4 lg:mx-8">
-                <div className="p-0.5 sm:p-1 md:p-1.5 bg-white rounded shadow-sm border border-gray-200 mb-0.5 sm:mb-1">
+              <div className="flex flex-col items-center mx-2 sm:mx-4 md:mx-8">
+                <div className="p-1 sm:p-1.5 md:p-2 bg-white rounded-lg shadow-sm border border-gray-200 mb-1 sm:mb-2">
                   <QRCode
                     value={verificationUrl}
-                    size={24}
-                    level="L"
+                    size={32}
+                    level="M"
                     fgColor="hsl(174, 72%, 35%)"
-                    className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10"
+                    className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 lg:w-14 lg:h-14"
                   />
                 </div>
-                <div className="w-8 sm:w-12 md:w-16 lg:w-20 border-b border-gray-300" />
-                <span className="text-[6px] sm:text-[8px] md:text-[10px] text-gray-500 mt-0.5 sm:mt-1">Verify</span>
+                <div className="w-12 sm:w-16 md:w-20 border-b border-gray-300" />
+                <span className="text-[8px] sm:text-[10px] md:text-xs text-gray-500 mt-1 sm:mt-2">Verify</span>
               </div>
 
               <div className="flex flex-col items-center flex-1">
-                <span className="text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs font-medium text-gray-700 font-mono mb-0.5 sm:mb-1 truncate max-w-full">
+                <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-gray-700 font-mono mb-1 sm:mb-2 truncate max-w-full">
                   {certificateNumber}
                 </span>
-                <div className="w-12 sm:w-16 md:w-24 lg:w-32 border-b border-gray-300" />
-                <span className="text-[6px] sm:text-[8px] md:text-[10px] lg:text-xs text-gray-500 mt-0.5 sm:mt-1">Certificate No.</span>
+                <div className="w-16 sm:w-24 md:w-32 lg:w-40 border-b border-gray-300" />
+                <span className="text-[8px] sm:text-[10px] md:text-xs text-gray-500 mt-1 sm:mt-2">Certificate No.</span>
               </div>
             </div>
           </div>
