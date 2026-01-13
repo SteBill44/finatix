@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { Award, CheckCircle2 } from "lucide-react";
 import { format } from "date-fns";
+import QRCode from "react-qr-code";
 
 interface CertificateTemplateProps {
   studentName: string;
@@ -19,6 +20,9 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
 
     // Remove course code prefix (e.g., "BA1 - ", "P1 - ", etc.)
     const cleanCourseName = courseName.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "");
+
+    // Generate verification URL
+    const verificationUrl = `${window.location.origin}/verify?cert=${encodeURIComponent(certificateNumber)}`;
 
     return (
       <div
@@ -177,13 +181,15 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               </div>
 
               <div className="flex flex-col items-center">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-2"
-                  style={{ backgroundColor: "hsl(174, 72%, 40%)" }}
-                >
-                  <Award className="w-6 h-6 text-white" />
+                <div className="p-2 bg-white rounded-lg shadow-sm border border-gray-200">
+                  <QRCode
+                    value={verificationUrl}
+                    size={56}
+                    level="M"
+                    fgColor="hsl(174, 72%, 35%)"
+                  />
                 </div>
-                <span className="text-xs text-gray-400">Verified</span>
+                <span className="text-xs text-gray-400 mt-1">Scan to verify</span>
               </div>
 
               <div className="flex flex-col items-center">
