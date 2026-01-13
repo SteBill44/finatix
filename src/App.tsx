@@ -38,6 +38,7 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const HelpCentre = lazy(() => import("./pages/HelpCentre"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const CertificatePreviewPage = lazy(() => import("./pages/CertificatePreviewPage"));
 
 // Configure QueryClient with global error handling
 const queryClient = new QueryClient({
@@ -100,6 +101,7 @@ const AnimatedRoutes = () => {
           <Route path="/cookies" element={<PageTransition><CookiePolicy /></PageTransition>} />
           <Route path="/help" element={<PageTransition><HelpCentre /></PageTransition>} />
           <Route path="/terms" element={<PageTransition><TermsOfService /></PageTransition>} />
+          <Route path="/certificate-preview" element={<PageTransition><CertificatePreviewPage /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </Suspense>
