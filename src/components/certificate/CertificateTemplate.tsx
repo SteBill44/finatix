@@ -27,31 +27,42 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
     return (
       <div
         ref={ref}
-        className={`relative w-full aspect-[1.6/1] bg-white overflow-hidden ${className}`}
-        style={{ fontFamily: "'Inter', sans-serif" }}
+        className={`relative w-full aspect-[1.6/1] overflow-hidden ${className}`}
+        style={{ 
+          fontFamily: "'Inter', sans-serif",
+          background: "linear-gradient(135deg, hsl(174, 60%, 97%) 0%, hsl(262, 50%, 97%) 100%)"
+        }}
       >
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="hexPattern" x="0" y="0" width="56" height="100" patternUnits="userSpaceOnUse">
-                <path
-                  d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100"
-                  fill="none"
-                  stroke="hsl(174, 72%, 40%)"
-                  strokeWidth="1"
-                />
-                <path
-                  d="M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34"
-                  fill="none"
-                  stroke="hsl(174, 72%, 40%)"
-                  strokeWidth="1"
-                />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#hexPattern)" />
-          </svg>
-        </div>
+        {/* Animated gradient orbs - similar to homepage */}
+        <div 
+          className="absolute -top-10 -left-10 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 rounded-full pointer-events-none"
+          style={{
+            background: "linear-gradient(135deg, hsla(174, 72%, 45%, 0.3), hsla(174, 72%, 45%, 0.15))",
+            filter: "blur(40px)",
+            animation: "float 8s ease-in-out infinite"
+          }}
+        />
+        <div 
+          className="absolute top-1/4 -right-10 w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 rounded-full pointer-events-none"
+          style={{
+            background: "linear-gradient(135deg, hsla(262, 83%, 65%, 0.25), hsla(262, 83%, 65%, 0.1))",
+            filter: "blur(40px)",
+            animation: "float 8s ease-in-out infinite",
+            animationDelay: "-4s"
+          }}
+        />
+        <div 
+          className="absolute bottom-10 left-1/4 w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full pointer-events-none"
+          style={{
+            background: "linear-gradient(135deg, hsla(174, 72%, 45%, 0.25), hsla(174, 72%, 45%, 0.1))",
+            filter: "blur(40px)",
+            animation: "float 8s ease-in-out infinite",
+            animationDelay: "-2s"
+          }}
+        />
+
+        {/* Subtle hexagon pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.04] hex-pattern" />
 
         {/* Decorative corner accents - responsive sizing */}
         <div className="absolute top-0 left-0 w-8 h-8 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32">
