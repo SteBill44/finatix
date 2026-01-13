@@ -76,9 +76,9 @@ const FinatixLogo = ({
           </linearGradient>
         </defs>
         
-        {/* Clean hexagon shape */}
+        {/* Horizontal hexagon (flat top and bottom) */}
         <path
-          d="M50 8 L88 28 L88 72 L50 92 L12 72 L12 28 Z"
+          d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
           fill="url(#logoGradient)"
           className={animated ? "animate-pulse" : ""}
           style={animated ? { animationDuration: "2s" } : {}}
@@ -87,13 +87,13 @@ const FinatixLogo = ({
         {/* Clean geometric F */}
         <g fill="hsl(var(--primary-foreground))">
           {/* Vertical bar */}
-          <rect x="30" y="28" width="12" height="44" />
+          <rect x="32" y="28" width="12" height="44" />
           
           {/* Top horizontal bar */}
-          <rect x="42" y="28" width="28" height="10" />
+          <rect x="44" y="28" width="26" height="10" />
           
           {/* Middle horizontal bar */}
-          <rect x="42" y="46" width="20" height="10" />
+          <rect x="44" y="46" width="18" height="10" />
         </g>
       </svg>
     </div>
