@@ -92,12 +92,12 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         <div className="absolute inset-3 sm:inset-5 md:inset-8 border border-primary/10 rounded-lg" />
 
         {/* Content - responsive padding */}
-        <div className="relative z-10 flex flex-col items-center justify-between h-full px-3 py-3 sm:px-6 sm:py-5 md:px-10 md:py-8 lg:px-12 lg:py-10">
+        <div className="relative z-10 flex min-h-0 flex-col items-center justify-between h-full px-2 py-2 sm:px-6 sm:py-5 md:px-10 md:py-7 lg:px-12 lg:py-10">
           {/* Header */}
-          <div className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3">
+          <div className="flex shrink-0 flex-col items-center gap-1 sm:gap-2 md:gap-3">
             {/* Logo */}
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="relative w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14">
+              <div className="relative w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14">
                 <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
                   <defs>
                     <linearGradient id="certLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -122,14 +122,14 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             </div>
 
             {/* Certificate title */}
-            <div className="flex flex-col items-center mt-1 sm:mt-2 md:mt-3">
-              <div className="flex items-center gap-1 sm:gap-2 text-primary/60 text-[9px] sm:text-xs md:text-sm font-medium tracking-[0.2em] sm:tracking-[0.3em] uppercase">
+            <div className="flex flex-col items-center mt-1 sm:mt-2 md:mt-2">
+              <div className="hidden sm:flex items-center gap-1 sm:gap-2 text-primary/60 text-[9px] sm:text-xs md:text-sm font-medium tracking-[0.2em] sm:tracking-[0.3em] uppercase">
                 <span className="w-4 sm:w-6 md:w-8 h-px bg-primary/40" />
                 Official Document
                 <span className="w-4 sm:w-6 md:w-8 h-px bg-primary/40" />
               </div>
               <h1
-                className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-light tracking-wide mt-1 sm:mt-2"
+                className="text-[clamp(1.25rem,3.2vw,3.25rem)] font-light leading-tight tracking-wide mt-1 sm:mt-2 md:mt-2"
                 style={{ color: "hsl(174, 72%, 35%)" }}
               >
                 Certificate of Completion
@@ -138,33 +138,33 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           {/* Main content */}
-          <div className="flex flex-col items-center text-center max-w-2xl flex-1 justify-center py-2 sm:py-3 md:py-4">
-            <p className="text-gray-500 text-xs sm:text-sm md:text-base lg:text-lg">This is to certify that</p>
-            
-            <h2 className="text-base sm:text-xl md:text-3xl lg:text-4xl font-semibold text-gray-800 mt-1 sm:mt-2 md:mt-4 mb-1 sm:mb-2">
+          <div className="flex flex-col items-center text-center max-w-2xl flex-1 min-h-0 justify-center overflow-hidden py-2 sm:py-3 md:py-3">
+            <p className="text-gray-500 text-[clamp(0.75rem,1.6vw,1.125rem)]">This is to certify that</p>
+
+            <h2 className="text-[clamp(1.1rem,3.2vw,2.5rem)] font-semibold leading-tight text-gray-800 mt-1 sm:mt-2 md:mt-3 mb-1 sm:mb-2">
               {studentName}
             </h2>
-            
+
             <div className="w-28 sm:w-40 md:w-56 lg:w-64 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-            
-            <p className="text-gray-500 text-xs sm:text-sm md:text-base lg:text-lg mt-2 sm:mt-4 md:mt-6">has successfully completed the course</p>
-            
+
+            <p className="text-gray-500 text-[clamp(0.75rem,1.6vw,1.125rem)] mt-2 sm:mt-3 md:mt-4">has successfully completed the course</p>
+
             <h3
-              className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-semibold mt-1 sm:mt-2 md:mt-4 px-2"
+              className="text-[clamp(0.95rem,2.6vw,2rem)] font-semibold leading-tight mt-1 sm:mt-2 md:mt-3 px-2"
               style={{ color: "hsl(174, 72%, 35%)" }}
             >
               {cleanCourseName}
             </h3>
-            
-            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm mt-2 sm:mt-4 md:mt-6 px-4 hidden sm:block">
+
+            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm mt-2 sm:mt-3 md:mt-4 px-4 hidden sm:block">
               and has demonstrated the knowledge and skills required for professional competency
             </p>
           </div>
 
           {/* Footer */}
-          <div className="flex flex-col items-center w-full">
+          <div className="flex shrink-0 flex-col items-center w-full">
             {/* Achievement badge */}
-            <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4 md:mb-6">
+            <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4 md:mb-4">
               <Award className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" style={{ color: "hsl(174, 72%, 40%)" }} />
               <span className="text-[10px] sm:text-xs md:text-sm font-medium text-gray-600">
                 Professional Certification
