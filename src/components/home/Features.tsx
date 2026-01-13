@@ -6,6 +6,42 @@ import {
   FileQuestion, 
   Zap
 } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+
+const FeatureCard = ({ 
+  icon: Icon, 
+  title, 
+  description, 
+  index 
+}: { 
+  icon: React.ElementType; 
+  title: string; 
+  description: string; 
+  index: number;
+}) => {
+  const { isVisible, elementRef } = useScrollAnimation({ threshold: 0.2 });
+  
+  return (
+    <div
+      ref={elementRef}
+      className={`feature-card hover-lift transition-all duration-500 ${
+        isVisible 
+          ? 'opacity-100 translate-y-0' 
+          : 'opacity-0 translate-y-8'
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      {/* Icon */}
+      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+        <Icon className="w-6 h-6 text-primary" />
+      </div>
+
+      {/* Content */}
+      <h3 className="text-lg font-semibold text-charcoal mb-2">{title}</h3>
+      <p className="text-muted-foreground text-sm">{description}</p>
+    </div>
+  );
+};
 
 const Features = () => {
   const features = [
@@ -41,11 +77,18 @@ const Features = () => {
     },
   ];
 
+  const { isVisible: headerVisible, elementRef: headerRef } = useScrollAnimation({ threshold: 0.3 });
+
   return (
     <section className="py-20 lg:py-32 bg-background hex-pattern">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div 
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
             Why Choose <span className="text-primary">Finatix</span>
           </h2>
@@ -56,20 +99,14 @@ const Features = () => {
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <div
+          {features.map((feature, index) => (
+            <FeatureCard
               key={feature.title}
-              className="feature-card hover-lift"
-            >
-              {/* Icon */}
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <feature.icon className="w-6 h-6 text-primary" />
-              </div>
-
-              {/* Content */}
-              <h3 className="text-lg font-semibold text-charcoal mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm">{feature.description}</p>
-            </div>
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+              index={index}
+            />
           ))}
         </div>
       </div>
