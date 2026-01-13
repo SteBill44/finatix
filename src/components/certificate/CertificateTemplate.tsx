@@ -181,16 +181,17 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               </div>
 
               <div className="flex flex-col items-center mx-2 sm:mx-4 md:mx-8">
-                <div className="p-1 sm:p-1.5 bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="p-1 sm:p-1.5 bg-white rounded-lg shadow-sm border border-gray-200 mb-1">
                   <QRCode
                     value={verificationUrl}
                     size={32}
                     level="M"
                     fgColor="hsl(174, 72%, 35%)"
-                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14"
+                    className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10"
                   />
                 </div>
-                <span className="text-[8px] sm:text-[10px] text-gray-400 mt-1">Scan to verify</span>
+                <div className="w-12 sm:w-16 md:w-20 border-b border-gray-300" />
+                <span className="text-[8px] sm:text-[10px] text-gray-500 mt-1">Verify</span>
               </div>
 
               <div className="flex flex-col items-center flex-1">
