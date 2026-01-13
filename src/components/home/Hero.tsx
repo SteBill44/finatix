@@ -152,8 +152,11 @@ const Hero = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row items-start gap-4">
-            <Link to="/auth?mode=signup">
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <Link 
+              to="/auth?mode=signup"
+              className="opacity-0 animate-[fade-in_0.5s_ease-out_0.3s_forwards]"
+            >
               <Button 
                 size="xl" 
                 className="shadow-lg shadow-primary/20 group transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/30"
@@ -162,7 +165,10 @@ const Hero = () => {
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link to="/courses">
+            <Link 
+              to="/courses"
+              className="opacity-0 animate-[fade-in_0.5s_ease-out_0.5s_forwards]"
+            >
               <Button 
                 size="xl" 
                 variant="outline" 
@@ -172,7 +178,10 @@ const Hero = () => {
                 Explore courses
               </Button>
             </Link>
-            <Link to="/why-cima">
+            <Link 
+              to="/why-cima"
+              className="opacity-0 animate-[fade-in_0.5s_ease-out_0.7s_forwards]"
+            >
               <Button 
                 size="xl" 
                 variant="ghost" 
