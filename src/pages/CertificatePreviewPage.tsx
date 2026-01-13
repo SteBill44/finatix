@@ -5,8 +5,8 @@ const CertificatePreviewPage = () => {
   // Demo data for preview
   const demoData = {
     studentName: "Sarah Johnson",
-    courseName: "CIMA BA1 - Fundamentals of Business Economics",
-    certificateNumber: "CIMA-R3K8X2-M7YN4P",
+    courseName: "BA1 - Fundamentals of Business Economics",
+    certificateNumber: "FTX-R3K8X2-M7YN4P",
     issuedAt: new Date(),
   };
 
