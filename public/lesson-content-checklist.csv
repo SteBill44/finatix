@@ -1,0 +1,38 @@
+Course Level,Course Title,Lesson #,Lesson Title,Has Video,Has Script (PDF),Has Study Text,Has Lesson Quiz,Has Mock Exams,Has Final Exam,Status
+certificate,BA1 – Fundamentals of Business Economics,1,Introduction to National Income,❌ No,✅ Yes (3),❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Partial
+certificate,BA1 – Fundamentals of Business Economics,2,Economic Growth and Development,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,3,Inflation and Unemployment,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,4,Fiscal and Monetary Policy,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,5,Institutions and International Organizations,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,6,Goals and Governance of Organizations,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,7,Supply and Demand Fundamentals,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,8,Price Elasticity of Demand,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,9,Other Elasticities (YED XED PES),❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,10,Costs Revenue and Profit Maximization,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,11,Market Structures,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,12,Data Collection Methods,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,13,Data Analysis and Presentation,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,14,Forecasting Techniques,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,15,Big Data and Business Analytics,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,16,Financial Markets and Institutions,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,17,Financial Instruments,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+certificate,BA1 – Fundamentals of Business Economics,18,Regulatory Environment,❌ No,❌ No,❌ No,✅ Yes (1),✅ Yes (6),✅ Yes,Missing Content
+
+SUMMARY
+========
+Total Lessons: 18
+With Video: 0 (0%)
+With Script/PDF: 1 (6%)
+With Study Text: 0 (0%)
+With Lesson Quiz: 18 (100%)
+With Mock Exams: 18 (100%)
+With Final Exam: 18 (100%)
+
+NOTES
+=====
+- Video: Checked lesson_resources with resource_type='video'
+- Script/PDF: Checked lesson_resources with file_type containing 'pdf'
+- Study Text: Checked lessons.content field (currently empty for all)
+- Lesson Quiz: Quizzes linked directly to lesson_id
+- Mock Exams: Course-level quizzes (lesson_id IS NULL) - counted per course
+- Final Exam: Assumed included in course-level quizzes
