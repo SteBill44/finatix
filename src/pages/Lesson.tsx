@@ -2,6 +2,15 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -269,6 +278,44 @@ const Lesson = () => {
       <main className="flex-1 min-w-0">
         {/* Top Navigation */}
         <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
+          {/* Breadcrumb Navigation */}
+          <div className="px-4 pt-3 pb-2 border-b border-border/50">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
+                      <Home className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Home</span>
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/courses" className="text-muted-foreground hover:text-foreground">
+                      Courses
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to={`/courses/${course?.slug || courseId}`} className="text-muted-foreground hover:text-foreground max-w-[120px] sm:max-w-[200px] truncate">
+                      {course?.title || "Course"}
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium max-w-[100px] sm:max-w-[180px] truncate">
+                    {currentLesson.title}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+          
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <Button

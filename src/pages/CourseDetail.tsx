@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -371,10 +380,33 @@ const CourseDetail = () => {
         <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container mx-auto px-4 relative z-10 overflow-hidden">
-          <Link to="/courses" className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-primary-foreground mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Courses
-          </Link>
+          {/* Breadcrumb Navigation */}
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/" className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground">
+                    <Home className="w-4 h-4" />
+                    Home
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="text-primary-foreground/50" />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/courses" className="text-primary-foreground/70 hover:text-primary-foreground">
+                    Courses
+                  </Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="text-primary-foreground/50" />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="text-primary-foreground font-medium">
+                  {course.title}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
