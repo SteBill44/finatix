@@ -12,7 +12,7 @@ const CertificatePreviewPage = () => {
 
   return (
     <Layout>
-      <div className="container max-w-4xl py-12">
+      <div className="container max-w-4xl pt-24 pb-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Certificate Preview</h1>
           <p className="text-muted-foreground">
