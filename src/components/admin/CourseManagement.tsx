@@ -11,7 +11,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GraduationCap } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GraduationCap, Video, VideoOff } from "lucide-react";
+import LessonVideoUpload from "./LessonVideoUpload";
 
 interface Course {
   id: string;
@@ -32,6 +33,7 @@ interface Lesson {
   content: string | null;
   duration_minutes: number | null;
   order_index: number;
+  video_url: string | null;
 }
 
 const CourseManagement = () => {
@@ -481,6 +483,7 @@ const CourseManagement = () => {
                               <TableRow>
                                 <TableHead className="w-12">#</TableHead>
                                 <TableHead>Title</TableHead>
+                                <TableHead>Video</TableHead>
                                 <TableHead>Duration</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                               </TableRow>
@@ -490,6 +493,19 @@ const CourseManagement = () => {
                                 <TableRow key={lesson.id}>
                                   <TableCell className="text-muted-foreground">{lesson.order_index + 1}</TableCell>
                                   <TableCell className="font-medium">{lesson.title}</TableCell>
+                                  <TableCell>
+                                    {lesson.video_url ? (
+                                      <Badge variant="secondary" className="gap-1 text-green-600 dark:text-green-400">
+                                        <Video className="h-3 w-3" />
+                                        Yes
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="outline" className="gap-1 text-muted-foreground">
+                                        <VideoOff className="h-3 w-3" />
+                                        No
+                                      </Badge>
+                                    )}
+                                  </TableCell>
                                   <TableCell>{lesson.duration_minutes ? `${lesson.duration_minutes} min` : "-"}</TableCell>
                                   <TableCell className="text-right">
                                     <Button
@@ -534,7 +550,7 @@ const CourseManagement = () => {
               {editingLesson ? "Update lesson details below." : "Fill in the details for the new lesson."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
             <div className="grid gap-2">
               <Label htmlFor="lesson-title">Title *</Label>
               <Input
@@ -554,6 +570,35 @@ const CourseManagement = () => {
                 rows={2}
               />
             </div>
+            
+            {/* Video Upload Section */}
+            {editingLesson && (
+              <div className="grid gap-2">
+                <Label>Lesson Video</Label>
+                <LessonVideoUpload
+                  lessonId={editingLesson.id}
+                  lessonTitle={editingLesson.title}
+                  currentVideoUrl={editingLesson.video_url}
+                  onVideoUploaded={(videoUrl) => {
+                    setEditingLesson({ ...editingLesson, video_url: videoUrl });
+                    if (selectedCourseId) fetchLessons(selectedCourseId);
+                  }}
+                  onVideoRemoved={() => {
+                    setEditingLesson({ ...editingLesson, video_url: null });
+                    if (selectedCourseId) fetchLessons(selectedCourseId);
+                  }}
+                />
+              </div>
+            )}
+            {!editingLesson && (
+              <div className="grid gap-2">
+                <Label>Lesson Video</Label>
+                <p className="text-sm text-muted-foreground">
+                  Save the lesson first, then edit it to upload a video.
+                </p>
+              </div>
+            )}
+
             <div className="grid gap-2">
               <Label htmlFor="lesson-content">Content</Label>
               <Textarea
@@ -561,7 +606,7 @@ const CourseManagement = () => {
                 value={lessonForm.content}
                 onChange={(e) => setLessonForm({ ...lessonForm, content: e.target.value })}
                 placeholder="Lesson content (supports markdown)"
-                rows={8}
+                rows={6}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
