@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, XCircle, Loader2, Award, Calendar, User, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CheckCircle2, XCircle, Loader2, Award, Calendar, User, BookOpen, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 
@@ -19,59 +21,73 @@ interface CertificateData {
 }
 
 const CertificateVerify = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const certificateNumber = searchParams.get("cert");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState(certificateNumber || "");
 
-  useEffect(() => {
-    const verifyCertificate = async () => {
-      if (!certificateNumber) {
-        setError("No certificate number provided");
+  const verifyCertificate = async (certNumber: string) => {
+    if (!certNumber.trim()) {
+      setError("Please enter a certificate number");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    setCertificate(null);
+
+    try {
+      const { data, error: fetchError } = await supabase
+        .from("certificates")
+        .select(`
+          certificate_number,
+          issued_at,
+          user_id,
+          course:courses(title)
+        `)
+        .eq("certificate_number", certNumber.trim())
+        .single();
+
+      if (fetchError || !data) {
+        setError("Certificate not found or invalid");
         setIsLoading(false);
         return;
       }
 
-      try {
-        const { data, error: fetchError } = await supabase
-          .from("certificates")
-          .select(`
-            certificate_number,
-            issued_at,
-            user_id,
-            course:courses(title)
-          `)
-          .eq("certificate_number", certificateNumber)
-          .single();
+      // Fetch profile separately
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("user_id", data.user_id)
+        .single();
 
-        if (fetchError || !data) {
-          setError("Certificate not found or invalid");
-          setIsLoading(false);
-          return;
-        }
+      setCertificate({
+        ...data,
+        course: data.course as { title: string },
+        profile: profileData,
+      });
+    } catch (err) {
+      setError("Failed to verify certificate");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-        // Fetch profile separately
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("user_id", data.user_id)
-          .single();
-
-        setCertificate({
-          ...data,
-          course: data.course as { title: string },
-          profile: profileData,
-        });
-      } catch (err) {
-        setError("Failed to verify certificate");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    verifyCertificate();
+  useEffect(() => {
+    if (certificateNumber) {
+      verifyCertificate(certificateNumber);
+    }
   }, [certificateNumber]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      setSearchParams({ cert: searchInput.trim() });
+    }
+  };
 
   // Clean course name (remove code prefix)
   const cleanCourseName = (name: string) => {
@@ -89,6 +105,24 @@ const CertificateVerify = () => {
             Verify the authenticity of a Finatix certificate
           </p>
         </div>
+
+        {/* Search Form */}
+        <form onSubmit={handleSearch} className="mb-8">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Enter certificate number (e.g., FTX-R3K8X2-M7YN4P)"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="pl-10 font-mono"
+              />
+            </div>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Verify"}
+            </Button>
+          </div>
+        </form>
 
         {isLoading ? (
           <Card>
