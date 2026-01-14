@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Twitter, Youtube, Facebook } from "lucide-react";
+import { Linkedin, Twitter, Youtube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import FinatixLogo from "@/components/FinatixLogo";
 
@@ -21,6 +21,7 @@ const Footer = ({ className }: FooterProps) => {
       { name: "Why CIMA?", path: "/why-cima" },
       { name: "About Us", path: "/about" },
       { name: "Pricing", path: "/pricing" },
+      { name: "My Certificates", path: "/certificates" },
     ],
     support: [
       { name: "Contact Us", path: "/contact" },
@@ -35,11 +36,11 @@ const Footer = ({ className }: FooterProps) => {
     ],
   };
 
+  // Social links - update these with actual URLs when available
   const socialLinks = [
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Youtube, href: "#", label: "YouTube" },
-    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Linkedin, href: "https://linkedin.com/company/finatix", label: "LinkedIn" },
+    { icon: Twitter, href: "https://twitter.com/finatix", label: "Twitter" },
+    { icon: Youtube, href: "https://youtube.com/@finatix", label: "YouTube" },
   ];
 
   return (

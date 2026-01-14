@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -146,6 +146,12 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
+                      <Link to="/certificates" className="cursor-pointer flex items-center">
+                        <Award className="w-4 h-4 mr-2" />
+                        My Certificates
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to="/achievements" className="cursor-pointer flex items-center">
                         <Trophy className="w-4 h-4 mr-2" />
                         Achievements
@@ -246,6 +252,12 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <LayoutDashboard className="w-4 h-4" />
                         Dashboard
+                      </Button>
+                    </Link>
+                    <Link to="/certificates" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Award className="w-4 h-4" />
+                        My Certificates
                       </Button>
                     </Link>
                     <Link to="/achievements" onClick={() => setIsOpen(false)}>
