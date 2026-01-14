@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, Printer } from "lucide-react";
+import { Share2, Printer } from "lucide-react";
 import { toast } from "sonner";
 import CertificateTemplate from "./CertificateTemplate";
+import CertificateDownloadButton from "./CertificateDownloadButton";
+import { useCertificatePDF } from "@/hooks/useCertificatePDF";
 
 interface CertificatePreviewProps {
   studentName: string;
@@ -17,8 +18,10 @@ const CertificatePreview = ({
   certificateNumber,
   issuedAt,
 }: CertificatePreviewProps) => {
-  const certificateRef = useRef<HTMLDivElement>(null);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const cleanName = courseName.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "").replace(/\s+/g, "-");
+  const { certificateRef, isGenerating, downloadPDF, downloadImage } = useCertificatePDF({
+    fileName: `${cleanName}-certificate.pdf`,
+  });
 
   const handlePrint = () => {
     window.print();
@@ -44,37 +47,17 @@ const CertificatePreview = ({
     }
   };
 
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-      // Create a simple canvas-based download
-      const element = certificateRef.current;
-      if (!element) return;
-
-      // For now, trigger print as PDF download
-      toast.info("Use 'Save as PDF' in print dialog to download");
-      window.print();
-    } catch (error) {
-      toast.error("Failed to download certificate");
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   return (
     <div className="flex flex-col gap-6">
       {/* Action buttons */}
       <div className="flex flex-wrap gap-3 justify-center print:hidden">
-        <Button
+        <CertificateDownloadButton
+          onDownloadPDF={downloadPDF}
+          onDownloadImage={downloadImage}
+          isGenerating={isGenerating}
           variant="outline"
           size="sm"
-          onClick={handleDownload}
-          disabled={isDownloading}
-          className="gap-2"
-        >
-          <Download className="w-4 h-4" />
-          Download PDF
-        </Button>
+        />
         <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
           <Printer className="w-4 h-4" />
           Print
@@ -86,7 +69,10 @@ const CertificatePreview = ({
       </div>
 
       {/* Certificate display */}
-      <div className="rounded-xl overflow-hidden shadow-xl border border-border bg-white print:shadow-none print:border-none print:rounded-none">
+      <div 
+        className="rounded-xl overflow-hidden shadow-xl border border-border bg-white print:shadow-none print:border-none print:rounded-none"
+        data-certificate-container
+      >
         <CertificateTemplate
           ref={certificateRef}
           studentName={studentName}
