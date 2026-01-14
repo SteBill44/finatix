@@ -291,7 +291,11 @@ const Courses = () => {
                         {/* Price & CTA */}
                         <div className="flex items-center justify-between pt-3 border-t border-border">
                           <div className="flex items-baseline gap-1.5">
-                            <span className="text-sm font-semibold text-accent">Coming Soon</span>
+                            {course.price === 0 ? (
+                              <span className="text-sm font-semibold text-accent">Free</span>
+                            ) : (
+                              <span className="text-sm font-semibold text-foreground">£{course.price}</span>
+                            )}
                           </div>
                           <span className="text-xs font-medium text-primary group-hover:text-primary/80 transition-colors flex items-center gap-1">
                             View
