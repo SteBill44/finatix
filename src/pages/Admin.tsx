@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2, Activity, DollarSign } from "lucide-react";
+import { Pencil, Trash2, Plus, Users, BookOpen, Shield, ChevronDown, ChevronRight, GraduationCap, Eye, Crown, UserPlus, FileText, ClipboardList, ScrollText, Mail, Building2, Activity, DollarSign, LayoutDashboard, History } from "lucide-react";
 import UserDetailSheet from "@/components/admin/UserDetailSheet";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
@@ -26,6 +26,8 @@ import CorporateManagement from "@/components/admin/CorporateManagement";
 import { PerformanceMonitoring } from "@/components/admin/PerformanceMonitoring";
 import BulkEnrollmentManagement from "@/components/admin/BulkEnrollmentManagement";
 import { CostMonitoringDashboard } from "@/components/admin/CostMonitoringDashboard";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminAuditLog from "@/components/admin/AdminAuditLog";
 
 interface Course {
   id: string;
@@ -490,8 +492,12 @@ const Admin = () => {
           <p className="text-muted-foreground mt-2">Manage courses, lessons, users, and site settings</p>
         </div>
 
-        <Tabs defaultValue="courses" className="space-y-6">
+        <Tabs defaultValue="dashboard" className="space-y-6">
           <TabsList className="flex w-full h-auto gap-1 p-1 overflow-x-auto scrollbar-thin">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
+            </TabsTrigger>
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
@@ -528,11 +534,25 @@ const Admin = () => {
               <DollarSign className="h-4 w-4" />
               Costs
             </TabsTrigger>
+            <TabsTrigger value="audit" className="flex items-center gap-2">
+              <History className="h-4 w-4" />
+              Audit Log
+            </TabsTrigger>
             <TabsTrigger value="users" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Users
             </TabsTrigger>
           </TabsList>
+
+          {/* Dashboard Tab */}
+          <TabsContent value="dashboard">
+            <AdminDashboard />
+          </TabsContent>
+
+          {/* Audit Log Tab */}
+          <TabsContent value="audit">
+            <AdminAuditLog />
+          </TabsContent>
 
           {/* Enrollments Tab */}
           <TabsContent value="enrollments">
