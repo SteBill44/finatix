@@ -6,11 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Award, Calendar, Eye, Search, ExternalLink, FileX } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Award, Calendar, Eye, Search, ExternalLink, FileX, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import CertificateTemplate from "@/components/certificate/CertificateTemplate";
+import CertificateDownloadButton from "@/components/certificate/CertificateDownloadButton";
+import { useCertificatePDF } from "@/hooks/useCertificatePDF";
 
 interface Certificate {
   id: string;
@@ -22,10 +31,79 @@ interface Certificate {
   };
 }
 
+interface CertificateWithProfile extends Certificate {
+  profile: {
+    full_name: string | null;
+  } | null;
+}
+
+const CertificateDownloadDialog = ({
+  certificate,
+  userName,
+  open,
+  onOpenChange,
+}: {
+  certificate: Certificate;
+  userName: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const cleanName = certificate.course.title.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "").replace(/\s+/g, "-");
+  const { certificateRef, isGenerating, downloadPDF, downloadImage } = useCertificatePDF({
+    fileName: `${cleanName}-certificate.pdf`,
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Award className="w-5 h-5 text-primary" />
+            Download Certificate
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="rounded-lg overflow-hidden border">
+            <CertificateTemplate
+              ref={certificateRef}
+              studentName={userName}
+              courseName={certificate.course.title}
+              certificateNumber={certificate.certificate_number}
+              issuedAt={certificate.issued_at}
+            />
+          </div>
+          <div className="flex justify-end">
+            <CertificateDownloadButton
+              onDownloadPDF={downloadPDF}
+              onDownloadImage={downloadImage}
+              isGenerating={isGenerating}
+            />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const Certificates = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCertificate, setSelectedCertificate] = useState<CertificateWithProfile | null>(null);
+
+  const { data: profile } = useQuery({
+    queryKey: ["user-profile", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, first_name, last_name")
+        .eq("user_id", user.id)
+        .single();
+      return data;
+    },
+    enabled: !!user,
+  });
 
   const { data: certificates, isLoading } = useQuery({
     queryKey: ["user-certificates", user?.id],
@@ -47,6 +125,10 @@ const Certificates = () => {
     },
     enabled: !!user,
   });
+
+  const userName = profile?.full_name || 
+    `${profile?.first_name || ""} ${profile?.last_name || ""}`.trim() || 
+    "Certificate Holder";
 
   const cleanCourseName = (name: string) => {
     return name.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "");
@@ -87,7 +169,7 @@ const Certificates = () => {
             My Certificates
           </h1>
           <p className="text-muted-foreground">
-            View and share your earned certificates
+            View, download and share your earned certificates
           </p>
         </div>
 
@@ -156,6 +238,17 @@ const Certificates = () => {
                         <Eye className="w-4 h-4 mr-1" />
                         View
                       </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => setSelectedCertificate({
+                          ...cert,
+                          profile: { full_name: userName }
+                        })}
+                      >
+                        <Download className="w-4 h-4 mr-1" />
+                        Download
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -195,6 +288,16 @@ const Certificates = () => {
           </Button>
         </div>
       </div>
+
+      {/* Download Dialog */}
+      {selectedCertificate && (
+        <CertificateDownloadDialog
+          certificate={selectedCertificate}
+          userName={userName}
+          open={!!selectedCertificate}
+          onOpenChange={(open) => !open && setSelectedCertificate(null)}
+        />
+      )}
     </Layout>
   );
 };

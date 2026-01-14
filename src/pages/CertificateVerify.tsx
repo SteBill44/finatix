@@ -5,9 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle2, XCircle, Loader2, Award, Calendar, User, BookOpen, Search } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CheckCircle2, XCircle, Loader2, Award, Calendar, User, BookOpen, Search, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import CertificateTemplate from "@/components/certificate/CertificateTemplate";
+import CertificateDownloadButton from "@/components/certificate/CertificateDownloadButton";
+import { useCertificatePDF } from "@/hooks/useCertificatePDF";
 
 interface CertificateData {
   certificate_number: string;
@@ -20,6 +29,52 @@ interface CertificateData {
   } | null;
 }
 
+const CertificateDownloadDialog = ({
+  certificate,
+  open,
+  onOpenChange,
+}: {
+  certificate: CertificateData;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) => {
+  const cleanName = certificate.course.title.replace(/^[A-Z]+\d+\s*[-–]\s*/i, "").replace(/\s+/g, "-");
+  const { certificateRef, isGenerating, downloadPDF, downloadImage } = useCertificatePDF({
+    fileName: `${cleanName}-certificate.pdf`,
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Award className="w-5 h-5 text-primary" />
+            Download Certificate
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="rounded-lg overflow-hidden border">
+            <CertificateTemplate
+              ref={certificateRef}
+              studentName={certificate.profile?.full_name || "Certificate Holder"}
+              courseName={certificate.course.title}
+              certificateNumber={certificate.certificate_number}
+              issuedAt={certificate.issued_at}
+            />
+          </div>
+          <div className="flex justify-end">
+            <CertificateDownloadButton
+              onDownloadPDF={downloadPDF}
+              onDownloadImage={downloadImage}
+              isGenerating={isGenerating}
+            />
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const CertificateVerify = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,6 +83,7 @@ const CertificateVerify = () => {
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState(certificateNumber || "");
+  const [showDownloadDialog, setShowDownloadDialog] = useState(false);
 
   const verifyCertificate = async (certNumber: string) => {
     if (!certNumber.trim()) {
@@ -203,10 +259,30 @@ const CertificateVerify = () => {
                   </p>
                 </div>
               </div>
+
+              {/* Download button */}
+              <div className="pt-4 border-t">
+                <Button
+                  onClick={() => setShowDownloadDialog(true)}
+                  className="w-full gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Certificate
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ) : null}
       </div>
+
+      {/* Download Dialog */}
+      {certificate && (
+        <CertificateDownloadDialog
+          certificate={certificate}
+          open={showDownloadDialog}
+          onOpenChange={setShowDownloadDialog}
+        />
+      )}
     </Layout>
   );
 };
