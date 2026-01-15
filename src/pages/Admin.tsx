@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History } from "lucide-react";
+import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History, ListChecks } from "lucide-react";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
 import SyllabusManagement from "@/components/admin/SyllabusManagement";
@@ -19,6 +19,7 @@ import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminAuditLog from "@/components/admin/AdminAuditLog";
 import CourseManagement from "@/components/admin/CourseManagement";
 import UserManagement from "@/components/admin/UserManagement";
+import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -74,6 +75,10 @@ const Admin = () => {
             <TabsTrigger value="courses" className="flex items-center gap-2">
               <BookOpen className="h-4 w-4" />
               Courses
+            </TabsTrigger>
+            <TabsTrigger value="content-status" className="flex items-center gap-2">
+              <ListChecks className="h-4 w-4" />
+              Content Status
             </TabsTrigger>
             <TabsTrigger value="syllabus" className="flex items-center gap-2">
               <ScrollText className="h-4 w-4" />
@@ -183,6 +188,16 @@ const Admin = () => {
           {/* Courses Tab */}
           <TabsContent value="courses">
             <CourseManagement />
+          </TabsContent>
+
+          {/* Content Status Tab */}
+          <TabsContent value="content-status">
+            <ContentStatusDashboard />
+          </TabsContent>
+
+          {/* Users Tab */}
+          <TabsContent value="users">
+            <UserManagement />
           </TabsContent>
 
           {/* Users Tab */}
