@@ -17,6 +17,8 @@ import StreakWidget from "@/components/dashboard/StreakWidget";
 import QuickActions from "@/components/dashboard/QuickActions";
 import LeaderboardPreview from "@/components/dashboard/LeaderboardPreview";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
+import OnboardingModal from "@/components/onboarding/OnboardingModal";
+import { useOnboarding } from "@/hooks/useOnboarding";
 import {
   BookOpen,
   Clock,
@@ -45,6 +47,9 @@ const Dashboard = () => {
   const availableQuizzes = allQuizzes?.filter((q) =>
     enrolledCourseIds.includes(q.course_id)
   );
+
+  // Onboarding
+  const { showOnboarding, completeOnboarding } = useOnboarding();
 
   // Calculate stats from real data
   const totalEnrollments = enrollments?.length || 0;
@@ -84,6 +89,9 @@ const Dashboard = () => {
   return (
     <Layout>
       <SEOHead title="Dashboard" noIndex />
+      
+      {/* Onboarding Modal */}
+      <OnboardingModal open={showOnboarding} onComplete={completeOnboarding} />
       {/* Header */}
       <section className="relative pt-24 lg:pt-28 pb-12 lg:pb-16 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />

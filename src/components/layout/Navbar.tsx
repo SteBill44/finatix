@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
 import FinatixLogo from "@/components/FinatixLogo";
+import GlobalSearch from "@/components/search/GlobalSearch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -109,6 +110,9 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* Global Search */}
+            <GlobalSearch />
+            
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
