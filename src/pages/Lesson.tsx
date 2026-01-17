@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -24,7 +24,9 @@ import {
 } from "@/hooks/useStudentProgress";
 import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
 import { useQuizzes } from "@/hooks/useQuizzes";
+import { useVideoProgress } from "@/hooks/useVideoProgress";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
+import LessonNotes from "@/components/lesson/LessonNotes";
 import {
   ArrowLeft,
   ArrowRight,
@@ -56,6 +58,9 @@ const Lesson = () => {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const markComplete = useMarkLessonComplete();
+  
+  // Video progress tracking
+  const { progress: videoProgress, saveProgress, saveProgressImmediate } = useVideoProgress(lessonId);
 
   // Fetch course details
   const { data: course } = useQuery({
@@ -359,9 +364,13 @@ const Lesson = () => {
           {/* Video Player */}
           <div className="mb-8">
             <VideoPlayer
-              videoUrl={null}
+              videoUrl={currentLesson.video_url}
               title={currentLesson.title}
               duration={currentLesson.duration_minutes || 0}
+              initialTime={videoProgress?.progress_seconds ? Number(videoProgress.progress_seconds) : 0}
+              onTimeUpdate={(currentTime, duration) => {
+                saveProgress(currentTime, duration);
+              }}
             />
           </div>
 
@@ -508,6 +517,9 @@ const Lesson = () => {
             </>
           )}
 
+          {/* Lesson Notes */}
+          <Separator className="my-8" />
+          <LessonNotes lessonId={lessonId!} lessonTitle={currentLesson.title} />
 
           <Separator className="my-8" />
 

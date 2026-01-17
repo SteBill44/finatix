@@ -686,6 +686,41 @@ export type Database = {
           },
         ]
       }
+      lesson_notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          lesson_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_notes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed: boolean
@@ -925,6 +960,7 @@ export type Database = {
           full_name: string | null
           id: string
           last_name: string | null
+          onboarding_completed: boolean | null
           siebel_id: string | null
           updated_at: string
           user_id: string
@@ -939,6 +975,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding_completed?: boolean | null
           siebel_id?: string | null
           updated_at?: string
           user_id: string
@@ -953,6 +990,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           last_name?: string | null
+          onboarding_completed?: boolean | null
           siebel_id?: string | null
           updated_at?: string
           user_id?: string
@@ -1394,6 +1432,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      video_progress: {
+        Row: {
+          completed: boolean
+          created_at: string
+          duration_seconds: number
+          id: string
+          lesson_id: string
+          progress_seconds: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          lesson_id: string
+          progress_seconds?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          lesson_id?: string
+          progress_seconds?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       visitor_snapshots: {
         Row: {

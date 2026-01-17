@@ -21,6 +21,8 @@ interface VideoPlayerProps {
   duration?: number;
   title: string;
   onProgress?: (progress: number) => void;
+  initialTime?: number;
+  onTimeUpdate?: (currentTime: number, duration: number) => void;
 }
 
 const VideoPlayer = ({
@@ -29,6 +31,8 @@ const VideoPlayer = ({
   duration = 0,
   title,
   onProgress,
+  initialTime = 0,
+  onTimeUpdate,
 }: VideoPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -66,6 +70,9 @@ const VideoPlayer = ({
       setCurrentTime(videoRef.current.currentTime);
       if (onProgress && videoDuration > 0) {
         onProgress((videoRef.current.currentTime / videoDuration) * 100);
+      }
+      if (onTimeUpdate && videoDuration > 0) {
+        onTimeUpdate(videoRef.current.currentTime, videoDuration);
       }
     }
   };
@@ -153,6 +160,14 @@ const VideoPlayer = ({
       }
     };
   }, []);
+
+  // Set initial time when video loads
+  useEffect(() => {
+    if (videoRef.current && initialTime > 0) {
+      videoRef.current.currentTime = initialTime;
+      setCurrentTime(initialTime);
+    }
+  }, [initialTime, videoUrl]);
 
   // Placeholder if no video URL
   if (!videoUrl) {
