@@ -18,38 +18,46 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
   const { notes, isLoading, saveNotes, saveNotesImmediate, isSaving } = useLessonNotes(lessonId);
   const [content, setContent] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const initializedRef = useRef(false);
+  const lastSavedContentRef = useRef("");
 
-  const lastSavedContentRef = useRef<string>("");
-
-  // Initialize content when notes load
+  // Initialize content when notes load (only once)
   useEffect(() => {
-    if (notes?.content !== undefined && !hasUnsavedChanges) {
+    if (notes?.content !== undefined && !initializedRef.current) {
       setContent(notes.content);
       lastSavedContentRef.current = notes.content;
+      initializedRef.current = true;
     }
-  }, [notes?.content, hasUnsavedChanges]);
+  }, [notes?.content]);
+
+  // Reset initialization when lessonId changes
+  useEffect(() => {
+    initializedRef.current = false;
+    setContent("");
+    setHasUnsavedChanges(false);
+    lastSavedContentRef.current = "";
+  }, [lessonId]);
 
   // Handle content change with debounced save
   const handleContentChange = (newContent: string) => {
     setContent(newContent);
     
-    if (!user || newContent === lastSavedContentRef.current) {
-      setHasUnsavedChanges(false);
-      return;
-    }
+    const isDifferentFromSaved = newContent !== lastSavedContentRef.current;
+    setHasUnsavedChanges(isDifferentFromSaved);
     
-    setHasUnsavedChanges(true);
-    saveNotes(newContent);
+    if (user && isDifferentFromSaved) {
+      saveNotes(newContent);
+    }
   };
 
-  // Update saved content ref when save completes
-  useEffect(() => {
-    if (!isSaving && hasUnsavedChanges) {
-      // After saving completes, update the reference
+  // Handle manual save
+  const handleSaveNow = () => {
+    if (user && hasUnsavedChanges) {
+      saveNotesImmediate(content);
       lastSavedContentRef.current = content;
       setHasUnsavedChanges(false);
     }
-  }, [isSaving]);
+  };
 
   // Save on page leave
   useEffect(() => {
@@ -62,9 +70,6 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      if (hasUnsavedChanges && user) {
-        saveNotesImmediate(content);
-      }
     };
   }, [hasUnsavedChanges, content, saveNotesImmediate, user]);
 
@@ -142,7 +147,7 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
             size="sm"
             variant="outline"
             className="gap-1"
-            onClick={() => saveNotesImmediate(content)}
+            onClick={handleSaveNow}
             disabled={isSaving}
           >
             <Save className="w-4 h-4" />
