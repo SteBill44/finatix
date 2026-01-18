@@ -59,11 +59,24 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
     }
   };
 
-  // Save on page leave
+  // Use refs to access latest values in cleanup without causing effect reruns
+  const contentRef = useRef(content);
+  const hasUnsavedChangesRef = useRef(hasUnsavedChanges);
+  const userRef = useRef(user);
+  const saveNotesImmediateRef = useRef(saveNotesImmediate);
+
+  useEffect(() => {
+    contentRef.current = content;
+    hasUnsavedChangesRef.current = hasUnsavedChanges;
+    userRef.current = user;
+    saveNotesImmediateRef.current = saveNotesImmediate;
+  });
+
+  // Save on browser close/refresh
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (hasUnsavedChanges && user) {
-        saveNotesImmediate(content);
+      if (hasUnsavedChangesRef.current && userRef.current) {
+        saveNotesImmediateRef.current(contentRef.current);
       }
     };
 
@@ -71,7 +84,16 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [hasUnsavedChanges, content, saveNotesImmediate, user]);
+  }, []);
+
+  // Save on component unmount (navigating away)
+  useEffect(() => {
+    return () => {
+      if (hasUnsavedChangesRef.current && userRef.current) {
+        saveNotesImmediateRef.current(contentRef.current);
+      }
+    };
+  }, []);
 
   if (!user) {
     return (
