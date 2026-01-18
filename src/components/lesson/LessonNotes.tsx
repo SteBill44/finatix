@@ -1,9 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { StickyNote, Save, Loader2 } from "lucide-react";
+import { Toggle } from "@/components/ui/toggle";
+import { Separator } from "@/components/ui/separator";
+import { 
+  StickyNote, 
+  Save, 
+  Loader2, 
+  Bold, 
+  Italic, 
+  List,
+  Heading2
+} from "lucide-react";
 import { useLessonNotes } from "@/hooks/useLessonNotes";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -20,6 +30,7 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const lastSavedContentRef = useRef("");
   const previousLessonIdRef = useRef<string | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Initialize content when notes load or lessonId changes
   useEffect(() => {
@@ -57,6 +68,74 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
       lastSavedContentRef.current = content;
       setHasUnsavedChanges(false);
     }
+  };
+
+  // Formatting helper - wraps selected text or inserts at cursor
+  const applyFormat = useCallback((prefix: string, suffix: string = prefix) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    
+    let newContent: string;
+    let newCursorPos: number;
+
+    if (selectedText) {
+      // Wrap selected text
+      newContent = content.substring(0, start) + prefix + selectedText + suffix + content.substring(end);
+      newCursorPos = end + prefix.length + suffix.length;
+    } else {
+      // Insert at cursor
+      newContent = content.substring(0, start) + prefix + suffix + content.substring(end);
+      newCursorPos = start + prefix.length;
+    }
+
+    handleContentChange(newContent);
+    
+    // Restore focus and cursor position
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
+  }, [content, handleContentChange]);
+
+  // Format handlers
+  const handleBold = () => applyFormat("**");
+  const handleItalic = () => applyFormat("*");
+  const handleHeading = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const lineStart = content.lastIndexOf("\n", start - 1) + 1;
+    const prefix = "## ";
+    
+    const newContent = content.substring(0, lineStart) + prefix + content.substring(lineStart);
+    handleContentChange(newContent);
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, start + prefix.length);
+    }, 0);
+  };
+  
+  const handleBulletPoint = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const lineStart = content.lastIndexOf("\n", start - 1) + 1;
+    const prefix = "• ";
+    
+    const newContent = content.substring(0, lineStart) + prefix + content.substring(lineStart);
+    handleContentChange(newContent);
+    
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, start + prefix.length);
+    }, 0);
   };
 
   // Use refs to access latest values in cleanup without causing effect reruns
@@ -150,19 +229,57 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
         </div>
       </div>
 
+      {/* Formatting Toolbar */}
+      <div className="flex items-center gap-1 mb-2 p-1 bg-secondary/50 rounded-md">
+        <Toggle
+          size="sm"
+          aria-label="Bold"
+          onClick={handleBold}
+          className="h-8 w-8 p-0"
+        >
+          <Bold className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          aria-label="Italic"
+          onClick={handleItalic}
+          className="h-8 w-8 p-0"
+        >
+          <Italic className="h-4 w-4" />
+        </Toggle>
+        <Separator orientation="vertical" className="h-6 mx-1" />
+        <Toggle
+          size="sm"
+          aria-label="Heading"
+          onClick={handleHeading}
+          className="h-8 w-8 p-0"
+        >
+          <Heading2 className="h-4 w-4" />
+        </Toggle>
+        <Toggle
+          size="sm"
+          aria-label="Bullet point"
+          onClick={handleBulletPoint}
+          className="h-8 w-8 p-0"
+        >
+          <List className="h-4 w-4" />
+        </Toggle>
+      </div>
+
       <Textarea
-        placeholder={`Take notes on "${lessonTitle}"...\n\nYour notes are automatically saved as you type.`}
+        ref={textareaRef}
+        placeholder={`Take notes on "${lessonTitle}"...\n\nUse **bold**, *italic*, • bullets, and ## headings.`}
         value={content}
         onChange={(e) => handleContentChange(e.target.value)}
         className={cn(
-          "min-h-[200px] resize-none bg-secondary/30 border-border",
+          "min-h-[200px] resize-none bg-secondary/30 border-border font-mono text-sm",
           "focus:ring-primary focus:border-primary"
         )}
       />
 
       <div className="flex items-center justify-between mt-3">
         <p className="text-xs text-muted-foreground">
-          {content.length} characters
+          {content.length} characters • Markdown supported
         </p>
         {hasUnsavedChanges && (
           <Button
