@@ -96,11 +96,21 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   return (
     <Dialog open={open} onOpenChange={() => {}}>
       <DialogContent
-        className="sm:max-w-md p-0 overflow-hidden"
+        className="sm:max-w-md p-0 overflow-hidden [&>button]:hidden"
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <div className="relative">
+          {/* Skip button - positioned to avoid dialog close button */}
+          {currentStep < steps.length - 1 && (
+            <button
+              onClick={handleSkip}
+              className="absolute top-4 right-4 text-sm text-muted-foreground hover:text-foreground transition-colors z-10"
+            >
+              Skip tour
+            </button>
+          )}
+
           {/* Progress dots */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {steps.map((_, index) => (
@@ -117,16 +127,6 @@ const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
               />
             ))}
           </div>
-
-          {/* Skip button */}
-          {currentStep < steps.length - 1 && (
-            <button
-              onClick={handleSkip}
-              className="absolute top-4 right-4 text-sm text-muted-foreground hover:text-foreground transition-colors z-10"
-            >
-              Skip
-            </button>
-          )}
 
           <AnimatePresence mode="wait">
             <motion.div
