@@ -72,10 +72,23 @@ export function useLessonNotes(lessonId: string | undefined) {
 
         if (error) throw error;
       }
+      
+      return content;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["lesson-notes", lessonId, user?.id],
+    onSuccess: (content) => {
+      // Update cache directly instead of invalidating to avoid refetch loops
+      queryClient.setQueryData(["lesson-notes", lessonId, user?.id], (old: LessonNote | null) => {
+        if (old) {
+          return { ...old, content, updated_at: new Date().toISOString() };
+        }
+        return {
+          id: "temp",
+          user_id: user?.id || "",
+          lesson_id: lessonId || "",
+          content,
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+        };
       });
     },
   });
