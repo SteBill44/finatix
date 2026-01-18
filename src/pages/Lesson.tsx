@@ -360,19 +360,26 @@ const Lesson = () => {
         </header>
 
         {/* Lesson Content */}
-        <div className="p-6 lg:p-8 max-w-4xl mx-auto">
-          {/* Video Player */}
-          <div className="mb-8">
-            <VideoPlayer
-              videoUrl={currentLesson.video_url}
-              title={currentLesson.title}
-              duration={currentLesson.duration_minutes || 0}
-              initialTime={videoProgress?.progress_seconds ? Number(videoProgress.progress_seconds) : 0}
-              onTimeUpdate={(currentTime, duration) => {
-                saveProgress(currentTime, duration);
-              }}
-            />
+        <div className="p-6 lg:p-8">
+          {/* Video Player and Notes - Side by Side on larger screens */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+            <div className="xl:col-span-2">
+              <VideoPlayer
+                videoUrl={currentLesson.video_url}
+                title={currentLesson.title}
+                duration={currentLesson.duration_minutes || 0}
+                initialTime={videoProgress?.progress_seconds ? Number(videoProgress.progress_seconds) : 0}
+                onTimeUpdate={(currentTime, duration) => {
+                  saveProgress(currentTime, duration);
+                }}
+              />
+            </div>
+            <div className="xl:col-span-1">
+              <LessonNotes lessonId={lessonId!} lessonTitle={currentLesson.title} />
+            </div>
           </div>
+          
+          <div className="max-w-4xl mx-auto">
 
           {/* Lesson Info */}
           <div className="mb-8">
@@ -517,10 +524,6 @@ const Lesson = () => {
             </>
           )}
 
-          {/* Lesson Notes */}
-          <Separator className="my-8" />
-          <LessonNotes lessonId={lessonId!} lessonTitle={currentLesson.title} />
-
           <Separator className="my-8" />
 
           {/* Navigation */}
@@ -557,6 +560,7 @@ const Lesson = () => {
                 <CheckCircle className="w-4 h-4" />
               </Button>
             )}
+          </div>
           </div>
         </div>
       </main>
