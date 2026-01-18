@@ -18,25 +18,25 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
   const { notes, isLoading, saveNotes, saveNotesImmediate, isSaving } = useLessonNotes(lessonId);
   const [content, setContent] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const initializedRef = useRef(false);
   const lastSavedContentRef = useRef("");
+  const previousLessonIdRef = useRef<string | null>(null);
 
-  // Initialize content when notes load (only once)
+  // Initialize content when notes load or lessonId changes
   useEffect(() => {
-    if (notes?.content !== undefined && !initializedRef.current) {
+    // Reset when lessonId changes
+    if (previousLessonIdRef.current !== lessonId) {
+      previousLessonIdRef.current = lessonId;
+      setContent("");
+      setHasUnsavedChanges(false);
+      lastSavedContentRef.current = "";
+    }
+    
+    // Set content from loaded notes
+    if (notes?.content !== undefined && !hasUnsavedChanges) {
       setContent(notes.content);
       lastSavedContentRef.current = notes.content;
-      initializedRef.current = true;
     }
-  }, [notes?.content]);
-
-  // Reset initialization when lessonId changes
-  useEffect(() => {
-    initializedRef.current = false;
-    setContent("");
-    setHasUnsavedChanges(false);
-    lastSavedContentRef.current = "";
-  }, [lessonId]);
+  }, [notes?.content, lessonId, hasUnsavedChanges]);
 
   // Handle content change with debounced save
   const handleContentChange = (newContent: string) => {
