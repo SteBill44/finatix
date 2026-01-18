@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -19,23 +19,37 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
   const [content, setContent] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
+  const lastSavedContentRef = useRef<string>("");
+
   // Initialize content when notes load
   useEffect(() => {
-    if (notes?.content !== undefined) {
+    if (notes?.content !== undefined && !hasUnsavedChanges) {
       setContent(notes.content);
+      lastSavedContentRef.current = notes.content;
     }
-  }, [notes?.content]);
+  }, [notes?.content, hasUnsavedChanges]);
 
-  // Auto-save on content change
-  useEffect(() => {
-    if (!user || content === (notes?.content || "")) {
+  // Handle content change with debounced save
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+    
+    if (!user || newContent === lastSavedContentRef.current) {
       setHasUnsavedChanges(false);
       return;
     }
     
     setHasUnsavedChanges(true);
-    saveNotes(content);
-  }, [content, user, saveNotes, notes?.content]);
+    saveNotes(newContent);
+  };
+
+  // Update saved content ref when save completes
+  useEffect(() => {
+    if (!isSaving && hasUnsavedChanges) {
+      // After saving completes, update the reference
+      lastSavedContentRef.current = content;
+      setHasUnsavedChanges(false);
+    }
+  }, [isSaving]);
 
   // Save on page leave
   useEffect(() => {
@@ -112,7 +126,7 @@ const LessonNotes = ({ lessonId, lessonTitle }: LessonNotesProps) => {
       <Textarea
         placeholder={`Take notes on "${lessonTitle}"...\n\nYour notes are automatically saved as you type.`}
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={(e) => handleContentChange(e.target.value)}
         className={cn(
           "min-h-[200px] resize-none bg-secondary/30 border-border",
           "focus:ring-primary focus:border-primary"
