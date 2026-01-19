@@ -1,17 +1,27 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Gift, Users, CheckCircle, Clock, Share2, Trophy, Sparkles } from 'lucide-react';
+import { Copy, Gift, Users, CheckCircle, Clock, Share2, Trophy, Sparkles, Percent, Tag } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReferralCode, useReferralStats, useMyReferrals, useApplyReferralCode } from '@/hooks/useReferrals';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { format } from 'date-fns';
+import { CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT } from '@/hooks/useReferrals';
+
+// Discount tiers configuration
+const DISCOUNT_TIERS = [
+  { credits: 1, discount: 1 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 3, discount: 3 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 5, discount: 5 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 10, discount: 10 * CREDITS_TO_DISCOUNT_RATE },
+];
 
 export default function Referrals() {
   const { user, loading } = useAuth();
@@ -107,9 +117,10 @@ export default function Referrals() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
               <Gift className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold">Invite Friends, Earn Rewards</h1>
+            <h1 className="text-4xl font-bold">Invite Friends, Earn Discounts</h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Share your unique referral code with friends. When they sign up and complete their first lesson, you both earn rewards!
+              Share your unique referral code with friends. When they sign up and complete their first lesson, 
+              you both earn credits worth {CREDITS_TO_DISCOUNT_RATE}% off courses each—up to {MAX_DISCOUNT_PERCENT}% total!
             </p>
           </motion.div>
 
@@ -146,6 +157,131 @@ export default function Referrals() {
                 <Trophy className="w-8 h-8 mx-auto text-amber-500 mb-2" />
                 <p className="text-3xl font-bold">{stats?.totalCredits || 0}</p>
                 <p className="text-sm text-muted-foreground">Credits Earned</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Discount Rewards Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className="border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-transparent">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Tag className="w-5 h-5 text-amber-500" />
+                  Your Discount Rewards
+                </CardTitle>
+                <CardDescription>
+                  Earn credits to unlock course discounts. Each referral earns you credits!
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Current Discount */}
+                <div className="p-4 bg-muted/50 rounded-lg text-center">
+                  <p className="text-sm text-muted-foreground mb-1">Your Current Discount</p>
+                  <p className="text-4xl font-bold text-primary">
+                    {Math.min((stats?.totalCredits || 0) * CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT)}%
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Applied automatically at checkout
+                  </p>
+                </div>
+
+                {/* Discount Tiers */}
+                <div className="space-y-3">
+                  <p className="text-sm font-medium">Discount Tiers</p>
+                  {DISCOUNT_TIERS.map((tier) => {
+                    const currentCredits = stats?.totalCredits || 0;
+                    const isUnlocked = currentCredits >= tier.credits;
+                    const isNext = !isUnlocked && (
+                      DISCOUNT_TIERS.findIndex(t => t.credits === tier.credits) === 
+                      DISCOUNT_TIERS.findIndex(t => currentCredits < t.credits)
+                    );
+                    
+                    return (
+                      <div 
+                        key={tier.credits}
+                        className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
+                          isUnlocked 
+                            ? 'bg-primary/10 border-primary/30' 
+                            : isNext 
+                              ? 'bg-muted/80 border-amber-500/30' 
+                              : 'bg-muted/30 border-border'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          {isUnlocked ? (
+                            <CheckCircle className="w-5 h-5 text-primary" />
+                          ) : (
+                            <div className={`w-5 h-5 rounded-full border-2 ${isNext ? 'border-amber-500' : 'border-muted-foreground/30'}`} />
+                          )}
+                          <div>
+                            <p className={`font-medium ${isUnlocked ? 'text-foreground' : 'text-muted-foreground'}`}>
+                              {tier.credits} {tier.credits === 1 ? 'Credit' : 'Credits'}
+                            </p>
+                            {isNext && (
+                              <p className="text-xs text-amber-500">
+                                {tier.credits - currentCredits} more to unlock
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <Badge 
+                          variant={isUnlocked ? 'default' : 'secondary'}
+                          className={isUnlocked ? '' : 'opacity-60'}
+                        >
+                          <Percent className="w-3 h-3 mr-1" />
+                          {tier.discount}% off
+                        </Badge>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Progress to next tier */}
+                {(() => {
+                  const currentCredits = stats?.totalCredits || 0;
+                  const nextTier = DISCOUNT_TIERS.find(t => currentCredits < t.credits);
+                  
+                  if (nextTier && currentCredits < MAX_DISCOUNT_PERCENT / CREDITS_TO_DISCOUNT_RATE) {
+                    const prevTier = DISCOUNT_TIERS.filter(t => t.credits <= currentCredits).pop();
+                    const prevCredits = prevTier?.credits || 0;
+                    const progress = ((currentCredits - prevCredits) / (nextTier.credits - prevCredits)) * 100;
+                    
+                    return (
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Progress to {nextTier.discount}% discount</span>
+                          <span className="font-medium">{currentCredits}/{nextTier.credits} credits</span>
+                        </div>
+                        <Progress value={progress} className="h-2" />
+                      </div>
+                    );
+                  }
+                  
+                  if (currentCredits >= 10) {
+                    return (
+                      <div className="text-center p-3 bg-primary/10 rounded-lg">
+                        <p className="text-sm font-medium text-primary">
+                          🎉 Maximum discount unlocked!
+                        </p>
+                      </div>
+                    );
+                  }
+                  
+                  return null;
+                })()}
+
+                <div className="text-center pt-2">
+                  <Link to="/courses">
+                    <Button variant="outline" className="gap-2">
+                      <Tag className="w-4 h-4" />
+                      Browse Courses
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </motion.div>
@@ -334,9 +470,9 @@ export default function Referrals() {
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
                       <span className="text-xl font-bold text-primary">3</span>
                     </div>
-                    <h3 className="font-semibold mb-1">Both Earn Rewards</h3>
+                    <h3 className="font-semibold mb-1">Earn Course Discounts</h3>
                     <p className="text-sm text-muted-foreground">
-                      When they complete their first lesson, you both earn credits!
+                      Each credit = 5% off courses. Earn up to 50% discount!
                     </p>
                   </div>
                 </div>
