@@ -2,8 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Discount configuration - 5% per credit, max 50%
-export const CREDITS_TO_DISCOUNT_RATE = 5; // 5% per credit
+// Discount configuration - 10% per credit, max 50%
+export const CREDITS_TO_DISCOUNT_RATE = 10; // 10% per credit
 export const MAX_DISCOUNT_PERCENT = 50;
 
 export function calculateDiscount(credits: number): number {
