@@ -1185,6 +1185,95 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referral_rewards: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          referral_id: string
+          reward_type: string
+          reward_value: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          referral_id: string
+          reward_type?: string
+          reward_value?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          referral_id?: string
+          reward_type?: string
+          reward_value?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+          reward_claimed: boolean
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+          reward_claimed?: boolean
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+          reward_claimed?: boolean
+          status?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           id: string
@@ -1500,6 +1589,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_referral_code: {
+        Args: { p_code: string; p_referred_id: string }
+        Returns: Json
+      }
       check_rate_limit: {
         Args: {
           p_action_type: string
@@ -1510,7 +1603,13 @@ export type Database = {
         Returns: Json
       }
       cleanup_rate_limits: { Args: never; Returns: undefined }
+      complete_referral: { Args: { p_referred_id: string }; Returns: Json }
+      generate_referral_code: { Args: never; Returns: string }
       get_admin_dashboard_stats: { Args: never; Returns: Json }
+      get_or_create_referral_code: {
+        Args: { p_user_id: string }
+        Returns: string
+      }
       get_platform_analytics: { Args: never; Returns: Json }
       get_quiz_questions: {
         Args: { _quiz_id: string }
@@ -1525,6 +1624,7 @@ export type Database = {
           quiz_id: string
         }[]
       }
+      get_referral_stats: { Args: { p_user_id: string }; Returns: Json }
       get_user_profile_with_audit: {
         Args: { p_user_id: string }
         Returns: {
