@@ -15,13 +15,12 @@ import SEOHead from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT } from '@/hooks/useReferrals';
 
-// Discount tiers configuration - hardcoded for display
+// Discount tiers configuration
 const DISCOUNT_TIERS = [
-  { credits: 1, discount: 10 },
-  { credits: 2, discount: 20 },
-  { credits: 3, discount: 30 },
-  { credits: 4, discount: 40 },
-  { credits: 5, discount: 50 },
+  { credits: 1, discount: 1 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 3, discount: 3 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 5, discount: 5 * CREDITS_TO_DISCOUNT_RATE },
+  { credits: 10, discount: 10 * CREDITS_TO_DISCOUNT_RATE },
 ];
 
 export default function Referrals() {
