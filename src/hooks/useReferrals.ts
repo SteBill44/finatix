@@ -2,6 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Discount configuration - 5% per credit, max 50%
+export const CREDITS_TO_DISCOUNT_RATE = 5; // 5% per credit
+export const MAX_DISCOUNT_PERCENT = 50;
+
+export function calculateDiscount(credits: number): number {
+  return Math.min(credits * CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT);
+}
+
 interface ReferralStats {
   totalReferrals: number;
   pendingReferrals: number;
@@ -150,4 +158,15 @@ export function useCompleteReferral() {
       queryClient.invalidateQueries({ queryKey: ['my-referrals'] });
     },
   });
+}
+
+export function useReferralDiscount() {
+  const { data: stats, isLoading } = useReferralStats();
+  
+  return {
+    credits: stats?.totalCredits || 0,
+    discountPercent: calculateDiscount(stats?.totalCredits || 0),
+    maxDiscount: MAX_DISCOUNT_PERCENT,
+    isLoading,
+  };
 }
