@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search, Gift } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -167,6 +167,12 @@ const Navbar = () => {
                         Discussions
                       </Link>
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/referrals" className="cursor-pointer flex items-center">
+                        <Gift className="w-4 h-4 mr-2" />
+                        Referrals
+                      </Link>
+                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Account</DropdownMenuLabel>
@@ -274,6 +280,12 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <MessageSquare className="w-4 h-4" />
                         Discussions
+                      </Button>
+                    </Link>
+                    <Link to="/referrals" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Gift className="w-4 h-4" />
+                        Referrals
                       </Button>
                     </Link>
                     <Link to="/account" onClick={() => setIsOpen(false)}>

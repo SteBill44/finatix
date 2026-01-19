@@ -433,6 +433,16 @@ export const useMarkLessonComplete = () => {
     mutationFn: async ({ lessonId, courseId }: { lessonId: string; courseId: string }) => {
       if (!user) throw new Error("Must be logged in");
       
+      // Check if this is the user's first completed lesson
+      const { data: existingProgress } = await supabase
+        .from("lesson_progress")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("completed", true)
+        .limit(1);
+      
+      const isFirstLesson = !existingProgress || existingProgress.length === 0;
+      
       // Mark the lesson as complete
       const { data, error } = await supabase
         .from("lesson_progress")
@@ -446,6 +456,16 @@ export const useMarkLessonComplete = () => {
         .single();
 
       if (error) throw error;
+
+      // Complete referral if this is the first lesson
+      if (isFirstLesson) {
+        try {
+          await supabase.rpc('complete_referral', { p_referred_id: user.id });
+        } catch (refErr) {
+          // Silently fail - referral completion is optional
+          console.log('No pending referral to complete');
+        }
+      }
 
       // Check if all lessons in the course are now complete
       const { data: allLessons } = await supabase
@@ -476,6 +496,7 @@ export const useMarkLessonComplete = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lesson_progress"] });
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["referral-stats"] });
     },
   });
 };

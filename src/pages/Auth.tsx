@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft, Gift } from "lucide-react";
 import { z } from "zod";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import FinatixLogo from "@/components/FinatixLogo";
@@ -93,6 +93,7 @@ const Auth = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [cimaId, setCimaId] = useState("");
+  const [referralCode, setReferralCode] = useState(() => searchParams.get("ref") || "");
   
   const { signIn, signUp } = useAuth();
   const { toast } = useToast();
@@ -271,6 +272,22 @@ const Auth = () => {
             });
           }
         } else {
+          // Apply referral code if provided
+          if (referralCode.trim()) {
+            try {
+              const { data: { user: newUser } } = await supabase.auth.getUser();
+              if (newUser) {
+                await supabase.rpc('apply_referral_code', {
+                  p_referred_id: newUser.id,
+                  p_code: referralCode.trim().toUpperCase()
+                });
+              }
+            } catch (refErr) {
+              // Silently fail - user account is created, referral is optional
+              console.error('Failed to apply referral code:', refErr);
+            }
+          }
+          
           toast({
             title: "Account created!",
             description: "Welcome to Finatix. You can now access your dashboard.",
@@ -626,23 +643,44 @@ const Auth = () => {
                     </div>
 
                     {mode === "signup" && (
-                      <div className="space-y-2">
-                        <Label htmlFor="confirmPassword">Confirm Password</Label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                          <Input
-                            id="confirmPassword"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="••••••••"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="pl-10"
-                          />
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="confirmPassword">Confirm Password</Label>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                            <Input
+                              id="confirmPassword"
+                              type={showPassword ? "text" : "password"}
+                              placeholder="••••••••"
+                              value={confirmPassword}
+                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              className="pl-10"
+                            />
+                          </div>
+                          {errors.confirmPassword && (
+                            <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                          )}
                         </div>
-                        {errors.confirmPassword && (
-                          <p className="text-sm text-destructive">{errors.confirmPassword}</p>
-                        )}
-                      </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="referralCode" className="flex items-center gap-1">
+                            <Gift className="w-4 h-4 text-primary" />
+                            Referral Code <span className="text-xs text-muted-foreground">(optional)</span>
+                          </Label>
+                          <Input
+                            id="referralCode"
+                            type="text"
+                            placeholder="e.g., ABC12345"
+                            value={referralCode}
+                            onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                            className="font-mono tracking-wider uppercase"
+                            maxLength={12}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Have a friend's referral code? Enter it to earn bonus credits!
+                          </p>
+                        </div>
+                      </>
                     )}
 
                     <Button type="submit" className="w-full" disabled={loading}>
