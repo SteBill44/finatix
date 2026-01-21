@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import CertificateTemplate from "@/components/certificate/CertificateTemplate";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
-import stepSuccessImg from "@/assets/course-step-3-success.jpg";
 
 const CourseLevels = () => {
   const { user } = useAuth();
@@ -51,7 +51,7 @@ const CourseLevels = () => {
       cta: user ? "View Achievements" : "View Certifications",
       ctaLink: user ? "/achievements" : "/courses",
       imagePosition: "right",
-      image: stepSuccessImg
+      useCertificate: true
     },
   ];
 
@@ -88,12 +88,21 @@ const CourseLevels = () => {
             {/* Image */}
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden shadow-lg">
-                <OptimizedImage 
-                  src={step.image} 
-                  alt={step.title}
-                  aspectRatio={step.number === "02" ? undefined : "video"}
-                  className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
-                />
+                {'useCertificate' in step && step.useCertificate ? (
+                  <CertificateTemplate
+                    studentName="Sarah Johnson"
+                    courseName="BA1 - Fundamentals of Business Economics"
+                    certificateNumber="FTX-R3K8X2-M7YN4P"
+                    issuedAt={new Date()}
+                  />
+                ) : (
+                  <OptimizedImage 
+                    src={step.image} 
+                    alt={step.title}
+                    aspectRatio={step.number === "02" ? undefined : "video"}
+                    className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
+                  />
+                )}
               </div>
             </div>
           </div>
