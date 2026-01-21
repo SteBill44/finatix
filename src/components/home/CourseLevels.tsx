@@ -89,12 +89,15 @@ const CourseLevels = () => {
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden shadow-lg">
                 {'useCertificate' in step && step.useCertificate ? (
-                  <CertificateTemplate
-                    studentName="Sarah Johnson"
-                    courseName="BA1 - Fundamentals of Business Economics"
-                    certificateNumber="FTX-R3K8X2-M7YN4P"
-                    issuedAt={new Date()}
-                  />
+                  <div className="aspect-video bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center p-4">
+                    <CertificateTemplate
+                      studentName="Sarah Johnson"
+                      courseName="BA1 - Fundamentals of Business Economics"
+                      certificateNumber="FTX-R3K8X2-M7YN4P"
+                      issuedAt={new Date()}
+                      className="shadow-xl"
+                    />
+                  </div>
                 ) : (
                   <OptimizedImage 
                     src={step.image} 
