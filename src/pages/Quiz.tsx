@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useQuizWithQuestions, QuizQuestion } from "@/hooks/useQuizzes";
-import { useRecordQuizAttempt } from "@/hooks/useStudentProgress";
+import { useSubmitQuiz } from "@/hooks/useSubmitQuiz";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import QuestionRenderer, { Answer, isAnswerCorrect } from "@/components/quiz/QuestionRenderer";
@@ -25,7 +25,7 @@ const Quiz = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { quiz, questions, isLoading, refetchQuestions } = useQuizWithQuestions(quizId || "");
-  const recordAttempt = useRecordQuizAttempt();
+  const submitQuiz = useSubmitQuiz();
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, Answer>>({});
@@ -102,22 +102,24 @@ const Quiz = () => {
       return;
     }
 
-    const score = calculateScore();
     setSubmitted(true);
     setShowResults(true);
 
     try {
-      await recordAttempt.mutateAsync({
-        courseId: quiz.course_id,
+      // Submit quiz to server for secure scoring
+      const result = await submitQuiz.mutateAsync({
         quizId: quiz.id,
-        score,
-        maxScore: questions.length,
+        answers: selectedAnswers,
       });
       // Refetch questions to get correct answers now that attempt is recorded
       await refetchQuestions();
-      toast.success("Quiz completed! Your score has been saved.");
+      toast.success(`Quiz completed! You scored ${result.score}/${result.maxScore} (${result.percentage}%)`);
     } catch (error) {
-      toast.error("Failed to save score, but you can see your results.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit quiz";
+      toast.error(errorMessage);
+      // Reset state on error so user can try again
+      setSubmitted(false);
+      setShowResults(false);
     }
   };
 

@@ -18,12 +18,41 @@ serve(async (req) => {
   }
 
   try {
+    // Authenticate the request
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      throw new Error("No authorization header");
+    }
+
+    // Create client with user's auth token for authentication
+    const supabaseAuth = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    if (userError || !user) {
+      throw new Error("Unauthorized");
+    }
+
+    // Create service role client for admin operations
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
     const { type, userId, data }: NotificationRequest = await req.json();
+
+    // Users can only send notifications to themselves, unless they're an admin
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: user.id,
+      _role: "admin",
+    });
+
+    if (userId !== user.id && !isAdmin) {
+      throw new Error("Forbidden: Cannot send notifications to other users");
+    }
 
     // Check user's notification preferences
     const { data: preferences } = await supabase
