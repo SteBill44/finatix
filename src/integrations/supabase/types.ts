@@ -1050,12 +1050,14 @@ export type Database = {
           correct_answer: number
           correct_answers: number[] | null
           created_at: string
+          difficulty_level: string | null
           drag_items: Json | null
           drag_targets: Json | null
           explanation: string | null
           hotspot_regions: Json | null
           id: string
           image_url: string | null
+          is_practice_pool: boolean | null
           number_answer: number | null
           number_tolerance: number | null
           options: Json
@@ -1064,17 +1066,21 @@ export type Database = {
           question_type: string
           quiz_id: string
           syllabus_area_index: number | null
+          times_correct: number | null
+          times_shown: number | null
         }
         Insert: {
           correct_answer: number
           correct_answers?: number[] | null
           created_at?: string
+          difficulty_level?: string | null
           drag_items?: Json | null
           drag_targets?: Json | null
           explanation?: string | null
           hotspot_regions?: Json | null
           id?: string
           image_url?: string | null
+          is_practice_pool?: boolean | null
           number_answer?: number | null
           number_tolerance?: number | null
           options?: Json
@@ -1083,17 +1089,21 @@ export type Database = {
           question_type?: string
           quiz_id: string
           syllabus_area_index?: number | null
+          times_correct?: number | null
+          times_shown?: number | null
         }
         Update: {
           correct_answer?: number
           correct_answers?: number[] | null
           created_at?: string
+          difficulty_level?: string | null
           drag_items?: Json | null
           drag_targets?: Json | null
           explanation?: string | null
           hotspot_regions?: Json | null
           id?: string
           image_url?: string | null
+          is_practice_pool?: boolean | null
           number_answer?: number | null
           number_tolerance?: number | null
           options?: Json
@@ -1102,6 +1112,8 @@ export type Database = {
           question_type?: string
           quiz_id?: string
           syllabus_area_index?: number | null
+          times_correct?: number | null
+          times_shown?: number | null
         }
         Relationships: [
           {
@@ -1474,6 +1486,47 @@ export type Database = {
           },
         ]
       }
+      user_question_attempts: {
+        Row: {
+          attempted_at: string
+          course_id: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          syllabus_area_index: number | null
+          time_taken_seconds: number | null
+          user_id: string
+        }
+        Insert: {
+          attempted_at?: string
+          course_id: string
+          id?: string
+          is_correct: boolean
+          question_id: string
+          syllabus_area_index?: number | null
+          time_taken_seconds?: number | null
+          user_id: string
+        }
+        Update: {
+          attempted_at?: string
+          course_id?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          syllabus_area_index?: number | null
+          time_taken_seconds?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_question_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1517,6 +1570,48 @@ export type Database = {
           id?: string
           last_activity_date?: string | null
           longest_streak?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_syllabus_mastery: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          last_attempted_at: string | null
+          mastery_score: number | null
+          questions_attempted: number | null
+          questions_correct: number | null
+          syllabus_area_index: number
+          syllabus_area_title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          last_attempted_at?: string | null
+          mastery_score?: number | null
+          questions_attempted?: number | null
+          questions_correct?: number | null
+          syllabus_area_index: number
+          syllabus_area_title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          last_attempted_at?: string | null
+          mastery_score?: number | null
+          questions_attempted?: number | null
+          questions_correct?: number | null
+          syllabus_area_index?: number
+          syllabus_area_title?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1605,6 +1700,22 @@ export type Database = {
       cleanup_rate_limits: { Args: never; Returns: undefined }
       complete_referral: { Args: { p_referred_id: string }; Returns: Json }
       generate_referral_code: { Args: never; Returns: string }
+      get_adaptive_practice_questions: {
+        Args: { p_count?: number; p_course_id: string }
+        Returns: {
+          difficulty_level: string
+          drag_items: Json
+          drag_targets: Json
+          hotspot_regions: Json
+          id: string
+          image_url: string
+          options: Json
+          question: string
+          question_type: string
+          quiz_id: string
+          syllabus_area_index: number
+        }[]
+      }
       get_admin_dashboard_stats: { Args: never; Returns: Json }
       get_or_create_referral_code: {
         Args: { p_user_id: string }
@@ -1655,6 +1766,16 @@ export type Database = {
       is_master_admin: { Args: { _user_id: string }; Returns: boolean }
       log_profile_access: {
         Args: { p_access_type?: string; p_profile_user_id: string }
+        Returns: undefined
+      }
+      update_syllabus_mastery: {
+        Args: {
+          p_course_id: string
+          p_is_correct: boolean
+          p_syllabus_area_index: number
+          p_syllabus_area_title: string
+          p_user_id: string
+        }
         Returns: undefined
       }
     }

@@ -42,6 +42,7 @@ const CertificatePreviewPage = lazy(() => import("./pages/CertificatePreviewPage
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify"));
 const Certificates = lazy(() => import("./pages/Certificates"));
 const Referrals = lazy(() => import("./pages/Referrals"));
+const PracticeMode = lazy(() => import("./pages/PracticeMode"));
 
 // Configure QueryClient with global error handling
 const queryClient = new QueryClient({
@@ -108,6 +109,7 @@ const AnimatedRoutes = () => {
           <Route path="/verify" element={<PageTransition><CertificateVerify /></PageTransition>} />
           <Route path="/certificates" element={<PageTransition><Certificates /></PageTransition>} />
           <Route path="/referrals" element={<PageTransition><Referrals /></PageTransition>} />
+          <Route path="/practice/:courseSlug" element={<PageTransition><PracticeMode /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </Suspense>
