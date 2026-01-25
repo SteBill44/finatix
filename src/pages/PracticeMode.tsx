@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import QuestionRenderer from "@/components/quiz/QuestionRenderer";
+import QuestionRenderer, { Answer } from "@/components/quiz/QuestionRenderer";
 import SyllabusMasteryCard from "@/components/course/SyllabusMasteryCard";
 import { 
   ArrowLeft, 
@@ -26,8 +26,6 @@ import {
   Lightbulb,
   Filter,
 } from "lucide-react";
-
-type Answer = number | number[] | string | string[] | { x: number; y: number } | null;
 
 const PracticeMode = () => {
   const { courseSlug } = useParams<{ courseSlug: string }>();
@@ -433,8 +431,8 @@ const PracticeMode = () => {
                 number_answer: undefined,
                 number_tolerance: undefined,
               }}
-              selectedAnswer={selectedAnswer}
-              onAnswerChange={setSelectedAnswer}
+              answer={selectedAnswer}
+              onAnswerChange={(answer) => setSelectedAnswer(answer)}
               showResult={showResult}
               disabled={showResult}
             />
