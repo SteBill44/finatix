@@ -15,26 +15,28 @@ const Brand = () => {
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
   const logo512Ref = useRef<HTMLDivElement>(null);
   const logo1024Ref = useRef<HTMLDivElement>(null);
+  const twitterBannerRef = useRef<HTMLDivElement>(null);
+  const facebookBannerRef = useRef<HTMLDivElement>(null);
 
-  const downloadLogo = async (ref: React.RefObject<HTMLDivElement>, size: number) => {
+  const downloadLogo = async (ref: React.RefObject<HTMLDivElement>, filename: string, scale: number = 4) => {
     if (!ref.current) return;
 
     try {
       const canvas = await html2canvas(ref.current, {
         backgroundColor: null,
-        scale: size / 128, // Scale to actual size
+        scale: scale,
         logging: false,
       });
 
       const link = document.createElement("a");
-      link.download = `finatix-logo-${size}x${size}.png`;
+      link.download = `finatix-${filename}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
       
-      toast.success(`Logo ${size}x${size} downloaded successfully!`);
+      toast.success(`${filename} downloaded successfully!`);
     } catch (error) {
-      console.error("Error downloading logo:", error);
-      toast.error("Failed to download logo");
+      console.error("Error downloading:", error);
+      toast.error("Failed to download");
     }
   };
 
@@ -103,7 +105,7 @@ const Brand = () => {
                 </div>
               </div>
               <Button 
-                onClick={() => downloadLogo(logo512Ref, 512)} 
+                onClick={() => downloadLogo(logo512Ref, "logo-512x512", 4)}
                 className="w-full"
               >
                 <Download className="mr-2 h-4 w-4" />
@@ -152,7 +154,7 @@ const Brand = () => {
                 </div>
               </div>
               <Button 
-                onClick={() => downloadLogo(logo1024Ref, 1024)} 
+                onClick={() => downloadLogo(logo1024Ref, "logo-1024x1024", 8)}
                 className="w-full"
               >
                 <Download className="mr-2 h-4 w-4" />
@@ -161,6 +163,124 @@ const Brand = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Social Media Banners */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Social Media Banners</CardTitle>
+            <CardDescription>
+              Ready-to-use banners for social media platforms
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Twitter/X Banner */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Twitter/X Header</p>
+                  <p className="text-sm text-muted-foreground">1500×500 pixels</p>
+                </div>
+                <Button 
+                  onClick={() => downloadLogo(twitterBannerRef, "twitter-banner-1500x500", 2)}
+                  size="sm"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+              <div className="overflow-hidden rounded-lg border">
+                <div 
+                  ref={twitterBannerRef}
+                  className="flex items-center justify-center"
+                  style={{ 
+                    width: "100%",
+                    aspectRatio: "1500/500",
+                    background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #0d9488 100%)"
+                  }}
+                >
+                  <div className="flex items-center gap-4">
+                    <svg 
+                      viewBox="0 0 100 100" 
+                      className="w-16 h-16 md:w-20 md:h-20"
+                      fill="none"
+                    >
+                      <path
+                        d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
+                        fill="rgba(255,255,255,0.15)"
+                      />
+                      <g fill="#ffffff">
+                        <rect x="32" y="28" width="12" height="44" />
+                        <rect x="44" y="28" width="26" height="10" />
+                        <rect x="44" y="46" width="18" height="10" />
+                      </g>
+                    </svg>
+                    <span className="text-white text-2xl md:text-4xl font-bold tracking-tight">
+                      Fin<span className="opacity-90">atix</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Facebook/LinkedIn Banner */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Facebook/LinkedIn Cover</p>
+                  <p className="text-sm text-muted-foreground">1200×630 pixels</p>
+                </div>
+                <Button 
+                  onClick={() => downloadLogo(facebookBannerRef, "facebook-banner-1200x630", 2)}
+                  size="sm"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+              <div className="overflow-hidden rounded-lg border">
+                <div 
+                  ref={facebookBannerRef}
+                  className="flex items-center justify-center"
+                  style={{ 
+                    width: "100%",
+                    aspectRatio: "1200/630",
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)"
+                  }}
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <svg 
+                      viewBox="0 0 100 100" 
+                      className="w-16 h-16 md:w-24 md:h-24"
+                      fill="none"
+                    >
+                      <defs>
+                        <linearGradient id="fbBannerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#0d9488" />
+                          <stop offset="100%" stopColor="#14b8a6" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
+                        fill="url(#fbBannerGradient)"
+                      />
+                      <g fill="#ffffff">
+                        <rect x="32" y="28" width="12" height="44" />
+                        <rect x="44" y="28" width="26" height="10" />
+                        <rect x="44" y="46" width="18" height="10" />
+                      </g>
+                    </svg>
+                    <span className="text-white text-2xl md:text-4xl font-bold tracking-tight">
+                      Fin<span className="text-primary">atix</span>
+                    </span>
+                    <span className="text-white/60 text-xs md:text-sm">
+                      Master CIMA with Confidence
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Logo with Text */}
         <Card className="mt-8">
