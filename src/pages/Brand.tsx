@@ -197,28 +197,43 @@ const Brand = () => {
                   style={{ 
                     width: "100%",
                     aspectRatio: "1500/500",
-                    background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #0d9488 100%)"
+                    background: "linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)"
                   }}
                 >
-                  {/* Animated orbs background */}
+                  {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-32 h-32 rounded-full bg-white/10 blur-2xl -top-10 -left-10" />
-                    <div className="absolute w-48 h-48 rounded-full bg-white/10 blur-3xl top-1/2 right-10" />
-                    <div className="absolute w-24 h-24 rounded-full bg-white/15 blur-xl bottom-0 left-1/3" />
+                    <div className="absolute w-64 h-64 rounded-full bg-teal-500/20 blur-3xl -top-20 -left-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-teal-400/15 blur-3xl bottom-0 right-20" />
+                    <div className="absolute w-40 h-40 rounded-full bg-teal-600/20 blur-2xl top-1/2 left-1/3" />
                   </div>
-                  {/* Tech pattern */}
-                  <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 1500 500" fill="none">
-                    <path d="M0 400 Q 200 350 400 380 T 800 300 T 1200 250 T 1500 200" stroke="white" strokeWidth="2" fill="none" />
-                    <circle cx="400" cy="380" r="6" fill="white" />
-                    <circle cx="800" cy="300" r="6" fill="white" />
-                    <circle cx="1200" cy="250" r="6" fill="white" />
+                  {/* Tech graphics */}
+                  <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1500 500" fill="none">
+                    <defs>
+                      <linearGradient id="twitterLineGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#0d9488" stopOpacity="0.8" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M0 400 Q 200 350 400 380 T 800 280 T 1200 200 T 1500 120" stroke="url(#twitterLineGradient)" strokeWidth="3" fill="none" />
+                    <circle cx="400" cy="380" r="8" fill="#14b8a6" />
+                    <circle cx="800" cy="280" r="8" fill="#14b8a6" />
+                    <circle cx="1200" cy="200" r="8" fill="#14b8a6" />
                     {/* Bar chart */}
-                    <rect x="1100" y="350" width="30" height="80" rx="4" fill="white" fillOpacity="0.3" />
-                    <rect x="1150" y="300" width="30" height="130" rx="4" fill="white" fillOpacity="0.3" />
-                    <rect x="1200" y="250" width="30" height="180" rx="4" fill="white" fillOpacity="0.3" />
-                    <rect x="1250" y="200" width="30" height="230" rx="4" fill="white" fillOpacity="0.3" />
-                    {/* Hexagon */}
-                    <polygon points="200,100 240,80 280,100 280,140 240,160 200,140" fill="none" stroke="white" strokeWidth="2" opacity="0.4" />
+                    <g transform="translate(1150, 250)">
+                      <rect x="0" y="50" width="35" height="100" rx="4" fill="#0d9488" fillOpacity="0.6" />
+                      <rect x="50" y="20" width="35" height="130" rx="4" fill="#0d9488" fillOpacity="0.7" />
+                      <rect x="100" y="-20" width="35" height="170" rx="4" fill="#14b8a6" fillOpacity="0.8" />
+                      <rect x="150" y="-60" width="35" height="210" rx="4" fill="#14b8a6" fillOpacity="0.9" />
+                    </g>
+                    {/* Pie chart */}
+                    <g transform="translate(200, 250)">
+                      <circle cx="0" cy="0" r="50" fill="none" stroke="#1e293b" strokeWidth="12" />
+                      <circle cx="0" cy="0" r="50" fill="none" stroke="#0d9488" strokeWidth="12" strokeDasharray="100 214" strokeDashoffset="0" opacity="0.7" />
+                      <circle cx="0" cy="0" r="50" fill="none" stroke="#14b8a6" strokeWidth="12" strokeDasharray="70 244" strokeDashoffset="-100" opacity="0.7" />
+                    </g>
+                    {/* Hexagons */}
+                    <polygon points="1350,80 1390,60 1430,80 1430,120 1390,140 1350,120" fill="none" stroke="#14b8a6" strokeWidth="2" opacity="0.5" />
+                    <polygon points="350,420 380,405 410,420 410,450 380,465 350,450" fill="none" stroke="#0d9488" strokeWidth="2" opacity="0.4" />
                   </svg>
                   <div className="relative flex items-center gap-4 z-10">
                     <svg 
@@ -226,9 +241,15 @@ const Brand = () => {
                       className="w-16 h-16 md:w-20 md:h-20"
                       fill="none"
                     >
+                      <defs>
+                        <linearGradient id="twitterLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#0d9488" />
+                          <stop offset="100%" stopColor="#14b8a6" />
+                        </linearGradient>
+                      </defs>
                       <path
                         d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
-                        fill="rgba(255,255,255,0.2)"
+                        fill="url(#twitterLogoGradient)"
                       />
                       <g fill="#ffffff">
                         <rect x="32" y="28" width="12" height="44" />
@@ -237,7 +258,7 @@ const Brand = () => {
                       </g>
                     </svg>
                     <span className="text-white text-2xl md:text-4xl font-bold tracking-tight drop-shadow-lg">
-                      Fin<span className="opacity-90">atix</span>
+                      Fin<span className="text-primary">atix</span>
                     </span>
                   </div>
                 </div>
