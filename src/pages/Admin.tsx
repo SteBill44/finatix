@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,7 +6,13 @@ import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History, ListChecks } from "lucide-react";
+import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History, ListChecks, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import ResourceManagement from "@/components/admin/ResourceManagement";
 import QuestionManagement from "@/components/admin/QuestionManagement";
 import SyllabusManagement from "@/components/admin/SyllabusManagement";
@@ -26,6 +32,7 @@ const Admin = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -58,6 +65,40 @@ const Admin = () => {
     return null;
   }
 
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources"];
+  const usersTabs = ["users", "enrollments", "interest", "corporate"];
+  const systemTabs = ["performance", "costs", "audit"];
+
+  const getContentLabel = () => {
+    const labels: Record<string, string> = {
+      courses: "Courses",
+      "content-status": "Content Status",
+      syllabus: "Syllabus",
+      questions: "Questions",
+      resources: "Resources",
+    };
+    return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
+  };
+
+  const getUsersLabel = () => {
+    const labels: Record<string, string> = {
+      users: "Users",
+      enrollments: "Enrollments",
+      interest: "Interest",
+      corporate: "Corporate",
+    };
+    return usersTabs.includes(activeTab) ? labels[activeTab] : "Users";
+  };
+
+  const getSystemLabel = () => {
+    const labels: Record<string, string> = {
+      performance: "Performance",
+      costs: "Costs",
+      audit: "Audit Log",
+    };
+    return systemTabs.includes(activeTab) ? labels[activeTab] : "System";
+  };
+
   return (
     <Layout>
       <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
@@ -66,60 +107,87 @@ const Admin = () => {
           <p className="text-muted-foreground mt-2">Manage courses, lessons, users, and site settings</p>
         </div>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="flex w-full h-auto gap-1 p-1 overflow-x-auto scrollbar-thin">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="flex w-full h-auto gap-1 p-1">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <LayoutDashboard className="h-4 w-4" />
-              Dashboard
+              <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="courses" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Courses
-            </TabsTrigger>
-            <TabsTrigger value="content-status" className="flex items-center gap-2">
-              <ListChecks className="h-4 w-4" />
-              Content Status
-            </TabsTrigger>
-            <TabsTrigger value="syllabus" className="flex items-center gap-2">
-              <ScrollText className="h-4 w-4" />
-              Syllabus
-            </TabsTrigger>
-            <TabsTrigger value="questions" className="flex items-center gap-2">
-              <ClipboardList className="h-4 w-4" />
-              Questions
-            </TabsTrigger>
-            <TabsTrigger value="resources" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Resources
-            </TabsTrigger>
-            <TabsTrigger value="enrollments" className="flex items-center gap-2">
-              <GraduationCap className="h-4 w-4" />
-              Enrollments
-            </TabsTrigger>
-            <TabsTrigger value="interest" className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              Interest
-            </TabsTrigger>
-            <TabsTrigger value="corporate" className="flex items-center gap-2">
-              <Building2 className="h-4 w-4" />
-              Corporate
-            </TabsTrigger>
-            <TabsTrigger value="performance" className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              Performance
-            </TabsTrigger>
-            <TabsTrigger value="costs" className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              Costs
-            </TabsTrigger>
-            <TabsTrigger value="audit" className="flex items-center gap-2">
-              <History className="h-4 w-4" />
-              Audit Log
-            </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Users
-            </TabsTrigger>
+
+            {/* Content Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${contentTabs.includes(activeTab) ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  {getContentLabel()}
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => setActiveTab("courses")}>
+                  <BookOpen className="h-4 w-4 mr-2" /> Courses
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("content-status")}>
+                  <ListChecks className="h-4 w-4 mr-2" /> Content Status
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("syllabus")}>
+                  <ScrollText className="h-4 w-4 mr-2" /> Syllabus
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("questions")}>
+                  <ClipboardList className="h-4 w-4 mr-2" /> Questions
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("resources")}>
+                  <FileText className="h-4 w-4 mr-2" /> Resources
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Users Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${usersTabs.includes(activeTab) ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                  <Users className="h-4 w-4 mr-2" />
+                  {getUsersLabel()}
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => setActiveTab("users")}>
+                  <Users className="h-4 w-4 mr-2" /> Users
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("enrollments")}>
+                  <GraduationCap className="h-4 w-4 mr-2" /> Enrollments
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("interest")}>
+                  <Mail className="h-4 w-4 mr-2" /> Interest
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("corporate")}>
+                  <Building2 className="h-4 w-4 mr-2" /> Corporate
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* System Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${systemTabs.includes(activeTab) ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                  <Activity className="h-4 w-4 mr-2" />
+                  {getSystemLabel()}
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => setActiveTab("performance")}>
+                  <Activity className="h-4 w-4 mr-2" /> Performance
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("costs")}>
+                  <DollarSign className="h-4 w-4 mr-2" /> Costs
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("audit")}>
+                  <History className="h-4 w-4 mr-2" /> Audit Log
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </TabsList>
 
           {/* Dashboard Tab */}
@@ -195,10 +263,6 @@ const Admin = () => {
             <ContentStatusDashboard />
           </TabsContent>
 
-          {/* Users Tab */}
-          <TabsContent value="users">
-            <UserManagement />
-          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">
