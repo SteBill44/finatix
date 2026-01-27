@@ -9,10 +9,26 @@ interface CertificateTemplateProps {
   certificateNumber: string;
   issuedAt: string | Date;
   className?: string;
+  /**
+   * "standard" uses viewport breakpoints (good for full-page preview/print).
+   * "embed" uses fixed sizes so the certificate can be safely scaled down in marketing sections.
+   */
+  variant?: "standard" | "embed";
 }
 
 const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>(
-  ({ studentName, courseName, certificateNumber, issuedAt, className = "" }, ref) => {
+  (
+    {
+      studentName,
+      courseName,
+      certificateNumber,
+      issuedAt,
+      className = "",
+      variant = "standard",
+    },
+    ref
+  ) => {
+    const isEmbed = variant === "embed";
     const formattedDate = format(
       typeof issuedAt === "string" ? new Date(issuedAt) : issuedAt,
       "MMMM d, yyyy"
@@ -103,7 +119,11 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         <div className="absolute inset-2.5 sm:inset-4 md:inset-7 border border-primary/10 rounded-lg" />
 
         {/* Content - use absolute positioning to fill container */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-between p-3 sm:p-5 md:p-8 lg:p-10">
+        <div
+          className={`absolute inset-0 z-10 flex flex-col items-center justify-between ${
+            isEmbed ? "p-3" : "p-3 sm:p-5 md:p-8 lg:p-10"
+          }`}
+        >
           {/* Header */}
           <div className="flex flex-col items-center">
             {/* Logo */}
@@ -124,7 +144,11 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                   </g>
                 </svg>
               </div>
-              <span className="text-base sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 tracking-tight">
+              <span
+                className={`${
+                  isEmbed ? "text-base" : "text-base sm:text-xl md:text-2xl lg:text-3xl"
+                } font-bold text-gray-800 tracking-tight`}
+              >
                 Fin<span style={{ color: "hsl(174, 72%, 40%)" }}>atix</span>
               </span>
             </div>
@@ -137,7 +161,9 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                 <span className="w-3 sm:w-5 md:w-6 h-px bg-primary/40" />
               </div>
               <h1
-                className="text-sm sm:text-xl md:text-3xl lg:text-4xl font-light leading-tight tracking-wide mt-0.5 sm:mt-1"
+                className={`${
+                  isEmbed ? "text-sm" : "text-sm sm:text-xl md:text-3xl lg:text-4xl"
+                } font-light leading-tight tracking-wide mt-0.5 sm:mt-1`}
                 style={{ color: "hsl(174, 72%, 35%)" }}
               >
                 Certificate of Completion
@@ -146,21 +172,45 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
           </div>
 
           {/* Main content */}
-          <div className="flex flex-col items-center text-center flex-1 justify-center min-h-0 py-1 sm:py-2 md:py-3">
-            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm lg:text-base">This is to certify that</p>
+          <div
+            className={`flex flex-col items-center text-center flex-1 justify-center min-h-0 ${
+              isEmbed ? "py-1" : "py-1 sm:py-2 md:py-3"
+            }`}
+          >
+            <p
+              className={`text-gray-500 ${
+                isEmbed ? "text-[10px]" : "text-[10px] sm:text-xs md:text-sm lg:text-base"
+              }`}
+            >
+              This is to certify that
+            </p>
 
-            <h2 className="text-xs sm:text-lg md:text-2xl lg:text-3xl font-semibold leading-tight text-gray-800 mt-0.5 sm:mt-1 md:mt-2">
+            <h2
+              className={`${
+                isEmbed ? "text-sm" : "text-xs sm:text-lg md:text-2xl lg:text-3xl"
+              } font-semibold leading-tight text-gray-800 mt-0.5 sm:mt-1 md:mt-2`}
+            >
               {studentName}
             </h2>
 
-            <div className="w-16 sm:w-32 md:w-48 lg:w-56 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mt-0.5 sm:mt-1" />
+            <div
+              className={`${
+                isEmbed ? "w-24" : "w-16 sm:w-32 md:w-48 lg:w-56"
+              } h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mt-0.5 sm:mt-1`}
+            />
 
-            <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm lg:text-base mt-1 sm:mt-2 md:mt-3">
+            <p
+              className={`text-gray-500 ${
+                isEmbed ? "text-[10px]" : "text-[10px] sm:text-xs md:text-sm lg:text-base"
+              } mt-1 sm:mt-2 md:mt-3`}
+            >
               has successfully completed the course
             </p>
 
             <h3
-              className="text-[11px] sm:text-base md:text-xl lg:text-2xl font-semibold leading-tight mt-0.5 sm:mt-1 md:mt-2 px-2"
+              className={`${
+                isEmbed ? "text-xs" : "text-[11px] sm:text-base md:text-xl lg:text-2xl"
+              } font-semibold leading-tight mt-0.5 sm:mt-1 md:mt-2 px-2`}
               style={{ color: "hsl(174, 72%, 35%)" }}
             >
               {cleanCourseName}
@@ -176,16 +226,30 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             {/* Achievement badge */}
             <div className="flex items-center gap-1 mb-1 sm:mb-2 md:mb-3">
               <Award className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" style={{ color: "hsl(174, 72%, 40%)" }} />
-              <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-gray-600">
+              <span
+                className={`${
+                  isEmbed ? "text-[8px]" : "text-[8px] sm:text-[10px] md:text-xs"
+                } font-medium text-gray-600`}
+              >
                 Professional Certification
               </span>
               <CheckCircle2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-green-500" />
             </div>
 
             {/* Signatures, QR code, and date */}
-            <div className="flex justify-between items-end w-full max-w-xl px-1 sm:px-2 md:px-4">
+            <div
+              className={`flex justify-between items-end w-full max-w-xl ${
+                isEmbed ? "px-1" : "px-1 sm:px-2 md:px-4"
+              }`}
+            >
               <div className="flex flex-col items-center flex-1">
-                <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-gray-700 mb-0.5 sm:mb-1">{formattedDate}</span>
+                <span
+                  className={`${
+                    isEmbed ? "text-[8px]" : "text-[8px] sm:text-[10px] md:text-xs"
+                  } font-medium text-gray-700 mb-0.5 sm:mb-1`}
+                >
+                  {formattedDate}
+                </span>
                 <div className="w-12 sm:w-20 md:w-28 lg:w-36 border-b border-gray-300" />
                 <span className="text-[6px] sm:text-[8px] md:text-[10px] text-gray-500 mt-0.5 sm:mt-1">Date of Issue</span>
               </div>
@@ -197,14 +261,22 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                     size={24}
                     level="M"
                     fgColor="hsl(174, 72%, 35%)"
-                    className="w-4 h-4 sm:w-6 sm:h-6 md:w-10 md:h-10 lg:w-12 lg:h-12"
+                    className={
+                      isEmbed
+                        ? "w-8 h-8"
+                        : "w-4 h-4 sm:w-6 sm:h-6 md:w-10 md:h-10 lg:w-12 lg:h-12"
+                    }
                   />
                 </div>
                 <span className="text-[6px] sm:text-[8px] md:text-[10px] text-gray-500 mt-0.5 sm:mt-1">Scan to Verify</span>
               </div>
 
               <div className="flex flex-col items-center flex-1">
-                <span className="text-[6px] sm:text-[8px] md:text-[10px] font-medium text-gray-700 font-mono mb-0.5 sm:mb-1 truncate max-w-full">
+                <span
+                  className={`${
+                    isEmbed ? "text-[8px]" : "text-[6px] sm:text-[8px] md:text-[10px]"
+                  } font-medium text-gray-700 font-mono mb-0.5 sm:mb-1 truncate max-w-full`}
+                >
                   {certificateNumber}
                 </span>
                 <div className="w-12 sm:w-20 md:w-28 lg:w-36 border-b border-gray-300" />
