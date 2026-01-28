@@ -493,8 +493,8 @@ const CourseDetail = () => {
                 </Accordion>
               </div>
 
-              {/* Progress and Readiness for enrolled users */}
-              {isEnrolled && (
+              {/* Progress and Readiness for enrolled users - hidden in student view */}
+              {isEnrolled && !(isAdmin && isStudentView) && (
                 <div className="space-y-4">
                   <div className="p-4 bg-primary-foreground/10 rounded-xl backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-2">
@@ -745,8 +745,8 @@ const CourseDetail = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Readiness Score - Only for enrolled users */}
-              {isEnrolled && (
+              {/* Readiness Score & Study Recommendations - hidden in student view */}
+              {isEnrolled && !(isAdmin && isStudentView) && (
                 <>
                   <ReadinessScoreCard courseId={course.id} />
                   {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
