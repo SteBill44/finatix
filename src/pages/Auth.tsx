@@ -9,7 +9,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft, Gift } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, CreditCard, Check, X, ArrowLeft, Gift, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { z } from "zod";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import FinatixLogo from "@/components/FinatixLogo";
@@ -87,6 +88,7 @@ const Auth = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCIMAModal, setShowCIMAModal] = useState(false);
+  const [emailExistsError, setEmailExistsError] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
   
   const [email, setEmail] = useState("");
@@ -204,6 +206,7 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setEmailExistsError(false);
     setLoading(true);
 
     try {
@@ -260,12 +263,8 @@ const Auth = () => {
           cima_id: cimaId.trim()
         });
         if (error) {
-          if (error.message.includes("User already registered")) {
-            toast({
-              title: "Account exists",
-              description: "An account with this email already exists. Please sign in instead.",
-              variant: "destructive",
-            });
+          if (error.message.includes("User already registered") || error.message.includes("already exists")) {
+            setEmailExistsError(true);
           } else {
             toast({
               title: "Sign up failed",
@@ -312,6 +311,7 @@ const Auth = () => {
     setMode(newMode);
     setErrors({});
     setResetEmailSent(false);
+    setEmailExistsError(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -535,6 +535,23 @@ const Auth = () => {
               {(mode === "login" || mode === "signup") && (
                 <>
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Email already exists alert */}
+                    {mode === "signup" && emailExistsError && (
+                      <Alert variant="destructive" className="bg-destructive/10 border-destructive/50">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="ml-2">
+                          An account with this email already exists.{" "}
+                          <button
+                            type="button"
+                            onClick={() => switchMode("login")}
+                            className="font-semibold underline underline-offset-2 hover:text-destructive-foreground"
+                          >
+                            Sign in instead
+                          </button>
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                    
                     {mode === "signup" && (
                       <>
                         <div className="space-y-2">
