@@ -10,7 +10,6 @@ import { CourseGridSkeleton } from "@/components/skeletons/ContentSkeletons";
 import { 
   Search, 
   Clock, 
-  Star, 
   BookOpen,
   BarChart3,
   Target,
@@ -268,10 +267,6 @@ const Courses = () => {
                                 Case Study
                               </span>
                             )}
-                          </div>
-                          <div className="flex items-center gap-1 text-yellow-500">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span className="text-xs font-medium text-foreground">4.8</span>
                           </div>
                         </div>
 
