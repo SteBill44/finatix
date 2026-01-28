@@ -19,6 +19,7 @@ import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse, useLessons, u
 import { useQuizzes } from "@/hooks/useQuizzes";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import { useIsAdmin } from "@/hooks/useUserRole";
+import { useAdminView } from "@/contexts/AdminViewContext";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { 
@@ -98,10 +99,14 @@ const CourseDetail = () => {
   const unenrollMutation = useUnenrollFromCourse();
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
   const { isAdmin } = useIsAdmin();
+  const { isStudentView } = useAdminView();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
+
+  // Effective admin status - false if in student view mode
+  const isEffectiveAdmin = isAdmin && !isStudentView;
 
   // Fetch course from database
   const { data: course, isLoading } = useQuery({
@@ -610,7 +615,7 @@ const CourseDetail = () => {
             <div className="lg:col-span-2">
 
               {/* Lessons - Admin Only */}
-              {isAdmin && lessons && lessons.length > 0 && (
+              {isEffectiveAdmin && lessons && lessons.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                     <BookOpen className={`w-6 h-6 ${levelColor}`} />
@@ -656,7 +661,7 @@ const CourseDetail = () => {
               )}
 
               {/* Quizzes - Admin Only */}
-              {isAdmin && quizzes && quizzes.length > 0 && (
+              {isEffectiveAdmin && quizzes && quizzes.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                     <ClipboardList className={`w-6 h-6 ${levelColor}`} />
@@ -687,7 +692,7 @@ const CourseDetail = () => {
               )}
 
               {/* Mock Exams - Admin Only */}
-              {isAdmin && quizzes && quizzes.length > 0 && (
+              {isEffectiveAdmin && quizzes && quizzes.length > 0 && (
                 <div className="mb-12">
                   <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
                     <GraduationCap className={`w-6 h-6 ${levelColor}`} />
@@ -716,7 +721,7 @@ const CourseDetail = () => {
               )}
 
               {/* Mock Exam History - Admin Only */}
-              {isAdmin && isEnrolled && quizAttempts && quizzes && (
+              {isEffectiveAdmin && isEnrolled && quizAttempts && quizzes && (
                 <div className="mb-12">
                   <div className="flex items-center gap-2 mb-4">
                     <History className={`w-5 h-5 ${levelColor}`} />
@@ -728,7 +733,7 @@ const CourseDetail = () => {
               )}
 
               {/* Student Reviews - Admin Only */}
-              {isAdmin && (
+              {isEffectiveAdmin && (
                 <div className="mb-12">
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
@@ -755,7 +760,7 @@ const CourseDetail = () => {
               )}
 
               {/* Course Content Navigation - Admin Only */}
-              {isAdmin && (
+              {isEffectiveAdmin && (
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
@@ -771,7 +776,7 @@ const CourseDetail = () => {
               )}
 
               {/* All Features - Admin Only */}
-              {isAdmin && (
+              {isEffectiveAdmin && (
                 <Card className="p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <h3 className="font-semibold text-foreground">All Course Features</h3>
@@ -789,7 +794,7 @@ const CourseDetail = () => {
               )}
 
               {/* Related Courses - Admin Only */}
-              {isAdmin && (
+              {isEffectiveAdmin && (
                 <Card className="p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <h3 className="font-semibold text-foreground">Related Courses</h3>

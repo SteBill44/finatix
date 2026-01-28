@@ -18,6 +18,7 @@ import {
   Award
 } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useUserRole";
+import { useAdminView } from "@/contexts/AdminViewContext";
 
 interface Course {
   id: string;
@@ -34,6 +35,10 @@ const Courses = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { isAdmin } = useIsAdmin();
+  const { isStudentView } = useAdminView();
+  
+  // Effective admin status - false if in student view mode
+  const isEffectiveAdmin = isAdmin && !isStudentView;
 
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ["courses"],
@@ -271,8 +276,8 @@ const Courses = () => {
                               </span>
                             )}
                           </div>
-                          {/* Rating - Admin Only */}
-                          {isAdmin && (
+                          {/* Rating - Admin Only (not in student view) */}
+                          {isEffectiveAdmin && (
                             <div className="flex items-center gap-1 text-yellow-500">
                               <Star className="w-3.5 h-3.5 fill-current" />
                               <span className="text-xs font-medium text-foreground">4.8</span>
