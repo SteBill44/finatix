@@ -642,38 +642,9 @@ const CourseDetail = () => {
 
               {/* Course Content Navigation - Hidden for now */}
 
-              {/* All Features */}
-              <div className="bg-card rounded-2xl border border-border p-6">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Award className={`w-5 h-5 ${levelColor}`} />
-                  All Course Features
-                </h3>
-                <ul className="space-y-3">
-                  {features.map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
-                      <CheckCircle className={`w-4 h-4 ${levelColor} flex-shrink-0`} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* All Features - Hidden for now */}
 
-              {/* Related Courses */}
-              <div className="bg-card rounded-2xl border border-border p-6">
-                <h3 className="font-semibold text-foreground mb-4">Related Courses</h3>
-                <div className="space-y-4">
-                  {["BA2", "BA3", "BA4"].map((code) => (
-                    <Link
-                      key={code}
-                      to={`/courses/${code.toLowerCase()}`}
-                      className="block p-3 bg-secondary/50 rounded-lg hover:bg-secondary transition-colors"
-                    >
-                      <span className="font-medium text-foreground">{code}</span>
-                      <p className="text-sm text-muted-foreground">Operational Level</p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {/* Related Courses - Hidden for now */}
             </div>
           </div>
         </div>
