@@ -440,7 +440,7 @@ const CourseDetail = () => {
 
               {/* Course Objectives Dropdown */}
               <div className="mb-8">
-                <Accordion type="single" collapsible className="w-full">
+                <Accordion type="single" collapsible defaultValue="objectives" className="w-full">
                   <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                     <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4 [&[data-state=open]>div>svg]:rotate-0">
                       <div className="flex items-center gap-3">
