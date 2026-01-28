@@ -609,19 +609,133 @@ const CourseDetail = () => {
             {/* Main Content */}
             <div className="lg:col-span-2">
 
-              {/* Lessons - Hidden for now */}
+              {/* Lessons - Admin Only */}
+              {isAdmin && lessons && lessons.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <BookOpen className={`w-6 h-6 ${levelColor}`} />
+                    Course Lessons
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </h2>
+                  <div className="space-y-3">
+                    {lessons.map((lesson, index) => {
+                      const completed = isLessonCompleted(lesson.id);
+                      const isLocked = !isEnrolled && index > 0;
+                      return (
+                        <Card
+                          key={lesson.id}
+                          className={`p-4 transition-all duration-200 ${
+                            isLocked ? "opacity-60" : "hover:shadow-md cursor-pointer"
+                          }`}
+                          onClick={() => !isLocked && navigate(`/courses/${course.id}/lesson/${lesson.id}`)}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              completed ? levelBgColor : "bg-secondary"
+                            }`}>
+                              {completed ? (
+                                <CheckCircle className="w-5 h-5 text-primary-foreground" />
+                              ) : isLocked ? (
+                                <Lock className="w-5 h-5 text-muted-foreground" />
+                              ) : (
+                                <Play className="w-5 h-5 text-muted-foreground" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-medium text-foreground truncate">{lesson.title}</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {lesson.duration_minutes} min
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-              {/* Lesson Quizzes - Hidden for now */}
+              {/* Quizzes - Admin Only */}
+              {isAdmin && quizzes && quizzes.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <ClipboardList className={`w-6 h-6 ${levelColor}`} />
+                    Practice Quizzes
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </h2>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {quizzes.map((quiz) => (
+                      <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-start gap-3">
+                          <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
+                            <ClipboardList className="w-5 h-5 text-primary-foreground" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium text-foreground mb-1">{quiz.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {quiz.description || "Test your knowledge"}
+                            </p>
+                            <Button size="sm" variant="outline" onClick={() => navigate(`/quiz/${quiz.id}`)}>
+                              Start Quiz
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              {/* Mock Exams - Hidden for now */}
+              {/* Mock Exams - Admin Only */}
+              {isAdmin && quizzes && quizzes.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                    <GraduationCap className={`w-6 h-6 ${levelColor}`} />
+                    Mock Exams
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </h2>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {quizzes.map((quiz) => (
+                      <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
+                        <div className="flex items-start gap-3">
+                          <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
+                            <GraduationCap className="w-5 h-5 text-primary-foreground" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-medium text-foreground mb-1">{quiz.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-3">Full exam simulation</p>
+                            <Button size="sm" variant="outline" onClick={() => navigate(`/mock-exam/${quiz.id}`)}>
+                              Start Exam
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              {/* Mock Exam Results History - Only show if enrolled with mock exam attempts */}
-              {/* Mock Exam Results - Hidden for now */}
+              {/* Mock Exam History - Admin Only */}
+              {isAdmin && isEnrolled && quizAttempts && quizzes && (
+                <div className="mb-12">
+                  <div className="flex items-center gap-2 mb-4">
+                    <History className={`w-5 h-5 ${levelColor}`} />
+                    <h3 className="text-lg font-semibold text-foreground">Mock Exam History</h3>
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </div>
+                  <MockExamHistory attempts={quizAttempts} quizzes={quizzes} />
+                </div>
+              )}
 
-              {/* Performance Analytics - Hidden for now */}
-
-
-              {/* Student Reviews - Hidden for now */}
+              {/* Student Reviews - Admin Only */}
+              {isAdmin && (
+                <div className="mb-12">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </div>
+                  <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -640,11 +754,55 @@ const CourseDetail = () => {
                 </>
               )}
 
-              {/* Course Content Navigation - Hidden for now */}
+              {/* Course Content Navigation - Admin Only */}
+              {isAdmin && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </div>
+                  <CourseSideNav
+                    courseId={course.id}
+                    lessons={lessons || []}
+                    quizzes={quizzes || []}
+                    lessonProgress={lessonProgress}
+                    levelColor={levelColor}
+                  />
+                </div>
+              )}
 
-              {/* All Features - Hidden for now */}
+              {/* All Features - Admin Only */}
+              {isAdmin && (
+                <Card className="p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <h3 className="font-semibold text-foreground">All Course Features</h3>
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </div>
+                  <ul className="space-y-3">
+                    {features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
+                        <CheckCircle className={`w-4 h-4 ${levelColor} flex-shrink-0`} />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              )}
 
-              {/* Related Courses - Hidden for now */}
+              {/* Related Courses - Admin Only */}
+              {isAdmin && (
+                <Card className="p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <h3 className="font-semibold text-foreground">Related Courses</h3>
+                    <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Explore other courses at the {course.level} level to continue your CIMA journey.
+                  </p>
+                  <Button variant="outline" className="w-full mt-4" onClick={() => navigate("/courses")}>
+                    Browse All Courses
+                  </Button>
+                </Card>
+              )}
             </div>
           </div>
         </div>
