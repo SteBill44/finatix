@@ -103,18 +103,31 @@ export const errorTracker: ErrorTracker = {
   },
 };
 
+// Performance logging callback
+type LogErrorFn = (path: string, error: string) => void;
+let performanceLogError: LogErrorFn | null = null;
+
+export function setPerformanceErrorLogger(logger: LogErrorFn) {
+  performanceLogError = logger;
+}
+
 /**
  * Global error handler for uncaught errors
  */
 export function setupGlobalErrorHandlers(): void {
   // Handle uncaught errors
   window.onerror = (message, source, lineno, colno, error) => {
-    errorTracker.captureException(
-      error || new Error(String(message)),
-      {
-        metadata: { source, lineno, colno },
-      }
-    );
+    const errorObj = error || new Error(String(message));
+    
+    errorTracker.captureException(errorObj, {
+      metadata: { source, lineno, colno },
+    });
+    
+    // Also log to performance monitoring
+    if (performanceLogError) {
+      performanceLogError(window.location.pathname, errorObj.message);
+    }
+    
     return false; // Let default handler run too
   };
 
@@ -127,6 +140,11 @@ export function setupGlobalErrorHandlers(): void {
     errorTracker.captureException(error, {
       metadata: { type: "unhandledrejection" },
     });
+    
+    // Also log to performance monitoring
+    if (performanceLogError) {
+      performanceLogError(window.location.pathname, error.message);
+    }
   };
 
   // Log when user leaves page with errors in buffer

@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { AdminViewProvider } from "@/contexts/AdminViewContext";
+import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import LoadingScreen from "@/components/LoadingScreen";
 import PageTransition from "@/components/PageTransition";
@@ -137,9 +138,11 @@ const App = () => {
                   )}
                   <Sonner />
                   <BrowserRouter>
-                    <ScrollToTop />
-                    <AnimatedRoutes />
-                    <CookieConsent />
+                    <PerformanceProvider>
+                      <ScrollToTop />
+                      <AnimatedRoutes />
+                      <CookieConsent />
+                    </PerformanceProvider>
                   </BrowserRouter>
                 </TooltipProvider>
               </CookieConsentProvider>
