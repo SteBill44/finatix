@@ -145,7 +145,7 @@ const Navbar = () => {
                     </span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-popover border border-border">
+                <DropdownMenuContent align="end" className="w-48 max-h-[70vh] overflow-y-auto bg-popover border border-border">
                   <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Navigation</DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
