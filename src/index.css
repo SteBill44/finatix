@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    /* Core palette */
     --background: 210 20% 98%;
     --foreground: 210 15% 10%;
 
@@ -36,7 +37,7 @@
 
     --radius: 0.5rem;
 
-    /* Custom design tokens - ArcX style */
+    /* Extended design tokens */
     --charcoal: 210 11% 15%;
     --teal: 174 72% 40%;
     --teal-dark: 174 72% 35%;
@@ -45,18 +46,44 @@
     --orange: 25 95% 53%;
     --red: 0 72% 50%;
     
+    /* Success/Warning states */
+    --success: 142 72% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    
     /* Light mode gradients and glows */
     --hero-gradient-start: 174 60% 97%;
     --hero-gradient-end: 262 50% 97%;
     --glow-primary: 174 72% 45%;
     --glow-accent: 262 83% 65%;
     
+    /* Animation timing tokens */
+    --duration-instant: 0ms;
+    --duration-fast: 100ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 500ms;
+    --duration-slowest: 800ms;
+    
+    /* Easing functions */
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    
     /* Shadows - more pronounced for light mode */
     --shadow-sm: 0 1px 2px 0 hsl(210 11% 15% / 0.06);
     --shadow-md: 0 4px 6px -1px hsl(210 11% 15% / 0.08), 0 2px 4px -2px hsl(210 11% 15% / 0.06);
     --shadow-lg: 0 10px 15px -3px hsl(210 11% 15% / 0.1), 0 4px 6px -4px hsl(210 11% 15% / 0.06);
     --shadow-xl: 0 20px 25px -5px hsl(210 11% 15% / 0.12), 0 8px 10px -6px hsl(210 11% 15% / 0.06);
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
 
+    /* Sidebar tokens */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -96,7 +123,14 @@
     --input: 210 11% 20%;
     --ring: 174 72% 45%;
 
+    /* Dark mode state colors */
+    --success: 142 72% 50%;
+    --warning: 38 92% 55%;
+    --info: 199 89% 58%;
+
     --charcoal: 0 0% 90%;
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.2);
+    
     --sidebar-background: 210 11% 10%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 174 72% 45%;
