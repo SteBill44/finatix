@@ -59,6 +59,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // State colors
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -69,6 +82,23 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      // Animation timing using CSS variables
+      transitionDuration: {
+        instant: "var(--duration-instant)",
+        fast: "var(--duration-fast)",
+        normal: "var(--duration-normal)",
+        slow: "var(--duration-slow)",
+        slower: "var(--duration-slower)",
+        slowest: "var(--duration-slowest)",
+      },
+      transitionTimingFunction: {
+        default: "var(--ease-default)",
+        in: "var(--ease-in)",
+        out: "var(--ease-out)",
+        "in-out": "var(--ease-in-out)",
+        bounce: "var(--ease-bounce)",
+        elastic: "var(--ease-elastic)",
       },
       borderRadius: {
         lg: "var(--radius)",

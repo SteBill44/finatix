@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { usePerformanceMonitoring } from "@/hooks/usePerformanceMonitoring";
-import { setApiLogger } from "@/lib/trackedSupabase";
+import { setApiLogger } from "@/lib/api/client";
 import { setPerformanceErrorLogger } from "@/lib/errorTracking";
 
 interface PerformanceContextValue {
