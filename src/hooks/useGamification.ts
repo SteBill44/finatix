@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface Badge {
@@ -34,14 +34,11 @@ export const useBadges = () => {
   return useQuery({
     queryKey: ["badges"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("badges")
-        .select("*")
-        .order("category")
-        .order("requirement_value");
-      
-      if (error) throw error;
-      return data as Badge[];
+      const result = await tracked("gamification:badges", () =>
+        from("badges").select("*").order("category").order("requirement_value")
+      );
+      if (result.error) throw result.error;
+      return result.data as Badge[];
     },
   });
 };
@@ -53,17 +50,14 @@ export const useUserBadges = (userId?: string) => {
   return useQuery({
     queryKey: ["user_badges", targetUserId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_badges")
-        .select(`
-          *,
-          badges (*)
-        `)
-        .eq("user_id", targetUserId!)
-        .order("earned_at", { ascending: false });
-      
-      if (error) throw error;
-      return data as UserBadge[];
+      const result = await tracked("gamification:userBadges", () =>
+        from("user_badges")
+          .select(`*, badges (*)`)
+          .eq("user_id", targetUserId!)
+          .order("earned_at", { ascending: false })
+      );
+      if (result.error) throw result.error;
+      return result.data as UserBadge[];
     },
     enabled: !!targetUserId,
   });
@@ -75,12 +69,10 @@ export const useUserStreak = () => {
   return useQuery({
     queryKey: ["user_streak", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_streaks")
+      const { data, error } = await from("user_streaks")
         .select("*")
         .eq("user_id", user!.id)
         .single();
-      
       if (error && error.code !== "PGRST116") throw error;
       return data as UserStreak | null;
     },
@@ -96,16 +88,13 @@ export const useUpdateStreak = () => {
     mutationFn: async () => {
       const today = new Date().toISOString().split("T")[0];
       
-      // Get current streak
-      const { data: existingStreak } = await supabase
-        .from("user_streaks")
+      const { data: existingStreak } = await from("user_streaks")
         .select("*")
         .eq("user_id", user!.id)
         .single();
 
       if (!existingStreak) {
-        // Create new streak
-        const { error } = await supabase.from("user_streaks").insert({
+        const { error } = await from("user_streaks").insert({
           user_id: user!.id,
           current_streak: 1,
           longest_streak: 1,
@@ -117,7 +106,6 @@ export const useUpdateStreak = () => {
 
       const lastDate = existingStreak.last_activity_date;
       if (lastDate === today) {
-        // Already logged today
         return { newStreak: existingStreak.current_streak };
       }
 
@@ -132,8 +120,7 @@ export const useUpdateStreak = () => {
 
       const longestStreak = Math.max(newStreak, existingStreak.longest_streak);
 
-      const { error } = await supabase
-        .from("user_streaks")
+      const { error } = await from("user_streaks")
         .update({
           current_streak: newStreak,
           longest_streak: longestStreak,
@@ -166,9 +153,7 @@ export const useLeaderboard = (limit = 10) => {
   return useQuery({
     queryKey: ["leaderboard", limit],
     queryFn: async (): Promise<LeaderboardEntry[]> => {
-      // First get streaks
-      const { data: streaks, error: streaksError } = await supabase
-        .from("user_streaks")
+      const { data: streaks, error: streaksError } = await from("user_streaks")
         .select("*")
         .order("current_streak", { ascending: false })
         .limit(limit);
@@ -176,16 +161,13 @@ export const useLeaderboard = (limit = 10) => {
       if (streaksError) throw streaksError;
       if (!streaks || streaks.length === 0) return [];
 
-      // Get user profiles for these users
       const userIds = streaks.map(s => s.user_id);
-      const { data: profiles, error: profilesError } = await supabase
-        .from("profiles")
+      const { data: profiles, error: profilesError } = await from("profiles")
         .select("user_id, full_name, first_name, avatar_url")
         .in("user_id", userIds);
       
       if (profilesError) throw profilesError;
 
-      // Map profiles to streaks
       const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
       
       return streaks.map(streak => ({
@@ -205,17 +187,14 @@ export const useAwardBadge = () => {
 
   return useMutation({
     mutationFn: async (badgeId: string) => {
-      const { data, error } = await supabase
-        .from("user_badges")
-        .insert({
-          user_id: user!.id,
-          badge_id: badgeId,
-        })
-        .select()
-        .single();
-
-      if (error && error.code !== "23505") throw error; // Ignore duplicate
-      return data;
+      const result = await tracked("gamification:awardBadge", () =>
+        from("user_badges")
+          .insert({ user_id: user!.id, badge_id: badgeId })
+          .select()
+          .single()
+      );
+      if (result.error && result.error.code !== "23505") throw result.error;
+      return result.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user_badges"] });

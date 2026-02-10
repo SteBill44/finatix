@@ -18,8 +18,7 @@ const LoadingScreen = ({ onLoadingComplete, minDuration = 1500 }: LoadingScreenP
     }, minDuration);
 
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [minDuration]);
+  }, [minDuration, onLoadingComplete]);
 
   return (
     <div

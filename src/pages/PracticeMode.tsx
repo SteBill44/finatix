@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdaptivePracticeQuestions, useSubmitPracticeAnswer } from "@/hooks/useAdaptivePractice";
 import { useSyllabusMastery } from "@/hooks/useSyllabusMastery";
-import { isAnswerCorrect } from "@/components/quiz/QuestionRenderer";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Card } from "@/components/ui/card";
@@ -103,22 +102,22 @@ const PracticeMode = () => {
   const handleAnswerSubmit = async () => {
     if (!currentQuestion || selectedAnswer === null || !course?.id) return;
 
-    // Transform question to match QuestionRenderer's expected format
-    const questionForCheck = {
-      ...currentQuestion,
-      correct_answer: 0, // Will be checked server-side
-      explanation: null,
-    };
-
-    // For practice mode, we need to get the correct answer from the server
-    // For now, we'll simulate by checking locally (in real implementation, 
-    // this would be a secure check)
-    const correct = false; // Placeholder - server will validate
-    setIsCorrect(correct);
-    setShowResult(true);
-
-    // Record the attempt
     try {
+      // Validate answer server-side
+      const { data, error } = await supabase.functions.invoke("validate-practice-answer", {
+        body: {
+          questionId: currentQuestion.id,
+          answer: selectedAnswer,
+        },
+      });
+
+      if (error) throw error;
+
+      const correct = data?.isCorrect ?? false;
+      setIsCorrect(correct);
+      setShowResult(true);
+
+      // Record the attempt
       await submitAnswer.mutateAsync({
         questionId: currentQuestion.id,
         courseId: course.id,
@@ -131,7 +130,9 @@ const PracticeMode = () => {
         total: prev.total + 1,
       }));
     } catch (error) {
-      console.error("Failed to record attempt:", error);
+      console.error("Failed to validate/record attempt:", error);
+      // Fallback: still show the result UI so user isn't stuck
+      setShowResult(true);
     }
   };
 

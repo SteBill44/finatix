@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface CourseReview {
@@ -24,14 +24,14 @@ export const useCourseReviews = (courseId: string) => {
   return useQuery({
     queryKey: ["course_reviews", courseId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("course_reviews")
-        .select("*")
-        .eq("course_id", courseId)
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      return data as CourseReview[];
+      const result = await tracked("reviews:list", () =>
+        from("course_reviews")
+          .select("*")
+          .eq("course_id", courseId)
+          .order("created_at", { ascending: false })
+      );
+      if (result.error) throw result.error;
+      return result.data as CourseReview[];
     },
     enabled: !!courseId,
   });
@@ -41,22 +41,13 @@ export const useCourseRating = (courseId: string) => {
   return useQuery({
     queryKey: ["course_rating", courseId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("course_reviews")
+      const { data, error } = await from("course_reviews")
         .select("rating")
         .eq("course_id", courseId);
-      
       if (error) throw error;
-      
-      if (!data || data.length === 0) {
-        return { averageRating: 0, totalReviews: 0 };
-      }
-      
+      if (!data || data.length === 0) return { averageRating: 0, totalReviews: 0 };
       const sum = data.reduce((acc, review) => acc + review.rating, 0);
-      return {
-        averageRating: sum / data.length,
-        totalReviews: data.length,
-      };
+      return { averageRating: sum / data.length, totalReviews: data.length };
     },
     enabled: !!courseId,
   });
@@ -64,17 +55,14 @@ export const useCourseRating = (courseId: string) => {
 
 export const useUserReview = (courseId: string) => {
   const { user } = useAuth();
-
   return useQuery({
     queryKey: ["user_review", courseId, user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("course_reviews")
+      const { data, error } = await from("course_reviews")
         .select("*")
         .eq("course_id", courseId)
         .eq("user_id", user!.id)
         .single();
-      
       if (error && error.code !== "PGRST116") throw error;
       return data as CourseReview | null;
     },
@@ -87,66 +75,30 @@ export const useSubmitReview = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      courseId,
-      rating,
-      title,
-      content,
-    }: {
-      courseId: string;
-      rating: number;
-      title?: string;
-      content?: string;
+    mutationFn: async ({ courseId, rating, title, content }: {
+      courseId: string; rating: number; title?: string; content?: string;
     }) => {
-      // Check if review exists
-      const { data: existing } = await supabase
-        .from("course_reviews")
-        .select("id")
-        .eq("course_id", courseId)
-        .eq("user_id", user!.id)
-        .single();
-
-      // Check if user is enrolled
-      const { data: enrollment } = await supabase
-        .from("enrollments")
-        .select("id")
-        .eq("course_id", courseId)
-        .eq("user_id", user!.id)
-        .single();
+      const { data: existing } = await from("course_reviews")
+        .select("id").eq("course_id", courseId).eq("user_id", user!.id).single();
+      const { data: enrollment } = await from("enrollments")
+        .select("id").eq("course_id", courseId).eq("user_id", user!.id).single();
 
       if (existing) {
-        // Update
-        const { data, error } = await supabase
-          .from("course_reviews")
-          .update({
-            rating,
-            title: title || null,
-            content: content || null,
-            is_verified_purchase: !!enrollment,
-          })
-          .eq("id", existing.id)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        return data;
+        const result = await tracked("reviews:update", () =>
+          from("course_reviews")
+            .update({ rating, title: title || null, content: content || null, is_verified_purchase: !!enrollment })
+            .eq("id", existing.id).select().single()
+        );
+        if (result.error) throw result.error;
+        return result.data;
       } else {
-        // Insert
-        const { data, error } = await supabase
-          .from("course_reviews")
-          .insert({
-            course_id: courseId,
-            user_id: user!.id,
-            rating,
-            title: title || null,
-            content: content || null,
-            is_verified_purchase: !!enrollment,
-          })
-          .select()
-          .single();
-        
-        if (error) throw error;
-        return data;
+        const result = await tracked("reviews:create", () =>
+          from("course_reviews")
+            .insert({ course_id: courseId, user_id: user!.id, rating, title: title || null, content: content || null, is_verified_purchase: !!enrollment })
+            .select().single()
+        );
+        if (result.error) throw result.error;
+        return result.data;
       }
     },
     onSuccess: (_, variables) => {

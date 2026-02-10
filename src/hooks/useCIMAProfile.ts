@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface CIMAProfileData {
@@ -25,15 +25,14 @@ export const useCIMAProfile = () => {
     queryKey: ["cima-profile", user?.id],
     queryFn: async () => {
       if (!user) return null;
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("cima_id, first_name, last_name, cima_start_date, cima_end_date")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (error) throw error;
-      return data as CIMAProfileData | null;
+      const result = await tracked("cima:getProfile", () =>
+        from("profiles")
+          .select("cima_id, first_name, last_name, cima_start_date, cima_end_date")
+          .eq("user_id", user.id)
+          .maybeSingle()
+      );
+      if (result.error) throw result.error;
+      return result.data as CIMAProfileData | null;
     },
     enabled: !!user,
   });
@@ -41,19 +40,8 @@ export const useCIMAProfile = () => {
 
 export const useHasCIMAProfile = () => {
   const { data: profile, isLoading } = useCIMAProfile();
-  
-  // User has a complete CIMA profile if they have cima_id and first/last name
-  const hasCompleteProfile = !!(
-    profile?.cima_id && 
-    profile?.first_name && 
-    profile?.last_name
-  );
-
-  return {
-    hasCompleteProfile,
-    isLoading,
-    profile,
-  };
+  const hasCompleteProfile = !!(profile?.cima_id && profile?.first_name && profile?.last_name);
+  return { hasCompleteProfile, isLoading, profile };
 };
 
 export const useUpdateCIMAProfile = () => {
@@ -64,33 +52,18 @@ export const useUpdateCIMAProfile = () => {
     mutationFn: async (data: CIMAProfileUpdate) => {
       if (!user) throw new Error("Not authenticated");
 
-      // First check if profile exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
+      const { data: existingProfile } = await from("profiles")
         .select("id")
         .eq("user_id", user.id)
         .maybeSingle();
 
       if (existingProfile) {
-        // Update existing profile
-        const { error } = await supabase
-          .from("profiles")
-          .update({
-            ...data,
-            updated_at: new Date().toISOString(),
-          })
+        const { error } = await from("profiles")
+          .update({ ...data, updated_at: new Date().toISOString() })
           .eq("user_id", user.id);
-
         if (error) throw error;
       } else {
-        // Create new profile
-        const { error } = await supabase
-          .from("profiles")
-          .insert({
-            user_id: user.id,
-            ...data,
-          });
-
+        const { error } = await from("profiles").insert({ user_id: user.id, ...data });
         if (error) throw error;
       }
     },

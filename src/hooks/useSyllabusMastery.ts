@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export interface SyllabusMastery {
@@ -20,13 +20,9 @@ export interface MasteryLevel {
 }
 
 export function getMasteryLevel(score: number): MasteryLevel {
-  if (score < 50) {
-    return { level: "weak", color: "text-destructive", label: "Needs Work" };
-  } else if (score < 75) {
-    return { level: "medium", color: "text-yellow-500", label: "Developing" };
-  } else {
-    return { level: "strong", color: "text-accent", label: "Strong" };
-  }
+  if (score < 50) return { level: "weak", color: "text-destructive", label: "Needs Work" };
+  if (score < 75) return { level: "medium", color: "text-yellow-500", label: "Developing" };
+  return { level: "strong", color: "text-accent", label: "Strong" };
 }
 
 export function useSyllabusMastery(courseId?: string) {
@@ -36,16 +32,15 @@ export function useSyllabusMastery(courseId?: string) {
     queryKey: ["syllabus-mastery", courseId, user?.id],
     queryFn: async () => {
       if (!courseId || !user) return [];
-
-      const { data, error } = await supabase
-        .from("user_syllabus_mastery")
-        .select("*")
-        .eq("course_id", courseId)
-        .eq("user_id", user.id)
-        .order("syllabus_area_index");
-
-      if (error) throw error;
-      return data as SyllabusMastery[];
+      const result = await tracked("mastery:list", () =>
+        from("user_syllabus_mastery")
+          .select("*")
+          .eq("course_id", courseId)
+          .eq("user_id", user.id)
+          .order("syllabus_area_index")
+      );
+      if (result.error) throw result.error;
+      return result.data as SyllabusMastery[];
     },
     enabled: !!courseId && !!user,
   });
@@ -58,41 +53,27 @@ export function useQuestionAttemptStats(courseId?: string) {
     queryKey: ["question-attempt-stats", courseId, user?.id],
     queryFn: async () => {
       if (!courseId || !user) {
-        return {
-          totalAttempted: 0,
-          totalCorrect: 0,
-          recentAccuracy: 0,
-          attemptsByArea: [] as Array<{
-            syllabus_area_index: number;
-            total: number;
-            correct: number;
-          }>,
-        };
+        return { totalAttempted: 0, totalCorrect: 0, recentAccuracy: 0, attemptsByArea: [] as Array<{ syllabus_area_index: number; total: number; correct: number }> };
       }
 
-      // Get all attempts for this course
-      const { data: attempts, error } = await supabase
-        .from("user_question_attempts")
-        .select("*")
-        .eq("course_id", courseId)
-        .eq("user_id", user.id)
-        .order("attempted_at", { ascending: false });
+      const result = await tracked("mastery:attemptStats", () =>
+        from("user_question_attempts")
+          .select("*")
+          .eq("course_id", courseId)
+          .eq("user_id", user.id)
+          .order("attempted_at", { ascending: false })
+      );
+      if (result.error) throw result.error;
+      const attempts = result.data || [];
 
-      if (error) throw error;
-
-      const totalAttempted = attempts?.length || 0;
-      const totalCorrect = attempts?.filter((a) => a.is_correct).length || 0;
-
-      // Calculate recent accuracy (last 50 questions)
-      const recent = attempts?.slice(0, 50) || [];
+      const totalAttempted = attempts.length;
+      const totalCorrect = attempts.filter((a) => a.is_correct).length;
+      const recent = attempts.slice(0, 50);
       const recentCorrect = recent.filter((a) => a.is_correct).length;
-      const recentAccuracy = recent.length > 0 
-        ? Math.round((recentCorrect / recent.length) * 100) 
-        : 0;
+      const recentAccuracy = recent.length > 0 ? Math.round((recentCorrect / recent.length) * 100) : 0;
 
-      // Group by syllabus area
       const byArea = new Map<number, { total: number; correct: number }>();
-      attempts?.forEach((a) => {
+      attempts.forEach((a) => {
         if (a.syllabus_area_index !== null) {
           const existing = byArea.get(a.syllabus_area_index) || { total: 0, correct: 0 };
           existing.total++;
@@ -102,16 +83,10 @@ export function useQuestionAttemptStats(courseId?: string) {
       });
 
       const attemptsByArea = Array.from(byArea.entries()).map(([index, stats]) => ({
-        syllabus_area_index: index,
-        ...stats,
+        syllabus_area_index: index, ...stats,
       }));
 
-      return {
-        totalAttempted,
-        totalCorrect,
-        recentAccuracy,
-        attemptsByArea,
-      };
+      return { totalAttempted, totalCorrect, recentAccuracy, attemptsByArea };
     },
     enabled: !!courseId && !!user,
   });
