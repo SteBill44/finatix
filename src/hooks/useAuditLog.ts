@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import type { Json } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuditLogEntry {
   id: string;
@@ -32,26 +33,18 @@ export function useAuditLogs(options?: { limit?: number; entityType?: string }) 
   return useQuery<AuditLogEntry[]>({
     queryKey: ["admin-audit-logs", limit, entityType],
     queryFn: async () => {
-      let query = supabase
-        .from("admin_audit_logs")
+      let query = from("admin_audit_logs")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(limit);
 
-      if (entityType) {
-        query = query.eq("entity_type", entityType);
-      }
+      if (entityType) query = query.eq("entity_type", entityType);
 
       const { data, error } = await query;
-
-      if (error) {
-        console.error("Error fetching audit logs:", error);
-        throw error;
-      }
-
+      if (error) throw error;
       return data as AuditLogEntry[];
     },
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 1000 * 30,
   });
 }
 
@@ -61,26 +54,21 @@ export function useCreateAuditLog() {
   return useMutation({
     mutationFn: async (params: CreateAuditLogParams) => {
       const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error("User not authenticated");
-      }
+      if (!user) throw new Error("User not authenticated");
 
-      const { error } = await supabase.from("admin_audit_logs").insert([{
-        admin_user_id: user.id,
-        action: params.action,
-        entity_type: params.entity_type,
-        entity_id: params.entity_id || null,
-        entity_name: params.entity_name || null,
-        old_values: params.old_values || null,
-        new_values: params.new_values || null,
-        user_agent: navigator.userAgent,
-      }]);
-
-      if (error) {
-        console.error("Error creating audit log:", error);
-        throw error;
-      }
+      const result = await tracked("audit:create", () =>
+        from("admin_audit_logs").insert([{
+          admin_user_id: user.id,
+          action: params.action,
+          entity_type: params.entity_type,
+          entity_id: params.entity_id || null,
+          entity_name: params.entity_name || null,
+          old_values: params.old_values || null,
+          new_values: params.new_values || null,
+          user_agent: navigator.userAgent,
+        }])
+      );
+      if (result.error) throw result.error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-audit-logs"] });
@@ -89,7 +77,6 @@ export function useCreateAuditLog() {
   });
 }
 
-// Helper hook to automatically log admin actions
 export function useLoggedMutation<TData, TVariables>(
   mutationFn: (variables: TVariables) => Promise<TData>,
   auditOptions: {
@@ -107,8 +94,6 @@ export function useLoggedMutation<TData, TVariables>(
   return useMutation({
     mutationFn: async (variables: TVariables) => {
       const result = await mutationFn(variables);
-      
-      // Log the action
       await createAuditLog.mutateAsync({
         action: auditOptions.action,
         entity_type: auditOptions.entity_type,
@@ -117,7 +102,6 @@ export function useLoggedMutation<TData, TVariables>(
         old_values: auditOptions.getOldValues?.(variables),
         new_values: auditOptions.getNewValues?.(variables),
       });
-      
       return result;
     },
     onSuccess: () => {

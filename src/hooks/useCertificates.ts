@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Certificate {
   id: string;
@@ -18,22 +19,14 @@ export const useCertificates = () => {
   return useQuery({
     queryKey: ["certificates", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("certificates")
-        .select(`
-          *,
-          courses (
-            id,
-            title,
-            slug,
-            image_url
-          )
-        `)
-        .eq("user_id", user!.id)
-        .order("issued_at", { ascending: false });
-      
-      if (error) throw error;
-      return data;
+      const result = await tracked("certificates:list", () =>
+        from("certificates")
+          .select(`*, courses (id, title, slug, image_url)`)
+          .eq("user_id", user!.id)
+          .order("issued_at", { ascending: false })
+      );
+      if (result.error) throw result.error;
+      return result.data;
     },
     enabled: !!user,
   });
@@ -47,7 +40,6 @@ export const useGenerateCertificate = () => {
       const { data, error } = await supabase.functions.invoke("generate-certificate", {
         body: { courseId },
       });
-      
       if (error) throw error;
       if (data.error) throw new Error(data.error);
       return data;

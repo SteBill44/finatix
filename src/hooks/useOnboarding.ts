@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { from } from "@/lib/api/client";
 
 export function useOnboarding() {
   const { user } = useAuth();
@@ -15,13 +15,11 @@ export function useOnboarding() {
       }
 
       try {
-        const { data: profile } = await supabase
-          .from("profiles")
+        const { data: profile } = await from("profiles")
           .select("onboarding_completed")
           .eq("user_id", user.id)
           .maybeSingle();
 
-        // Show onboarding if profile doesn't exist or onboarding not completed
         if (!profile || profile.onboarding_completed !== true) {
           setShowOnboarding(true);
         }
@@ -39,22 +37,17 @@ export function useOnboarding() {
     if (!user) return;
 
     try {
-      // Check if profile exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
+      const { data: existingProfile } = await from("profiles")
         .select("id")
         .eq("user_id", user.id)
         .maybeSingle();
 
       if (existingProfile) {
-        // Update existing profile
-        await supabase
-          .from("profiles")
+        await from("profiles")
           .update({ onboarding_completed: true })
           .eq("user_id", user.id);
       } else {
-        // Create new profile with onboarding completed
-        await supabase.from("profiles").insert({
+        await from("profiles").insert({
           user_id: user.id,
           onboarding_completed: true,
         });
@@ -66,9 +59,5 @@ export function useOnboarding() {
     }
   };
 
-  return {
-    showOnboarding,
-    isLoading,
-    completeOnboarding,
-  };
+  return { showOnboarding, isLoading, completeOnboarding };
 }

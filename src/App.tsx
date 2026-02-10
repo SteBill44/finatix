@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useCallback } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -15,6 +15,8 @@ import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
 import FaviconManager from "@/components/FaviconManager";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { FeatureErrorBoundary } from "@/components/FeatureErrorBoundary";
 import { Loader2 } from "lucide-react";
 
 // Lazy load all page components
@@ -52,20 +54,18 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        // Don't retry on auth errors or 4xx errors
         const err = error as { status?: number; message?: string };
         if (err.status && err.status >= 400 && err.status < 500) {
           return false;
         }
-        // Retry up to 2 times for network/server errors
         return failureCount < 2;
       },
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-      staleTime: 30 * 1000, // 30 seconds default
+      staleTime: 30 * 1000,
       refetchOnWindowFocus: false,
     },
     mutations: {
-      retry: false, // Don't retry mutations by default
+      retry: false,
     },
   },
 });
@@ -80,6 +80,22 @@ const PageLoader = () => (
   </div>
 );
 
+// Helper to wrap protected routes with error boundary
+const Protected = ({ children, feature }: { children: React.ReactNode; feature: string }) => (
+  <ProtectedRoute>
+    <FeatureErrorBoundary featureName={feature}>
+      <PageTransition>{children}</PageTransition>
+    </FeatureErrorBoundary>
+  </ProtectedRoute>
+);
+
+// Helper to wrap public routes with error boundary
+const Public = ({ children, feature }: { children: React.ReactNode; feature: string }) => (
+  <FeatureErrorBoundary featureName={feature}>
+    <PageTransition>{children}</PageTransition>
+  </FeatureErrorBoundary>
+);
+
 const AnimatedRoutes = () => {
   const location = useLocation();
 
@@ -87,34 +103,38 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Suspense fallback={<PageLoader />}>
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-          <Route path="/why-cima" element={<PageTransition><WhyCIMA /></PageTransition>} />
-          <Route path="/courses" element={<PageTransition><Courses /></PageTransition>} />
-          <Route path="/courses/:courseId" element={<PageTransition><CourseDetail /></PageTransition>} />
-          <Route path="/courses/:courseId/lesson/:lessonId" element={<PageTransition><Lesson /></PageTransition>} />
-          <Route path="/dashboard" element={<PageTransition><Dashboard /></PageTransition>} />
-          <Route path="/pricing" element={<PageTransition><Pricing /></PageTransition>} />
-          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-          <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-          <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
-          <Route path="/quiz/:quizId" element={<PageTransition><Quiz /></PageTransition>} />
-          <Route path="/exam/:quizId" element={<PageTransition><ExamMode /></PageTransition>} />
-          <Route path="/mock-exam/:quizId" element={<PageTransition><MockExam /></PageTransition>} />
-          <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
-          <Route path="/achievements" element={<PageTransition><Achievements /></PageTransition>} />
-          <Route path="/discussions" element={<PageTransition><Discussions /></PageTransition>} />
-          <Route path="/account" element={<PageTransition><ManageAccount /></PageTransition>} />
-          <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
-          <Route path="/cookies" element={<PageTransition><CookiePolicy /></PageTransition>} />
-          <Route path="/help" element={<PageTransition><HelpCentre /></PageTransition>} />
-          <Route path="/terms" element={<PageTransition><TermsOfService /></PageTransition>} />
-          <Route path="/certificate-preview" element={<PageTransition><CertificatePreviewPage /></PageTransition>} />
-          <Route path="/verify" element={<PageTransition><CertificateVerify /></PageTransition>} />
-          <Route path="/certificates" element={<PageTransition><Certificates /></PageTransition>} />
-          <Route path="/referrals" element={<PageTransition><Referrals /></PageTransition>} />
-          <Route path="/practice/:courseSlug" element={<PageTransition><PracticeMode /></PageTransition>} />
-          <Route path="/brand" element={<PageTransition><Brand /></PageTransition>} />
-          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+          {/* Public routes */}
+          <Route path="/" element={<Public feature="Home"><Index /></Public>} />
+          <Route path="/why-cima" element={<Public feature="Why CIMA"><WhyCIMA /></Public>} />
+          <Route path="/courses" element={<Public feature="Courses"><Courses /></Public>} />
+          <Route path="/courses/:courseId" element={<Public feature="Course Detail"><CourseDetail /></Public>} />
+          <Route path="/pricing" element={<Public feature="Pricing"><Pricing /></Public>} />
+          <Route path="/about" element={<Public feature="About"><About /></Public>} />
+          <Route path="/contact" element={<Public feature="Contact"><Contact /></Public>} />
+          <Route path="/auth" element={<Public feature="Authentication"><Auth /></Public>} />
+          <Route path="/privacy" element={<Public feature="Privacy Policy"><PrivacyPolicy /></Public>} />
+          <Route path="/cookies" element={<Public feature="Cookie Policy"><CookiePolicy /></Public>} />
+          <Route path="/help" element={<Public feature="Help Centre"><HelpCentre /></Public>} />
+          <Route path="/terms" element={<Public feature="Terms of Service"><TermsOfService /></Public>} />
+          <Route path="/verify" element={<Public feature="Certificate Verification"><CertificateVerify /></Public>} />
+          <Route path="/brand" element={<Public feature="Brand"><Brand /></Public>} />
+
+          {/* Protected routes - require authentication */}
+          <Route path="/courses/:courseId/lesson/:lessonId" element={<Protected feature="Lesson"><Lesson /></Protected>} />
+          <Route path="/dashboard" element={<Protected feature="Dashboard"><Dashboard /></Protected>} />
+          <Route path="/quiz/:quizId" element={<Protected feature="Quiz"><Quiz /></Protected>} />
+          <Route path="/exam/:quizId" element={<Protected feature="Exam"><ExamMode /></Protected>} />
+          <Route path="/mock-exam/:quizId" element={<Protected feature="Mock Exam"><MockExam /></Protected>} />
+          <Route path="/admin" element={<Protected feature="Admin"><Admin /></Protected>} />
+          <Route path="/achievements" element={<Protected feature="Achievements"><Achievements /></Protected>} />
+          <Route path="/discussions" element={<Protected feature="Discussions"><Discussions /></Protected>} />
+          <Route path="/account" element={<Protected feature="Account"><ManageAccount /></Protected>} />
+          <Route path="/certificate-preview" element={<Protected feature="Certificate Preview"><CertificatePreviewPage /></Protected>} />
+          <Route path="/certificates" element={<Protected feature="Certificates"><Certificates /></Protected>} />
+          <Route path="/referrals" element={<Protected feature="Referrals"><Referrals /></Protected>} />
+          <Route path="/practice/:courseSlug" element={<Protected feature="Practice Mode"><PracticeMode /></Protected>} />
+
+          <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
         </Routes>
       </Suspense>
     </AnimatePresence>
@@ -123,6 +143,10 @@ const AnimatedRoutes = () => {
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = useCallback(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <ErrorBoundary>
@@ -134,7 +158,7 @@ const App = () => {
               <CookieConsentProvider>
                 <TooltipProvider>
                   {isLoading && (
-                    <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+                    <LoadingScreen onLoadingComplete={handleLoadingComplete} />
                   )}
                   <Sonner />
                   <BrowserRouter>

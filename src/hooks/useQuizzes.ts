@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { from, rpc } from "@/lib/api/client";
 
 export interface Quiz {
   id: string;
@@ -55,19 +55,9 @@ export const useQuizzes = (courseId?: string, lessonId?: string) => {
   return useQuery({
     queryKey: ["quizzes", courseId, lessonId],
     queryFn: async () => {
-      let query = supabase
-        .from("quizzes")
-        .select("*")
-        .order("order_index", { ascending: true });
-
-      if (courseId) {
-        query = query.eq("course_id", courseId);
-      }
-
-      if (lessonId) {
-        query = query.eq("lesson_id", lessonId);
-      }
-
+      let query = from("quizzes").select("*").order("order_index", { ascending: true });
+      if (courseId) query = query.eq("course_id", courseId);
+      if (lessonId) query = query.eq("lesson_id", lessonId);
       const { data, error } = await query;
       if (error) throw error;
       return data as (Quiz & { lesson_id?: string })[];
@@ -80,25 +70,17 @@ export const useLessonQuizAttempts = (lessonId?: string) => {
     queryKey: ["lesson_quiz_attempts", lessonId],
     queryFn: async () => {
       if (!lessonId) return [];
-      
-      // First get quizzes for this lesson
-      const { data: quizzes, error: quizzesError } = await supabase
-        .from("quizzes")
+      const { data: quizzes, error: quizzesError } = await from("quizzes")
         .select("id")
         .eq("lesson_id", lessonId);
-
       if (quizzesError) throw quizzesError;
       if (!quizzes || quizzes.length === 0) return [];
 
       const quizIds = quizzes.map(q => q.id);
-
-      // Then get attempts for those quizzes
-      const { data: attempts, error: attemptsError } = await supabase
-        .from("quiz_attempts")
+      const { data: attempts, error: attemptsError } = await from("quiz_attempts")
         .select("*, quizzes(title)")
         .in("quiz_id", quizIds)
         .order("attempted_at", { ascending: false });
-
       if (attemptsError) throw attemptsError;
       return attempts || [];
     },
@@ -110,14 +92,9 @@ export const useQuizQuestions = (quizId: string, includeAnswers: boolean = false
   return useQuery({
     queryKey: ["quiz_questions", quizId, includeAnswers],
     queryFn: async () => {
-      // Use the secure RPC function that hides answers until quiz is attempted
-      const { data, error } = await supabase
-        .rpc("get_quiz_questions", { _quiz_id: quizId });
-
-      if (error) throw error;
-      
-      // Transform the data to match our interface
-      return (data || []).map((q: any) => ({
+      const result = await rpc("get_quiz_questions", { _quiz_id: quizId });
+      if (result.error) throw result.error;
+      return ((result.data as any[]) || []).map((q: any) => ({
         id: q.id,
         quiz_id: q.quiz_id,
         question: q.question,
@@ -143,19 +120,10 @@ export const useQuizWithQuestions = (quizId: string) => {
   const quizQuery = useQuery({
     queryKey: ["quiz", quizId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("quizzes")
-        .select(`
-          *,
-          courses (
-            id,
-            title,
-            slug
-          )
-        `)
+      const { data, error } = await from("quizzes")
+        .select(`*, courses (id, title, slug)`)
         .eq("id", quizId)
         .maybeSingle();
-
       if (error) throw error;
       return data;
     },
