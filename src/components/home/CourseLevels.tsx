@@ -90,17 +90,34 @@ const CourseLevels = () => {
               <div className="rounded-xl overflow-hidden shadow-lg">
                 {'useCertificate' in step && step.useCertificate ? (
                   <div className="aspect-[1.6/1] bg-gradient-to-br from-primary/5 to-accent/5 overflow-hidden relative">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-full h-full" style={{ containerType: 'inline-size' }}>
-                        <CertificateTemplate
-                          studentName="Sarah Johnson"
-                          courseName="BA1 - Fundamentals of Business Economics"
-                          certificateNumber="FTX-R3K8X2-M7YN4P"
-                          issuedAt={new Date()}
-                          variant="embed"
-                          className="shadow-xl"
-                        />
-                      </div>
+                    <div 
+                      className="absolute inset-0 origin-top-left"
+                      style={{
+                        width: '320px',
+                        height: '200px',
+                        transform: 'scale(var(--cert-scale))',
+                      }}
+                      ref={(el) => {
+                        if (!el) return;
+                        const parent = el.parentElement;
+                        if (!parent) return;
+                        const update = () => {
+                          const scale = parent.clientWidth / 320;
+                          el.style.setProperty('--cert-scale', String(scale));
+                        };
+                        update();
+                        const ro = new ResizeObserver(update);
+                        ro.observe(parent);
+                      }}
+                    >
+                      <CertificateTemplate
+                        studentName="Sarah Johnson"
+                        courseName="BA1 - Fundamentals of Business Economics"
+                        certificateNumber="FTX-R3K8X2-M7YN4P"
+                        issuedAt={new Date()}
+                        variant="embed"
+                        className="shadow-xl"
+                      />
                     </div>
                   </div>
                 ) : (
