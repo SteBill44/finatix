@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -12,100 +12,96 @@ const getVisitorId = () => {
   return visitorId;
 };
 
+// Shared state so multiple consumers see the same counts
+let sharedState = {
+  activeUserCount: 0,
+  activeVisitorCount: 0,
+  isConnected: false,
+};
+const listeners = new Set<() => void>();
+
+function notifyListeners() {
+  listeners.forEach((fn) => fn());
+}
+
+// Subscribe to shared presence state (read-only)
 export const useActiveUsers = () => {
-  const { user } = useAuth();
-  const [activeUserCount, setActiveUserCount] = useState(0);
-  const [activeVisitorCount, setActiveVisitorCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
+  const [, forceUpdate] = useState(0);
 
   useEffect(() => {
-    // Channel for tracking authenticated users only
-    const usersChannel = supabase.channel('authenticated-users-presence');
-    
-    // Channel for tracking all visitors (including anonymous)
-    const visitorsChannel = supabase.channel('all-visitors-presence');
-
-    usersChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = usersChannel.presenceState();
-        const count = Object.keys(state).length;
-        setActiveUserCount(count);
-      })
-      .subscribe();
-
-    visitorsChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = visitorsChannel.presenceState();
-        const count = Object.keys(state).length;
-        setActiveVisitorCount(count);
-      })
-      .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          setIsConnected(true);
-        }
-      });
-
-    return () => {
-      usersChannel.unsubscribe();
-      visitorsChannel.unsubscribe();
-    };
+    const listener = () => forceUpdate((n) => n + 1);
+    listeners.add(listener);
+    return () => { listeners.delete(listener); };
   }, []);
 
-  return { activeUserCount, activeVisitorCount, isConnected };
+  return {
+    activeUserCount: sharedState.activeUserCount,
+    activeVisitorCount: sharedState.activeVisitorCount,
+    isConnected: sharedState.isConnected,
+  };
 };
 
-// Hook for tracking user presence globally (to be used in Layout)
+// Hook for tracking user presence globally (used in Layout)
+// This is the ONLY place that creates presence channels
 export const useTrackUserPresence = () => {
   const { user } = useAuth();
   const visitorIdRef = useRef<string>(getVisitorId());
 
   useEffect(() => {
     const visitorId = visitorIdRef.current;
-    
-    // Always track in visitors channel (all site visitors)
+
+    // All-visitors channel
     const visitorsChannel = supabase.channel('all-visitors-presence', {
-      config: {
-        presence: {
-          key: visitorId,
-        },
-      },
+      config: { presence: { key: visitorId } },
     });
 
-    visitorsChannel.subscribe(async (status) => {
-      if (status === 'SUBSCRIBED') {
-        await visitorsChannel.track({
-          visitorId,
-          isAuthenticated: !!user?.id,
-          onlineAt: new Date().toISOString(),
-        });
-      }
-    });
-
-    // If authenticated, also track in users channel
-    let usersChannel: ReturnType<typeof supabase.channel> | null = null;
-    
-    if (user?.id) {
-      usersChannel = supabase.channel('authenticated-users-presence', {
-        config: {
-          presence: {
-            key: user.id,
-          },
-        },
-      });
-
-      usersChannel.subscribe(async (status) => {
+    visitorsChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = visitorsChannel.presenceState();
+        sharedState.activeVisitorCount = Object.keys(state).length;
+        notifyListeners();
+      })
+      .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await usersChannel!.track({
-            userId: user.id,
+          sharedState.isConnected = true;
+          notifyListeners();
+          await visitorsChannel.track({
+            visitorId,
+            isAuthenticated: !!user?.id,
             onlineAt: new Date().toISOString(),
           });
         }
       });
+
+    // Authenticated users channel
+    let usersChannel: ReturnType<typeof supabase.channel> | null = null;
+
+    if (user?.id) {
+      usersChannel = supabase.channel('authenticated-users-presence', {
+        config: { presence: { key: user.id } },
+      });
+
+      usersChannel
+        .on('presence', { event: 'sync' }, () => {
+          const state = usersChannel!.presenceState();
+          sharedState.activeUserCount = Object.keys(state).length;
+          notifyListeners();
+        })
+        .subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            await usersChannel!.track({
+              userId: user.id,
+              onlineAt: new Date().toISOString(),
+            });
+          }
+        });
     }
 
     return () => {
       visitorsChannel.unsubscribe();
       usersChannel?.unsubscribe();
+      sharedState.isConnected = false;
+      notifyListeners();
     };
   }, [user?.id]);
 };

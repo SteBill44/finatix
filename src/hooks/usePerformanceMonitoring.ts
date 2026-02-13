@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { queryConfigs } from "@/lib/queryConfig";
@@ -92,25 +93,59 @@ export const usePerformanceMetrics = (timeRange: "1h" | "24h" | "7d" = "24h") =>
   return useQuery({
     queryKey: ["performance_metrics", timeRange],
     queryFn: async () => {
-      const result = await tracked("performance:metrics", () =>
-        from("performance_logs")
-          .select("*")
-          .gte("created_at", new Date(Date.now() - getMilliseconds(timeRange)).toISOString())
-          .order("created_at", { ascending: false })
-          .limit(1000)
-      );
-      if (result.error) throw result.error;
-      const logs = result.data || [];
+      const cutoff = new Date(Date.now() - getMilliseconds(timeRange)).toISOString();
 
+      // Fetch real data from multiple tables in parallel
+      const [perfLogsResult, enrollmentsResult, quizAttemptsResult, lessonProgressResult, profilesResult] = await Promise.all([
+        supabase
+          .from("performance_logs")
+          .select("*")
+          .gte("created_at", cutoff)
+          .order("created_at", { ascending: false })
+          .limit(1000),
+        supabase
+          .from("enrollments")
+          .select("id, enrolled_at, user_id")
+          .gte("enrolled_at", cutoff),
+        supabase
+          .from("quiz_attempts")
+          .select("id, attempted_at, user_id, score, max_score")
+          .gte("attempted_at", cutoff),
+        supabase
+          .from("lesson_progress")
+          .select("id, completed_at, user_id")
+          .eq("completed", true)
+          .gte("completed_at", cutoff),
+        supabase
+          .from("profiles")
+          .select("user_id, created_at"),
+      ]);
+
+      const logs = perfLogsResult.data || [];
+      const enrollments = enrollmentsResult.data || [];
+      const quizAttempts = quizAttemptsResult.data || [];
+      const lessonProgress = lessonProgressResult.data || [];
+      const allProfiles = profilesResult.data || [];
+
+      // Calculate real activity counts
+      const totalActivity = enrollments.length + quizAttempts.length + lessonProgress.length + logs.length;
+
+      // API performance from actual logs
       const apiCalls = logs.filter((l) => l.event_type === "api_call");
-      const pageLoads = logs.filter((l) => l.event_type === "page_load");
       const errors = logs.filter((l) => l.event_type === "error");
 
       const avgApiTime = apiCalls.length > 0
-        ? Math.round(apiCalls.reduce((sum, l) => sum + (l.duration_ms || 0), 0) / apiCalls.length) : 0;
-      const avgPageLoad = pageLoads.length > 0
-        ? Math.round(pageLoads.reduce((sum, l) => sum + (l.duration_ms || 0), 0) / pageLoads.length) : 0;
+        ? Math.round(apiCalls.reduce((sum, l) => sum + (l.duration_ms || 0), 0) / apiCalls.length) 
+        : 0;
 
+      // Unique active users from real activity data
+      const activeUserIds = new Set<string>();
+      enrollments.forEach((e) => { if (e.user_id) activeUserIds.add(e.user_id); });
+      quizAttempts.forEach((q) => { if (q.user_id) activeUserIds.add(q.user_id); });
+      lessonProgress.forEach((l) => { if (l.user_id) activeUserIds.add(l.user_id); });
+      logs.forEach((l) => { if (l.user_id) activeUserIds.add(l.user_id); });
+
+      // Path metrics for slowest endpoints
       const pathMetrics: Record<string, { count: number; totalTime: number }> = {};
       apiCalls.forEach((log) => {
         const path = log.path || "unknown";
@@ -123,22 +158,56 @@ export const usePerformanceMetrics = (timeRange: "1h" | "24h" | "7d" = "24h") =>
         .map(([path, data]) => ({ path, avgTime: Math.round(data.totalTime / data.count), count: data.count }))
         .sort((a, b) => b.avgTime - a.avgTime).slice(0, 10);
 
-      const errorRate = logs.length > 0 ? Math.round((errors.length / logs.length) * 100 * 100) / 100 : 0;
-      const uniqueUsers = new Set(logs.map((l) => l.user_id).filter(Boolean)).size;
+      const errorRate = totalActivity > 0 
+        ? Math.round((errors.length / totalActivity) * 100 * 100) / 100 
+        : 0;
 
+      // Build chart data from real activity (enrollments + quiz attempts + lesson completions)
       const hourlyData: Record<string, { requests: number; errors: number }> = {};
-      logs.forEach((log) => {
-        const hour = new Date(log.created_at).toISOString().slice(0, 13);
+      
+      const addToHourly = (dateStr: string, isError = false) => {
+        const hour = new Date(dateStr).toISOString().slice(0, 13);
         if (!hourlyData[hour]) hourlyData[hour] = { requests: 0, errors: 0 };
         hourlyData[hour].requests++;
-        if (log.event_type === "error") hourlyData[hour].errors++;
+        if (isError) hourlyData[hour].errors++;
+      };
+
+      enrollments.forEach((e) => addToHourly(e.enrolled_at));
+      quizAttempts.forEach((q) => addToHourly(q.attempted_at));
+      lessonProgress.forEach((l) => { if (l.completed_at) addToHourly(l.completed_at); });
+      logs.forEach((log) => {
+        addToHourly(log.created_at, log.event_type === "error");
       });
 
       const chartData = Object.entries(hourlyData)
-        .map(([hour, data]) => ({ hour: new Date(hour).toLocaleTimeString([], { hour: "2-digit" }), requests: data.requests, errors: data.errors }))
+        .map(([hour, data]) => ({ 
+          hour: new Date(hour + ":00:00Z").toLocaleTimeString([], { hour: "2-digit" }), 
+          requests: data.requests, 
+          errors: data.errors 
+        }))
+        .sort((a, b) => a.hour.localeCompare(b.hour))
         .slice(-24);
 
-      return { totalRequests: logs.length, avgApiTime, avgPageLoad, errorRate, errorCount: errors.length, uniqueUsers, slowestEndpoints, chartData };
+      // New users in period
+      const newUsersInPeriod = allProfiles.filter(
+        (p) => new Date(p.created_at) >= new Date(cutoff)
+      ).length;
+
+      return { 
+        totalRequests: totalActivity, 
+        avgApiTime, 
+        avgPageLoad: 0,
+        errorRate, 
+        errorCount: errors.length, 
+        uniqueUsers: activeUserIds.size,
+        totalRegisteredUsers: allProfiles.length,
+        newUsers: newUsersInPeriod,
+        enrollmentCount: enrollments.length,
+        quizAttemptCount: quizAttempts.length,
+        lessonCompletionCount: lessonProgress.length,
+        slowestEndpoints, 
+        chartData 
+      };
     },
     ...queryConfigs.performance,
   });

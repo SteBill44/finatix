@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePerformanceMetrics } from "@/hooks/usePerformanceMonitoring";
 import { useActiveUsers } from "@/hooks/useActiveUsers";
 import { useVisitorTrends, useRecordVisitorSnapshot } from "@/hooks/useVisitorTrends";
-import { Activity, AlertTriangle, Clock, TrendingUp, Users, Zap, Radio } from "lucide-react";
+import { Activity, AlertTriangle, Clock, TrendingUp, Users, Radio } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -145,25 +145,38 @@ export const PerformanceMonitoring = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Activity</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{metrics?.totalRequests.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">In selected period</p>
+            <p className="text-xs text-muted-foreground">
+              {metrics?.enrollmentCount} enrollments · {metrics?.quizAttemptCount} quizzes · {metrics?.lessonCompletionCount} lessons
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg API Response</CardTitle>
-            <Zap className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics?.avgApiTime}ms</div>
-            <Badge variant={metrics?.avgApiTime && metrics.avgApiTime < 200 ? "default" : metrics?.avgApiTime && metrics.avgApiTime < 500 ? "secondary" : "destructive"}>
-              {metrics?.avgApiTime && metrics.avgApiTime < 200 ? "Fast" : metrics?.avgApiTime && metrics.avgApiTime < 500 ? "Normal" : "Slow"}
-            </Badge>
+            <div className="text-2xl font-bold">{metrics?.uniqueUsers}</div>
+            <p className="text-xs text-muted-foreground">
+              {metrics?.totalRegisteredUsers} total registered
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">New Users</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{metrics?.newUsers}</div>
+            <p className="text-xs text-muted-foreground">In selected period</p>
           </CardContent>
         </Card>
 
@@ -175,19 +188,8 @@ export const PerformanceMonitoring = () => {
           <CardContent>
             <div className="text-2xl font-bold">{metrics?.errorRate}%</div>
             <p className="text-xs text-muted-foreground">
-              {metrics?.errorCount} errors total
+              {metrics?.errorCount} errors logged
             </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unique Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics?.uniqueUsers}</div>
-            <p className="text-xs text-muted-foreground">In selected period</p>
           </CardContent>
         </Card>
       </div>
@@ -307,27 +309,13 @@ export const PerformanceMonitoring = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-              <div className={`p-2 rounded-full ${metrics?.avgApiTime && metrics.avgApiTime < 200 ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-600"}`}>
-                <Zap className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="font-medium text-sm">API Performance</p>
-                <p className="text-xs text-muted-foreground">
-                  {metrics?.avgApiTime && metrics.avgApiTime < 200 
-                    ? "APIs are responding quickly" 
-                    : "Consider optimizing slow endpoints"}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-              <div className={`p-2 rounded-full ${metrics?.errorRate && metrics.errorRate < 1 ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}>
+              <div className={`p-2 rounded-full ${(metrics?.errorRate ?? 0) < 1 ? "bg-primary/10 text-primary" : "bg-destructive/10 text-destructive"}`}>
                 <AlertTriangle className="h-4 w-4" />
               </div>
               <div>
                 <p className="font-medium text-sm">Error Rate</p>
                 <p className="text-xs text-muted-foreground">
-                  {metrics?.errorRate && metrics.errorRate < 1 
+                  {(metrics?.errorRate ?? 0) < 1 
                     ? "Error rate is healthy" 
                     : "Monitor error logs for issues"}
                 </p>
@@ -335,13 +323,25 @@ export const PerformanceMonitoring = () => {
             </div>
             
             <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-              <div className="p-2 rounded-full bg-blue-100 text-blue-600">
+              <div className="p-2 rounded-full bg-primary/10 text-primary">
                 <Users className="h-4 w-4" />
               </div>
               <div>
                 <p className="font-medium text-sm">User Activity</p>
                 <p className="text-xs text-muted-foreground">
-                  {metrics?.uniqueUsers} active users in this period
+                  {metrics?.uniqueUsers} active users · {metrics?.totalRegisteredUsers} total registered
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+              <div className="p-2 rounded-full bg-primary/10 text-primary">
+                <Activity className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">Engagement</p>
+                <p className="text-xs text-muted-foreground">
+                  {metrics?.quizAttemptCount} quiz attempts · {metrics?.lessonCompletionCount} lessons completed
                 </p>
               </div>
             </div>
