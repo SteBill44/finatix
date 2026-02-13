@@ -89,15 +89,19 @@ const CourseLevels = () => {
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden shadow-lg">
                 {'useCertificate' in step && step.useCertificate ? (
-                  <div className="aspect-[1.6/1] bg-gradient-to-br from-primary/5 to-accent/5 overflow-hidden">
-                    <CertificateTemplate
-                      studentName="Sarah Johnson"
-                      courseName="BA1 - Fundamentals of Business Economics"
-                      certificateNumber="FTX-R3K8X2-M7YN4P"
-                      issuedAt={new Date()}
-                      variant="embed"
-                      className="shadow-xl"
-                    />
+                  <div className="aspect-[1.6/1] bg-gradient-to-br from-primary/5 to-accent/5 overflow-hidden relative">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-full" style={{ containerType: 'inline-size' }}>
+                        <CertificateTemplate
+                          studentName="Sarah Johnson"
+                          courseName="BA1 - Fundamentals of Business Economics"
+                          certificateNumber="FTX-R3K8X2-M7YN4P"
+                          issuedAt={new Date()}
+                          variant="embed"
+                          className="shadow-xl"
+                        />
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <OptimizedImage 
