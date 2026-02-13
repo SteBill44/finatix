@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import CertificateTemplate from "@/components/certificate/CertificateTemplate";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
-
+import certificatePreviewImg from "@/assets/certificate-preview.jpg";
 const CourseLevels = () => {
   const { user } = useAuth();
 
@@ -51,7 +50,7 @@ const CourseLevels = () => {
       cta: user ? "View Achievements" : "View Certifications",
       ctaLink: user ? "/achievements" : "/courses",
       imagePosition: "right",
-      useCertificate: true
+      image: certificatePreviewImg
     },
   ];
 
@@ -88,46 +87,12 @@ const CourseLevels = () => {
             {/* Image */}
             <div className="flex-1 w-full">
               <div className="rounded-xl overflow-hidden shadow-lg">
-                {'useCertificate' in step && step.useCertificate ? (
-                  <div className="aspect-[1.6/1] bg-gradient-to-br from-primary/5 to-accent/5 overflow-hidden relative">
-                    <div 
-                      className="absolute inset-0 origin-top-left"
-                      style={{
-                        width: '320px',
-                        height: '200px',
-                        transform: 'scale(var(--cert-scale))',
-                      }}
-                      ref={(el) => {
-                        if (!el) return;
-                        const parent = el.parentElement;
-                        if (!parent) return;
-                        const update = () => {
-                          const scale = parent.clientWidth / 320;
-                          el.style.setProperty('--cert-scale', String(scale));
-                        };
-                        update();
-                        const ro = new ResizeObserver(update);
-                        ro.observe(parent);
-                      }}
-                    >
-                      <CertificateTemplate
-                        studentName="Sarah Johnson"
-                        courseName="BA1 - Fundamentals of Business Economics"
-                        certificateNumber="FTX-R3K8X2-M7YN4P"
-                        issuedAt={new Date()}
-                        variant="embed"
-                        className="shadow-xl"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <OptimizedImage 
-                    src={step.image} 
-                    alt={step.title}
-                    aspectRatio={step.number === "02" ? undefined : "video"}
-                    className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
-                  />
-                )}
+                <OptimizedImage 
+                  src={step.image} 
+                  alt={step.title}
+                  aspectRatio={step.number === "02" ? undefined : "video"}
+                  className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
+                />
               </div>
             </div>
           </div>
