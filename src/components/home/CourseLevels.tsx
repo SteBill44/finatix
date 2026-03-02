@@ -90,8 +90,8 @@ const CourseLevels = () => {
                 <OptimizedImage 
                   src={step.image} 
                   alt={step.title}
-                  aspectRatio={step.number === "02" ? undefined : "video"}
-                  className={`w-full ${step.number === "02" ? "mix-blend-multiply dark:mix-blend-screen dark:invert" : ""}`}
+                  aspectRatio="video"
+                  className="w-full"
                 />
               </div>
             </div>
