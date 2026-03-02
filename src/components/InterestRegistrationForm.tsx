@@ -83,7 +83,7 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
     return (
       <div className="space-y-3">
         <p className="text-sm text-muted-foreground text-center">
-          We'll notify <strong className="text-foreground">{user.email}</strong> when this course launches.
+          We'll notify <strong className="text-foreground">you</strong> when this course launches.
         </p>
         <Button
           size="lg"
