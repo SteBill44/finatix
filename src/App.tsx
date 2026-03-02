@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense, useCallback } from "react";
+import { lazy, Suspense } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { AdminViewProvider } from "@/contexts/AdminViewContext";
 import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
-import LoadingScreen from "@/components/LoadingScreen";
+
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
 import FaviconManager from "@/components/FaviconManager";
@@ -142,12 +142,6 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleLoadingComplete = useCallback(() => {
-    setIsLoading(false);
-  }, []);
-
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
@@ -157,9 +151,6 @@ const App = () => {
             <AdminViewProvider>
               <CookieConsentProvider>
                 <TooltipProvider>
-                  {isLoading && (
-                    <LoadingScreen onLoadingComplete={handleLoadingComplete} />
-                  )}
                   <Sonner />
                   <BrowserRouter>
                     <PerformanceProvider>
