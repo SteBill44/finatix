@@ -21,23 +21,15 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
     email: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.email) {
-      toast.error("Please enter your email address");
-      return;
-    }
-
+  const registerInterest = async (email: string, fullName?: string) => {
     setIsSubmitting(true);
-
     try {
       const { error } = await supabase
         .from("interest_registrations")
         .insert({
           course_id: courseId,
-          email: formData.email,
-          full_name: formData.fullName || null,
+          email,
+          full_name: fullName || null,
         });
 
       if (error) {
@@ -58,6 +50,20 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    await registerInterest(formData.email, formData.fullName);
+  };
+
+  const handleQuickRegister = async () => {
+    if (!user?.email) return;
+    await registerInterest(user.email, user.user_metadata?.full_name);
+  };
+
   if (isRegistered) {
     return (
       <div className="text-center py-6">
@@ -72,6 +78,36 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
     );
   }
 
+  // Logged-in users get a simple one-click button
+  if (user) {
+    return (
+      <div className="space-y-3">
+        <p className="text-sm text-muted-foreground text-center">
+          We'll notify <strong className="text-foreground">{user.email}</strong> when this course launches.
+        </p>
+        <Button
+          size="lg"
+          className="w-full gap-2"
+          onClick={handleQuickRegister}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Registering...
+            </>
+          ) : (
+            <>
+              <Mail className="w-4 h-4" />
+              Register Interest
+            </>
+          )}
+        </Button>
+      </div>
+    );
+  }
+
+  // Guest users fill in the form
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -105,7 +141,6 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="pl-10"
             required
-            defaultValue={user?.email || ""}
           />
         </div>
       </div>
