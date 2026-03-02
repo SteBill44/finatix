@@ -144,7 +144,7 @@ const AnimatedRoutes = () => {
 const App = () => {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true}>
+      <ThemeProvider defaultTheme="dark" attribute="class" enableSystem={true}>
         <FaviconManager />
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
