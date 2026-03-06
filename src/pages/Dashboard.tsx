@@ -231,30 +231,61 @@ const Dashboard = () => {
               {/* Main Content */}
               <div className="lg:col-span-2 space-y-6 min-w-0">
                 {/* My Courses Grid */}
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-foreground text-lg">My Courses</h3>
-                      <p className="text-xs text-muted-foreground">Continue where you left off</p>
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {[...(enrollments || [])].sort((a, b) => {
-                      const order = ['BA1','BA2','BA3','BA4','E1','P1','F1','E2','P2','F2','E3','P3','F3','SCS','MCS','OCS'];
-                      const getIndex = (title: string) => {
-                        const code = title.match(/^([A-Z]+\d?)/i)?.[1]?.toUpperCase() || '';
-                        const idx = order.indexOf(code);
-                        return idx >= 0 ? idx : order.length;
-                      };
-                      return getIndex(a.courses?.title || '') - getIndex(b.courses?.title || '');
-                    }).map((enrollment) => (
-                      <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
-                    ))}
-                  </div>
-                </div>
+                {(() => {
+                  const sortedEnrollments = [...(enrollments || [])].sort((a, b) => {
+                    const order = ['BA1','BA2','BA3','BA4','E1','P1','F1','E2','P2','F2','E3','P3','F3','SCS','MCS','OCS'];
+                    const getIndex = (title: string) => {
+                      const code = title.match(/^([A-Z]+\d?)/i)?.[1]?.toUpperCase() || '';
+                      const idx = order.indexOf(code);
+                      return idx >= 0 ? idx : order.length;
+                    };
+                    return getIndex(a.courses?.title || '') - getIndex(b.courses?.title || '');
+                  });
+                  const activeCourses = sortedEnrollments.filter(e => !e.completed_at);
+                  const completedCourses = sortedEnrollments.filter(e => e.completed_at);
+
+                  return (
+                    <>
+                      {activeCourses.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                              <BookOpen className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground text-lg">My Courses</h3>
+                              <p className="text-xs text-muted-foreground">Continue where you left off</p>
+                            </div>
+                          </div>
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            {activeCourses.map((enrollment) => (
+                              <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {completedCourses.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                              <GraduationCap className="w-5 h-5 text-accent" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-foreground text-lg">Completed Courses</h3>
+                              <p className="text-xs text-muted-foreground">{completedCourses.length} course{completedCourses.length > 1 ? 's' : ''} completed</p>
+                            </div>
+                          </div>
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            {completedCourses.map((enrollment) => (
+                              <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {/* Quick Actions */}
                 <QuickActions />
