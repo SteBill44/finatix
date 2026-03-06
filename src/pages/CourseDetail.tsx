@@ -296,7 +296,7 @@ const CourseDetail = () => {
   const navSections = [
     { key: "overview", label: "Overview", icon: FileText, show: true },
     { key: "lessons", label: "Lessons", icon: BookOpen, show: isEnrolled && totalLessons > 0 },
-    { key: "quizzes", label: "Quizzes", icon: ClipboardList, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type !== 'mock_exam').length > 0 },
+    { key: "quizzes", label: "Quizzes", icon: ClipboardList, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type !== 'mock_exam' && q.quiz_type !== 'final_exam').length > 0 },
     { key: "mock-exams", label: "Mock Exams", icon: GraduationCap, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type === 'mock_exam').length > 0 },
     { key: "history", label: "Exam History", icon: History, show: isEffectiveAdmin && isEnrolled && !!quizAttempts?.length },
     { key: "final-exam", label: "Final Exam", icon: Award, show: isEnrolled && quizzes && quizzes.filter(q => q.quiz_type === 'final_exam').length > 0 },
