@@ -17,7 +17,7 @@ const Layout = ({ children }: LayoutProps) => {
   useTrackUserPresence();
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col relative" style={{ overflowX: 'clip' }}>
       <ScrollProgressBar />
       <NetworkStatusIndicator />
       <DynamicBackground />
