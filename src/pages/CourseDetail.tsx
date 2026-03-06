@@ -305,25 +305,6 @@ const CourseDetail = () => {
   // ── Shared content blocks ──
   const OverviewContent = (
     <div ref={el => { sectionRefs.current["overview"] = el; }}>
-      {/* Progress & Readiness for enrolled */}
-      {isEnrolled && !(isAdmin && isStudentView) && (
-        <div className="space-y-4 mb-8">
-          <div className="p-4 bg-secondary rounded-xl">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-foreground">Your Progress</span>
-              <span className="text-sm text-foreground">{progressPercentage}%</span>
-            </div>
-            <div className="w-full bg-muted rounded-full h-2">
-              <div className={`${levelBgColor} h-2 rounded-full transition-all duration-300`} style={{ width: `${progressPercentage}%` }} />
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">{completedLessons} of {totalLessons} lessons completed</p>
-          </div>
-          <ReadinessScoreCard courseId={course.id} compact />
-          {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
-            <StudyRecommendations courseSlug={course.slug} weakAreas={readinessScore.weakAreas} overallScore={readinessScore.overall} />
-          )}
-        </div>
-      )}
 
       {/* Course features */}
       <Card className="p-6">
