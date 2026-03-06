@@ -505,21 +505,12 @@ const Lesson = () => {
                         </div>
                         <div className="flex gap-2 flex-shrink-0">
                           <Button
-                            variant="outline"
                             size="sm"
                             className="gap-2"
                             onClick={() => navigate(`/quiz/${quiz.id}`)}
                           >
-                            <Play className="w-4 h-4" />
-                            Practice
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="gap-2"
-                            onClick={() => navigate(`/exam/${quiz.id}`)}
-                          >
-                            <Timer className="w-4 h-4" />
-                            Exam Mode
+                            <ClipboardList className="w-4 h-4" />
+                            Take Quiz
                           </Button>
                         </div>
                       </div>
