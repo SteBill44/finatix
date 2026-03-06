@@ -674,8 +674,13 @@ const CourseDetail = () => {
                         <p className="text-[10px] text-muted-foreground mt-1">{completedLessons}/{totalLessons} lessons</p>
                       </div>
 
-                      <div className="[&_*]:!text-xs [&_h3]:!text-[11px] [&_p]:!text-[10px]">
-                        <ReadinessScoreCard courseId={course.id} compact />
+                      <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Readiness</span>
+                          <span className={`text-lg font-bold ${readinessScore ? (readinessScore.overall >= 75 ? 'text-accent' : readinessScore.overall >= 50 ? 'text-primary' : readinessScore.overall >= 25 ? 'text-yellow-500' : 'text-muted-foreground') : 'text-muted-foreground'}`}>
+                            {readinessScore?.overall ?? 0}%
+                          </span>
+                        </div>
                       </div>
 
                       {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
