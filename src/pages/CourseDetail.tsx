@@ -640,7 +640,7 @@ const CourseDetail = () => {
               </Tabs>
             ) : (
               /* ── Desktop: Sticky side nav + scrollable content ── */
-              <div className="grid md:grid-cols-[1fr_220px] lg:grid-cols-[1fr_240px] gap-6 lg:gap-8">
+              <div className="grid md:grid-cols-[minmax(0,1fr)_200px] lg:grid-cols-[minmax(0,1fr)_240px] gap-6 lg:gap-8">
                 <div className="space-y-16 min-w-0">
                   {navSections.map(s => (
                     <div key={s.key}>{sectionContentMap[s.key]}</div>
