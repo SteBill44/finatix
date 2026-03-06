@@ -668,11 +668,6 @@ const CourseDetail = () => {
                         </div>
                       </div>
 
-                      {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
-                        <div className="[&_*]:!text-xs [&_h3]:!text-[11px] [&_h4]:!text-[11px] [&_p]:!text-[10px] [&_li]:!text-[10px]">
-                          <StudyRecommendations courseSlug={course.slug} weakAreas={readinessScore.weakAreas} overallScore={readinessScore.overall} />
-                        </div>
-                      )}
                     </>
                   )}
                 </div>
