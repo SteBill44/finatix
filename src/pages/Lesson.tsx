@@ -23,7 +23,7 @@ import {
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
 import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
-import { useQuizzes } from "@/hooks/useQuizzes";
+import { useQuizzes, useLessonQuizAttempts } from "@/hooks/useQuizzes";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
 import LessonNotes from "@/components/lesson/LessonNotes";
@@ -83,9 +83,15 @@ const Lesson = () => {
   const { data: resources } = useLessonResources(lessonId || "");
   const { data: lessonQuizzes } = useQuizzes(courseId, lessonId);
   const { data: courseQuizzes } = useQuizzes(courseId);
+  const { data: lessonQuizAttempts } = useLessonQuizAttempts(lessonId);
   const incrementDownload = useIncrementDownloadCount();
   // Use lesson-specific quizzes if available, otherwise fall back to course quizzes
   const quizzesToShow = lessonQuizzes && lessonQuizzes.length > 0 ? lessonQuizzes : courseQuizzes;
+
+  // Check if user has passed the lesson quiz (score >= 50%)
+  const hasPassedLessonQuiz = lessonQuizAttempts?.some(
+    (a: any) => a.score > 0 && a.max_score > 0 && (a.score / a.max_score) >= 0.5
+  ) ?? false;
 
   // Handle resource download with tracking
   const handleDownload = (resource: { id: string; file_url: string }) => {
@@ -499,21 +505,12 @@ const Lesson = () => {
                         </div>
                         <div className="flex gap-2 flex-shrink-0">
                           <Button
-                            variant="outline"
                             size="sm"
                             className="gap-2"
                             onClick={() => navigate(`/quiz/${quiz.id}`)}
                           >
-                            <Play className="w-4 h-4" />
-                            Practice
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="gap-2"
-                            onClick={() => navigate(`/exam/${quiz.id}`)}
-                          >
-                            <Timer className="w-4 h-4" />
-                            Exam Mode
+                            <ClipboardList className="w-4 h-4" />
+                            Take Quiz
                           </Button>
                         </div>
                       </div>
@@ -551,13 +548,23 @@ const Lesson = () => {
                 <span className="max-w-[150px] truncate">{nextLesson.title}</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
-            ) : (
+            ) : hasPassedLessonQuiz ? (
               <Button
                 className="gap-2"
                 onClick={() => navigate("/dashboard")}
               >
                 Complete Course
                 <CheckCircle className="w-4 h-4" />
+              </Button>
+            ) : (
+              <Button
+                className="gap-2"
+                variant="outline"
+                disabled
+                title="Pass the lesson quiz to complete the course"
+              >
+                <ClipboardList className="w-4 h-4" />
+                Pass Quiz to Complete
               </Button>
             )}
           </div>
