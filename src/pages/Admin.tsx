@@ -246,7 +246,10 @@ const Admin = () => {
 
           {/* Questions Tab */}
           <TabsContent value="questions">
-            <QuestionManagement />
+            <div className="space-y-6">
+              <QuestionGenerator />
+              <QuestionManagement />
+            </div>
           </TabsContent>
 
           {/* Resources Tab */}

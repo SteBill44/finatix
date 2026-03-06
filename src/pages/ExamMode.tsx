@@ -376,6 +376,17 @@ const ExamMode = () => {
 
             {/* Right - Tools */}
             <div className="flex items-center gap-2">
+              <FocusMonitor isActive={!submitted} onViolation={handleFocusViolation} />
+              {!isFullscreen && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => document.documentElement.requestFullscreen().catch(() => {})}
+                  className="gap-2"
+                >
+                  <Maximize className="w-4 h-4" />
+                </Button>
+              )}
               <Button
                 variant={showFormulaSheet ? "default" : "outline"}
                 size="sm"
