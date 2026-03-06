@@ -129,7 +129,7 @@ Each question should have 4 options (A-D) with exactly one correct answer.`;
           });
         }
       }
-      questionCount = 45;
+      questionCount = 60;
 
       const lessonsContext = lessons?.map(l => `- ${l.title}`).join('\n') || '';
       prompt = `${courseContext}\n\nChapters:\n${lessonsContext}\n\nGenerate ${questionCount} CIMA-style exam questions for a mock examination.
