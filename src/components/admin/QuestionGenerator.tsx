@@ -152,7 +152,7 @@ const QuestionGenerator = () => {
               <SelectTrigger><SelectValue placeholder="Question type" /></SelectTrigger>
               <SelectContent className="bg-popover">
                 <SelectItem value="lesson_quiz">Lesson Quizzes (10 per chapter)</SelectItem>
-                <SelectItem value="mock_exam">Mock Exams (5 × 45 questions)</SelectItem>
+                <SelectItem value="mock_exam">Mock Exams (5 × 60 questions)</SelectItem>
                 <SelectItem value="final_exam">Final Exam (60 questions)</SelectItem>
                 <SelectItem value="practice">Practice Bank (500 questions)</SelectItem>
               </SelectContent>
