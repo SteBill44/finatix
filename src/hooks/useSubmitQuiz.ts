@@ -7,6 +7,7 @@ interface SubmitQuizParams {
   quizId: string;
   answers: Record<number, Answer>;
   timeTakenSeconds?: number;
+  focusViolations?: number;
 }
 
 interface SubmitQuizResponse {
