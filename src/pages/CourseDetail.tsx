@@ -300,7 +300,7 @@ const CourseDetail = () => {
     { key: "mock-exams", label: "Mock Exams", icon: GraduationCap, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type === 'mock_exam').length > 0 },
     { key: "history", label: "Exam History", icon: History, show: isEffectiveAdmin && isEnrolled && !!quizAttempts?.length },
     { key: "final-exam", label: "Final Exam", icon: Award, show: isEnrolled && quizzes && quizzes.filter(q => q.quiz_type === 'final_exam').length > 0 },
-    { key: "reviews", label: "Reviews", icon: Star, show: isEffectiveAdmin },
+    { key: "reviews", label: "Reviews", icon: Star, show: isEffectiveAdmin && (ratingData?.totalReviews ?? 0) > 0 },
   ].filter(s => s.show);
 
   // ── Shared content blocks ──
