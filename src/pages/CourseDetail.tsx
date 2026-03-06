@@ -641,24 +641,50 @@ const CourseDetail = () => {
             ) : (
               /* ── Desktop: Sticky side nav + scrollable content ── */
               <div className="grid items-start md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)] gap-6 lg:gap-8">
-                <div className="hidden md:block sticky top-24 self-start h-fit z-10">
-                  <nav className="space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-4 shadow-lg max-h-[calc(100vh-7rem)] overflow-y-auto">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">On this page</p>
+                <div className="hidden md:block sticky top-24 self-start h-fit z-10 space-y-3 max-h-[calc(100vh-7rem)] overflow-y-auto pr-1">
+                  <nav className="space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-3 shadow-lg">
+                    <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">On this page</p>
                     {navSections.map(s => (
                       <button
                         key={s.key}
                         onClick={() => scrollToSection(s.key)}
-                        className={`w-full flex items-center gap-2 text-sm px-3 py-2 rounded-lg transition-colors text-left ${
+                        className={`w-full flex items-center gap-1.5 text-xs px-2 py-1.5 rounded-md transition-colors text-left ${
                           activeSection === s.key
                             ? "bg-primary/10 text-primary font-medium"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         }`}
                       >
-                        <s.icon className="w-4 h-4 flex-shrink-0" />
+                        <s.icon className="w-3.5 h-3.5 flex-shrink-0" />
                         {s.label}
                       </button>
                     ))}
                   </nav>
+
+                  {/* Compact progress, readiness & recommendations */}
+                  {isEnrolled && !(isAdmin && isStudentView) && (
+                    <>
+                      <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-3">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Progress</span>
+                          <span className="text-xs font-medium text-foreground">{progressPercentage}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-1.5">
+                          <div className={`${levelBgColor} h-1.5 rounded-full transition-all duration-300`} style={{ width: `${progressPercentage}%` }} />
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-1">{completedLessons}/{totalLessons} lessons</p>
+                      </div>
+
+                      <div className="[&_*]:!text-xs [&_h3]:!text-[11px] [&_p]:!text-[10px]">
+                        <ReadinessScoreCard courseId={course.id} compact />
+                      </div>
+
+                      {readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
+                        <div className="[&_*]:!text-xs [&_h3]:!text-[11px] [&_h4]:!text-[11px] [&_p]:!text-[10px] [&_li]:!text-[10px]">
+                          <StudyRecommendations courseSlug={course.slug} weakAreas={readinessScore.weakAreas} overallScore={readinessScore.overall} />
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
 
                 <div className="space-y-16 min-w-0">
