@@ -1,0 +1,1 @@
+UPDATE quizzes SET title = TRIM(REPLACE(title, 'Quiz', '')) WHERE quiz_type = 'lesson_quiz' AND title LIKE '%Quiz%';
