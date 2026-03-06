@@ -1,0 +1,220 @@
+Level,Course,Chapter Number,Chapter Title,Duration (minutes)
+Certificate,BA1 – Fundamentals of Business Economics,1,Introduction to National Income,45
+Certificate,BA1 – Fundamentals of Business Economics,2,Economic Growth and Development,40
+Certificate,BA1 – Fundamentals of Business Economics,3,Inflation and Unemployment,50
+Certificate,BA1 – Fundamentals of Business Economics,4,Fiscal and Monetary Policy,45
+Certificate,BA1 – Fundamentals of Business Economics,5,Institutions and International Organizations,35
+Certificate,BA1 – Fundamentals of Business Economics,6,Goals and Governance of Organizations,40
+Certificate,BA1 – Fundamentals of Business Economics,7,Supply and Demand Fundamentals,45
+Certificate,BA1 – Fundamentals of Business Economics,8,Price Elasticity of Demand,50
+Certificate,BA1 – Fundamentals of Business Economics,9,"Other Elasticities (YED, XED, PES)",40
+Certificate,BA1 – Fundamentals of Business Economics,10,"Costs, Revenue, and Profit Maximization",55
+Certificate,BA1 – Fundamentals of Business Economics,11,Market Structures,50
+Certificate,BA1 – Fundamentals of Business Economics,12,Data Collection Methods,40
+Certificate,BA1 – Fundamentals of Business Economics,13,Data Analysis and Presentation,45
+Certificate,BA1 – Fundamentals of Business Economics,14,Forecasting Techniques,50
+Certificate,BA1 – Fundamentals of Business Economics,15,Big Data and Business Analytics,35
+Certificate,BA1 – Fundamentals of Business Economics,16,Financial Markets and Institutions,45
+Certificate,BA1 – Fundamentals of Business Economics,17,Foreign Exchange and International Trade,50
+Certificate,BA1 – Fundamentals of Business Economics,18,Interest Rates and Business Impact,45
+Certificate,BA2 – Fundamentals of Management Accounting,1,Introduction to Management Accounting,40
+Certificate,BA2 – Fundamentals of Management Accounting,2,Information for Planning and Control,35
+Certificate,BA2 – Fundamentals of Management Accounting,3,Cost Classification and Behavior,50
+Certificate,BA2 – Fundamentals of Management Accounting,4,Absorption Costing,55
+Certificate,BA2 – Fundamentals of Management Accounting,5,Marginal Costing,50
+Certificate,BA2 – Fundamentals of Management Accounting,6,Materials and Labor Costing,55
+Certificate,BA2 – Fundamentals of Management Accounting,7,Overhead Accounting,50
+Certificate,BA2 – Fundamentals of Management Accounting,8,Cost-Volume-Profit Analysis,55
+Certificate,BA2 – Fundamentals of Management Accounting,9,Budget Preparation Fundamentals,50
+Certificate,BA2 – Fundamentals of Management Accounting,10,Cash Budgets and Forecasting,45
+Certificate,BA2 – Fundamentals of Management Accounting,11,Standard Costing Fundamentals,45
+Certificate,BA2 – Fundamentals of Management Accounting,12,Variance Analysis,60
+Certificate,BA2 – Fundamentals of Management Accounting,13,Relevant Costs for Decision-Making,50
+Certificate,BA2 – Fundamentals of Management Accounting,14,Make-or-Buy and Pricing Decisions,55
+Certificate,BA2 – Fundamentals of Management Accounting,15,Limiting Factor Analysis,50
+Certificate,BA2 – Fundamentals of Management Accounting,16,Performance Measurement Indicators,45
+Certificate,BA2 – Fundamentals of Management Accounting,17,Responsibility Accounting,50
+Certificate,BA2 – Fundamentals of Management Accounting,18,Integrated Decision-Making,45
+Certificate,BA3 – Fundamentals of Financial Accounting,1,Purpose and Scope of Financial Accounting,35
+Certificate,BA3 – Fundamentals of Financial Accounting,2,Fundamental Accounting Principles,40
+Certificate,BA3 – Fundamentals of Financial Accounting,3,Regulatory Frameworks and Standards,35
+Certificate,BA3 – Fundamentals of Financial Accounting,4,Double-Entry Bookkeeping,55
+Certificate,BA3 – Fundamentals of Financial Accounting,5,Books of Prime Entry,50
+Certificate,BA3 – Fundamentals of Financial Accounting,6,Control Accounts and Reconciliations,50
+Certificate,BA3 – Fundamentals of Financial Accounting,7,Accruals and Prepayments,45
+Certificate,BA3 – Fundamentals of Financial Accounting,8,Depreciation Methods,50
+Certificate,BA3 – Fundamentals of Financial Accounting,9,Bad Debts and Allowances,45
+Certificate,BA3 – Fundamentals of Financial Accounting,10,Inventory Valuation,50
+Certificate,BA3 – Fundamentals of Financial Accounting,11,Non-Current Assets,55
+Certificate,BA3 – Fundamentals of Financial Accounting,12,Trial Balance and Error Correction,50
+Certificate,BA3 – Fundamentals of Financial Accounting,13,Income Statement Preparation,55
+Certificate,BA3 – Fundamentals of Financial Accounting,14,Statement of Financial Position,55
+Certificate,BA3 – Fundamentals of Financial Accounting,15,Year-End Adjustments,50
+Certificate,BA3 – Fundamentals of Financial Accounting,16,Introduction to Ratio Analysis,45
+Certificate,BA3 – Fundamentals of Financial Accounting,17,Interpreting Financial Statements,45
+Certificate,BA3 – Fundamentals of Financial Accounting,18,Limitations of Financial Analysis,35
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",1,Introduction to Business Ethics,40
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",2,Ethical Theories and Frameworks,50
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",3,CIMA Code of Ethics,45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",4,Ethical Issues and Dilemmas,50
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",5,Principles of Corporate Governance,40
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",6,"Boards, Directors and Stakeholders",45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",7,Sources and Systems of Law,40
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",8,Dispute Resolution,35
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",9,Formation of Contracts,50
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",10,Terms of Contracts,45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",11,Breach and Remedies,45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",12,Employment Contracts,45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",13,Employee Rights and Protections,50
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",14,Tort Law and Negligence,45
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",15,Business Structures,40
+Certificate,"BA4 – Fundamentals of Ethics, Corporate Governance and Business Law",16,Data Protection and GDPR,45
+Operational,E1 – Managing Finance in a Digital World,1,Introduction to Digital Finance,25
+Operational,E1 – Managing Finance in a Digital World,2,Information Systems and Technology,30
+Operational,E1 – Managing Finance in a Digital World,3,Data Analytics for Finance,35
+Operational,E1 – Managing Finance in a Digital World,4,Cloud Computing and Finance,28
+Operational,E1 – Managing Finance in a Digital World,5,Cybersecurity Fundamentals,32
+Operational,E1 – Managing Finance in a Digital World,6,Blockchain and Distributed Ledgers,30
+Operational,E1 – Managing Finance in a Digital World,7,Artificial Intelligence in Finance,35
+Operational,E1 – Managing Finance in a Digital World,8,Digital Transformation Strategy,28
+Operational,E1 – Managing Finance in a Digital World,9,Robotic Process Automation,25
+Operational,E1 – Managing Finance in a Digital World,10,E-Commerce and Digital Payments,30
+Operational,E1 – Managing Finance in a Digital World,11,Big Data in Financial Decision Making,32
+Operational,E1 – Managing Finance in a Digital World,12,IT Governance and Controls,28
+Operational,E1 – Managing Finance in a Digital World,13,Digital Risk Management,30
+Operational,E1 – Managing Finance in a Digital World,14,Change Management in Digital Finance,25
+Operational,E1 – Managing Finance in a Digital World,15,Exam Preparation and Review,40
+Operational,F1 – Financial Reporting,1,Financial Reporting Regulatory Framework,40
+Operational,F1 – Financial Reporting,2,Conceptual Framework for Financial Reporting,45
+Operational,F1 – Financial Reporting,3,Statement of Financial Position (IAS 1),55
+Operational,F1 – Financial Reporting,4,Statement of Profit or Loss (IAS 1),50
+Operational,F1 – Financial Reporting,5,Statement of Cash Flows (IAS 7),55
+Operational,F1 – Financial Reporting,6,"Property, Plant and Equipment (IAS 16)",50
+Operational,F1 – Financial Reporting,7,Intangible Assets (IAS 38),50
+Operational,F1 – Financial Reporting,8,Inventories (IAS 2),45
+Operational,F1 – Financial Reporting,9,Provisions and Contingencies (IAS 37),50
+Operational,F1 – Financial Reporting,10,Revenue Recognition (IFRS 15),55
+Operational,F1 – Financial Reporting,11,Leases (IFRS 16),55
+Operational,F1 – Financial Reporting,12,Consolidated Financial Statements Introduction,50
+Operational,F1 – Financial Reporting,13,Consolidation Procedures,55
+Operational,F1 – Financial Reporting,14,Goodwill and Non-Controlling Interests,55
+Operational,F1 – Financial Reporting,15,Associates and Joint Ventures (IAS 28),50
+Operational,F1 – Financial Reporting,16,Financial Statement Analysis,50
+Operational,Operational Case Study (OCS),1,Operational Case Study Approach,55
+Operational,Operational Case Study (OCS),2,Integrating E1 Concepts,50
+Operational,Operational Case Study (OCS),3,Integrating F1 Concepts,50
+Operational,Operational Case Study (OCS),4,Integrating P1 Concepts,50
+Operational,Operational Case Study (OCS),5,Case Study Practice Scenarios,55
+Operational,Operational Case Study (OCS),6,Operational Level Exam Techniques,45
+Operational,P1 – Management Accounting,1,Cost Accounting Systems,45
+Operational,P1 – Management Accounting,2,Overhead Allocation and Absorption,50
+Operational,P1 – Management Accounting,3,Activity-Based Costing,55
+Operational,P1 – Management Accounting,4,Marginal and Absorption Costing,50
+Operational,P1 – Management Accounting,5,Budgeting Methods and Processes,55
+Operational,P1 – Management Accounting,6,Flexible Budgets and Variance Analysis,55
+Operational,P1 – Management Accounting,7,Advanced Variance Analysis,50
+Operational,P1 – Management Accounting,8,Standard Costing Systems,45
+Operational,P1 – Management Accounting,9,Short-Term Decision Making,50
+Operational,P1 – Management Accounting,10,Limiting Factors and Linear Programming,55
+Operational,P1 – Management Accounting,11,Pricing Strategies,45
+Operational,P1 – Management Accounting,12,Risk and Uncertainty in Decision Making,55
+Operational,P1 – Management Accounting,13,Capital Budgeting – NPV and IRR,60
+Operational,P1 – Management Accounting,14,Investment Appraisal Under Uncertainty,50
+Operational,P1 – Management Accounting,15,Performance Measurement and Control,50
+Management,E2 – Managing Performance,1,Understanding Industry and Competition,50
+Management,E2 – Managing Performance,2,Strategic Analysis Tools,55
+Management,E2 – Managing Performance,3,Market Analysis and Positioning,45
+Management,E2 – Managing Performance,4,"Mission, Vision, and Objectives",45
+Management,E2 – Managing Performance,5,Competitive and Corporate Strategy,55
+Management,E2 – Managing Performance,6,Strategic Planning and Implementation,50
+Management,E2 – Managing Performance,7,Project Management Fundamentals,50
+Management,E2 – Managing Performance,8,Project Tools and Techniques,50
+Management,E2 – Managing Performance,9,Leading Teams and Individuals,45
+Management,E2 – Managing Performance,10,Change Management,50
+Management,E2 – Managing Performance,11,Managing Conflict and Communication,40
+Management,E2 – Managing Performance,12,Performance Measurement Systems,55
+Management,E2 – Managing Performance,13,Budgetary Control,50
+Management,E2 – Managing Performance,14,Quality Management,45
+Management,F2 – Advanced Financial Reporting,1,Equity Finance and Capital Markets,50
+Management,F2 – Advanced Financial Reporting,2,Debt Finance and Financial Instruments,55
+Management,F2 – Advanced Financial Reporting,3,Capital Structure Decisions,50
+Management,F2 – Advanced Financial Reporting,4,Complex Group Structures,60
+Management,F2 – Advanced Financial Reporting,5,Foreign Currency Translation (IAS 21),55
+Management,F2 – Advanced Financial Reporting,6,Financial Instruments (IFRS 9),60
+Management,F2 – Advanced Financial Reporting,7,Impairment of Assets (IAS 36),50
+Management,F2 – Advanced Financial Reporting,8,Share-Based Payment (IFRS 2),50
+Management,F2 – Advanced Financial Reporting,9,Employee Benefits (IAS 19),55
+Management,F2 – Advanced Financial Reporting,10,Advanced Ratio Analysis,50
+Management,F2 – Advanced Financial Reporting,11,Cash Flow Analysis and Forecasting,50
+Management,F2 – Advanced Financial Reporting,12,Earnings Quality and Manipulation,45
+Management,F2 – Advanced Financial Reporting,13,Integrated Reporting Framework,45
+Management,F2 – Advanced Financial Reporting,14,Sustainability and ESG Reporting,50
+Management,F2 – Advanced Financial Reporting,15,Current and Emerging IFRS Issues,40
+Management,Management Case Study (MCS),1,Management Case Study Approach,55
+Management,Management Case Study (MCS),2,Integrating F1 Concepts,55
+Management,Management Case Study (MCS),3,Integrating F2 Concepts,55
+Management,Management Case Study (MCS),4,Integrating P1 Concepts,55
+Management,Management Case Study (MCS),5,Financial Analysis in Cases,50
+Management,Management Case Study (MCS),6,Management Level Exam Techniques,45
+Management,P2 – Advanced Management Accounting,1,Strategic Pricing Decisions,55
+Management,P2 – Advanced Management Accounting,2,Activity-Based Management,50
+Management,P2 – Advanced Management Accounting,3,Life Cycle and Target Costing,50
+Management,P2 – Advanced Management Accounting,4,Throughput Accounting,45
+Management,P2 – Advanced Management Accounting,5,Environmental Management Accounting,45
+Management,P2 – Advanced Management Accounting,6,Divisional Performance Measurement,55
+Management,P2 – Advanced Management Accounting,7,Transfer Pricing,50
+Management,P2 – Advanced Management Accounting,8,Beyond Budgeting,50
+Management,P2 – Advanced Management Accounting,9,Risk Management Frameworks,55
+Management,P2 – Advanced Management Accounting,10,Value Chain Analysis,50
+Management,P2 – Advanced Management Accounting,11,Lean Management and Six Sigma,45
+Management,P2 – Advanced Management Accounting,12,Strategic Investment Decisions,55
+Management,P2 – Advanced Management Accounting,13,Advanced Investment Appraisal,60
+Management,P2 – Advanced Management Accounting,14,Balanced Scorecard,50
+Strategic,E3 – Strategic Management,1,Strategic Position Assessment,55
+Strategic,E3 – Strategic Management,2,External Environment Analysis,60
+Strategic,E3 – Strategic Management,3,Industry and Competitive Analysis,55
+Strategic,E3 – Strategic Management,4,Internal Resource Analysis,50
+Strategic,E3 – Strategic Management,5,Stakeholder Strategy and Management,50
+Strategic,E3 – Strategic Management,6,Corporate Strategy and Direction,55
+Strategic,E3 – Strategic Management,7,"Mergers, Acquisitions and Alliances",60
+Strategic,E3 – Strategic Management,8,International Business Strategy,55
+Strategic,E3 – Strategic Management,9,Digital Strategy and Innovation,50
+Strategic,E3 – Strategic Management,10,Strategy Implementation,55
+Strategic,E3 – Strategic Management,11,Organizational Structure and Design,50
+Strategic,E3 – Strategic Management,12,Change Management at Strategic Level,55
+Strategic,E3 – Strategic Management,13,Leadership and Governance,50
+Strategic,E3 – Strategic Management,14,Risk Management Strategy,55
+Strategic,F3 – Financial Strategy,1,Financial Strategy Formulation,55
+Strategic,F3 – Financial Strategy,2,Financial Objectives and Stakeholders,50
+Strategic,F3 – Financial Strategy,3,Investment Decisions and Real Options,60
+Strategic,F3 – Financial Strategy,4,Business Valuation Methods,60
+Strategic,F3 – Financial Strategy,5,"Mergers, Acquisitions and Divestments",55
+Strategic,F3 – Financial Strategy,6,Financing Strategy,55
+Strategic,F3 – Financial Strategy,7,Cost of Capital and WACC,60
+Strategic,F3 – Financial Strategy,8,Capital Structure Theory,50
+Strategic,F3 – Financial Strategy,9,Dividend Policy and Shareholder Returns,50
+Strategic,F3 – Financial Strategy,10,Treasury and Working Capital Strategy,55
+Strategic,F3 – Financial Strategy,11,Financial Risk Management,55
+Strategic,F3 – Financial Strategy,12,Foreign Exchange Risk Management,55
+Strategic,F3 – Financial Strategy,13,Interest Rate Risk Management,50
+Strategic,F3 – Financial Strategy,14,Emerging Issues in Financial Strategy,50
+Strategic,P3 – Risk Management,1,Enterprise Risk Management Framework,55
+Strategic,P3 – Risk Management,2,Risk Identification and Assessment,55
+Strategic,P3 – Risk Management,3,Risk Quantification and Modeling,60
+Strategic,P3 – Risk Management,4,Internal Controls and Audit,55
+Strategic,P3 – Risk Management,5,Corporate Governance and Risk,50
+Strategic,P3 – Risk Management,6,Operational Risk Management,55
+Strategic,P3 – Risk Management,7,Cyber Risk and IT Security,50
+Strategic,P3 – Risk Management,8,Strategic Risk Management,55
+Strategic,P3 – Risk Management,9,Reputation Risk and Crisis Management,50
+Strategic,P3 – Risk Management,10,Compliance and Regulatory Risk,50
+Strategic,P3 – Risk Management,11,Financial Risk and Hedging Strategies,55
+Strategic,P3 – Risk Management,12,Project Risk Management,50
+Strategic,P3 – Risk Management,13,Supply Chain and Operational Resilience,50
+Strategic,P3 – Risk Management,14,Emerging Risks and Future Trends,45
+Strategic,Strategic Case Study (SCS),1,Strategic Case Study Approach,60
+Strategic,Strategic Case Study (SCS),2,Integrating E3 Concepts,55
+Strategic,Strategic Case Study (SCS),3,Integrating F3 Concepts,55
+Strategic,Strategic Case Study (SCS),4,Integrating P3 Concepts,55
+Strategic,Strategic Case Study (SCS),5,Strategic Analysis in Cases,55
+Strategic,Strategic Case Study (SCS),6,Strategic Level Exam Techniques,50
