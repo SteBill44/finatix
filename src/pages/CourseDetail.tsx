@@ -305,7 +305,11 @@ const CourseDetail = () => {
   // ── Shared content blocks ──
   const OverviewContent = (
     <div ref={el => { sectionRefs.current["overview"] = el; }}>
-
+      {isEnrolled && !(isAdmin && isStudentView) && readinessScore?.weakAreas && readinessScore.weakAreas.length > 0 && (
+        <div className="mb-8">
+          <StudyRecommendations courseSlug={course.slug} weakAreas={readinessScore.weakAreas} overallScore={readinessScore.overall} />
+        </div>
+      )}
       {/* Course features */}
       <Card className="p-6">
         <h3 className="font-semibold text-foreground mb-4">This course includes</h3>
