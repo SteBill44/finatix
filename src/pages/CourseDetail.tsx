@@ -310,18 +310,6 @@ const CourseDetail = () => {
           <StudyRecommendations courseSlug={course.slug} weakAreas={readinessScore.weakAreas} overallScore={readinessScore.overall} />
         </div>
       )}
-      {/* Course features */}
-      <Card className="p-6">
-        <h3 className="font-semibold text-foreground mb-4">This course includes</h3>
-        <ul className="space-y-3">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
-              <CheckCircle className={`w-4 h-4 ${levelColor} flex-shrink-0`} />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </Card>
     </div>
   );
 
