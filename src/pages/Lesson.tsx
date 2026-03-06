@@ -23,7 +23,7 @@ import {
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
 import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
-import { useQuizzes } from "@/hooks/useQuizzes";
+import { useQuizzes, useLessonQuizAttempts } from "@/hooks/useQuizzes";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
 import LessonNotes from "@/components/lesson/LessonNotes";
