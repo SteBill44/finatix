@@ -497,10 +497,12 @@ const CourseDetail = () => {
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <BookOpen className="w-5 h-5" /><span>{totalLessons} lessons</span>
                 </div>
-                <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                  <span>{ratingData?.averageRating.toFixed(1) || "0.0"} ({ratingData?.totalReviews || 0} reviews)</span>
-                </div>
+                {(ratingData?.totalReviews ?? 0) > 0 && (
+                  <div className="flex items-center gap-2 text-primary-foreground/90">
+                    <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+                    <span>{ratingData?.averageRating.toFixed(1) || "0.0"} ({ratingData?.totalReviews || 0} reviews)</span>
+                  </div>
+                )}
               </div>
 
               {/* Syllabus Accordion */}
