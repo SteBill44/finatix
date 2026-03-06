@@ -648,7 +648,7 @@ const CourseDetail = () => {
                 </div>
 
                 <div className="hidden lg:block">
-                  <nav className="sticky top-24 space-y-1">
+                  <nav className="sticky top-24 space-y-1 bg-card border border-border rounded-xl p-4 shadow-sm">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">On this page</p>
                     {navSections.map(s => (
                       <button
