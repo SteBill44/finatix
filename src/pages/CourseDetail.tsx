@@ -157,6 +157,13 @@ const CourseDetail = () => {
   const totalLessons = lessons?.length || 0;
   const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+  // Count unique mock exams the user has attempted
+  const mockExamIds = new Set(quizzes?.filter(q => q.quiz_type === 'mock_exam').map(q => q.id) || []);
+  const completedMockExamCount = new Set(
+    quizAttempts?.filter(a => a.quiz_id && mockExamIds.has(a.quiz_id)).map(a => a.quiz_id) || []
+  ).size;
+  const isFinalExamUnlocked = completedMockExamCount >= 3;
+
   const isLessonCompleted = (lessonId: string) => {
     return lessonProgress?.some((p) => p.lesson_id === lessonId && p.completed);
   };
@@ -415,22 +422,44 @@ const CourseDetail = () => {
         <Award className={`w-6 h-6 ${levelColor}`} />
         Final Exam
       </h2>
-      <div className="grid md:grid-cols-2 gap-4">
-        {quizzes?.filter(q => q.quiz_type === 'final_exam').map((quiz) => (
-          <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
-            <div className="flex items-start gap-3">
-              <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
-                <Award className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium text-foreground mb-1">{quiz.title}</h3>
-                <p className="text-sm text-muted-foreground mb-3">End-of-course assessment</p>
-                <Button size="sm" variant="outline" onClick={() => navigate(`/mock-exam/${quiz.id}`)}>Start Final Exam</Button>
-              </div>
+
+      {!isFinalExamUnlocked ? (
+        <Card className="p-6 border-dashed border-2 border-muted-foreground/30">
+          <div className="flex flex-col items-center text-center gap-3 py-4">
+            <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center">
+              <Lock className="w-7 h-7 text-muted-foreground" />
             </div>
-          </Card>
-        ))}
-      </div>
+            <h3 className="font-semibold text-foreground">Final Exam Locked</h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              Complete at least <strong>3 mock exams</strong> to unlock the final exam. 
+              You've completed <strong>{completedMockExamCount} of 3</strong> so far.
+            </p>
+            <div className="w-full max-w-xs bg-muted rounded-full h-2 mt-2">
+              <div 
+                className={`${levelBgColor} h-2 rounded-full transition-all duration-300`} 
+                style={{ width: `${Math.min((completedMockExamCount / 3) * 100, 100)}%` }} 
+              />
+            </div>
+          </div>
+        </Card>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {quizzes?.filter(q => q.quiz_type === 'final_exam').map((quiz) => (
+            <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
+                  <Award className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-medium text-foreground mb-1">{quiz.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">End-of-course assessment</p>
+                  <Button size="sm" variant="outline" onClick={() => navigate(`/mock-exam/${quiz.id}`)}>Start Final Exam</Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 
