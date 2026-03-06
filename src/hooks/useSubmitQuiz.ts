@@ -43,7 +43,8 @@ export const useSubmitQuiz = () => {
         body: { 
           quizId, 
           answers: simplifiedAnswers,
-          timeTakenSeconds 
+          timeTakenSeconds,
+          focusViolations: focusViolations || 0,
         },
       });
 

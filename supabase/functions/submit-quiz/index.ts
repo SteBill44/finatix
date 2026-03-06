@@ -168,6 +168,7 @@ serve(async (req) => {
         score,
         max_score: maxScore,
         time_taken_seconds: timeTakenSeconds || null,
+        focus_violations: focusViolations || 0,
       })
       .select()
       .single();
