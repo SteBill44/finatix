@@ -647,8 +647,8 @@ const CourseDetail = () => {
                   ))}
                 </div>
 
-                <div className="hidden md:block relative z-10">
-                  <nav className="sticky top-20 lg:top-24 space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-4 shadow-lg">
+                <div className="hidden md:block relative z-10 self-start sticky top-20 lg:top-24">
+                  <nav className="space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-4 shadow-lg">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">On this page</p>
                     {navSections.map(s => (
                       <button
