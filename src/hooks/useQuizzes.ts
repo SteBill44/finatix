@@ -51,16 +51,17 @@ export interface QuizQuestion {
   order_index: number;
 }
 
-export const useQuizzes = (courseId?: string, lessonId?: string) => {
+export const useQuizzes = (courseId?: string, lessonId?: string, quizType?: string) => {
   return useQuery({
-    queryKey: ["quizzes", courseId, lessonId],
+    queryKey: ["quizzes", courseId, lessonId, quizType],
     queryFn: async () => {
       let query = from("quizzes").select("*").order("order_index", { ascending: true });
       if (courseId) query = query.eq("course_id", courseId);
       if (lessonId) query = query.eq("lesson_id", lessonId);
+      if (quizType) query = query.eq("quiz_type", quizType);
       const { data, error } = await query;
       if (error) throw error;
-      return data as (Quiz & { lesson_id?: string })[];
+      return data as (Quiz & { lesson_id?: string; quiz_type?: string })[];
     },
   });
 };
