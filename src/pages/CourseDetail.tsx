@@ -409,6 +409,31 @@ const CourseDetail = () => {
     </div>
   );
 
+  const FinalExamContent = (
+    <div ref={el => { sectionRefs.current["final-exam"] = el; }}>
+      <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+        <Award className={`w-6 h-6 ${levelColor}`} />
+        Final Exam
+      </h2>
+      <div className="grid md:grid-cols-2 gap-4">
+        {quizzes?.filter(q => q.quiz_type === 'final_exam').map((quiz) => (
+          <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
+            <div className="flex items-start gap-3">
+              <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
+                <Award className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium text-foreground mb-1">{quiz.title}</h3>
+                <p className="text-sm text-muted-foreground mb-3">End-of-course assessment</p>
+                <Button size="sm" variant="outline" onClick={() => navigate(`/mock-exam/${quiz.id}`)}>Start Final Exam</Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
   const ReviewsContent = (
     <div ref={el => { sectionRefs.current["reviews"] = el; }}>
       <CourseReviews courseId={course.id} isEnrolled={isEnrolled || false} />
