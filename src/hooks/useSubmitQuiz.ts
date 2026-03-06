@@ -23,7 +23,7 @@ export const useSubmitQuiz = () => {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ quizId, answers, timeTakenSeconds }: SubmitQuizParams): Promise<SubmitQuizResponse> => {
+    mutationFn: async ({ quizId, answers, timeTakenSeconds, focusViolations }: SubmitQuizParams): Promise<SubmitQuizResponse> => {
       if (!user) {
         throw new Error("You must be signed in to submit a quiz");
       }
