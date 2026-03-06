@@ -548,8 +548,7 @@ const Lesson = () => {
                 <span className="max-w-[150px] truncate">{nextLesson.title}</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
-            ) : (
-              {!nextLesson && hasPassedLessonQuiz ? (
+            ) : hasPassedLessonQuiz ? (
               <Button
                 className="gap-2"
                 onClick={() => navigate("/dashboard")}
@@ -557,7 +556,7 @@ const Lesson = () => {
                 Complete Course
                 <CheckCircle className="w-4 h-4" />
               </Button>
-            ) : !nextLesson ? (
+            ) : (
               <Button
                 className="gap-2"
                 variant="outline"
@@ -567,7 +566,6 @@ const Lesson = () => {
                 <ClipboardList className="w-4 h-4" />
                 Pass Quiz to Complete
               </Button>
-            ) : null}
             )}
           </div>
           </div>
