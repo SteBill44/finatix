@@ -242,7 +242,15 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    {enrollments?.map((enrollment) => (
+                    {[...(enrollments || [])].sort((a, b) => {
+                      const order = ['BA1','BA2','BA3','BA4','E1','P1','F1','E2','P2','F2','E3','P3','F3','SCS','MCS','OCS'];
+                      const getIndex = (title: string) => {
+                        const code = title.match(/^([A-Z]+\d?)/i)?.[1]?.toUpperCase() || '';
+                        const idx = order.indexOf(code);
+                        return idx >= 0 ? idx : order.length;
+                      };
+                      return getIndex(a.courses?.title || '') - getIndex(b.courses?.title || '');
+                    }).map((enrollment) => (
                       <CourseProgressCard key={enrollment.id} enrollment={enrollment} />
                     ))}
                   </div>
