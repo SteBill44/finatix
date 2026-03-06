@@ -296,8 +296,8 @@ const CourseDetail = () => {
   const navSections = [
     { key: "overview", label: "Overview", icon: FileText, show: true },
     { key: "lessons", label: "Lessons", icon: BookOpen, show: isEnrolled && totalLessons > 0 },
-    { key: "quizzes", label: "Quizzes", icon: ClipboardList, show: isEffectiveAdmin && quizzes && quizzes.length > 0 },
-    { key: "mock-exams", label: "Mock Exams", icon: GraduationCap, show: isEffectiveAdmin && quizzes && quizzes.length > 0 },
+    { key: "quizzes", label: "Quizzes", icon: ClipboardList, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type !== 'mock_exam').length > 0 },
+    { key: "mock-exams", label: "Mock Exams", icon: GraduationCap, show: isEffectiveAdmin && quizzes && quizzes.filter(q => q.quiz_type === 'mock_exam').length > 0 },
     { key: "history", label: "Exam History", icon: History, show: isEffectiveAdmin && isEnrolled && !!quizAttempts?.length },
     { key: "reviews", label: "Reviews", icon: Star, show: isEffectiveAdmin },
   ].filter(s => s.show);
@@ -353,7 +353,7 @@ const CourseDetail = () => {
         <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
       </h2>
       <div className="grid md:grid-cols-2 gap-4">
-        {quizzes?.map((quiz) => (
+        {quizzes?.filter(q => q.quiz_type !== 'mock_exam').map((quiz) => (
           <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
@@ -379,7 +379,7 @@ const CourseDetail = () => {
         <span className="text-xs bg-yellow-500/20 text-yellow-600 px-2 py-0.5 rounded-full">Admin View</span>
       </h2>
       <div className="grid md:grid-cols-2 gap-4">
-        {quizzes?.map((quiz) => (
+        {quizzes?.filter(q => q.quiz_type === 'mock_exam').map((quiz) => (
           <Card key={quiz.id} className="p-4 hover:shadow-md transition-all duration-200">
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-lg ${levelBgColor} flex items-center justify-center flex-shrink-0`}>
