@@ -157,6 +157,13 @@ const CourseDetail = () => {
   const totalLessons = lessons?.length || 0;
   const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+  // Count unique mock exams the user has attempted
+  const mockExamIds = new Set(quizzes?.filter(q => q.quiz_type === 'mock_exam').map(q => q.id) || []);
+  const completedMockExamCount = new Set(
+    quizAttempts?.filter(a => a.quiz_id && mockExamIds.has(a.quiz_id)).map(a => a.quiz_id) || []
+  ).size;
+  const isFinalExamUnlocked = completedMockExamCount >= 3;
+
   const isLessonCompleted = (lessonId: string) => {
     return lessonProgress?.some((p) => p.lesson_id === lessonId && p.completed);
   };
