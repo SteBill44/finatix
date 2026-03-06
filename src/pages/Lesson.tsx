@@ -549,6 +549,7 @@ const Lesson = () => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             ) : (
+              {!nextLesson && hasPassedLessonQuiz ? (
               <Button
                 className="gap-2"
                 onClick={() => navigate("/dashboard")}
@@ -556,6 +557,17 @@ const Lesson = () => {
                 Complete Course
                 <CheckCircle className="w-4 h-4" />
               </Button>
+            ) : !nextLesson ? (
+              <Button
+                className="gap-2"
+                variant="outline"
+                disabled
+                title="Pass the lesson quiz to complete the course"
+              >
+                <ClipboardList className="w-4 h-4" />
+                Pass Quiz to Complete
+              </Button>
+            ) : null}
             )}
           </div>
           </div>
