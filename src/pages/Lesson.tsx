@@ -83,9 +83,15 @@ const Lesson = () => {
   const { data: resources } = useLessonResources(lessonId || "");
   const { data: lessonQuizzes } = useQuizzes(courseId, lessonId);
   const { data: courseQuizzes } = useQuizzes(courseId);
+  const { data: lessonQuizAttempts } = useLessonQuizAttempts(lessonId);
   const incrementDownload = useIncrementDownloadCount();
   // Use lesson-specific quizzes if available, otherwise fall back to course quizzes
   const quizzesToShow = lessonQuizzes && lessonQuizzes.length > 0 ? lessonQuizzes : courseQuizzes;
+
+  // Check if user has passed the lesson quiz (score >= 50%)
+  const hasPassedLessonQuiz = lessonQuizAttempts?.some(
+    (a: any) => a.score > 0 && a.max_score > 0 && (a.score / a.max_score) >= 0.5
+  ) ?? false;
 
   // Handle resource download with tracking
   const handleDownload = (resource: { id: string; file_url: string }) => {
