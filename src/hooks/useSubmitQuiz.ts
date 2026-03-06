@@ -7,6 +7,7 @@ interface SubmitQuizParams {
   quizId: string;
   answers: Record<number, Answer>;
   timeTakenSeconds?: number;
+  focusViolations?: number;
 }
 
 interface SubmitQuizResponse {
@@ -22,7 +23,7 @@ export const useSubmitQuiz = () => {
   const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ quizId, answers, timeTakenSeconds }: SubmitQuizParams): Promise<SubmitQuizResponse> => {
+    mutationFn: async ({ quizId, answers, timeTakenSeconds, focusViolations }: SubmitQuizParams): Promise<SubmitQuizResponse> => {
       if (!user) {
         throw new Error("You must be signed in to submit a quiz");
       }
@@ -42,7 +43,8 @@ export const useSubmitQuiz = () => {
         body: { 
           quizId, 
           answers: simplifiedAnswers,
-          timeTakenSeconds 
+          timeTakenSeconds,
+          focusViolations: focusViolations || 0,
         },
       });
 

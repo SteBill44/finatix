@@ -1001,6 +1001,7 @@ export type Database = {
         Row: {
           attempted_at: string
           course_id: string
+          focus_violations: number | null
           id: string
           max_score: number
           quiz_id: string | null
@@ -1011,6 +1012,7 @@ export type Database = {
         Insert: {
           attempted_at?: string
           course_id: string
+          focus_violations?: number | null
           id?: string
           max_score: number
           quiz_id?: string | null
@@ -1021,6 +1023,7 @@ export type Database = {
         Update: {
           attempted_at?: string
           course_id?: string
+          focus_violations?: number | null
           id?: string
           max_score?: number
           quiz_id?: string | null
@@ -1133,6 +1136,7 @@ export type Database = {
           id: string
           lesson_id: string | null
           order_index: number
+          quiz_type: string
           title: string
         }
         Insert: {
@@ -1142,6 +1146,7 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           order_index?: number
+          quiz_type?: string
           title: string
         }
         Update: {
@@ -1151,6 +1156,7 @@ export type Database = {
           id?: string
           lesson_id?: string | null
           order_index?: number
+          quiz_type?: string
           title?: string
         }
         Relationships: [

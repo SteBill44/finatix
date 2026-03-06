@@ -89,7 +89,7 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { quizId, answers, timeTakenSeconds, isPracticeMode } = await req.json();
+    const { quizId, answers, timeTakenSeconds, isPracticeMode, focusViolations } = await req.json();
 
     if (!quizId || !answers) {
       throw new Error("Missing quizId or answers");
@@ -168,6 +168,7 @@ serve(async (req) => {
         score,
         max_score: maxScore,
         time_taken_seconds: timeTakenSeconds || null,
+        focus_violations: focusViolations || 0,
       })
       .select()
       .single();

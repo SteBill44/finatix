@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.submit-quiz]
 verify_jwt = false
+
+[functions.generate-course-questions]
+verify_jwt = true

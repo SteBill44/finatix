@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import ExamCalculator from "@/components/quiz/ExamCalculator";
 import ExamTimer from "@/components/quiz/ExamTimer";
 import QuestionNavigator from "@/components/quiz/QuestionNavigator";
 import FormulaSheet from "@/components/quiz/FormulaSheet";
+import FocusMonitor from "@/components/quiz/FocusMonitor";
 import QuestionRenderer, { Answer, isAnswerCorrect } from "@/components/quiz/QuestionRenderer";
 import {
   CheckCircle,
@@ -24,6 +25,7 @@ import {
   List,
   AlertCircle,
   BookOpen,
+  Maximize,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -81,9 +83,60 @@ const ExamMode = () => {
   const [showFormulaSheet, setShowFormulaSheet] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  const [focusViolations, setFocusViolations] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const examContainerRef = useRef<HTMLDivElement>(null);
 
   // Default exam duration: 2 minutes per question, minimum 5 minutes
   const examDuration = Math.max(5, (questions?.length || 0) * 2);
+
+  // Anti-cheat: Request fullscreen on mount
+  useEffect(() => {
+    const requestFullscreen = async () => {
+      try {
+        await document.documentElement.requestFullscreen();
+        setIsFullscreen(true);
+      } catch {
+        // User may deny fullscreen
+      }
+    };
+    requestFullscreen();
+
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+  }, []);
+
+  // Anti-cheat: Disable right-click and text selection
+  useEffect(() => {
+    const preventContext = (e: MouseEvent) => { e.preventDefault(); };
+    const preventCopy = (e: ClipboardEvent) => { e.preventDefault(); };
+    const preventSelect = (e: Event) => { e.preventDefault(); };
+
+    document.addEventListener("contextmenu", preventContext);
+    document.addEventListener("copy", preventCopy);
+    document.addEventListener("cut", preventCopy);
+    document.addEventListener("selectstart", preventSelect);
+
+    return () => {
+      document.removeEventListener("contextmenu", preventContext);
+      document.removeEventListener("copy", preventCopy);
+      document.removeEventListener("cut", preventCopy);
+      document.removeEventListener("selectstart", preventSelect);
+    };
+  }, []);
+
+  const handleFocusViolation = useCallback((count: number) => {
+    setFocusViolations(count);
+  }, []);
 
   const handleTimeUp = useCallback(() => {
     setShowTimeUpDialog(true);
@@ -323,6 +376,17 @@ const ExamMode = () => {
 
             {/* Right - Tools */}
             <div className="flex items-center gap-2">
+              <FocusMonitor isActive={!submitted} onViolation={handleFocusViolation} />
+              {!isFullscreen && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => document.documentElement.requestFullscreen().catch(() => {})}
+                  className="gap-2"
+                >
+                  <Maximize className="w-4 h-4" />
+                </Button>
+              )}
               <Button
                 variant={showFormulaSheet ? "default" : "outline"}
                 size="sm"
