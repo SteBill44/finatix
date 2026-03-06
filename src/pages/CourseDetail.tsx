@@ -446,6 +446,7 @@ const CourseDetail = () => {
     quizzes: QuizzesContent,
     "mock-exams": MockExamsContent,
     history: HistoryContent,
+    "final-exam": FinalExamContent,
     reviews: ReviewsContent,
   };
 
