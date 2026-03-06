@@ -640,15 +640,15 @@ const CourseDetail = () => {
               </Tabs>
             ) : (
               /* ── Desktop: Sticky side nav + scrollable content ── */
-              <div className="grid lg:grid-cols-[1fr_240px] gap-8">
+              <div className="grid md:grid-cols-[1fr_220px] lg:grid-cols-[1fr_240px] gap-6 lg:gap-8">
                 <div className="space-y-16 min-w-0">
                   {navSections.map(s => (
                     <div key={s.key}>{sectionContentMap[s.key]}</div>
                   ))}
                 </div>
 
-                <div className="hidden lg:block relative z-10">
-                  <nav className="sticky top-24 space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-4 shadow-lg">
+                <div className="hidden md:block relative z-10">
+                  <nav className="sticky top-20 lg:top-24 space-y-1 bg-card/80 backdrop-blur-sm border-2 border-primary/20 rounded-xl p-4 shadow-lg">
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">On this page</p>
                     {navSections.map(s => (
                       <button
