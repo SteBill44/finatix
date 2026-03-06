@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import ExamCalculator from "@/components/quiz/ExamCalculator";
 import ExamTimer from "@/components/quiz/ExamTimer";
 import QuestionNavigator from "@/components/quiz/QuestionNavigator";
 import FormulaSheet from "@/components/quiz/FormulaSheet";
+import FocusMonitor from "@/components/quiz/FocusMonitor";
 import QuestionRenderer, { Answer, isAnswerCorrect } from "@/components/quiz/QuestionRenderer";
 import {
   CheckCircle,
@@ -24,6 +25,7 @@ import {
   List,
   AlertCircle,
   BookOpen,
+  Maximize,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
