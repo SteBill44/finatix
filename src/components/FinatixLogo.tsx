@@ -106,7 +106,7 @@ const FinatixLogo = ({
       "font-bold transition-colors duration-300 tracking-tight",
       config.text
     )}>
-      <span className={lightFin ? "text-white dark:text-foreground" : "text-foreground"}>Fin</span><span className="text-primary">atix</span>
+      <span className={lightFin ? "text-white dark:text-black" : "text-foreground"}>Fin</span><span className="text-primary">atix</span>
     </span>
   );
 
