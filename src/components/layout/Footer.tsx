@@ -51,7 +51,7 @@ const Footer = ({ className }: FooterProps) => {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <div className="mb-4">
-              <FinatixLogo size="sm" />
+              <FinatixLogo size="sm" lightFin />
             </div>
             <p className="text-background/60 text-sm mb-6">
               Smarter CIMA study. Modern tools. Real insights.
