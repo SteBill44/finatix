@@ -36,17 +36,17 @@ const Footer = ({ className }: FooterProps) => {
     ],
   };
 
-  // Social links - update these with actual URLs when available
   const socialLinks = [
     { icon: Linkedin, href: "https://linkedin.com/company/finatix", label: "LinkedIn" },
     { icon: Twitter, href: "https://twitter.com/finatix", label: "Twitter" },
     { icon: Youtube, href: "https://youtube.com/@finatix", label: "YouTube" },
   ];
 
+  const headingClass = "font-extrabold text-base uppercase tracking-wide mb-4 text-white dark:text-black";
+
   return (
     <footer className={cn("bg-charcoal text-background", className)}>
       <div className="container mx-auto px-4 py-16">
-        {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
@@ -72,7 +72,10 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Courses */}
           <div>
-            <h4 className="font-extrabold text-base uppercase tracking-wide mb-4 text-white        <li key={link.name}>
+            <h4 className={headingClass}>Courses</h4>
+            <ul className="space-y-3">
+              {footerLinks.courses.map((link) => (
+                <li key={link.name}>
                   <Link
                     to={link.path}
                     className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
@@ -86,7 +89,12 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Company */}
           <div>
-            <h4 className="font-bold t dark:text-blackext-base upperca darkextrabold text-base uppercase tracking-wideextrabold text-base uppercase tracking-wideextrabold text-base uppercase tracking-wide mb-4 text-white dark:text-black   to={link.path}
+            <h4 className={headingClass}>Company</h4>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.path}
                     className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
@@ -98,9 +106,9 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Support */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-blackextra">Support</h4>
+            <h4 className={headingClass}>Support</h4>
             <ul className="space-y-3">
-           extra   {footerLinks.support.map((link) => (
+              {footerLinks.support.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
@@ -115,7 +123,9 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-bold t dark:text-blackext-base uppercase tracking-wide mb-4 text-extrabold text-base uppercase tracking-wide mb-4 text-white dark:text-black {footerLinks.legal.map((link) => (
+            <h4 className={headingClass}>Legal</h4>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
