@@ -101,10 +101,10 @@ const FinatixLogo = ({
 
   const LogoText = showText && (
     <span className={cn(
-      "font-bold text-foreground transition-colors duration-300 tracking-tight",
+      "font-bold transition-colors duration-300 tracking-tight",
       config.text
     )}>
-      Fin<span className="text-primary">atix</span>
+      <span className="text-white dark:text-foreground">Fin</span><span className="text-primary">atix</span>
     </span>
   );
 
