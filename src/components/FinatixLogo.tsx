@@ -41,6 +41,7 @@ const FinatixLogo = ({
   linkTo = "/",
   className,
   animated = false,
+  lightFin = false,
 }: FinatixLogoProps) => {
   const config = sizeConfig[size];
 
