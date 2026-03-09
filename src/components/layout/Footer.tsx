@@ -72,8 +72,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Courses */}
           <div>
-            <h4 className="font-extrabold text-base uppercase tracking-wide mb-4 text-white<ul className="space-y-3">
-              {footerLinks.courses.map((link) => (
+            <h4 className="font-extrabold text-base uppercase tracking-wide mb-4 text-whiteooterLinks.courses.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
@@ -88,9 +87,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Company */}
           <div>
-            <h4 className="font-bold t dark:text-blackext-base upperca darkextrabold text-base uppercase tracking-wide mb-4 text-white dark:text-blackpace-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
+            <h4 className="font-bold t dark:text-blackext-base upperca darkextrabold text-base uppercase tracking-wideextrabold text-base uppercase tracking-wide mb-4 text-white dark:text-black        <li key={link.name}>
                   <Link
                     to={link.path}
                     className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
@@ -104,7 +101,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Support */}
           <div>
-            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-black">Support</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-blackextra">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
