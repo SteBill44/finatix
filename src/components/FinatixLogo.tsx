@@ -9,6 +9,7 @@ interface FinatixLogoProps {
   linkTo?: string | null;
   className?: string;
   animated?: boolean;
+  lightFin?: boolean;
 }
 
 const sizeConfig = {
