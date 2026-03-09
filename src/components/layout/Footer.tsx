@@ -106,7 +106,7 @@ const Footer = ({ className }: FooterProps) => {
 
           {/* Support */}
           <div>
-            <h4 classN dark:text-blackame="font-bold text-base upperca dark:text-blackse tracking-wide mb-4 text-white">Support</h4>
+            <h4 className="font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-black">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
                 <li key={link.name}>
