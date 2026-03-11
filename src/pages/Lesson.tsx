@@ -45,7 +45,6 @@ import {
   FileVideo,
   FileAudio,
   GraduationCap,
-  Timer,
   ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
