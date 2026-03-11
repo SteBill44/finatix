@@ -109,12 +109,14 @@ const PdfViewer = ({ sourceUrl, title }: PdfViewerProps) => {
         </Button>
       </div>
 
-      <iframe
-        src={pdfBlobUrl}
-        className="w-full border-none"
-        style={{ height: "80vh" }}
-        title={`${title} - Study Material`}
-      />
+      <div className="overflow-auto" style={{ height: "80vh" }}>
+        <iframe
+          src={pdfBlobUrl}
+          className="w-full h-full border-none"
+          style={{ minHeight: "100%" }}
+          title={`${title} - Study Material`}
+        />
+      </div>
     </div>
   );
 };
