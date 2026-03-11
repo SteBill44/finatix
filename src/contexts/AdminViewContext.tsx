@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { useIsAdmin } from "@/hooks/useUserRole";
 
 interface AdminViewContextType {
   isStudentView: boolean;
