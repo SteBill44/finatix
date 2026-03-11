@@ -599,16 +599,11 @@ const CourseManagement = () => {
               </div>
             )}
 
-            <div className="grid gap-2">
-              <Label htmlFor="lesson-content">Content</Label>
-              <Textarea
-                id="lesson-content"
-                value={lessonForm.content}
-                onChange={(e) => setLessonForm({ ...lessonForm, content: e.target.value })}
-                placeholder="Lesson content (supports markdown)"
-                rows={6}
-              />
-            </div>
+            <LessonContentEditor
+              content={lessonForm.content}
+              onChange={(val) => setLessonForm({ ...lessonForm, content: val })}
+              lessonId={editingLesson?.id}
+            />
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="lesson-duration">Duration (minutes)</Label>
