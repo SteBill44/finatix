@@ -60,7 +60,7 @@ const Lesson = () => {
   const markComplete = useMarkLessonComplete();
   
   // Video progress tracking
-  const { progress: videoProgress, saveProgress, saveProgressImmediate } = useVideoProgress(lessonId);
+  const { progress: videoProgress, saveProgress } = useVideoProgress(lessonId);
 
   // Fetch course details
   const { data: course } = useQuery({
