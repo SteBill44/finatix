@@ -15,7 +15,7 @@ interface LessonNote {
 export function useLessonNotes(lessonId: string | undefined) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: notes, isLoading } = useQuery({
     queryKey: ["lesson-notes", lessonId, user?.id],
