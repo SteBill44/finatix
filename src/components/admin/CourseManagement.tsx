@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GraduationCap, Video, VideoOff } from "lucide-react";
+import { Pencil, Trash2, Plus, ChevronDown, ChevronRight, GraduationCap, Video, VideoOff, FileText, Upload, X, Loader2 } from "lucide-react";
 import LessonVideoUpload from "./LessonVideoUpload";
 
 interface Course {
