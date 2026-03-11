@@ -11,7 +11,7 @@ export function sanitizeHtml(dirty: string): string {
       "p", "br", "hr",
       "ul", "ol", "li",
       "strong", "b", "em", "i", "u", "s", "strike",
-      "a", "img",
+      "a", "img", "iframe",
       "blockquote", "pre", "code",
       "table", "thead", "tbody", "tr", "th", "td",
       "div", "span",
@@ -20,12 +20,12 @@ export function sanitizeHtml(dirty: string): string {
     ALLOWED_ATTR: [
       "href", "target", "rel",
       "src", "alt", "title", "width", "height",
-      "class", "id",
+      "class", "id", "style", "allowfullscreen",
       "colspan", "rowspan",
     ],
     ALLOW_DATA_ATTR: false,
     ADD_ATTR: ["target"],
-    FORBID_TAGS: ["script", "style", "iframe", "object", "embed", "form", "input"],
+    FORBID_TAGS: ["script", "style", "object", "embed", "form", "input"],
     FORBID_ATTR: ["onerror", "onload", "onclick", "onmouseover"],
   });
 }
