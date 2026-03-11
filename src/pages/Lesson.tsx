@@ -402,19 +402,16 @@ const Lesson = () => {
           {/* Lesson Content */}
           <div className="prose prose-slate dark:prose-invert max-w-none">
             {currentLesson.content ? (
-              // Check if content is a PDF embed marker
-              currentLesson.content.match(/^\{\{PDF:(.+)\}\}$/) ? (
-                <div className="rounded-lg overflow-hidden border border-border">
-                  <iframe
-                    src={currentLesson.content.match(/^\{\{PDF:(.+)\}\}$/)?.[1]}
-                    className="w-full border-none rounded-lg"
-                    style={{ height: '80vh' }}
-                    title={`${currentLesson.title} - Study Material`}
-                  />
-                </div>
-              ) : (
-                <div dangerouslySetInnerHTML={createSanitizedMarkup(currentLesson.content)} />
-              )
+              (() => {
+                const pdfMatch = currentLesson.content.match(/^\{\{PDF:(.+)\}\}$/);
+                const pdfUrl = pdfMatch?.[1]?.trim();
+
+                return pdfUrl ? (
+                  <PdfViewer sourceUrl={pdfUrl} title={currentLesson.title} />
+                ) : (
+                  <div dangerouslySetInnerHTML={createSanitizedMarkup(currentLesson.content)} />
+                );
+              })()
             ) : (
               <Card className="p-8 text-center bg-secondary/30">
                 <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
