@@ -26,6 +26,7 @@ import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResour
 import { useQuizzes, useLessonQuizAttempts } from "@/hooks/useQuizzes";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
+import PdfViewer from "@/components/lesson/PdfViewer";
 import LessonNotes from "@/components/lesson/LessonNotes";
 import {
   ArrowLeft,
