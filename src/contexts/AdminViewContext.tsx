@@ -34,7 +34,6 @@ export const useAdminView = () => {
 export const useEffectiveAdmin = () => {
   const { isStudentView } = useAdminView();
   const { isAdmin, isLoading } = useIsAdmin();
-  const { isAdmin, isLoading } = useIsAdmin();
   
   return {
     isEffectiveAdmin: isAdmin && !isStudentView,
