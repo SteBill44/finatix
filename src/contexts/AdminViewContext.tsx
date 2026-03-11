@@ -33,7 +33,7 @@ export const useAdminView = () => {
 // Hook that combines admin status with view mode
 export const useEffectiveAdmin = () => {
   const { isStudentView } = useAdminView();
-  const { useIsAdmin } = require("@/hooks/useUserRole");
+  const { isAdmin, isLoading } = useIsAdmin();
   const { isAdmin, isLoading } = useIsAdmin();
   
   return {

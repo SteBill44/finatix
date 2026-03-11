@@ -15,7 +15,7 @@ interface PerformanceEntry {
 export const usePerformanceMonitoring = () => {
   const { user } = useAuth();
   const pendingLogs = useRef<PerformanceEntry[]>([]);
-  const flushTimeout = useRef<NodeJS.Timeout | null>(null);
+  const flushTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const flushLogs = useCallback(async () => {
     if (pendingLogs.current.length === 0) return;

@@ -45,7 +45,7 @@ const VideoPlayer = ({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const controlsTimeoutRef = useRef<NodeJS.Timeout>();
+  const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Format time in MM:SS
   const formatTime = (seconds: number) => {

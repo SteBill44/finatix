@@ -14,7 +14,7 @@ export function useRateLimitFeedback() {
     retryAfter: null,
     remainingTime: 0,
   });
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const startCountdown = useCallback((seconds: number) => {
     setState({

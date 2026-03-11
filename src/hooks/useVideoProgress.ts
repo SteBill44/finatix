@@ -17,7 +17,7 @@ export function useVideoProgress(lessonId: string | undefined) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const lastSavedRef = useRef<number>(0);
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: progress, isLoading } = useQuery({
     queryKey: ["video-progress", lessonId, user?.id],
