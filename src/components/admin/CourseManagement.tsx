@@ -36,6 +36,132 @@ interface Lesson {
   video_url: string | null;
 }
 
+// PDF drop zone + text content editor for lessons
+const LessonContentEditor = ({
+  content,
+  onChange,
+  lessonId,
+}: {
+  content: string;
+  onChange: (val: string) => void;
+  lessonId?: string;
+}) => {
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const { toast } = useToast();
+
+  const isPdfContent = content?.match(/^\{\{PDF:(.+)\}\}$/);
+  const pdfUrl = isPdfContent?.[1] || null;
+
+  const handlePdfUpload = useCallback(async (file: File) => {
+    if (file.type !== "application/pdf") {
+      toast({ title: "Invalid file", description: "Only PDF files are supported.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Maximum file size is 20MB.", variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const path = `lesson-pdfs/${lessonId || "new"}/${Date.now()}_${safeName}`;
+      const { error: uploadError } = await supabase.storage
+        .from("resources")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("resources")
+        .getPublicUrl(path);
+
+      onChange(`{{PDF:${urlData.publicUrl}}}`);
+      toast({ title: "PDF uploaded", description: file.name });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
+  }, [lessonId, onChange, toast]);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handlePdfUpload(file);
+  }, [handlePdfUpload]);
+
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handlePdfUpload(file);
+  }, [handlePdfUpload]);
+
+  return (
+    <div className="grid gap-2">
+      <Label>Content</Label>
+
+      {/* PDF drop zone */}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+          dragOver ? "border-primary bg-primary/5" : "border-border"
+        }`}
+      >
+        {uploading ? (
+          <div className="flex items-center justify-center gap-2 py-2 text-sm text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Uploading PDF…
+          </div>
+        ) : pdfUrl ? (
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm text-foreground min-w-0">
+              <FileText className="h-4 w-4 text-primary flex-shrink-0" />
+              <span className="truncate">{decodeURIComponent(pdfUrl.split("/").pop() || "PDF attached")}</span>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="flex-shrink-0 gap-1"
+              onClick={() => onChange("")}
+            >
+              <X className="h-3 w-3" />
+              Remove
+            </Button>
+          </div>
+        ) : (
+          <label className="cursor-pointer flex flex-col items-center gap-2 py-2">
+            <Upload className="h-5 w-5 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              Drop a PDF here or <span className="text-primary underline">browse</span>
+            </span>
+            <input
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={handleFileInput}
+            />
+          </label>
+        )}
+      </div>
+
+      {/* Text content fallback */}
+      {!pdfUrl && (
+        <Textarea
+          value={content}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Or enter lesson content text / HTML here"
+          rows={6}
+        />
+      )}
+    </div>
+  );
+};
+
 const CourseManagement = () => {
   const { toast } = useToast();
 
