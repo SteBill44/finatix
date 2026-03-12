@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { AlertTriangle, ExternalLink, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,7 +8,7 @@ interface PdfViewerProps {
   title: string;
 }
 
-const PdfViewer = ({ sourceUrl, title }: PdfViewerProps) => {
+const PdfViewer = forwardRef<HTMLDivElement, PdfViewerProps>(({ sourceUrl, title }, ref) => {
   const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -62,7 +62,7 @@ const PdfViewer = ({ sourceUrl, title }: PdfViewerProps) => {
   }, [sourceUrl]);
 
   const openPdf = () => {
-    window.open(sourceUrl, "_blank", "noopener,noreferrer");
+    window.open(pdfBlobUrl ?? sourceUrl, "_blank", "noopener,noreferrer");
   };
 
   if (isLoading) {
@@ -97,7 +97,7 @@ const PdfViewer = ({ sourceUrl, title }: PdfViewerProps) => {
   }
 
   return (
-    <div className="rounded-lg overflow-hidden border border-border bg-card">
+    <div ref={ref} className="rounded-lg overflow-hidden border border-border bg-card">
       <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-secondary/30">
         <div className="flex items-center gap-2 min-w-0">
           <FileText className="w-4 h-4 text-primary flex-shrink-0" />
@@ -109,16 +109,25 @@ const PdfViewer = ({ sourceUrl, title }: PdfViewerProps) => {
         </Button>
       </div>
 
-      <div className="overflow-auto" style={{ height: "80vh" }}>
-        <iframe
-          src={pdfBlobUrl}
-          className="w-full h-full border-none"
-          style={{ minHeight: "100%" }}
-          title={`${title} - Study Material`}
-        />
+      <div className="h-[80vh] overflow-hidden">
+        <object
+          data={pdfBlobUrl}
+          type="application/pdf"
+          className="w-full h-full"
+          aria-label={`${title} PDF preview`}
+        >
+          <iframe
+            src={pdfBlobUrl}
+            className="w-full h-full border-none"
+            title={`${title} - Study Material`}
+          />
+        </object>
       </div>
     </div>
   );
-};
+});
+
+PdfViewer.displayName = "PdfViewer";
 
 export default PdfViewer;
+

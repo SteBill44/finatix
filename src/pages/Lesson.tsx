@@ -407,7 +407,9 @@ const Lesson = () => {
                 const pdfUrl = pdfMatch?.[1]?.trim();
 
                 return pdfUrl ? (
-                  <PdfViewer sourceUrl={pdfUrl} title={currentLesson.title} />
+                  <div className="not-prose">
+                    <PdfViewer sourceUrl={pdfUrl} title={currentLesson.title} />
+                  </div>
                 ) : (
                   <div dangerouslySetInnerHTML={createSanitizedMarkup(currentLesson.content)} />
                 );
