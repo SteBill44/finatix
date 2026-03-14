@@ -214,9 +214,12 @@ const Quiz = () => {
                   <RotateCcw className="w-4 h-4" />
                   Retry Quiz
                 </Button>
-                <Button onClick={() => navigate("/dashboard")} className="gap-2">
+                <Button
+                  onClick={() => navigate(quiz.lesson_id ? `/lesson/${quiz.lesson_id}` : "/dashboard")}
+                  className="gap-2"
+                >
                   <Home className="w-4 h-4" />
-                  Dashboard
+                  {quiz.lesson_id ? "Back to Lesson" : "Dashboard"}
                 </Button>
               </div>
             </Card>
