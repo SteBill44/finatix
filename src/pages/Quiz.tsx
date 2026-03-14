@@ -239,11 +239,11 @@ const Quiz = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between mb-4">
             <Link
-              to="/dashboard"
+              to={quiz.lesson_id ? `/lesson/${quiz.lesson_id}` : "/dashboard"}
               className="inline-flex items-center gap-2 text-primary-foreground/70 hover:text-primary-foreground"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
+              {quiz.lesson_id ? "Back to Lesson" : "Back to Dashboard"}
             </Link>
             <Link to={`/exam/${quizId}`}>
               <Button variant="secondary" size="sm" className="gap-2">
