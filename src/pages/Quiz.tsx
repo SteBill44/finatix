@@ -177,7 +177,7 @@ const Quiz = () => {
   if (showResults) {
     return (
       <Layout>
-        <section className="relative py-12 lg:py-16 overflow-hidden">
+        <section className="relative pt-24 lg:pt-28 pb-12 lg:pb-16 overflow-hidden">
           <div className="absolute inset-0 gradient-bg opacity-95" />
           <div className="container mx-auto px-4 relative z-10 text-center">
             <Trophy className="w-16 h-16 mx-auto text-primary-foreground mb-4" />
@@ -234,7 +234,7 @@ const Quiz = () => {
   return (
     <Layout>
       {/* Header */}
-      <section className="relative py-8 lg:py-12 overflow-hidden">
+      <section className="relative pt-24 lg:pt-28 pb-8 lg:pb-12 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between mb-4">
