@@ -152,6 +152,31 @@ const Brand = () => {
                 Light Text
               </Button>
             </div>
+            {/* Hidden light version for export */}
+            <div
+              ref={fullLogoLightRef}
+              style={{ display: "none", padding: "16px 24px", position: "absolute", left: "-9999px" }}
+              className="items-center gap-3"
+            >
+              <svg viewBox="0 0 100 100" width={64} height={64} fill="none">
+                <defs>
+                  <linearGradient id="brandFullLogoGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0d9488" />
+                    <stop offset="100%" stopColor="#14b8a6" />
+                  </linearGradient>
+                </defs>
+                <path d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z" fill="url(#brandFullLogoGradientLight)" />
+                <g fill="#ffffff">
+                  <rect x="32" y="28" width="12" height="44" />
+                  <rect x="44" y="28" width="26" height="10" />
+                  <rect x="44" y="46" width="18" height="10" />
+                </g>
+              </svg>
+              <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
+                <span style={{ color: "#ffffff" }}>Fin</span>
+                <span style={{ color: "#0d9488" }}>atix</span>
+              </span>
+            </div>
           </CardContent>
         </Card>
 
