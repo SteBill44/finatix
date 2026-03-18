@@ -13,12 +13,37 @@ import { toast } from "sonner";
 const Brand = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const fullLogoRef = useRef<HTMLDivElement>(null);
+  const fullLogoLightRef = useRef<HTMLDivElement>(null);
   const logo512Ref = useRef<HTMLDivElement>(null);
   const logo1024Ref = useRef<HTMLDivElement>(null);
   const twitterBannerRef = useRef<HTMLDivElement>(null);
   const facebookBannerRef = useRef<HTMLDivElement>(null);
   const instagramSquareRef = useRef<HTMLDivElement>(null);
   const instagramStoryRef = useRef<HTMLDivElement>(null);
+
+  const downloadFullLogoLight = async () => {
+    if (!fullLogoLightRef.current) return;
+    // Temporarily show the light version
+    fullLogoLightRef.current.style.display = "flex";
+    try {
+      const canvas = await html2canvas(fullLogoLightRef.current, {
+        backgroundColor: null,
+        scale: 6,
+        logging: false,
+      });
+      const link = document.createElement("a");
+      link.download = "finatix-full-logo-light.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("Light logo downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading:", error);
+      toast.error("Failed to download");
+    } finally {
+      fullLogoLightRef.current.style.display = "none";
+    }
+  };
 
   const downloadLogo = async (ref: React.RefObject<HTMLDivElement>, filename: string, scale: number = 4) => {
     if (!ref.current) return;
