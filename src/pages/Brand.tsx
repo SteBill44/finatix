@@ -13,12 +13,37 @@ import { toast } from "sonner";
 const Brand = () => {
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const fullLogoRef = useRef<HTMLDivElement>(null);
+  const fullLogoLightRef = useRef<HTMLDivElement>(null);
   const logo512Ref = useRef<HTMLDivElement>(null);
   const logo1024Ref = useRef<HTMLDivElement>(null);
   const twitterBannerRef = useRef<HTMLDivElement>(null);
   const facebookBannerRef = useRef<HTMLDivElement>(null);
   const instagramSquareRef = useRef<HTMLDivElement>(null);
   const instagramStoryRef = useRef<HTMLDivElement>(null);
+
+  const downloadFullLogoLight = async () => {
+    if (!fullLogoLightRef.current) return;
+    // Temporarily show the light version
+    fullLogoLightRef.current.style.display = "flex";
+    try {
+      const canvas = await html2canvas(fullLogoLightRef.current, {
+        backgroundColor: null,
+        scale: 6,
+        logging: false,
+      });
+      const link = document.createElement("a");
+      link.download = "finatix-full-logo-light.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("Light logo downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading:", error);
+      toast.error("Failed to download");
+    } finally {
+      fullLogoLightRef.current.style.display = "none";
+    }
+  };
 
   const downloadLogo = async (ref: React.RefObject<HTMLDivElement>, filename: string, scale: number = 4) => {
     if (!ref.current) return;
@@ -65,6 +90,95 @@ const Brand = () => {
             Download official Finatix logos in various sizes for use across platforms.
           </p>
         </div>
+
+        {/* Full Logo (Icon + Text) */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Full Logo</CardTitle>
+            <CardDescription>
+              Complete logo with icon and wordmark — ideal for headers, documents, and presentations
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-center p-8 bg-muted/50 rounded-lg">
+              <div
+                ref={fullLogoRef}
+                className="flex items-center gap-3"
+                style={{ padding: "16px 24px" }}
+              >
+                <svg
+                  viewBox="0 0 100 100"
+                  width={64}
+                  height={64}
+                  fill="none"
+                >
+                  <defs>
+                    <linearGradient id="brandFullLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#0d9488" />
+                      <stop offset="100%" stopColor="#14b8a6" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
+                    fill="url(#brandFullLogoGradient)"
+                  />
+                  <g fill="#ffffff">
+                    <rect x="32" y="28" width="12" height="44" />
+                    <rect x="44" y="28" width="26" height="10" />
+                    <rect x="44" y="46" width="18" height="10" />
+                  </g>
+                </svg>
+                <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
+                  <span style={{ color: "#1a1a2e" }}>Fin</span>
+                  <span style={{ color: "#0d9488" }}>atix</span>
+                </span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => downloadLogo(fullLogoRef, "full-logo-dark", 6)}
+                className="w-full"
+                variant="outline"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Dark Text
+              </Button>
+              <Button
+                onClick={() => downloadFullLogoLight()}
+                className="w-full"
+                variant="outline"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Light Text
+              </Button>
+            </div>
+            {/* Hidden light version for export */}
+            <div
+              ref={fullLogoLightRef}
+              style={{ display: "none", padding: "16px 24px", position: "absolute", left: "-9999px" }}
+              className="items-center gap-3"
+            >
+              <svg viewBox="0 0 100 100" width={64} height={64} fill="none">
+                <defs>
+                  <linearGradient id="brandFullLogoGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0d9488" />
+                    <stop offset="100%" stopColor="#14b8a6" />
+                  </linearGradient>
+                </defs>
+                <path d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z" fill="url(#brandFullLogoGradientLight)" />
+                <g fill="#ffffff">
+                  <rect x="32" y="28" width="12" height="44" />
+                  <rect x="44" y="28" width="26" height="10" />
+                  <rect x="44" y="46" width="18" height="10" />
+                </g>
+              </svg>
+              <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
+                <span style={{ color: "#ffffff" }}>Fin</span>
+                <span style={{ color: "#0d9488" }}>atix</span>
+              </span>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* 512x512 Logo */}
