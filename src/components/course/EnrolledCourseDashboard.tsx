@@ -278,7 +278,7 @@ const EnrolledCourseDashboard = ({
               <Brain className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Syllabus Readiness</h3>
+              <h3 className="font-semibold text-foreground">Exam Readiness</h3>
               <p className="text-xs text-muted-foreground">
                 Your mastery across each exam area
               </p>
@@ -288,7 +288,7 @@ const EnrolledCourseDashboard = ({
           {radarData.length > 0 ? (
             <div className="w-full" style={{ height: isMobile ? 320 : 400 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "55%" : "60%"} data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "62%" : "70%"} data={radarData}>
                   <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
                   <PolarAngleAxis
                     dataKey="area"
