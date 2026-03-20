@@ -288,12 +288,46 @@ const EnrolledCourseDashboard = ({
           {radarData.length > 0 ? (
             <div className="w-full" style={{ height: isMobile ? 280 : 340 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "65%" : "70%"} data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "50%" : "55%"} data={radarData}>
                   <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
                   <PolarAngleAxis
                     dataKey="area"
-                    tick={{ fill: "hsl(var(--muted-foreground))", fontSize: isMobile ? 9 : 11 }}
                     tickLine={false}
+                    tick={(props: any) => {
+                      const { x, y, payload } = props;
+                      const text = payload.value as string;
+                      const maxChars = isMobile ? 12 : 18;
+                      const words = text.split(" ");
+                      const lines: string[] = [];
+                      let current = "";
+                      for (const word of words) {
+                        if (current && (current + " " + word).length > maxChars) {
+                          lines.push(current);
+                          current = word;
+                        } else {
+                          current = current ? current + " " + word : word;
+                        }
+                      }
+                      if (current) lines.push(current);
+                      const fontSize = isMobile ? 8 : 10;
+                      const lineHeight = fontSize + 2;
+                      const startY = y - ((lines.length - 1) * lineHeight) / 2;
+                      return (
+                        <text
+                          x={x}
+                          y={startY}
+                          textAnchor="middle"
+                          fill="hsl(var(--muted-foreground))"
+                          fontSize={fontSize}
+                        >
+                          {lines.map((line, i) => (
+                            <tspan key={i} x={x} dy={i === 0 ? 0 : lineHeight}>
+                              {line}
+                            </tspan>
+                          ))}
+                        </text>
+                      );
+                    }}
                   />
                   <PolarRadiusAxis
                     angle={90}
