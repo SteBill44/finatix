@@ -286,7 +286,7 @@ const EnrolledCourseDashboard = ({
           </div>
 
           {radarData.length > 0 ? (
-            <div className="w-full" style={{ height: isMobile ? 280 : 340 }}>
+            <div className="w-full" style={{ height: isMobile ? 340 : 420 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "50%" : "55%"} data={radarData}>
                   <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
