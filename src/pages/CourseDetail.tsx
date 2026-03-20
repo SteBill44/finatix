@@ -460,7 +460,7 @@ const CourseDetail = () => {
   if (isEnrolled && isEffectiveAdmin) {
     return (
       <Layout>
-        <section className="pt-12 pb-4 lg:pt-14 lg:pb-6">
+        <section className="pt-[4.5rem] pb-6 lg:pt-[5.25rem] lg:pb-9">
           <div className="container mx-auto px-4">
             <EnrolledCourseDashboard
               course={course}
