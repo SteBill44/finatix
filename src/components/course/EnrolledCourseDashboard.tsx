@@ -286,17 +286,17 @@ const EnrolledCourseDashboard = ({
           </div>
 
           {radarData.length > 0 ? (
-            <div className="w-full" style={{ height: isMobile ? 340 : 420 }}>
+            <div className="w-full" style={{ height: isMobile ? 380 : 480 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "50%" : "55%"} data={radarData}>
+                <RadarChart cx="50%" cy="50%" outerRadius={isMobile ? "38%" : "42%"} data={radarData}>
                   <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
                   <PolarAngleAxis
                     dataKey="area"
                     tickLine={false}
                     tick={(props: any) => {
-                      const { x, y, payload } = props;
+                      const { x, y, payload, cx: chartCx, cy: chartCy } = props;
                       const text = payload.value as string;
-                      const maxChars = isMobile ? 12 : 18;
+                      const maxChars = isMobile ? 10 : 14;
                       const words = text.split(" ");
                       const lines: string[] = [];
                       let current = "";
@@ -309,19 +309,33 @@ const EnrolledCourseDashboard = ({
                         }
                       }
                       if (current) lines.push(current);
-                      const fontSize = isMobile ? 8 : 10;
-                      const lineHeight = fontSize + 2;
-                      const startY = y - ((lines.length - 1) * lineHeight) / 2;
+                      const fontSize = isMobile ? 7 : 9;
+                      const lineHeight = fontSize + 3;
+
+                      // Push labels outward from chart center
+                      const dx = x - (chartCx || 0);
+                      const dy = y - (chartCy || 0);
+                      const dist = Math.sqrt(dx * dx + dy * dy);
+                      const pushOut = isMobile ? 14 : 20;
+                      const labelX = dist > 0 ? x + (dx / dist) * pushOut : x;
+                      const labelY = dist > 0 ? y + (dy / dist) * pushOut : y;
+
+                      // Determine text anchor based on position relative to center
+                      let anchor: string = "middle";
+                      if (dx > 20) anchor = "start";
+                      else if (dx < -20) anchor = "end";
+
+                      const startY = labelY - ((lines.length - 1) * lineHeight) / 2;
                       return (
                         <text
-                          x={x}
+                          x={labelX}
                           y={startY}
-                          textAnchor="middle"
+                          textAnchor={anchor}
                           fill="hsl(var(--muted-foreground))"
                           fontSize={fontSize}
                         >
                           {lines.map((line, i) => (
-                            <tspan key={i} x={x} dy={i === 0 ? 0 : lineHeight}>
+                            <tspan key={i} x={labelX} dy={i === 0 ? 0 : lineHeight}>
                               {line}
                             </tspan>
                           ))}
