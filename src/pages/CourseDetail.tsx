@@ -451,6 +451,44 @@ const CourseDetail = () => {
     reviews: ReviewsContent,
   };
 
+  // Parse syllabus areas for the dashboard
+  const parsedSyllabusAreas = syllabusData?.syllabus_areas
+    ? (syllabusData.syllabus_areas as Array<{ title: string; weight: string; topics?: string[] }>)
+    : [];
+
+  // ── Enrolled users see the dashboard ──
+  if (isEnrolled && !isEffectiveAdmin) {
+    return (
+      <Layout>
+        <section className="py-8 lg:py-12">
+          <div className="container mx-auto px-4">
+            <EnrolledCourseDashboard
+              course={course}
+              lessons={lessons || []}
+              lessonProgress={lessonProgress || null}
+              readinessScore={readinessScore}
+              syllabusAreas={parsedSyllabusAreas}
+              quizAttempts={quizAttempts || null}
+              levelColor={levelColor}
+              levelBgColor={levelBgColor}
+              onUnenroll={handleUnenroll}
+              unenrollPending={unenrollMutation.isPending}
+            />
+          </div>
+        </section>
+
+        <CIMAProfileModal
+          open={showCIMAModal}
+          onClose={() => {
+            setShowCIMAModal(false);
+            setPendingEnrollment(false);
+          }}
+          onSuccess={handleCIMAModalSuccess}
+        />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -507,7 +545,7 @@ const CourseDetail = () => {
               </div>
 
               {/* Syllabus Accordion */}
-              <Accordion type="single" collapsible defaultValue={isEnrolled ? undefined : "objectives"} className="w-full">
+              <Accordion type="single" collapsible defaultValue="objectives" className="w-full">
                 <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                   <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4">
                     <div className="flex items-center gap-3">
@@ -559,43 +597,9 @@ const CourseDetail = () => {
                   <span className="px-4 py-2 rounded-full bg-accent/20 text-accent font-semibold text-lg">Coming Soon</span>
                 </div>
 
-                {isEnrolled ? (
-                  <>
-                    <Button size="lg" className="w-full mb-3 gap-2" onClick={handleStartLearning}>
-                      <Play className="w-5 h-5" />
-                      {progressPercentage > 0 ? "Continue Learning" : "Start Learning"}
-                    </Button>
-                    <p className="text-center text-sm text-accent font-medium mb-3">✓ You're enrolled in this course</p>
-                    
-                    <AlertDialog open={showUnenrollDialog} onOpenChange={setShowUnenrollDialog}>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="w-full gap-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
-                          <UserMinus className="w-4 h-4" />Unenroll from Course
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Unenroll from course?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to unenroll from <strong>{course.title}</strong>? Your progress will be lost and you'll need to re-enroll to access the course again.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={handleUnenroll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90" disabled={unenrollMutation.isPending}>
-                            {unenrollMutation.isPending ? "Unenrolling..." : "Unenroll"}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-lg font-semibold text-foreground mb-2 text-center">Be the first to know</h3>
-                    <p className="text-sm text-muted-foreground mb-6 text-center">Register your interest and we'll notify you when this course launches.</p>
-                    <InterestRegistrationForm courseId={course.id} courseName={course.title} />
-                  </>
-                )}
+                <h3 className="text-lg font-semibold text-foreground mb-2 text-center">Be the first to know</h3>
+                <p className="text-sm text-muted-foreground mb-6 text-center">Register your interest and we'll notify you when this course launches.</p>
+                <InterestRegistrationForm courseId={course.id} courseName={course.title} />
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
@@ -662,32 +666,6 @@ const CourseDetail = () => {
                       </button>
                     ))}
                   </nav>
-
-                  {/* Compact progress, readiness & recommendations */}
-                  {isEnrolled && !(isAdmin && isStudentView) && (
-                    <>
-                      <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-3">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Progress</span>
-                          <span className="text-xs font-medium text-foreground">{progressPercentage}%</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-1.5">
-                          <div className={`${levelBgColor} h-1.5 rounded-full transition-all duration-300`} style={{ width: `${progressPercentage}%` }} />
-                        </div>
-                        <p className="text-[10px] text-muted-foreground mt-1">{completedLessons}/{totalLessons} lessons</p>
-                      </div>
-
-                      <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Readiness</span>
-                          <span className={`text-lg font-bold ${readinessScore ? (readinessScore.overall >= 75 ? 'text-accent' : readinessScore.overall >= 50 ? 'text-primary' : readinessScore.overall >= 25 ? 'text-yellow-500' : 'text-muted-foreground') : 'text-muted-foreground'}`}>
-                            {readinessScore?.overall ?? 0}%
-                          </span>
-                        </div>
-                      </div>
-
-                    </>
-                  )}
                 </div>
 
                 <div className="space-y-16 min-w-0">
