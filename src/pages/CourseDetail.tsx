@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
+import EnrolledCourseDashboard from "@/components/course/EnrolledCourseDashboard";
 import {
   Breadcrumb,
   BreadcrumbItem,
