@@ -100,12 +100,20 @@ const EnrolledCourseDashboard = ({
     ? lessons.sort((a, b) => a.order_index - b.order_index).findIndex((l) => l.id === nextLesson.id) + 1
     : null;
 
+  // Demo scores for preview (remove when real data flows)
+  const demoScores: Record<string, number> = {
+    "A": 95, "B": 84, "C": 72,
+  };
+
   // Radar chart data from syllabus areas + mastery
   const radarData = useMemo(() => {
     if (!syllabusAreas.length) return [];
     return syllabusAreas.map((area, index) => {
       const mastery = masteryData?.find((m) => m.syllabus_area_index === index);
-      const score = mastery ? Number(mastery.mastery_score) : 0;
+      const realScore = mastery ? Number(mastery.mastery_score) : 0;
+      // Use demo score if no real data exists
+      const areaLetter = area.title.match(/^([A-Z])\b/)?.[1];
+      const score = realScore > 0 ? realScore : (areaLetter && demoScores[areaLetter] ? demoScores[areaLetter] : 0);
       return {
         area: area.title,
         fullTitle: area.title,
