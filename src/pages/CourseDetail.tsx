@@ -460,7 +460,7 @@ const CourseDetail = () => {
   if (isEnrolled && isEffectiveAdmin) {
     return (
       <Layout>
-        <section className="py-8 lg:py-12">
+        <section className="pt-24 pb-8 lg:pt-28 lg:pb-12">
           <div className="container mx-auto px-4">
             <EnrolledCourseDashboard
               course={course}
