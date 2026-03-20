@@ -106,10 +106,8 @@ const EnrolledCourseDashboard = ({
     return syllabusAreas.map((area, index) => {
       const mastery = masteryData?.find((m) => m.syllabus_area_index === index);
       const score = mastery ? Number(mastery.mastery_score) : 0;
-      // Truncate long titles for the chart
-      const shortTitle = area.title.length > 20 ? area.title.substring(0, 18) + "…" : area.title;
       return {
-        area: shortTitle,
+        area: area.title,
         fullTitle: area.title,
         score: Math.round(score),
         weight: area.weight,
