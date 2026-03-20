@@ -456,8 +456,8 @@ const CourseDetail = () => {
     ? (syllabusData.syllabus_areas as Array<{ title: string; weight: string; topics?: string[] }>)
     : [];
 
-  // ── Enrolled users see the dashboard ──
-  if (isEnrolled && !isEffectiveAdmin) {
+  // ── Enrolled admins (not in student view) see the dashboard ──
+  if (isEnrolled && isEffectiveAdmin) {
     return (
       <Layout>
         <section className="py-8 lg:py-12">
