@@ -6,7 +6,7 @@ import {
   FileQuestion, 
   Zap
 } from "lucide-react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion } from "framer-motion";
 
 const FeatureCard = ({ 
   icon: Icon, 
@@ -19,27 +19,28 @@ const FeatureCard = ({
   description: string; 
   index: number;
 }) => {
-  const { isVisible, elementRef } = useScrollAnimation({ threshold: 0.2 });
-  
   return (
-    <div
-      ref={elementRef}
-      className={`feature-card hover-lift transition-all duration-500 ${
-        isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 translate-y-8'
-      }`}
-      style={{ transitionDelay: `${index * 100}ms` }}
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      whileHover={{ y: -6, transition: { duration: 0.25 } }}
+      className="feature-card transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/10"
     >
       {/* Icon */}
-      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+      <motion.div
+        whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+        transition={{ duration: 0.4 }}
+        className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
+      >
         <Icon className="w-6 h-6 text-primary" />
-      </div>
+      </motion.div>
 
       {/* Content */}
       <h3 className="text-lg font-semibold text-charcoal mb-2">{title}</h3>
       <p className="text-muted-foreground text-sm">{description}</p>
-    </div>
+    </motion.div>
   );
 };
 
@@ -77,17 +78,16 @@ const Features = () => {
     },
   ];
 
-  const { isVisible: headerVisible, elementRef: headerRef } = useScrollAnimation({ threshold: 0.3 });
-
   return (
     <section className="py-20 lg:py-32 bg-background hex-pattern">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div 
-          ref={headerRef}
-          className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 ${
-            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
             Why Choose <span className="text-primary">Finatix</span>
@@ -95,7 +95,7 @@ const Features = () => {
           <p className="text-lg text-muted-foreground">
             Our platform goes beyond traditional learning with data-driven insights that help you pass first time.
           </p>
-        </div>
+        </motion.div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

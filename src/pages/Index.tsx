@@ -1,9 +1,9 @@
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import Hero from "@/components/home/Hero";
+import StatsCounter from "@/components/home/StatsCounter";
 import CourseLevels from "@/components/home/CourseLevels";
 import Features from "@/components/home/Features";
-
 import FAQ from "@/components/home/FAQ";
 import CTA from "@/components/home/CTA";
 
@@ -15,6 +15,7 @@ const Index = () => {
         keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep"
       />
       <Hero />
+      <StatsCounter />
       <CourseLevels />
       <Features />
       <FAQ />
