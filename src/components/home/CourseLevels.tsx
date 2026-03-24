@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
 import certificatePreviewImg from "@/assets/certificate-preview.jpg";
+import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
+import { useSiteImages, useUpsertSiteImage } from "@/hooks/useSiteImages";
 
 const CourseLevels = () => {
   const { user } = useAuth();
