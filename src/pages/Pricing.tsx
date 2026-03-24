@@ -444,7 +444,7 @@ const Pricing = () => {
                 <div
                   className={`relative bg-card rounded-2xl border ${
                     plan.popular ? "border-primary shadow-glow" : "border-border"
-                  } p-8 hover-lift h-full`}
+                  } p-8 hover-lift h-full flex flex-col`}
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -476,7 +476,7 @@ const Pricing = () => {
                     )}
                   </div>
 
-                  <ul className="space-y-4 mb-8">
+                  <ul className="space-y-4 mb-8 flex-1">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-3">
                         {feature.included ? (
@@ -494,7 +494,7 @@ const Pricing = () => {
                   <Button
                     variant={plan.popular ? "default" : "outline"}
                     size="lg"
-                    className="w-full"
+                    className="w-full mt-auto"
                   >
                     {plan.cta}
                   </Button>
