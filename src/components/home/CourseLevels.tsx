@@ -120,14 +120,18 @@ const CourseLevels = () => {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="flex-1 w-full"
             >
-              <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
-                <OptimizedImage 
-                  src={step.image} 
-                  alt={step.title}
-                  aspectRatio="video"
-                  className="w-full transition-transform duration-700 hover:scale-[1.03]"
-                />
-              </div>
+              <AdminImageDropZone
+                onImageUpdated={(url) => upsertSiteImage(step.imageKey, url)}
+              >
+                <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
+                  <OptimizedImage 
+                    src={siteImages?.[step.imageKey] || step.image} 
+                    alt={step.title}
+                    aspectRatio="video"
+                    className="w-full transition-transform duration-700 hover:scale-[1.03]"
+                  />
+                </div>
+              </AdminImageDropZone>
             </motion.div>
           </div>
         ))}
