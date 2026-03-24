@@ -12,7 +12,15 @@ import { useSiteImages, useUpsertSiteImage } from "@/hooks/useSiteImages";
 
 const CourseLevels = () => {
   const { user } = useAuth();
+  const siteImageKeys = ["course-step-1", "course-step-2", "course-step-3"];
+  const { data: siteImages } = useSiteImages(siteImageKeys);
+  const { upsertSiteImage } = useUpsertSiteImage();
 
+  const fallbacks: Record<string, string> = {
+    "course-step-1": stepAccountImg,
+    "course-step-2": stepChooseImg,
+    "course-step-3": certificatePreviewImg,
+  };
   const steps = [
     {
       number: "01",
