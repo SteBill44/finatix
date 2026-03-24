@@ -49,7 +49,8 @@ const CourseLevels = () => {
       cta: "Explore Courses",
       ctaLink: "/courses",
       imagePosition: "left" as const,
-      image: stepChooseImg
+      image: stepChooseImg,
+      imageKey: "course-step-2"
     },
     {
       number: "03",
@@ -63,7 +64,8 @@ const CourseLevels = () => {
       cta: user ? "View Achievements" : "View Certifications",
       ctaLink: user ? "/achievements" : "/courses",
       imagePosition: "right" as const,
-      image: certificatePreviewImg
+      image: certificatePreviewImg,
+      imageKey: "course-step-3"
     },
   ];
 
