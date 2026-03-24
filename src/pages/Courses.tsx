@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
+import { useQueryClient } from "@tanstack/react-query";
+import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
+import { OptimizedImage } from "@/components/OptimizedImage";
 
 interface Course {
   id: string;
