@@ -177,6 +177,25 @@ const Pricing = () => {
 
   const plans = [
     {
+      name: "Single Module",
+      description: "Perfect for focusing on one exam at a time",
+      price: 149,
+      period: "per module",
+      features: [
+        { text: "One module of your choice", included: true },
+        { text: "50+ hours of video content", included: true },
+        { text: "500+ practice questions", included: true },
+        { text: "5 mock exams", included: true },
+        { text: "Competency tracking", included: true },
+        { text: "Mobile app access", included: true },
+        { text: "Community support", included: true },
+        { text: "1-on-1 tutor sessions", included: false },
+        { text: "Priority support", included: false },
+      ],
+      cta: "Get Started",
+      popular: false,
+    },
+    {
       name: "Monthly Access",
       description: "Flexible monthly access to all CIMA content",
       price: 30,
@@ -194,7 +213,7 @@ const Pricing = () => {
         { text: "Priority support", included: false },
       ],
       cta: "Start Monthly",
-      popular: false,
+      popular: true,
     },
     {
       name: "Unlimited Bundle",
@@ -215,25 +234,6 @@ const Pricing = () => {
         { text: "Priority 24/7 support", included: true },
       ],
       cta: "Get Lifetime Access",
-      popular: true,
-    },
-    {
-      name: "Single Module",
-      description: "Perfect for focusing on one exam at a time",
-      price: 149,
-      period: "per module",
-      features: [
-        { text: "One module of your choice", included: true },
-        { text: "50+ hours of video content", included: true },
-        { text: "500+ practice questions", included: true },
-        { text: "5 mock exams", included: true },
-        { text: "Competency tracking", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "1-on-1 tutor sessions", included: false },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Get Started",
       popular: false,
     },
   ];
