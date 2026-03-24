@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import { motion } from "framer-motion";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
 import certificatePreviewImg from "@/assets/certificate-preview.jpg";
+
 const CourseLevels = () => {
   const { user } = useAuth();
 
@@ -21,7 +23,7 @@ const CourseLevels = () => {
       ],
       cta: user ? "Go to Dashboard" : "Register for Free",
       ctaLink: user ? "/dashboard" : "/auth?mode=signup",
-      imagePosition: "right",
+      imagePosition: "right" as const,
       image: stepAccountImg
     },
     {
@@ -35,7 +37,7 @@ const CourseLevels = () => {
       ],
       cta: "Explore Courses",
       ctaLink: "/courses",
-      imagePosition: "left",
+      imagePosition: "left" as const,
       image: stepChooseImg
     },
     {
@@ -49,7 +51,7 @@ const CourseLevels = () => {
       ],
       cta: user ? "View Achievements" : "View Certifications",
       ctaLink: user ? "/achievements" : "/courses",
-      imagePosition: "right",
+      imagePosition: "right" as const,
       image: certificatePreviewImg
     },
   ];
@@ -63,7 +65,13 @@ const CourseLevels = () => {
             className={`flex flex-col ${step.imagePosition === 'left' ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-8 lg:gap-12 mb-12 last:mb-0`}
           >
             {/* Content */}
-            <div className="flex-1">
+            <motion.div
+              initial={{ opacity: 0, x: step.imagePosition === 'left' ? 40 : -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="flex-1"
+            >
               <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-3">
                 <span className="text-charcoal">{step.title.split(' ').slice(0, -1).join(' ')}</span>{' '}
                 <span className="text-primary">{step.title.split(' ').slice(-1)}</span>
@@ -73,28 +81,41 @@ const CourseLevels = () => {
               </p>
               <ul className="space-y-2 mb-6">
                 {step.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2">
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -15 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
+                    className="flex items-start gap-2"
+                  >
                     <CheckCircle className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                     <span className="text-muted-foreground text-sm">{feature}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
               <Link to={step.ctaLink}>
                 <Button size="sm">{step.cta}</Button>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Image */}
-            <div className="flex-1 w-full">
-              <div className="rounded-xl overflow-hidden shadow-lg">
+            <motion.div
+              initial={{ opacity: 0, x: step.imagePosition === 'left' ? -40 : 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="flex-1 w-full"
+            >
+              <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
                 <OptimizedImage 
                   src={step.image} 
                   alt={step.title}
                   aspectRatio="video"
-                  className="w-full"
+                  className="w-full transition-transform duration-700 hover:scale-[1.03]"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         ))}
       </div>
