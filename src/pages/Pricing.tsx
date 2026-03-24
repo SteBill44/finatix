@@ -283,6 +283,93 @@ const Pricing = () => {
         </div>
       </section>
 
+      {/* Pricing Cards */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Bundle Plans
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Save more with our comprehensive bundle plans.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {plans.map((plan, index) => (
+              <AnimatedCard key={plan.name} index={index}>
+                <div
+                  className={`relative bg-card rounded-2xl border ${
+                    plan.popular ? "border-primary shadow-glow" : "border-border"
+                  } p-8 hover-lift h-full flex flex-col`}
+                >
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
+                    <p className="text-muted-foreground mb-4">{plan.description}</p>
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-5xl font-bold text-foreground">
+                        £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
+                      </span>
+                      <span className="text-muted-foreground">/{plan.period}</span>
+                    </div>
+                    {plan.originalPrice && (
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        <span className="line-through">£{plan.originalPrice}</span>
+                        <span className="ml-2 text-primary font-medium">
+                          Save £{plan.originalPrice - plan.price}
+                        </span>
+                      </p>
+                    )}
+                    {'subtitle' in plan && plan.subtitle && (
+                      <p className="mt-2 text-sm font-medium text-primary">{plan.subtitle}</p>
+                    )}
+                  </div>
+
+                  <ul className="space-y-4 mb-8 flex-1">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        {feature.included ? (
+                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                        ) : (
+                          <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
+                        )}
+                        <span className={feature.included ? "text-foreground" : "text-muted-foreground/50"}>
+                          {feature.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    variant={plan.popular ? "default" : "outline"}
+                    size="lg"
+                    className="w-full mt-auto"
+                  >
+                    {plan.cta}
+                  </Button>
+                </div>
+              </AnimatedCard>
+            ))}
+          </div>
+
+          {/* Money Back Guarantee */}
+          <div className="text-center mt-12">
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
+              <Shield className="w-5 h-5 text-primary" />
+              <span className="text-foreground font-medium">30-day money-back guarantee on all plans</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Individual Courses by Level */}
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
         <section className="py-16 lg:py-20 bg-secondary/30">
@@ -425,93 +512,6 @@ const Pricing = () => {
           </div>
         </section>
       )}
-
-      {/* Pricing Cards */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Bundle Plans
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Save more with our comprehensive bundle plans.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <AnimatedCard key={plan.name} index={index}>
-                <div
-                  className={`relative bg-card rounded-2xl border ${
-                    plan.popular ? "border-primary shadow-glow" : "border-border"
-                  } p-8 hover-lift h-full flex flex-col`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-muted-foreground mb-4">{plan.description}</p>
-                    <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-5xl font-bold text-foreground">
-                        £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
-                      </span>
-                      <span className="text-muted-foreground">/{plan.period}</span>
-                    </div>
-                    {plan.originalPrice && (
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        <span className="line-through">£{plan.originalPrice}</span>
-                        <span className="ml-2 text-primary font-medium">
-                          Save £{plan.originalPrice - plan.price}
-                        </span>
-                      </p>
-                    )}
-                    {'subtitle' in plan && plan.subtitle && (
-                      <p className="mt-2 text-sm font-medium text-primary">{plan.subtitle}</p>
-                    )}
-                  </div>
-
-                  <ul className="space-y-4 mb-8 flex-1">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        {feature.included ? (
-                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                        ) : (
-                          <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
-                        )}
-                        <span className={feature.included ? "text-foreground" : "text-muted-foreground/50"}>
-                          {feature.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    variant={plan.popular ? "default" : "outline"}
-                    size="lg"
-                    className="w-full mt-auto"
-                  >
-                    {plan.cta}
-                  </Button>
-                </div>
-              </AnimatedCard>
-            ))}
-          </div>
-
-          {/* Money Back Guarantee */}
-          <div className="text-center mt-12">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
-              <Shield className="w-5 h-5 text-primary" />
-              <span className="text-foreground font-medium">30-day money-back guarantee on all plans</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Comparison Section */}
       <section className="py-16 lg:py-24 bg-secondary/30">
