@@ -335,7 +335,8 @@ const Courses = () => {
                           </span>
                         </div>
                       </div>
-                    </Link>
+                      </Link>
+                    </AdminImageDropZone>
                   ))}
                 </div>
               </div>
