@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
+import { useQueryClient } from "@tanstack/react-query";
+import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
+import { OptimizedImage } from "@/components/OptimizedImage";
 
 interface Course {
   id: string;
@@ -36,9 +39,15 @@ const Courses = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { isAdmin } = useIsAdmin();
   const { isStudentView } = useAdminView();
+  const queryClient = useQueryClient();
   
   // Effective admin status - false if in student view mode
   const isEffectiveAdmin = isAdmin && !isStudentView;
+
+  const handleCourseImageUpdate = async (courseId: string, newUrl: string) => {
+    await supabase.from("courses").update({ image_url: newUrl }).eq("id", courseId);
+    queryClient.invalidateQueries({ queryKey: ["courses"] });
+  };
 
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ["courses"],
@@ -258,12 +267,25 @@ const Courses = () => {
                 {/* Course Grid - 4 per row */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {levelCourses.map((course) => (
-                    <Link
+                    <AdminImageDropZone
                       key={course.id}
-                      to={`/courses/${course.slug}`}
-                      className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift block`}
+                      onImageUpdated={(url) => handleCourseImageUpdate(course.id, url)}
                     >
-                      <div className="p-4">
+                      <Link
+                        to={`/courses/${course.slug}`}
+                        className={`group bg-card rounded-xl border-l-4 ${getLevelBorderColor(course.level)} border border-border overflow-hidden hover-lift block`}
+                      >
+                        {course.image_url && (
+                          <div className="aspect-video overflow-hidden">
+                            <OptimizedImage
+                              src={course.image_url}
+                              alt={course.title}
+                              aspectRatio="video"
+                              className="w-full transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                        )}
+                        <div className="p-4">
                         {/* Code & Type Badge */}
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
@@ -313,7 +335,8 @@ const Courses = () => {
                           </span>
                         </div>
                       </div>
-                    </Link>
+                      </Link>
+                    </AdminImageDropZone>
                   ))}
                 </div>
               </div>

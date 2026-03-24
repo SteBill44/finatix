@@ -7,10 +7,20 @@ import { motion } from "framer-motion";
 import stepAccountImg from "@/assets/course-step-1-account.jpg";
 import stepChooseImg from "@/assets/course-step-2-choose.png";
 import certificatePreviewImg from "@/assets/certificate-preview.jpg";
+import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
+import { useSiteImages, useUpsertSiteImage } from "@/hooks/useSiteImages";
 
 const CourseLevels = () => {
   const { user } = useAuth();
+  const siteImageKeys = ["course-step-1", "course-step-2", "course-step-3"];
+  const { data: siteImages } = useSiteImages(siteImageKeys);
+  const { upsertSiteImage } = useUpsertSiteImage();
 
+  const fallbacks: Record<string, string> = {
+    "course-step-1": stepAccountImg,
+    "course-step-2": stepChooseImg,
+    "course-step-3": certificatePreviewImg,
+  };
   const steps = [
     {
       number: "01",
@@ -24,7 +34,8 @@ const CourseLevels = () => {
       cta: user ? "Go to Dashboard" : "Register for Free",
       ctaLink: user ? "/dashboard" : "/auth?mode=signup",
       imagePosition: "right" as const,
-      image: stepAccountImg
+      image: stepAccountImg,
+      imageKey: "course-step-1"
     },
     {
       number: "02",
@@ -38,7 +49,8 @@ const CourseLevels = () => {
       cta: "Explore Courses",
       ctaLink: "/courses",
       imagePosition: "left" as const,
-      image: stepChooseImg
+      image: stepChooseImg,
+      imageKey: "course-step-2"
     },
     {
       number: "03",
@@ -52,7 +64,8 @@ const CourseLevels = () => {
       cta: user ? "View Achievements" : "View Certifications",
       ctaLink: user ? "/achievements" : "/courses",
       imagePosition: "right" as const,
-      image: certificatePreviewImg
+      image: certificatePreviewImg,
+      imageKey: "course-step-3"
     },
   ];
 
@@ -107,14 +120,18 @@ const CourseLevels = () => {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="flex-1 w-full"
             >
-              <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
-                <OptimizedImage 
-                  src={step.image} 
-                  alt={step.title}
-                  aspectRatio="video"
-                  className="w-full transition-transform duration-700 hover:scale-[1.03]"
-                />
-              </div>
+              <AdminImageDropZone
+                onImageUpdated={(url) => upsertSiteImage(step.imageKey, url)}
+              >
+                <div className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
+                  <OptimizedImage 
+                    src={siteImages?.[step.imageKey] || step.image} 
+                    alt={step.title}
+                    aspectRatio="video"
+                    className="w-full transition-transform duration-700 hover:scale-[1.03]"
+                  />
+                </div>
+              </AdminImageDropZone>
             </motion.div>
           </div>
         ))}
