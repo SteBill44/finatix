@@ -177,6 +177,47 @@ const Pricing = () => {
 
   const plans = [
     {
+      name: "Monthly Access",
+      description: "Flexible monthly access to all CIMA content",
+      price: 29.99,
+      period: "per month",
+      subtitle: "Cancel anytime",
+      features: [
+        { text: "All CIMA modules", included: true },
+        { text: "500+ hours of video content", included: true },
+        { text: "5000+ practice questions", included: true },
+        { text: "Unlimited mock exams", included: true },
+        { text: "Full analytics suite", included: true },
+        { text: "Mobile app access", included: true },
+        { text: "Community support", included: true },
+        { text: "1-on-1 tutor sessions", included: false },
+        { text: "Priority support", included: false },
+      ],
+      cta: "Start Monthly",
+      popular: false,
+    },
+    {
+      name: "Unlimited Bundle",
+      description: "Everything you need to become CIMA qualified",
+      price: 999,
+      period: "one-time payment",
+      originalPrice: 1940,
+      subtitle: "Lifetime access — best value",
+      features: [
+        { text: "All CIMA modules", included: true },
+        { text: "500+ hours of video content", included: true },
+        { text: "5000+ practice questions", included: true },
+        { text: "Unlimited mock exams", included: true },
+        { text: "Full analytics suite", included: true },
+        { text: "Mobile app access", included: true },
+        { text: "Community support", included: true },
+        { text: "Unlimited tutor sessions", included: true },
+        { text: "Priority 24/7 support", included: true },
+      ],
+      cta: "Get Lifetime Access",
+      popular: true,
+    },
+    {
       name: "Single Module",
       description: "Perfect for focusing on one exam at a time",
       price: 149,
@@ -193,46 +234,6 @@ const Pricing = () => {
         { text: "Priority support", included: false },
       ],
       cta: "Get Started",
-      popular: false,
-    },
-    {
-      name: "Full Level",
-      description: "Complete preparation for your entire level",
-      price: 449,
-      period: "per level",
-      originalPrice: 646,
-      features: [
-        { text: "All modules in one level", included: true },
-        { text: "150+ hours of video content", included: true },
-        { text: "1500+ practice questions", included: true },
-        { text: "15 mock exams", included: true },
-        { text: "Advanced competency analytics", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "2 x 1-on-1 tutor sessions", included: true },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Get Full Level",
-      popular: true,
-    },
-    {
-      name: "Unlimited Bundle",
-      description: "Everything you need to become CIMA qualified",
-      price: 999,
-      period: "lifetime access",
-      originalPrice: 1940,
-      features: [
-        { text: "All CIMA modules", included: true },
-        { text: "500+ hours of video content", included: true },
-        { text: "5000+ practice questions", included: true },
-        { text: "Unlimited mock exams", included: true },
-        { text: "Full analytics suite", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "Unlimited tutor sessions", included: true },
-        { text: "Priority 24/7 support", included: true },
-      ],
-      cta: "Get Unlimited",
       popular: false,
     },
   ];
@@ -455,9 +456,11 @@ const Pricing = () => {
 
                   <div className="text-center mb-8">
                     <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-muted-foreground mb-6">{plan.description}</p>
+                    <p className="text-muted-foreground mb-4">{plan.description}</p>
                     <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-5xl font-bold text-foreground">£{plan.price}</span>
+                      <span className="text-5xl font-bold text-foreground">
+                        £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
+                      </span>
                       <span className="text-muted-foreground">/{plan.period}</span>
                     </div>
                     {plan.originalPrice && (
@@ -467,6 +470,9 @@ const Pricing = () => {
                           Save £{plan.originalPrice - plan.price}
                         </span>
                       </p>
+                    )}
+                    {'subtitle' in plan && plan.subtitle && (
+                      <p className="mt-2 text-sm font-medium text-primary">{plan.subtitle}</p>
                     )}
                   </div>
 
