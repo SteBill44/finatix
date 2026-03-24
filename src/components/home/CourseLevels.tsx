@@ -34,7 +34,8 @@ const CourseLevels = () => {
       cta: user ? "Go to Dashboard" : "Register for Free",
       ctaLink: user ? "/dashboard" : "/auth?mode=signup",
       imagePosition: "right" as const,
-      image: stepAccountImg
+      image: stepAccountImg,
+      imageKey: "course-step-1"
     },
     {
       number: "02",
