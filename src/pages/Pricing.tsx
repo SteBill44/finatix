@@ -179,7 +179,7 @@ const Pricing = () => {
     {
       name: "Monthly Access",
       description: "Flexible monthly access to all CIMA content",
-      price: 29.99,
+      price: 30,
       period: "per month",
       subtitle: "Cancel anytime",
       features: [
