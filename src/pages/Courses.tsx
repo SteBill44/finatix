@@ -39,9 +39,15 @@ const Courses = () => {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { isAdmin } = useIsAdmin();
   const { isStudentView } = useAdminView();
+  const queryClient = useQueryClient();
   
   // Effective admin status - false if in student view mode
   const isEffectiveAdmin = isAdmin && !isStudentView;
+
+  const handleCourseImageUpdate = async (courseId: string, newUrl: string) => {
+    await supabase.from("courses").update({ image_url: newUrl }).eq("id", courseId);
+    queryClient.invalidateQueries({ queryKey: ["courses"] });
+  };
 
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ["courses"],
