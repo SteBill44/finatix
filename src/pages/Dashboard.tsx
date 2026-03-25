@@ -59,7 +59,11 @@ const Dashboard = () => {
 
   const recentQuizAttempts = quizAttempts?.slice(0, 3) || [];
 
-  const userName = "Student";
+  const userName =
+    user?.user_metadata?.first_name || 
+    user?.user_metadata?.full_name?.split(" ")[0] || 
+    user?.email?.split("@")[0] || 
+    "Student";
 
   if (enrollmentsLoading) {
     return (
