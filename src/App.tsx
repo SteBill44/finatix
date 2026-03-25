@@ -13,7 +13,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
-import FaviconManager from "@/components/FaviconManager";
+
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { FeatureErrorBoundary } from "@/components/FeatureErrorBoundary";
@@ -145,7 +145,7 @@ const App = () => {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark" attribute="class" enableSystem={true}>
-        <FaviconManager />
+        
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <AdminViewProvider>
