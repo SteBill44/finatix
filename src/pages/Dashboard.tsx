@@ -101,8 +101,9 @@ const Dashboard = () => {
         <div className="absolute top-10 right-0 w-64 h-64 bg-accent/30 rounded-full blur-3xl translate-x-1/2" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            {/* Left: Welcome */}
+            <div className="flex-shrink-0">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground/80 text-sm font-medium mb-3">
                 Student Dashboard
               </span>
@@ -116,76 +117,67 @@ const Dashboard = () => {
                     }. Keep up the great work!`
                   : "Get started by enrolling in your first course."}
               </p>
+              {totalEnrollments === 0 && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-2 mt-4"
+                  onClick={() => navigate("/courses")}
+                >
+                  <GraduationCap className="w-5 h-5" />
+                  Browse Courses
+                </Button>
+              )}
             </div>
-            {totalEnrollments === 0 && (
-              <Button
-                variant="outline"
-                size="lg"
-                className="gap-2"
-                onClick={() => navigate("/courses")}
-              >
-                <GraduationCap className="w-5 h-5" />
-                Browse Courses
-              </Button>
-            )}
-          </div>
-        </div>
 
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 40" fill="none" className="w-full">
-            <path
-              d="M0 40L1440 40L1440 0C1200 30 720 40 0 15L0 40Z"
-              fill="hsl(var(--background))"
-            />
-          </svg>
-        </div>
-      </section>
-
-      {/* Dashboard Content */}
-      <section className="py-8 lg:py-12">
-        <div className="container mx-auto px-4 overflow-hidden">
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {[
-              {
-                label: "Courses",
-                value: totalEnrollments.toString(),
-                icon: BookOpen,
-                color: "text-primary",
-              },
-              {
-                label: "Study Time",
-                value: studyTimeFormatted || "0h",
-                icon: Clock,
-                color: "text-teal",
-              },
-              {
-                label: "Lessons",
-                value: completedLessons.toString(),
-                icon: Target,
-                color: "text-accent",
-              },
-              {
-                label: "Quiz Avg",
-                value: averageScore > 0 ? `${averageScore}%` : "N/A",
-                icon: Zap,
-                color: "text-yellow-500",
-              },
-            ].map((stat) => (
-              <Card key={stat.label} className="p-3 sm:p-6 hover-lift">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <div
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-secondary flex items-center justify-center ${stat.color} flex-shrink-0`}
-                  >
-                    <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+            {/* Right: Quick Stats inline */}
+            <div className="grid grid-cols-2 gap-3 lg:gap-4 lg:grid-cols-4 flex-1 max-w-2xl">
+              {[
+                {
+                  label: "Courses",
+                  value: totalEnrollments.toString(),
+                  icon: BookOpen,
+                  color: "text-primary-foreground",
+                  bg: "bg-primary-foreground/15",
+                },
+                {
+                  label: "Study Time",
+                  value: studyTimeFormatted || "0h",
+                  icon: Clock,
+                  color: "text-primary-foreground",
+                  bg: "bg-primary-foreground/15",
+                },
+                {
+                  label: "Lessons",
+                  value: completedLessons.toString(),
+                  icon: Target,
+                  color: "text-primary-foreground",
+                  bg: "bg-primary-foreground/15",
+                },
+                {
+                  label: "Quiz Avg",
+                  value: averageScore > 0 ? `${averageScore}%` : "N/A",
+                  icon: Zap,
+                  color: "text-primary-foreground",
+                  bg: "bg-primary-foreground/15",
+                },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-xl bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10 p-3 sm:p-4"
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center flex-shrink-0`}>
+                      <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                    </div>
+                    <p className="text-xs text-primary-foreground/60 font-medium truncate">{stat.label}</p>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-lg sm:text-2xl font-bold text-foreground truncate">{stat.value}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground truncate">{stat.label}</p>
-                  </div>
+                  <p className="text-xl sm:text-2xl font-bold text-primary-foreground truncate pl-1">
+                    {stat.value}
+                  </p>
                 </div>
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Resume Last Lesson Quick Action */}
