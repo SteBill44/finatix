@@ -4,7 +4,7 @@ import CertificatePreview from "@/components/certificate/CertificatePreview";
 const CertificatePreviewPage = () => {
   // Demo data for preview
   const demoData = {
-    studentName: "Sarah Johnson",
+    studentName: "Your Name Here",
     courseName: "BA1 - Fundamentals of Business Economics",
     certificateNumber: "FTX-R3K8X2-M7YN4P",
     issuedAt: new Date(),
