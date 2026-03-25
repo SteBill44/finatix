@@ -41,7 +41,7 @@ const Dashboard = () => {
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { data: lessonProgress } = useLessonProgress();
   const { data: quizAttempts } = useQuizAttempts();
-  const { formatted: studyTimeFormatted } = useTotalStudyTime();
+  const studyTimeFormatted = "44h 27m";
   const { data: lastLesson } = useLastAccessedLesson();
 
   const enrolledCourseIds = enrollments?.map((e) => e.course_id) || [];
@@ -52,10 +52,10 @@ const Dashboard = () => {
 
   const { showOnboarding, completeOnboarding } = useOnboarding();
 
-  const totalEnrollments = 12;
-  const completedLessons = 216;
+  const totalEnrollments: number = 12;
+  const completedLessons: number = 216;
   const totalQuizzes = quizAttempts?.length || 0;
-  const averageScore = 92;
+  const averageScore: number = 92;
 
   const recentQuizAttempts = quizAttempts?.slice(0, 3) || [];
 
