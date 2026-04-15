@@ -163,8 +163,8 @@ const Courses = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-6">
-              <div className="w-12 h-12 rounded-full bg-orange/10 flex items-center justify-center mx-auto mb-3">
-                <Award className="w-6 h-6 text-orange" />
+              <div className="w-12 h-12 rounded-full bg-teal/10 flex items-center justify-center mx-auto mb-3">
+                <Award className="w-6 h-6 text-teal" />
               </div>
               <h3 className="font-semibold text-foreground mb-1">Certificate (CBA)</h3>
               <p className="text-sm text-muted-foreground">BA1, BA2, BA3, BA4</p>
