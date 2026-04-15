@@ -115,8 +115,8 @@ const Brand = () => {
                 >
                   <defs>
                     <linearGradient id="brandFullLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0d9488" />
-                      <stop offset="100%" stopColor="#14b8a6" />
+                      <stop offset="0%" stopColor="#E85002" />
+                      <stop offset="100%" stopColor="#F16001" />
                     </linearGradient>
                   </defs>
                   <path
@@ -130,8 +130,8 @@ const Brand = () => {
                   </g>
                 </svg>
                 <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
-                  <span style={{ color: "#1a1a2e" }}>Fin</span>
-                  <span style={{ color: "#0d9488" }}>atix</span>
+                  <span style={{ color: "#000000" }}>Fin</span>
+                  <span style={{ color: "#E85002" }}>atix</span>
                 </span>
               </div>
             </div>
@@ -147,8 +147,8 @@ const Brand = () => {
                 >
                   <defs>
                     <linearGradient id="brandFullLogoGradientPreview" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#0d9488" />
-                      <stop offset="100%" stopColor="#14b8a6" />
+                      <stop offset="0%" stopColor="#E85002" />
+                      <stop offset="100%" stopColor="#F16001" />
                     </linearGradient>
                   </defs>
                   <path
@@ -163,7 +163,7 @@ const Brand = () => {
                 </svg>
                 <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
                   <span style={{ color: "#ffffff" }}>Fin</span>
-                  <span style={{ color: "#14b8a6" }}>atix</span>
+                  <span style={{ color: "#F16001" }}>atix</span>
                 </span>
               </div>
             </div>
@@ -195,8 +195,8 @@ const Brand = () => {
               <svg viewBox="0 0 100 100" width={64} height={64} fill="none">
                 <defs>
                   <linearGradient id="brandFullLogoGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0d9488" />
-                    <stop offset="100%" stopColor="#14b8a6" />
+                    <stop offset="0%" stopColor="#E85002" />
+                    <stop offset="100%" stopColor="#F16001" />
                   </linearGradient>
                 </defs>
                 <path d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z" fill="url(#brandFullLogoGradientLight)" />
@@ -208,7 +208,7 @@ const Brand = () => {
               </svg>
               <span style={{ fontSize: "40px", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1 }}>
                 <span style={{ color: "#ffffff" }}>Fin</span>
-                <span style={{ color: "#0d9488" }}>atix</span>
+                <span style={{ color: "#E85002" }}>atix</span>
               </span>
             </div>
           </CardContent>
@@ -238,8 +238,8 @@ const Brand = () => {
                   >
                     <defs>
                       <linearGradient id="brandLogoGradient512" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#0d9488" />
-                        <stop offset="100%" stopColor="#14b8a6" />
+                        <stop offset="0%" stopColor="#E85002" />
+                        <stop offset="100%" stopColor="#F16001" />
                       </linearGradient>
                     </defs>
                     <path
@@ -287,8 +287,8 @@ const Brand = () => {
                   >
                     <defs>
                       <linearGradient id="brandLogoGradient1024" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#0d9488" />
-                        <stop offset="100%" stopColor="#14b8a6" />
+                        <stop offset="0%" stopColor="#E85002" />
+                        <stop offset="100%" stopColor="#F16001" />
                       </linearGradient>
                     </defs>
                     <path
@@ -350,38 +350,38 @@ const Brand = () => {
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-500/20 blur-3xl -top-20 -left-20" />
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-400/15 blur-3xl bottom-0 right-20" />
-                    <div className="absolute w-40 h-40 rounded-full bg-teal-600/20 blur-2xl top-1/2 left-1/3" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl -top-20 -left-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/15 blur-3xl bottom-0 right-20" />
+                    <div className="absolute w-40 h-40 rounded-full bg-primary/20 blur-2xl top-1/2 left-1/3" />
                   </div>
                   {/* Tech graphics */}
                   <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1500 500" fill="none">
                     <defs>
                       <linearGradient id="twitterLineGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="#0d9488" stopOpacity="0.8" />
+                        <stop offset="0%" stopColor="#F16001" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#E85002" stopOpacity="0.8" />
                       </linearGradient>
                     </defs>
                     <path d="M0 400 Q 200 350 400 380 T 800 280 T 1200 200 T 1500 120" stroke="url(#twitterLineGradient)" strokeWidth="3" fill="none" />
-                    <circle cx="400" cy="380" r="8" fill="#14b8a6" />
-                    <circle cx="800" cy="280" r="8" fill="#14b8a6" />
-                    <circle cx="1200" cy="200" r="8" fill="#14b8a6" />
+                    <circle cx="400" cy="380" r="8" fill="#F16001" />
+                    <circle cx="800" cy="280" r="8" fill="#F16001" />
+                    <circle cx="1200" cy="200" r="8" fill="#F16001" />
                     {/* Bar chart */}
                     <g transform="translate(1150, 250)">
-                      <rect x="0" y="50" width="35" height="100" rx="4" fill="#0d9488" fillOpacity="0.6" />
-                      <rect x="50" y="20" width="35" height="130" rx="4" fill="#0d9488" fillOpacity="0.7" />
-                      <rect x="100" y="-20" width="35" height="170" rx="4" fill="#14b8a6" fillOpacity="0.8" />
-                      <rect x="150" y="-60" width="35" height="210" rx="4" fill="#14b8a6" fillOpacity="0.9" />
+                      <rect x="0" y="50" width="35" height="100" rx="4" fill="#E85002" fillOpacity="0.6" />
+                      <rect x="50" y="20" width="35" height="130" rx="4" fill="#E85002" fillOpacity="0.7" />
+                      <rect x="100" y="-20" width="35" height="170" rx="4" fill="#F16001" fillOpacity="0.8" />
+                      <rect x="150" y="-60" width="35" height="210" rx="4" fill="#F16001" fillOpacity="0.9" />
                     </g>
                     {/* Pie chart */}
                     <g transform="translate(200, 250)">
                       <circle cx="0" cy="0" r="50" fill="none" stroke="#1e293b" strokeWidth="12" />
-                      <circle cx="0" cy="0" r="50" fill="none" stroke="#0d9488" strokeWidth="12" strokeDasharray="100 214" strokeDashoffset="0" opacity="0.7" />
-                      <circle cx="0" cy="0" r="50" fill="none" stroke="#14b8a6" strokeWidth="12" strokeDasharray="70 244" strokeDashoffset="-100" opacity="0.7" />
+                      <circle cx="0" cy="0" r="50" fill="none" stroke="#E85002" strokeWidth="12" strokeDasharray="100 214" strokeDashoffset="0" opacity="0.7" />
+                      <circle cx="0" cy="0" r="50" fill="none" stroke="#F16001" strokeWidth="12" strokeDasharray="70 244" strokeDashoffset="-100" opacity="0.7" />
                     </g>
                     {/* Hexagons */}
-                    <polygon points="1350,80 1390,60 1430,80 1430,120 1390,140 1350,120" fill="none" stroke="#14b8a6" strokeWidth="2" opacity="0.5" />
-                    <polygon points="350,420 380,405 410,420 410,450 380,465 350,450" fill="none" stroke="#0d9488" strokeWidth="2" opacity="0.4" />
+                    <polygon points="1350,80 1390,60 1430,80 1430,120 1390,140 1350,120" fill="none" stroke="#F16001" strokeWidth="2" opacity="0.5" />
+                    <polygon points="350,420 380,405 410,420 410,450 380,465 350,450" fill="none" stroke="#E85002" strokeWidth="2" opacity="0.4" />
                   </svg>
                   <div className="relative flex items-center gap-4 z-10">
                     <svg 
@@ -391,8 +391,8 @@ const Brand = () => {
                     >
                       <defs>
                         <linearGradient id="twitterLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#0d9488" />
-                          <stop offset="100%" stopColor="#14b8a6" />
+                          <stop offset="0%" stopColor="#E85002" />
+                          <stop offset="100%" stopColor="#F16001" />
                         </linearGradient>
                       </defs>
                       <path
@@ -440,38 +440,38 @@ const Brand = () => {
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-500/20 blur-3xl -top-20 -left-20" />
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-400/15 blur-3xl bottom-0 right-10" />
-                    <div className="absolute w-32 h-32 rounded-full bg-teal-600/20 blur-2xl top-1/2 left-1/4" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl -top-20 -left-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/15 blur-3xl bottom-0 right-10" />
+                    <div className="absolute w-32 h-32 rounded-full bg-primary/20 blur-2xl top-1/2 left-1/4" />
                   </div>
                   {/* Tech graphics */}
                   <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1200 630" fill="none">
                     <defs>
                       <linearGradient id="fbLineGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.5" />
-                        <stop offset="100%" stopColor="#0d9488" stopOpacity="0.8" />
+                        <stop offset="0%" stopColor="#F16001" stopOpacity="0.5" />
+                        <stop offset="100%" stopColor="#E85002" stopOpacity="0.8" />
                       </linearGradient>
                     </defs>
                     <path d="M0 500 Q 150 450 300 480 T 600 350 T 900 280 T 1200 180" stroke="url(#fbLineGradient)" strokeWidth="3" fill="none" />
-                    <circle cx="300" cy="480" r="8" fill="#14b8a6" />
-                    <circle cx="600" cy="350" r="8" fill="#14b8a6" />
-                    <circle cx="900" cy="280" r="8" fill="#14b8a6" />
+                    <circle cx="300" cy="480" r="8" fill="#F16001" />
+                    <circle cx="600" cy="350" r="8" fill="#F16001" />
+                    <circle cx="900" cy="280" r="8" fill="#F16001" />
                     {/* Bar chart */}
                     <g transform="translate(950, 350)">
-                      <rect x="0" y="50" width="35" height="100" rx="4" fill="#0d9488" fillOpacity="0.6" />
-                      <rect x="50" y="20" width="35" height="130" rx="4" fill="#0d9488" fillOpacity="0.7" />
-                      <rect x="100" y="-20" width="35" height="170" rx="4" fill="#14b8a6" fillOpacity="0.8" />
-                      <rect x="150" y="-60" width="35" height="210" rx="4" fill="#14b8a6" fillOpacity="0.9" />
+                      <rect x="0" y="50" width="35" height="100" rx="4" fill="#E85002" fillOpacity="0.6" />
+                      <rect x="50" y="20" width="35" height="130" rx="4" fill="#E85002" fillOpacity="0.7" />
+                      <rect x="100" y="-20" width="35" height="170" rx="4" fill="#F16001" fillOpacity="0.8" />
+                      <rect x="150" y="-60" width="35" height="210" rx="4" fill="#F16001" fillOpacity="0.9" />
                     </g>
                     {/* Pie chart */}
                     <g transform="translate(150, 200)">
                       <circle cx="0" cy="0" r="60" fill="none" stroke="#1e293b" strokeWidth="15" />
-                      <circle cx="0" cy="0" r="60" fill="none" stroke="#0d9488" strokeWidth="15" strokeDasharray="120 260" strokeDashoffset="0" opacity="0.7" />
-                      <circle cx="0" cy="0" r="60" fill="none" stroke="#14b8a6" strokeWidth="15" strokeDasharray="80 300" strokeDashoffset="-120" opacity="0.7" />
+                      <circle cx="0" cy="0" r="60" fill="none" stroke="#E85002" strokeWidth="15" strokeDasharray="120 260" strokeDashoffset="0" opacity="0.7" />
+                      <circle cx="0" cy="0" r="60" fill="none" stroke="#F16001" strokeWidth="15" strokeDasharray="80 300" strokeDashoffset="-120" opacity="0.7" />
                     </g>
                     {/* Hexagons */}
-                    <polygon points="1050,80 1090,60 1130,80 1130,120 1090,140 1050,120" fill="none" stroke="#14b8a6" strokeWidth="2" opacity="0.5" />
-                    <polygon points="100,500 130,485 160,500 160,530 130,545 100,530" fill="none" stroke="#0d9488" strokeWidth="2" opacity="0.4" />
+                    <polygon points="1050,80 1090,60 1130,80 1130,120 1090,140 1050,120" fill="none" stroke="#F16001" strokeWidth="2" opacity="0.5" />
+                    <polygon points="100,500 130,485 160,500 160,530 130,545 100,530" fill="none" stroke="#E85002" strokeWidth="2" opacity="0.4" />
                   </svg>
                   <div className="relative flex flex-col items-center gap-3 z-10">
                     <svg 
@@ -481,8 +481,8 @@ const Brand = () => {
                     >
                       <defs>
                         <linearGradient id="fbBannerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#0d9488" />
-                          <stop offset="100%" stopColor="#14b8a6" />
+                          <stop offset="0%" stopColor="#E85002" />
+                          <stop offset="100%" stopColor="#F16001" />
                         </linearGradient>
                       </defs>
                       <path
@@ -528,7 +528,7 @@ const Brand = () => {
                   style={{ 
                     width: "100%",
                     aspectRatio: "1/1",
-                    background: "linear-gradient(145deg, #0d9488 0%, #0f766e 40%, #115e59 100%)"
+                    background: "linear-gradient(145deg, #E85002 0%, #0f766e 40%, #115e59 100%)"
                   }}
                 >
                   {/* Dynamic orbs */}
@@ -600,13 +600,13 @@ const Brand = () => {
                   style={{ 
                     width: "100%",
                     aspectRatio: "1080/1920",
-                    background: "linear-gradient(180deg, #0f172a 0%, #1e293b 30%, #0d9488 70%, #14b8a6 100%)"
+                    background: "linear-gradient(180deg, #0f172a 0%, #1e293b 30%, #E85002 70%, #F16001 100%)"
                   }}
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-500/30 blur-3xl top-1/4 -left-16" />
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-400/20 blur-3xl bottom-1/4 -right-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/30 blur-3xl top-1/4 -left-16" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl bottom-1/4 -right-20" />
                     <div className="absolute w-32 h-32 rounded-full bg-white/10 blur-2xl top-1/3 right-1/4" />
                   </div>
                   {/* Tech pattern */}
@@ -635,8 +635,8 @@ const Brand = () => {
                     >
                       <defs>
                         <linearGradient id="storyLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#0d9488" />
-                          <stop offset="100%" stopColor="#14b8a6" />
+                          <stop offset="0%" stopColor="#E85002" />
+                          <stop offset="100%" stopColor="#F16001" />
                         </linearGradient>
                       </defs>
                       <path
@@ -650,7 +650,7 @@ const Brand = () => {
                       </g>
                     </svg>
                     <span className="text-white text-xl font-bold tracking-tight drop-shadow-lg">
-                      Fin<span className="text-teal-300">atix</span>
+                      Fin<span className="text-orange-300">atix</span>
                     </span>
                     <span className="text-white/70 text-[10px] font-medium tracking-wide text-center px-4">
                       Master CIMA with Confidence
@@ -701,18 +701,18 @@ const Brand = () => {
               <div className="space-y-2">
                 <div 
                   className="h-20 rounded-lg" 
-                  style={{ background: "#0d9488" }}
+                  style={{ background: "#E85002" }}
                 />
                 <p className="text-sm font-medium">Primary Teal</p>
-                <p className="text-xs text-muted-foreground">#0d9488</p>
+                <p className="text-xs text-muted-foreground">#E85002</p>
               </div>
               <div className="space-y-2">
                 <div 
                   className="h-20 rounded-lg" 
-                  style={{ background: "#14b8a6" }}
+                  style={{ background: "#F16001" }}
                 />
                 <p className="text-sm font-medium">Secondary Teal</p>
-                <p className="text-xs text-muted-foreground">#14b8a6</p>
+                <p className="text-xs text-muted-foreground">#F16001</p>
               </div>
               <div className="space-y-2">
                 <div 
