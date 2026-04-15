@@ -43,22 +43,6 @@ const Hero = () => {
         className="gradient-orb gradient-orb-primary w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] bottom-20 left-1/4 pointer-events-none"
       />
 
-      {/* Floating shapes */}
-      <motion.div
-        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-32 right-[15%] w-16 h-16 rounded-2xl border-2 border-primary/20 bg-primary/5 pointer-events-none hidden lg:block"
-      />
-      <motion.div
-        animate={{ y: [0, 15, 0], rotate: [0, -8, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-        className="absolute bottom-32 right-[25%] w-10 h-10 rounded-full border-2 border-accent/20 bg-accent/5 pointer-events-none hidden lg:block"
-      />
-      <motion.div
-        animate={{ y: [0, -12, 0], rotate: [0, 10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        className="absolute top-[40%] right-[10%] w-8 h-8 rounded-lg border-2 border-primary/15 bg-primary/5 pointer-events-none hidden lg:block"
-      />
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
