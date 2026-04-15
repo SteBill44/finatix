@@ -45,7 +45,7 @@ const Footer = ({ className }: FooterProps) => {
   const headingClass = "font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-black";
 
   return (
-    <footer className={cn("bg-charcoal text-background", className)}>
+    <footer className={cn("gradient-footer text-white", className)}>
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
@@ -53,7 +53,7 @@ const Footer = ({ className }: FooterProps) => {
             <div className="mb-4">
               <FinatixLogo size="sm" lightFin />
             </div>
-            <p className="text-background/60 text-sm mb-6">
+            <p className="text-white/60 text-sm mb-6">
               Smarter CIMA study. Modern tools. Real insights.
             </p>
             <div className="flex gap-3">
@@ -62,7 +62,7 @@ const Footer = ({ className }: FooterProps) => {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-lg bg-background/10 flex items-center justify-center hover:bg-primary transition-colors duration-200"
+                  className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-primary transition-colors duration-200"
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -78,7 +78,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -95,7 +95,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -112,7 +112,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -129,7 +129,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-background/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -140,8 +140,8 @@ const Footer = ({ className }: FooterProps) => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-background/10 text-center">
-          <p className="text-sm text-background/40">
+        <div className="mt-12 pt-8 border-t border-white/10 text-center">
+          <p className="text-sm text-white/40">
             © {currentYear} Finatix. All rights reserved.
           </p>
         </div>

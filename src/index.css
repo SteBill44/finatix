@@ -174,7 +174,29 @@
 @layer components {
   /* Gradient background for hero sections */
   .gradient-bg {
-    @apply bg-gradient-to-br from-primary to-accent;
+    background: linear-gradient(135deg, #000000 0%, #C10801 40%, #F16001 70%, #D9C3AB 100%);
+  }
+
+  /* Light mode: swap dark end for lighter tones */
+  :root .gradient-bg {
+    background: linear-gradient(135deg, #D9C3AB 0%, #F16001 40%, #E85002 70%, #C10801 100%);
+  }
+
+  .dark .gradient-bg {
+    background: linear-gradient(135deg, #000000 0%, #C10801 40%, #F16001 70%, #D9C3AB 100%);
+  }
+
+  /* Footer gradient */
+  .gradient-footer {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a1a0a 50%, #331a00 100%);
+  }
+
+  :root .gradient-footer {
+    background: linear-gradient(135deg, #333333 0%, #4a2a10 40%, #5a3015 70%, #333333 100%);
+  }
+
+  .dark .gradient-footer {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a00 40%, #2a1500 70%, #0a0a0a 100%);
   }
 
   /* Light mode hero gradient background */

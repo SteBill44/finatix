@@ -214,12 +214,12 @@ const WhyCIMA = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 gradient-bg text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Start Your CIMA Journey Today
           </h2>
-          <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
+          <p className="text-white/80 max-w-2xl mx-auto mb-8">
             Whether you're just starting out or looking to advance your career, 
             Finatix provides everything you need to succeed in your CIMA studies.
           </p>
@@ -231,7 +231,7 @@ const WhyCIMA = () => {
               </Button>
             </Link>
             <Link to="/contact">
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-white hover:bg-primary-foreground/10">
                 Contact Us
               </Button>
             </Link>
