@@ -106,7 +106,7 @@ const Courses = () => {
 
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {
-      case "certificate": return "bg-orange/10 text-orange";
+      case "certificate": return "bg-teal/10 text-teal";
       case "operational": return "bg-primary/10 text-primary";
       case "management": return "bg-purple/10 text-purple";
       case "strategic": return "bg-red/10 text-red";
@@ -116,7 +116,7 @@ const Courses = () => {
 
   const getLevelBorderColor = (level: string) => {
     switch (level) {
-      case "certificate": return "border-l-orange";
+      case "certificate": return "border-l-teal";
       case "operational": return "border-l-primary";
       case "management": return "border-l-purple";
       case "strategic": return "border-l-red";
