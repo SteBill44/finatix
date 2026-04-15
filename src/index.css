@@ -47,10 +47,10 @@
     --brand-gray-light: 0 0% 65%;
     --brand-gray-dark: 0 0% 20%;
 
-    /* Legacy aliases for components still referencing teal */
-    --teal: 20 98% 46%;
-    --teal-dark: 2 99% 38%;
-    --teal-light: 24 99% 47%;
+    /* Accent colors for level differentiation */
+    --teal: 174 72% 40%;
+    --teal-dark: 174 72% 35%;
+    --teal-light: 174 72% 50%;
     --purple: 262 83% 58%;
     --orange: 25 95% 53%;
     --red: 0 72% 50%;

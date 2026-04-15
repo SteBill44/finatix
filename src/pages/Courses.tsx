@@ -64,7 +64,7 @@ const Courses = () => {
   });
 
   const levelConfig = {
-    certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-orange" },
+    certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-teal" },
     operational: { label: "Operational", icon: BookOpen, color: "bg-primary" },
     management: { label: "Management", icon: BarChart3, color: "bg-purple" },
     strategic: { label: "Strategic", icon: Target, color: "bg-red" },
