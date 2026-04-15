@@ -6,44 +6,53 @@
 
 @layer base {
   :root {
-    /* Core palette */
-    --background: 210 20% 98%;
-    --foreground: 210 15% 10%;
+    /* Core palette — Orange & Black branding */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 10%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 10%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 174 72% 35%;
+    --primary: 20 98% 46%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 174 30% 94%;
-    --secondary-foreground: 210 15% 10%;
+    --secondary: 20 20% 95%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 210 15% 35%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 39%;
 
-    --accent: 262 83% 55%;
+    --accent: 24 99% 47%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 88%;
-    --input: 210 20% 88%;
-    --ring: 174 72% 35%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 20 98% 46%;
 
     --radius: 0.5rem;
 
     /* Extended design tokens */
-    --charcoal: 210 11% 15%;
-    --teal: 174 72% 40%;
-    --teal-dark: 174 72% 35%;
-    --teal-light: 174 72% 50%;
-    --purple: 262 83% 58%;
-    --orange: 25 95% 53%;
+    --charcoal: 0 0% 20%;
+    --brand-orange: 20 98% 46%;
+    --brand-orange-dark: 2 99% 38%;
+    --brand-orange-light: 24 99% 47%;
+    --brand-black: 0 0% 0%;
+    --brand-gray: 0 0% 39%;
+    --brand-gray-light: 0 0% 65%;
+    --brand-gray-dark: 0 0% 20%;
+
+    /* Legacy aliases for components still referencing teal */
+    --teal: 20 98% 46%;
+    --teal-dark: 2 99% 38%;
+    --teal-light: 24 99% 47%;
+    --purple: 20 98% 46%;
+    --orange: 20 98% 46%;
     --red: 0 72% 50%;
     
     /* Success/Warning states */
@@ -55,10 +64,10 @@
     --info-foreground: 0 0% 100%;
     
     /* Light mode gradients and glows */
-    --hero-gradient-start: 174 60% 97%;
-    --hero-gradient-end: 262 50% 97%;
-    --glow-primary: 174 72% 45%;
-    --glow-accent: 262 83% 65%;
+    --hero-gradient-start: 20 40% 97%;
+    --hero-gradient-end: 0 0% 95%;
+    --glow-primary: 20 98% 50%;
+    --glow-accent: 24 99% 55%;
     
     /* Animation timing tokens */
     --duration-instant: 0ms;
@@ -76,52 +85,52 @@
     --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
     
-    /* Shadows - more pronounced for light mode */
-    --shadow-sm: 0 1px 2px 0 hsl(210 11% 15% / 0.06);
-    --shadow-md: 0 4px 6px -1px hsl(210 11% 15% / 0.08), 0 2px 4px -2px hsl(210 11% 15% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(210 11% 15% / 0.1), 0 4px 6px -4px hsl(210 11% 15% / 0.06);
-    --shadow-xl: 0 20px 25px -5px hsl(210 11% 15% / 0.12), 0 8px 10px -6px hsl(210 11% 15% / 0.06);
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.06);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.06);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.12), 0 8px 10px -6px hsl(0 0% 0% / 0.06);
     --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
 
     /* Sidebar tokens */
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 0 0% 0%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 210 11% 90%;
-    --sidebar-ring: 174 72% 40%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 20 98% 46%;
   }
 
   .dark {
-    --background: 210 11% 10%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 98%;
 
-    --card: 210 11% 13%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 210 11% 13%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 174 72% 45%;
+    --primary: 20 98% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 11% 18%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 11% 18%;
-    --muted-foreground: 210 11% 60%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 262 83% 65%;
+    --accent: 24 99% 52%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 11% 20%;
-    --input: 210 11% 20%;
-    --ring: 174 72% 45%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 20 98% 50%;
 
     /* Dark mode state colors */
     --success: 142 72% 50%;
@@ -131,14 +140,14 @@
     --charcoal: 0 0% 90%;
     --shadow-glow: 0 0 30px hsl(var(--primary) / 0.2);
     
-    --sidebar-background: 210 11% 10%;
+    --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 174 72% 45%;
+    --sidebar-primary: 20 98% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 11% 15%;
+    --sidebar-accent: 0 0% 10%;
     --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 210 11% 20%;
-    --sidebar-ring: 174 72% 45%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 20 98% 50%;
   }
 }
 
@@ -146,7 +155,6 @@
   * {
     @apply border-border;
   }
-
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
@@ -164,9 +172,9 @@
 }
 
 @layer components {
-  /* Gradient background for hero sections - ensures contrast in both themes */
+  /* Gradient background for hero sections */
   .gradient-bg {
-    @apply bg-gradient-to-br from-primary to-teal-dark;
+    @apply bg-gradient-to-br from-primary to-accent;
   }
 
   /* Light mode hero gradient background */
@@ -178,7 +186,7 @@
     background: transparent;
   }
 
-  /* Animated gradient orbs for light mode */
+  /* Animated gradient orbs */
   .gradient-orb {
     position: absolute;
     border-radius: 50%;
@@ -200,13 +208,13 @@
     opacity: 0.15;
   }
 
-  /* Hexagon pattern background - more visible in light mode */
+  /* Hexagon pattern background */
   .hex-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2320b2aa' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23E85002' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .dark .hex-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23E85002' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .stat-card {

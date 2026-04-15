@@ -28,6 +28,11 @@ export default {
           dark: "hsl(var(--teal-dark))",
           light: "hsl(var(--teal-light))",
         },
+        "brand-orange": {
+          DEFAULT: "hsl(var(--brand-orange))",
+          dark: "hsl(var(--brand-orange-dark))",
+          light: "hsl(var(--brand-orange-light))",
+        },
         purple: "hsl(var(--purple))",
         orange: "hsl(var(--orange))",
         red: "hsl(var(--red))",
