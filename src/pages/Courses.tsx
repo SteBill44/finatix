@@ -64,7 +64,7 @@ const Courses = () => {
   });
 
   const levelConfig = {
-    certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-orange" },
+    certificate: { label: "Certificate (CBA)", icon: Award, color: "bg-teal" },
     operational: { label: "Operational", icon: BookOpen, color: "bg-primary" },
     management: { label: "Management", icon: BarChart3, color: "bg-purple" },
     strategic: { label: "Strategic", icon: Target, color: "bg-red" },
@@ -106,7 +106,7 @@ const Courses = () => {
 
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {
-      case "certificate": return "bg-orange/10 text-orange";
+      case "certificate": return "bg-teal/10 text-teal";
       case "operational": return "bg-primary/10 text-primary";
       case "management": return "bg-purple/10 text-purple";
       case "strategic": return "bg-red/10 text-red";
@@ -116,7 +116,7 @@ const Courses = () => {
 
   const getLevelBorderColor = (level: string) => {
     switch (level) {
-      case "certificate": return "border-l-orange";
+      case "certificate": return "border-l-teal";
       case "operational": return "border-l-primary";
       case "management": return "border-l-purple";
       case "strategic": return "border-l-red";
@@ -163,8 +163,8 @@ const Courses = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-6">
-              <div className="w-12 h-12 rounded-full bg-orange/10 flex items-center justify-center mx-auto mb-3">
-                <Award className="w-6 h-6 text-orange" />
+              <div className="w-12 h-12 rounded-full bg-teal/10 flex items-center justify-center mx-auto mb-3">
+                <Award className="w-6 h-6 text-teal" />
               </div>
               <h3 className="font-semibold text-foreground mb-1">Certificate (CBA)</h3>
               <p className="text-sm text-muted-foreground">BA1, BA2, BA3, BA4</p>
