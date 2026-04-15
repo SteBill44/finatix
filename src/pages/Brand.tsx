@@ -350,9 +350,9 @@ const Brand = () => {
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-500/20 blur-3xl -top-20 -left-20" />
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-400/15 blur-3xl bottom-0 right-20" />
-                    <div className="absolute w-40 h-40 rounded-full bg-teal-600/20 blur-2xl top-1/2 left-1/3" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl -top-20 -left-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/15 blur-3xl bottom-0 right-20" />
+                    <div className="absolute w-40 h-40 rounded-full bg-primary/20 blur-2xl top-1/2 left-1/3" />
                   </div>
                   {/* Tech graphics */}
                   <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1500 500" fill="none">
@@ -440,9 +440,9 @@ const Brand = () => {
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-500/20 blur-3xl -top-20 -left-20" />
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-400/15 blur-3xl bottom-0 right-10" />
-                    <div className="absolute w-32 h-32 rounded-full bg-teal-600/20 blur-2xl top-1/2 left-1/4" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl -top-20 -left-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/15 blur-3xl bottom-0 right-10" />
+                    <div className="absolute w-32 h-32 rounded-full bg-primary/20 blur-2xl top-1/2 left-1/4" />
                   </div>
                   {/* Tech graphics */}
                   <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 1200 630" fill="none">
@@ -605,8 +605,8 @@ const Brand = () => {
                 >
                   {/* Gradient orbs */}
                   <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute w-48 h-48 rounded-full bg-teal-500/30 blur-3xl top-1/4 -left-16" />
-                    <div className="absolute w-64 h-64 rounded-full bg-teal-400/20 blur-3xl bottom-1/4 -right-20" />
+                    <div className="absolute w-48 h-48 rounded-full bg-primary/30 blur-3xl top-1/4 -left-16" />
+                    <div className="absolute w-64 h-64 rounded-full bg-primary/20 blur-3xl bottom-1/4 -right-20" />
                     <div className="absolute w-32 h-32 rounded-full bg-white/10 blur-2xl top-1/3 right-1/4" />
                   </div>
                   {/* Tech pattern */}
