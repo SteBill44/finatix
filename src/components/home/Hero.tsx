@@ -21,27 +21,51 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 hex-pattern hero-gradient-light overflow-hidden -mt-16"
+      className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
     >
+      {/* Gradient mesh background */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Base warm wash */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/[0.04]" />
+        
+        {/* Soft radial mesh spots */}
+        <motion.div
+          animate={{ opacity: [0.25, 0.4, 0.25] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[20%] -left-[10%] w-[60%] h-[70%]"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(var(--primary) / 0.08) 0%, transparent 70%)",
+          }}
+        />
+        <motion.div
+          animate={{ opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute top-[20%] -right-[15%] w-[55%] h-[60%]"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(var(--accent) / 0.06) 0%, transparent 70%)",
+          }}
+        />
+        <motion.div
+          animate={{ opacity: [0.1, 0.2, 0.1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%]"
+          style={{
+            background: "radial-gradient(ellipse at center, hsl(var(--primary) / 0.05) 0%, transparent 65%)",
+          }}
+        />
+
+        {/* Fine noise grain overlay for texture */}
+        <div 
+          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] mix-blend-multiply dark:mix-blend-screen"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: "128px 128px",
+          }}
+        />
+      </div>
+
       {/* Top gradient fade for smooth navbar transition */}
       <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background/80 to-transparent pointer-events-none z-[1]" />
-
-      {/* Animated gradient orbs with scroll parallax */}
-      <motion.div
-        animate={{ scale: [1, 1.15, 1], x: [0, 30, 0], y: [0, -20, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="gradient-orb gradient-orb-primary w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] -top-20 -left-20 pointer-events-none"
-      />
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], x: [0, -25, 0], y: [0, 30, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="gradient-orb gradient-orb-accent w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] top-1/3 -right-20 pointer-events-none"
-      />
-      <motion.div
-        animate={{ scale: [1, 1.1, 1], x: [0, 20, 0], y: [0, -15, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="gradient-orb gradient-orb-primary w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] bottom-20 left-1/4 pointer-events-none"
-      />
 
 
       <motion.div
