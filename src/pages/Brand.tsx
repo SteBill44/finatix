@@ -650,7 +650,7 @@ const Brand = () => {
                       </g>
                     </svg>
                     <span className="text-white text-xl font-bold tracking-tight drop-shadow-lg">
-                      Fin<span className="text-teal-300">atix</span>
+                      Fin<span className="text-orange-300">atix</span>
                     </span>
                     <span className="text-white/70 text-[10px] font-medium tracking-wide text-center px-4">
                       Master CIMA with Confidence
