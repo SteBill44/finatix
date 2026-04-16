@@ -37,26 +37,26 @@ export interface CostMonitoringData {
 }
 
 // Calculate AI cost
-function calculateAICost(messageCount: number): number {
+export function calculateAICost(messageCount: number): number {
   return messageCount * PRICING.AI_COST_PER_MESSAGE;
 }
 
 // Calculate edge function cost
-function calculateEdgeFunctionCost(invocations: number): number {
+export function calculateEdgeFunctionCost(invocations: number): number {
   if (invocations <= PRICING.EDGE_FUNCTION_FREE_TIER) return 0;
   const billableInvocations = invocations - PRICING.EDGE_FUNCTION_FREE_TIER;
   return (billableInvocations / 1000000) * PRICING.EDGE_FUNCTION_COST_PER_MILLION;
 }
 
 // Calculate database cost
-function calculateDatabaseCost(sizeMB: number): number {
+export function calculateDatabaseCost(sizeMB: number): number {
   if (sizeMB <= PRICING.DATABASE_FREE_TIER_MB) return 0;
   const billableGB = (sizeMB - PRICING.DATABASE_FREE_TIER_MB) / 1024;
   return billableGB * PRICING.DATABASE_COST_PER_GB;
 }
 
 // Calculate storage cost
-function calculateStorageCost(sizeMB: number): number {
+export function calculateStorageCost(sizeMB: number): number {
   const sizeGB = sizeMB / 1024;
   if (sizeGB <= PRICING.STORAGE_FREE_TIER_GB) return 0;
   const billableGB = sizeGB - PRICING.STORAGE_FREE_TIER_GB;

@@ -31,7 +31,7 @@ export interface ReadinessScore {
   dataPoints: number;
 }
 
-const getReadinessLevel = (score: number): ReadinessScore["level"] => {
+export const getReadinessLevel = (score: number): ReadinessScore["level"] => {
   if (score === 0) return "not-started";
   if (score < 25) return "beginning";
   if (score < 50) return "developing";
@@ -39,7 +39,7 @@ const getReadinessLevel = (score: number): ReadinessScore["level"] => {
   return "ready";
 };
 
-const getRecencyWeight = (daysAgo: number): number => {
+export const getRecencyWeight = (daysAgo: number): number => {
   if (daysAgo <= 7) return 1.0;
   if (daysAgo <= 14) return 0.9;
   if (daysAgo <= 30) return 0.75;
@@ -47,7 +47,7 @@ const getRecencyWeight = (daysAgo: number): number => {
   return 0.25;
 };
 
-const calculateConfidence = (
+export const calculateConfidence = (
   lastActivityDays: number | null,
   dataPoints: number,
   totalPossiblePoints: number
@@ -75,7 +75,7 @@ const calculateConfidence = (
   return { confidence, level };
 };
 
-const getDaysSince = (dateString: string): number => {
+export const getDaysSince = (dateString: string): number => {
   const date = new Date(dateString);
   const now = new Date();
   return Math.floor(Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
