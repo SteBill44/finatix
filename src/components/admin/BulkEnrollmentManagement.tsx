@@ -1,16 +1,14 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Users, UserMinus, UserPlus, Loader2, Search, X, Download, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, UserPlus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import EnrolledUsersTab, { EnrolledUser } from "./enrollment/EnrolledUsersTab";
+import AvailableUsersTab, { AvailableUser } from "./enrollment/AvailableUsersTab";
 
 interface Course {
   id: string;
@@ -18,47 +16,38 @@ interface Course {
   level: string;
 }
 
-interface EnrolledUser {
-  enrollment_id: string;
-  user_id: string;
-  full_name: string | null;
-  enrolled_at: string;
-  completed_at: string | null;
-  lessons_completed: number;
-  total_lessons: number;
-}
-
-interface AvailableUser {
-  user_id: string;
-  full_name: string | null;
-  created_at: string;
-}
-
-const ITEMS_PER_PAGE = 20;
+const LEVEL_BADGE_STYLES: Record<string, string> = {
+  certificate: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  operational: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+  management: "bg-purple-500/10 text-purple-600 border-purple-500/20",
+  strategic: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+};
 
 const BulkEnrollmentManagement = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCourseId, setSelectedCourseId] = useState<string>("");
   const [enrolledUsers, setEnrolledUsers] = useState<EnrolledUser[]>([]);
   const [availableUsers, setAvailableUsers] = useState<AvailableUser[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-  const [selectedUsersToEnroll, setSelectedUsersToEnroll] = useState<Set<string>>(new Set());
+
+  const [selectedToUnenroll, setSelectedToUnenroll] = useState<Set<string>>(new Set());
+  const [selectedToEnroll, setSelectedToEnroll] = useState<Set<string>>(new Set());
+
   const [loading, setLoading] = useState(false);
   const [loadingAvailable, setLoadingAvailable] = useState(false);
   const [unenrolling, setUnenrolling] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [enrollDialogOpen, setEnrollDialogOpen] = useState(false);
+
+  const [confirmUnenroll, setConfirmUnenroll] = useState(false);
+  const [confirmEnroll, setConfirmEnroll] = useState(false);
   const [activeTab, setActiveTab] = useState("enrolled");
-  const [enrolledSearchQuery, setEnrolledSearchQuery] = useState("");
-  const [availableSearchQuery, setAvailableSearchQuery] = useState("");
+
+  const [enrolledSearch, setEnrolledSearch] = useState("");
+  const [availableSearch, setAvailableSearch] = useState("");
   const [enrolledPage, setEnrolledPage] = useState(1);
   const [availablePage, setAvailablePage] = useState(1);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  useEffect(() => { fetchCourses(); }, []);
 
   useEffect(() => {
     if (selectedCourseId) {
@@ -67,106 +56,46 @@ const BulkEnrollmentManagement = () => {
     } else {
       setEnrolledUsers([]);
       setAvailableUsers([]);
-      setSelectedUsers(new Set());
-      setSelectedUsersToEnroll(new Set());
+      setSelectedToUnenroll(new Set());
+      setSelectedToEnroll(new Set());
     }
-    // Reset search and pagination when course changes
-    setEnrolledSearchQuery("");
-    setAvailableSearchQuery("");
+    setEnrolledSearch("");
+    setAvailableSearch("");
     setEnrolledPage(1);
     setAvailablePage(1);
   }, [selectedCourseId]);
 
-  // Reset to page 1 when search changes
-  useEffect(() => {
-    setEnrolledPage(1);
-  }, [enrolledSearchQuery]);
-
-  useEffect(() => {
-    setAvailablePage(1);
-  }, [availableSearchQuery]);
-
-  // Filtered lists based on search
-  const filteredEnrolledUsers = useMemo(() => {
-    if (!enrolledSearchQuery.trim()) return enrolledUsers;
-    const query = enrolledSearchQuery.toLowerCase();
-    return enrolledUsers.filter(u => 
-      u.full_name?.toLowerCase().includes(query)
-    );
-  }, [enrolledUsers, enrolledSearchQuery]);
-
-  const filteredAvailableUsers = useMemo(() => {
-    if (!availableSearchQuery.trim()) return availableUsers;
-    const query = availableSearchQuery.toLowerCase();
-    return availableUsers.filter(u => 
-      u.full_name?.toLowerCase().includes(query)
-    );
-  }, [availableUsers, availableSearchQuery]);
-
-  // Paginated lists
-  const paginatedEnrolledUsers = useMemo(() => {
-    const start = (enrolledPage - 1) * ITEMS_PER_PAGE;
-    return filteredEnrolledUsers.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredEnrolledUsers, enrolledPage]);
-
-  const paginatedAvailableUsers = useMemo(() => {
-    const start = (availablePage - 1) * ITEMS_PER_PAGE;
-    return filteredAvailableUsers.slice(start, start + ITEMS_PER_PAGE);
-  }, [filteredAvailableUsers, availablePage]);
-
-  const totalEnrolledPages = Math.ceil(filteredEnrolledUsers.length / ITEMS_PER_PAGE);
-  const totalAvailablePages = Math.ceil(filteredAvailableUsers.length / ITEMS_PER_PAGE);
+  useEffect(() => { setEnrolledPage(1); }, [enrolledSearch]);
+  useEffect(() => { setAvailablePage(1); }, [availableSearch]);
 
   const fetchCourses = async () => {
-    const { data, error } = await supabase
-      .from("courses")
-      .select("id, title, level")
-      .order("title");
-
-    if (error) {
-      toast.error("Failed to fetch courses");
-    } else {
-      setCourses(data || []);
-    }
+    const { data, error } = await supabase.from("courses").select("id, title, level").order("title");
+    if (error) toast.error("Failed to fetch courses");
+    else setCourses(data || []);
   };
 
   const fetchEnrolledUsers = async (courseId: string) => {
     setLoading(true);
-    
-    // Fetch enrollments with profiles
-    const { data: enrollmentsData, error: enrollmentsError } = await supabase
+
+    const { data: enrollmentsData, error: enrollErr } = await supabase
       .from("enrollments")
-      .select(`
-        id,
-        user_id,
-        enrolled_at,
-        completed_at,
-        profiles!inner(full_name)
-      `)
+      .select("id, user_id, enrolled_at, completed_at, profiles!inner(full_name)")
       .eq("course_id", courseId)
       .order("enrolled_at", { ascending: false });
 
-    if (enrollmentsError) {
+    if (enrollErr) {
       toast.error("Failed to fetch enrolled users");
       setEnrolledUsers([]);
       setLoading(false);
       return;
     }
 
-    // Fetch total lessons for this course
-    const { data: lessonsData } = await supabase
-      .from("lessons")
-      .select("id")
-      .eq("course_id", courseId);
-    
+    const { data: lessonsData } = await supabase.from("lessons").select("id").eq("course_id", courseId);
     const totalLessons = lessonsData?.length || 0;
-
-    // Fetch lesson progress for all users in this course
+    const lessonIds = lessonsData?.map((l) => l.id) || [];
     const userIds = enrollmentsData?.map((e: any) => e.user_id) || [];
-    const lessonIds = lessonsData?.map(l => l.id) || [];
 
     let progressMap: Record<string, number> = {};
-    
     if (userIds.length > 0 && lessonIds.length > 0) {
       const { data: progressData } = await supabase
         .from("lesson_progress")
@@ -175,299 +104,155 @@ const BulkEnrollmentManagement = () => {
         .in("lesson_id", lessonIds)
         .eq("completed", true);
 
-      if (progressData) {
-        progressData.forEach(p => {
-          progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
-        });
-      }
+      progressData?.forEach((p) => {
+        progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
+      });
     }
 
-    const users: EnrolledUser[] = (enrollmentsData || []).map((enrollment: any) => ({
-      enrollment_id: enrollment.id,
-      user_id: enrollment.user_id,
-      full_name: enrollment.profiles?.full_name || "Unknown User",
-      enrolled_at: enrollment.enrolled_at,
-      completed_at: enrollment.completed_at,
-      lessons_completed: progressMap[enrollment.user_id] || 0,
-      total_lessons: totalLessons,
-    }));
-    
-    setEnrolledUsers(users);
+    setEnrolledUsers(
+      (enrollmentsData || []).map((e: any) => ({
+        enrollment_id: e.id,
+        user_id: e.user_id,
+        full_name: e.profiles?.full_name || "Unknown User",
+        enrolled_at: e.enrolled_at,
+        completed_at: e.completed_at,
+        lessons_completed: progressMap[e.user_id] || 0,
+        total_lessons: totalLessons,
+      }))
+    );
     setLoading(false);
   };
 
   const fetchAvailableUsers = async (courseId: string) => {
     setLoadingAvailable(true);
-    
-    // Fetch all profiles
-    const { data: allProfiles, error: profilesError } = await supabase
+
+    const { data: allProfiles, error: profileErr } = await supabase
       .from("profiles")
       .select("user_id, full_name, created_at")
       .order("full_name");
 
-    if (profilesError) {
+    if (profileErr) {
       toast.error("Failed to fetch users");
       setAvailableUsers([]);
       setLoadingAvailable(false);
       return;
     }
 
-    // Fetch enrolled user IDs for this course
-    const { data: enrollments, error: enrollmentsError } = await supabase
+    const { data: enrollments, error: enrollErr } = await supabase
       .from("enrollments")
       .select("user_id")
       .eq("course_id", courseId);
 
-    if (enrollmentsError) {
+    if (enrollErr) {
       toast.error("Failed to fetch enrollments");
       setAvailableUsers([]);
       setLoadingAvailable(false);
       return;
     }
 
-    const enrolledUserIds = new Set(enrollments?.map(e => e.user_id) || []);
-    
-    // Filter out already enrolled users
-    const available = (allProfiles || [])
-      .filter(p => !enrolledUserIds.has(p.user_id))
-      .map(p => ({
-        user_id: p.user_id,
-        full_name: p.full_name,
-        created_at: p.created_at,
-      }));
-
-    setAvailableUsers(available);
+    const enrolledIds = new Set(enrollments?.map((e) => e.user_id) || []);
+    setAvailableUsers(
+      (allProfiles || [])
+        .filter((p) => !enrolledIds.has(p.user_id))
+        .map((p) => ({ user_id: p.user_id, full_name: p.full_name, created_at: p.created_at }))
+    );
     setLoadingAvailable(false);
   };
 
-  const toggleUserSelection = (enrollmentId: string) => {
-    const newSelected = new Set(selectedUsers);
-    if (newSelected.has(enrollmentId)) {
-      newSelected.delete(enrollmentId);
-    } else {
-      newSelected.add(enrollmentId);
-    }
-    setSelectedUsers(newSelected);
-  };
-
-  const toggleUserToEnrollSelection = (userId: string) => {
-    const newSelected = new Set(selectedUsersToEnroll);
-    if (newSelected.has(userId)) {
-      newSelected.delete(userId);
-    } else {
-      newSelected.add(userId);
-    }
-    setSelectedUsersToEnroll(newSelected);
-  };
-
-  const toggleSelectAll = () => {
-    const currentPage = paginatedEnrolledUsers;
-    const allPageIds = new Set(currentPage.map(u => u.enrollment_id));
-    const allSelected = currentPage.every(u => selectedUsers.has(u.enrollment_id));
-    
-    if (allSelected) {
-      setSelectedUsers(prev => {
-        const next = new Set(prev);
-        allPageIds.forEach(id => next.delete(id));
-        return next;
-      });
-    } else {
-      setSelectedUsers(prev => new Set([...prev, ...allPageIds]));
-    }
-  };
-
-  const toggleSelectAllToEnroll = () => {
-    const currentPage = paginatedAvailableUsers;
-    const allPageIds = new Set(currentPage.map(u => u.user_id));
-    const allSelected = currentPage.every(u => selectedUsersToEnroll.has(u.user_id));
-    
-    if (allSelected) {
-      setSelectedUsersToEnroll(prev => {
-        const next = new Set(prev);
-        allPageIds.forEach(id => next.delete(id));
-        return next;
-      });
-    } else {
-      setSelectedUsersToEnroll(prev => new Set([...prev, ...allPageIds]));
-    }
-  };
-
   const handleBulkUnenroll = async () => {
-    if (selectedUsers.size === 0) return;
-
+    if (selectedToUnenroll.size === 0) return;
     setUnenrolling(true);
-    const enrollmentIds = Array.from(selectedUsers);
-
-    const { error } = await supabase
-      .from("enrollments")
-      .delete()
-      .in("id", enrollmentIds);
-
+    const ids = Array.from(selectedToUnenroll);
+    const { error } = await supabase.from("enrollments").delete().in("id", ids);
     if (error) {
       toast.error("Failed to unenroll users");
     } else {
-      toast.success(`Successfully unenrolled ${enrollmentIds.length} user(s)`);
-      setEnrolledUsers(prev => prev.filter(u => !selectedUsers.has(u.enrollment_id)));
-      setSelectedUsers(new Set());
-      // Refresh available users
-      if (selectedCourseId) {
-        fetchAvailableUsers(selectedCourseId);
-      }
+      toast.success(`Successfully unenrolled ${ids.length} user(s)`);
+      setEnrolledUsers((prev) => prev.filter((u) => !selectedToUnenroll.has(u.enrollment_id)));
+      setSelectedToUnenroll(new Set());
+      if (selectedCourseId) fetchAvailableUsers(selectedCourseId);
     }
-
     setUnenrolling(false);
-    setConfirmDialogOpen(false);
+    setConfirmUnenroll(false);
   };
 
   const handleBulkEnroll = async () => {
-    if (selectedUsersToEnroll.size === 0 || !selectedCourseId) return;
-
+    if (selectedToEnroll.size === 0 || !selectedCourseId) return;
     setEnrolling(true);
-    const userIds = Array.from(selectedUsersToEnroll);
-
-    const enrollments = userIds.map(userId => ({
-      user_id: userId,
-      course_id: selectedCourseId,
-    }));
-
-    const { error } = await supabase
-      .from("enrollments")
-      .insert(enrollments);
-
+    const rows = Array.from(selectedToEnroll).map((userId) => ({ user_id: userId, course_id: selectedCourseId }));
+    const { error } = await supabase.from("enrollments").insert(rows);
     if (error) {
       toast.error("Failed to enroll users");
     } else {
-      toast.success(`Successfully enrolled ${userIds.length} user(s)`);
-      setSelectedUsersToEnroll(new Set());
-      // Refresh both lists
-      if (selectedCourseId) {
-        fetchEnrolledUsers(selectedCourseId);
-        fetchAvailableUsers(selectedCourseId);
-      }
+      toast.success(`Successfully enrolled ${rows.length} user(s)`);
+      setSelectedToEnroll(new Set());
+      fetchEnrolledUsers(selectedCourseId);
+      fetchAvailableUsers(selectedCourseId);
     }
-
     setEnrolling(false);
-    setEnrollDialogOpen(false);
+    setConfirmEnroll(false);
   };
 
   const handleExportCSV = () => {
-    if (enrolledUsers.length === 0) {
-      toast.error("No enrolled users to export");
-      return;
-    }
-
+    if (enrolledUsers.length === 0) { toast.error("No enrolled users to export"); return; }
     setExporting(true);
-
-    const selectedCourse = courses.find(c => c.id === selectedCourseId);
-    const courseName = selectedCourse?.title || "Unknown Course";
-
-    // CSV headers
+    const courseName = courses.find((c) => c.id === selectedCourseId)?.title || "Unknown";
     const headers = ["Name", "Enrolled Date", "Status", "Lessons Completed", "Total Lessons", "Progress %"];
-    
-    // CSV rows
-    const rows = enrolledUsers.map(user => {
-      const progressPercent = user.total_lessons > 0 
-        ? Math.round((user.lessons_completed / user.total_lessons) * 100)
-        : 0;
-      const status = user.completed_at ? "Completed" : "In Progress";
-      
-      return [
-        user.full_name || "Unknown User",
-        new Date(user.enrolled_at).toLocaleDateString(),
-        status,
-        user.lessons_completed.toString(),
-        user.total_lessons.toString(),
-        `${progressPercent}%`
-      ];
+    const rows = enrolledUsers.map((u) => {
+      const pct = u.total_lessons > 0 ? Math.round((u.lessons_completed / u.total_lessons) * 100) : 0;
+      return [u.full_name || "Unknown", new Date(u.enrolled_at).toLocaleDateString(), u.completed_at ? "Completed" : "In Progress", String(u.lessons_completed), String(u.total_lessons), `${pct}%`];
     });
-
-    // Build CSV content
-    const csvContent = [
-      headers.join(","),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
-    ].join("\n");
-
-    // Create and download file
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const csv = [headers.join(","), ...rows.map((r) => r.map((c) => `"${c}"`).join(","))].join("\n");
     const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `${courseName.replace(/[^a-z0-9]/gi, "_")}_enrollments.csv`);
+    link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+    link.download = `${courseName.replace(/[^a-z0-9]/gi, "_")}_enrollments.csv`;
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
     toast.success(`Exported ${enrolledUsers.length} enrolled users to CSV`);
     setExporting(false);
   };
 
-  const getLevelBadgeStyle = (level: string) => {
-    switch (level.toLowerCase()) {
-      case "certificate":
-        return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
-      case "operational":
-        return "bg-blue-500/10 text-blue-600 border-blue-500/20";
-      case "management":
-        return "bg-purple-500/10 text-purple-600 border-purple-500/20";
-      case "strategic":
-        return "bg-amber-500/10 text-amber-600 border-amber-500/20";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
+  const toggleUnenroll = (id: string) => {
+    const next = new Set(selectedToUnenroll);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelectedToUnenroll(next);
   };
 
-  const selectedCourse = courses.find(c => c.id === selectedCourseId);
-
-  const PaginationControls = ({ 
-    currentPage, 
-    totalPages, 
-    onPageChange,
-    totalItems,
-    itemsPerPage 
-  }: { 
-    currentPage: number; 
-    totalPages: number; 
-    onPageChange: (page: number) => void;
-    totalItems: number;
-    itemsPerPage: number;
-  }) => {
-    const start = (currentPage - 1) * itemsPerPage + 1;
-    const end = Math.min(currentPage * itemsPerPage, totalItems);
-
-    if (totalPages <= 1) return null;
-
-    return (
-      <div className="flex items-center justify-between px-2 py-3 border-t">
-        <div className="text-sm text-muted-foreground">
-          Showing {start}-{end} of {totalItems}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Previous
-          </Button>
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    );
+  const toggleEnroll = (id: string) => {
+    const next = new Set(selectedToEnroll);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelectedToEnroll(next);
   };
+
+  const toggleAllUnenroll = () => {
+    const filtered = enrolledSearch.trim()
+      ? enrolledUsers.filter((u) => u.full_name?.toLowerCase().includes(enrolledSearch.toLowerCase()))
+      : enrolledUsers;
+    const page = filtered.slice((enrolledPage - 1) * 20, enrolledPage * 20);
+    const allSelected = page.every((u) => selectedToUnenroll.has(u.enrollment_id));
+    setSelectedToUnenroll((prev) => {
+      const next = new Set(prev);
+      page.forEach((u) => allSelected ? next.delete(u.enrollment_id) : next.add(u.enrollment_id));
+      return next;
+    });
+  };
+
+  const toggleAllEnroll = () => {
+    const filtered = availableSearch.trim()
+      ? availableUsers.filter((u) => u.full_name?.toLowerCase().includes(availableSearch.toLowerCase()))
+      : availableUsers;
+    const page = filtered.slice((availablePage - 1) * 20, availablePage * 20);
+    const allSelected = page.every((u) => selectedToEnroll.has(u.user_id));
+    setSelectedToEnroll((prev) => {
+      const next = new Set(prev);
+      page.forEach((u) => allSelected ? next.delete(u.user_id) : next.add(u.user_id));
+      return next;
+    });
+  };
+
+  const selectedCourse = courses.find((c) => c.id === selectedCourseId);
 
   return (
     <Card>
@@ -476,9 +261,7 @@ const BulkEnrollmentManagement = () => {
           <Users className="h-5 w-5" />
           Bulk Enrollment Management
         </CardTitle>
-        <CardDescription>
-          Select a course to enroll or unenroll multiple users at once.
-        </CardDescription>
+        <CardDescription>Select a course to enroll or unenroll multiple users at once.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Select value={selectedCourseId} onValueChange={setSelectedCourseId}>
@@ -490,7 +273,7 @@ const BulkEnrollmentManagement = () => {
               <SelectItem key={course.id} value={course.id}>
                 <span className="flex items-center gap-2">
                   {course.title}
-                  <Badge variant="outline" className={getLevelBadgeStyle(course.level)}>
+                  <Badge variant="outline" className={LEVEL_BADGE_STYLES[course.level.toLowerCase()] || "bg-muted text-muted-foreground"}>
                     {course.level}
                   </Badge>
                 </span>
@@ -512,227 +295,48 @@ const BulkEnrollmentManagement = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="enrolled" className="mt-4 space-y-4">
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="relative flex-1 min-w-[200px] max-w-sm">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search enrolled users..."
-                    value={enrolledSearchQuery}
-                    onChange={(e) => setEnrolledSearchQuery(e.target.value)}
-                    className="pl-9 pr-9"
-                  />
-                  {enrolledSearchQuery && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                      onClick={() => setEnrolledSearchQuery("")}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={handleExportCSV}
-                  disabled={exporting || enrolledUsers.length === 0}
-                >
-                  {exporting ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Download className="h-4 w-4 mr-2" />
-                  )}
-                  Export CSV
-                </Button>
-                {selectedUsers.size > 0 && (
-                  <Button
-                    variant="destructive"
-                    onClick={() => setConfirmDialogOpen(true)}
-                    disabled={unenrolling}
-                  >
-                    {unenrolling ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <UserMinus className="h-4 w-4 mr-2" />
-                    )}
-                    Unenroll Selected ({selectedUsers.size})
-                  </Button>
-                )}
-              </div>
-
-              {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : filteredEnrolledUsers.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground border rounded-lg">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>{enrolledSearchQuery ? "No users match your search" : "No users enrolled in this course"}</p>
-                </div>
-              ) : (
-                <div className="border rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-12">
-                          <Checkbox
-                            checked={paginatedEnrolledUsers.length > 0 && paginatedEnrolledUsers.every(u => selectedUsers.has(u.enrollment_id))}
-                            onCheckedChange={toggleSelectAll}
-                          />
-                        </TableHead>
-                        <TableHead>User</TableHead>
-                        <TableHead>Enrolled</TableHead>
-                        <TableHead>Progress</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedEnrolledUsers.map((user) => {
-                        const progressPercent = user.total_lessons > 0 
-                          ? Math.round((user.lessons_completed / user.total_lessons) * 100)
-                          : 0;
-                        
-                        return (
-                          <TableRow key={user.enrollment_id}>
-                            <TableCell>
-                              <Checkbox
-                                checked={selectedUsers.has(user.enrollment_id)}
-                                onCheckedChange={() => toggleUserSelection(user.enrollment_id)}
-                              />
-                            </TableCell>
-                            <TableCell className="font-medium">{user.full_name}</TableCell>
-                            <TableCell className="text-muted-foreground">
-                              {new Date(user.enrolled_at).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>
-                              <span className="text-sm">
-                                {user.lessons_completed}/{user.total_lessons} ({progressPercent}%)
-                              </span>
-                            </TableCell>
-                            <TableCell>
-                              {user.completed_at ? (
-                                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                                  Completed
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline">In Progress</Badge>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                  <PaginationControls
-                    currentPage={enrolledPage}
-                    totalPages={totalEnrolledPages}
-                    onPageChange={setEnrolledPage}
-                    totalItems={filteredEnrolledUsers.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                  />
-                </div>
-              )}
+            <TabsContent value="enrolled" className="mt-4">
+              <EnrolledUsersTab
+                users={enrolledUsers}
+                searchQuery={enrolledSearch}
+                onSearchChange={setEnrolledSearch}
+                selectedIds={selectedToUnenroll}
+                onToggleUser={toggleUnenroll}
+                onToggleAll={toggleAllUnenroll}
+                page={enrolledPage}
+                onPageChange={setEnrolledPage}
+                loading={loading}
+                unenrolling={unenrolling}
+                exporting={exporting}
+                onUnenrollClick={() => setConfirmUnenroll(true)}
+                onExportCSV={handleExportCSV}
+              />
             </TabsContent>
 
-            <TabsContent value="enroll" className="mt-4 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search users to enroll..."
-                    value={availableSearchQuery}
-                    onChange={(e) => setAvailableSearchQuery(e.target.value)}
-                    className="pl-9 pr-9"
-                  />
-                  {availableSearchQuery && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                      onClick={() => setAvailableSearchQuery("")}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                {selectedUsersToEnroll.size > 0 && (
-                  <Button
-                    onClick={() => setEnrollDialogOpen(true)}
-                    disabled={enrolling}
-                  >
-                    {enrolling ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <UserPlus className="h-4 w-4 mr-2" />
-                    )}
-                    Enroll Selected ({selectedUsersToEnroll.size})
-                  </Button>
-                )}
-              </div>
-
-              {loadingAvailable ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : filteredAvailableUsers.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground border rounded-lg">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>{availableSearchQuery ? "No users match your search" : "All users are already enrolled in this course"}</p>
-                </div>
-              ) : (
-                <div className="border rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-12">
-                          <Checkbox
-                            checked={paginatedAvailableUsers.length > 0 && paginatedAvailableUsers.every(u => selectedUsersToEnroll.has(u.user_id))}
-                            onCheckedChange={toggleSelectAllToEnroll}
-                          />
-                        </TableHead>
-                        <TableHead>User</TableHead>
-                        <TableHead>Joined</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedAvailableUsers.map((user) => (
-                        <TableRow key={user.user_id}>
-                          <TableCell>
-                            <Checkbox
-                              checked={selectedUsersToEnroll.has(user.user_id)}
-                              onCheckedChange={() => toggleUserToEnrollSelection(user.user_id)}
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">{user.full_name || "Unknown User"}</TableCell>
-                          <TableCell className="text-muted-foreground">
-                            {new Date(user.created_at).toLocaleDateString()}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <PaginationControls
-                    currentPage={availablePage}
-                    totalPages={totalAvailablePages}
-                    onPageChange={setAvailablePage}
-                    totalItems={filteredAvailableUsers.length}
-                    itemsPerPage={ITEMS_PER_PAGE}
-                  />
-                </div>
-              )}
+            <TabsContent value="enroll" className="mt-4">
+              <AvailableUsersTab
+                users={availableUsers}
+                searchQuery={availableSearch}
+                onSearchChange={setAvailableSearch}
+                selectedIds={selectedToEnroll}
+                onToggleUser={toggleEnroll}
+                onToggleAll={toggleAllEnroll}
+                page={availablePage}
+                onPageChange={setAvailablePage}
+                loading={loadingAvailable}
+                enrolling={enrolling}
+                onEnrollClick={() => setConfirmEnroll(true)}
+              />
             </TabsContent>
           </Tabs>
         )}
 
-        {/* Unenroll Confirmation Dialog */}
-        <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <AlertDialog open={confirmUnenroll} onOpenChange={setConfirmUnenroll}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Unenroll {selectedUsers.size} user(s)?</AlertDialogTitle>
+              <AlertDialogTitle>Unenroll {selectedToUnenroll.size} user(s)?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to unenroll {selectedUsers.size} user(s) from "{selectedCourse?.title}"?
-                This will remove all their progress for this course. This action cannot be undone.
+                This will remove all their progress for "{selectedCourse?.title}". This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -742,42 +346,24 @@ const BulkEnrollmentManagement = () => {
                 onClick={handleBulkUnenroll}
                 disabled={unenrolling}
               >
-                {unenrolling ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Unenrolling...
-                  </>
-                ) : (
-                  "Unenroll All"
-                )}
+                {unenrolling ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Unenrolling...</> : "Unenroll All"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Enroll Confirmation Dialog */}
-        <AlertDialog open={enrollDialogOpen} onOpenChange={setEnrollDialogOpen}>
+        <AlertDialog open={confirmEnroll} onOpenChange={setConfirmEnroll}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Enroll {selectedUsersToEnroll.size} user(s)?</AlertDialogTitle>
+              <AlertDialogTitle>Enroll {selectedToEnroll.size} user(s)?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to enroll {selectedUsersToEnroll.size} user(s) in "{selectedCourse?.title}"?
+                Enroll {selectedToEnroll.size} user(s) in "{selectedCourse?.title}"?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={enrolling}>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleBulkEnroll}
-                disabled={enrolling}
-              >
-                {enrolling ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Enrolling...
-                  </>
-                ) : (
-                  "Enroll All"
-                )}
+              <AlertDialogAction onClick={handleBulkEnroll} disabled={enrolling}>
+                {enrolling ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Enrolling...</> : "Enroll All"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
