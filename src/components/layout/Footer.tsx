@@ -42,7 +42,7 @@ const Footer = ({ className }: FooterProps) => {
     { icon: Youtube, href: "https://youtube.com/@finatix", label: "YouTube" },
   ];
 
-  const headingClass = "font-bold text-base uppercase tracking-wide mb-4 text-white dark:text-black";
+  const headingClass = "font-bold text-base uppercase tracking-wide mb-4 text-white";
 
   return (
     <footer className={cn("gradient-footer text-white", className)}>
