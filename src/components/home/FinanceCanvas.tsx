@@ -155,6 +155,23 @@ const FinanceCanvas = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Resolve palette per render — re-runs when isDark changes
+    const P = isDark ? DARK : LIGHT;
+    const GRADIENT_STOPS = isDark
+      ? [P.BG_TOP, P.ORANGE_DARK, P.ORANGE, P.ORANGE_LIGHT]
+      : [P.CREAM, P.ORANGE_LIGHT, P.ORANGE, P.ORANGE_DARK];
+
+    // Visual tuning that differs between themes
+    const GRID_ALPHA       = isDark ? 0.03 : 0.06;
+    const SCAN_BOOST       = isDark ? 1    : 1.6;
+    const CANDLE_BOOST     = isDark ? 1    : 1.8;
+    const SYMBOL_BOOST     = isDark ? 1    : 2.2;
+    const AREA_TOP_ALPHA   = isDark ? 0.18 : 0.22;
+    const AREA_MID_ALPHA   = isDark ? 0.05 : 0.08;
+    const PARTICLE_GLOW_A  = isDark ? 0.5  : 0.55;
+    const BLOOM_ALPHA      = isDark ? 0.35 : 0.45;
+    const PARTICLE_CORE    = isDark ? P.CREAM : P.ORANGE_LIGHT;
+
     let dpr = window.devicePixelRatio || 1;
 
     const resize = () => {
