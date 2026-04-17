@@ -66,8 +66,8 @@ const timelineLevels: TimelineLevel[] = [
     ],
     skills: ["Digital finance", "Cost analysis", "Financial reporting", "Operational decision-making"],
     icon: Target,
-    color: "text-emerald-600 dark:text-emerald-400",
-    bgColor: "bg-emerald-500/10 border-emerald-500/30"
+    color: "text-primary",
+    bgColor: "bg-primary/10 border-primary/30"
   },
   {
     id: "management",
@@ -86,8 +86,8 @@ const timelineLevels: TimelineLevel[] = [
     ],
     skills: ["Performance management", "Advanced costing", "Strategic analysis", "Team leadership"],
     icon: GraduationCap,
-    color: "text-amber-600 dark:text-amber-400",
-    bgColor: "bg-amber-500/10 border-amber-500/30"
+    color: "text-purple",
+    bgColor: "bg-purple/10 border-purple/30"
   },
   {
     id: "strategic",
@@ -106,8 +106,8 @@ const timelineLevels: TimelineLevel[] = [
     ],
     skills: ["Strategic planning", "Risk assessment", "Corporate finance", "Executive leadership"],
     icon: Trophy,
-    color: "text-purple-600 dark:text-purple-400",
-    bgColor: "bg-purple-500/10 border-purple-500/30"
+    color: "text-red",
+    bgColor: "bg-red/10 border-red/30"
   }
 ];
 
