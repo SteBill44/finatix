@@ -28,14 +28,17 @@ const Hero = () => {
         <FinanceCanvas />
       </div>
 
-      {/* Dark overlay for text readability */}
+      {/* Warm gradient overlay — brightens the canvas with orange-to-charcoal blend */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(160deg, rgba(10,4,2,0.6) 0%, rgba(6,6,10,0.5) 100%)" }}
+        style={{
+          background:
+            "linear-gradient(135deg, hsl(var(--brand-orange-dark) / 0.55) 0%, hsl(var(--brand-orange) / 0.35) 35%, rgba(20,10,5,0.45) 70%, rgba(10,6,4,0.55) 100%)",
+        }}
       />
 
       {/* Top gradient fade for smooth navbar transition */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-[1]" />
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-[1]" />
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
