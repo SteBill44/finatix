@@ -93,7 +93,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-white/70 max-w-2xl mb-10"
+            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
           >
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </motion.p>
@@ -121,7 +121,7 @@ const Hero = () => {
                 <Button
                   size="xl"
                   variant="outline"
-                  className="shadow-md bg-black/50 border-white/40 text-white hover:bg-black/70 hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
+                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
                 >
                   <BookOpen className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                   Explore courses
@@ -133,7 +133,7 @@ const Hero = () => {
                 <Button
                   size="xl"
                   variant="outline"
-                  className="shadow-md bg-black/50 border-white/40 text-white hover:bg-black/70 hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
+                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
                 >
                   <GraduationCap className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                   Why CIMA?
@@ -151,18 +151,18 @@ const Hero = () => {
         transition={{ delay: 1.5, duration: 0.8 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
-        <span className="text-xs text-white/40 uppercase tracking-[0.2em] font-medium">
+        <span className="text-xs text-charcoal/50 dark:text-white/40 uppercase tracking-[0.2em] font-medium">
           Scroll to explore
         </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center pt-1.5"
+          className="w-5 h-8 rounded-full border-2 border-charcoal/30 dark:border-white/20 flex items-start justify-center pt-1.5"
         >
           <motion.div
             animate={{ opacity: [1, 0.3, 1], y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-1 h-1.5 rounded-full bg-white/40"
+            className="w-1 h-1.5 rounded-full bg-charcoal/50 dark:bg-white/40"
           />
         </motion.div>
       </motion.div>
