@@ -49,14 +49,14 @@ const Hero = () => {
               delay={0.2}
               className="block text-white"
             >
-              KICKSTART YOUR CAREER
+              LAUNCH YOUR CAREER IN
             </SplitTextReveal>
             <SplitTextReveal
               as="span"
               delay={0.5}
               className="block text-primary drop-shadow-sm"
             >
-              IN MANAGEMENT ACCOUNTING
+              MANAGEMENT ACCOUNTING
             </SplitTextReveal>
           </div>
 
