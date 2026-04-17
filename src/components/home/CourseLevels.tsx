@@ -43,8 +43,8 @@ const StepBlock = ({
       {/* Content */}
       <motion.div style={{ y: contentY }} className="flex-1">
         <motion.div
-          initial={{ opacity: 0, x: step.imagePosition === "left" ? 40 : -40, filter: "blur(6px)" }}
-          whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, x: step.imagePosition === "left" ? 40 : -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >

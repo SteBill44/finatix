@@ -62,8 +62,8 @@ const Hero = () => {
 
           {/* Subheading */}
           <motion.p
-            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg md:text-xl text-white/70 max-w-2xl mb-10"
           >
