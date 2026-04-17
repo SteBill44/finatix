@@ -91,7 +91,7 @@ const Hero = () => {
             transition={{ duration: 0.7, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col sm:flex-row items-start gap-4"
           >
-            <MagneticButton strength={0.2}>
+            <MagneticButton strength={0.08}>
               <Link to="/auth?mode=signup">
                 <Button
                   size="xl"
@@ -102,7 +102,7 @@ const Hero = () => {
                 </Button>
               </Link>
             </MagneticButton>
-            <MagneticButton strength={0.2}>
+            <MagneticButton strength={0.08}>
               <Link to="/courses">
                 <Button
                   size="xl"
@@ -114,7 +114,7 @@ const Hero = () => {
                 </Button>
               </Link>
             </MagneticButton>
-            <MagneticButton strength={0.2}>
+            <MagneticButton strength={0.08}>
               <Link to="/why-cima">
                 <Button
                   size="xl"

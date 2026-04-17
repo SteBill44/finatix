@@ -75,7 +75,7 @@ const StepBlock = ({
               </motion.li>
             ))}
           </ul>
-          <MagneticButton strength={0.15}>
+          <MagneticButton strength={0.06}>
             <Link to={step.ctaLink}>
               <Button size="sm">{step.cta}</Button>
             </Link>
