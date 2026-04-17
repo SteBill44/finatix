@@ -227,9 +227,9 @@ const FinanceCanvas = () => {
       // Glow dot at the leading tip
       const tip  = points[count - 1];
       const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 28);
-      glow.addColorStop(0, hexToRgba(ORANGE_LIGHT, 0.75 * alpha));
-      glow.addColorStop(0.4, hexToRgba(ORANGE, 0.4 * alpha));
-      glow.addColorStop(1, hexToRgba(ORANGE, 0));
+      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.75 * alpha));
+      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.4 * alpha));
+      glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
       ctx.beginPath();
       ctx.arc(tip.x, tip.y, 28, 0, Math.PI * 2);
       ctx.fillStyle = glow;
@@ -247,23 +247,23 @@ const FinanceCanvas = () => {
 
       // Background: diagonal gradient from dark warm charcoal (top-left) to near-black (bottom-right)
       const bgGrad = ctx.createLinearGradient(0, 0, w * 0.6, h);
-      bgGrad.addColorStop(0,   BG_TOP);
-      bgGrad.addColorStop(0.5, "#0F0806");
-      bgGrad.addColorStop(1,   BG_BOTTOM);
+      bgGrad.addColorStop(0,   P.BG_TOP);
+      bgGrad.addColorStop(0.5, P.BG_MID);
+      bgGrad.addColorStop(1,   P.BG_BOTTOM);
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
       // Warm radial bloom in upper-left to amplify the orange warmth
       const bloom = ctx.createRadialGradient(w * 0.15, h * 0.25, 0, w * 0.15, h * 0.25, w * 0.65);
-      bloom.addColorStop(0, hexToRgba(ORANGE_DARK, 0.35));
-      bloom.addColorStop(1, hexToRgba(ORANGE_DARK, 0));
+      bloom.addColorStop(0, hexToRgba(P.ORANGE_DARK, 0.35));
+      bloom.addColorStop(1, hexToRgba(P.ORANGE_DARK, 0));
       ctx.fillStyle = bloom;
       ctx.fillRect(0, 0, w, h);
 
       s.time += 0.018;
 
       // Faint orange grid
-      ctx.strokeStyle = hexToRgba(ORANGE, 0.03);
+      ctx.strokeStyle = hexToRgba(P.ORANGE, 0.03);
       ctx.lineWidth   = 0.5;
       const gs = 60;
       for (let x = 0; x < w; x += gs) {
@@ -278,9 +278,9 @@ const FinanceCanvas = () => {
         sl.y += sl.speed;
         if (sl.y > h + 10) sl.y = -10;
         const sg = ctx.createLinearGradient(0, sl.y - 8, 0, sl.y + 8);
-        sg.addColorStop(0,   hexToRgba(ORANGE_LIGHT, 0));
-        sg.addColorStop(0.5, hexToRgba(ORANGE_LIGHT, sl.opacity));
-        sg.addColorStop(1,   hexToRgba(ORANGE_LIGHT, 0));
+        sg.addColorStop(0,   hexToRgba(P.ORANGE_LIGHT, 0));
+        sg.addColorStop(0.5, hexToRgba(P.ORANGE_LIGHT, sl.opacity));
+        sg.addColorStop(1,   hexToRgba(P.ORANGE_LIGHT, 0));
         ctx.fillStyle = sg;
         ctx.fillRect(0, sl.y - 8, w, 16);
       });
@@ -290,7 +290,7 @@ const FinanceCanvas = () => {
         c.y -= c.speed;
         c.x += c.drift;
         if (c.y < -50) { c.y = h + 50; c.x = Math.random() * w; }
-        const col = c.bullish ? ORANGE : GRAY;
+        const col = c.bullish ? P.ORANGE : P.GRAY;
         ctx.strokeStyle = hexToRgba(col, c.opacity * 0.7);
         ctx.lineWidth   = 1;
         ctx.beginPath();
@@ -307,7 +307,7 @@ const FinanceCanvas = () => {
         sym.x += sym.drift + Math.sin(s.time * 2 + sym.phase) * 0.12;
         if (sym.y < -40) { sym.y = h + 40; sym.x = Math.random() * w; }
         ctx.font      = `300 ${sym.size}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = hexToRgba(GRAY, sym.opacity);
+        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity);
         ctx.textAlign = "center";
         ctx.fillText(sym.symbol, sym.x, sym.y);
       });
@@ -335,9 +335,9 @@ const FinanceCanvas = () => {
         ctx.lineTo(s.graphPoints[count - 1].x, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
-        ag.addColorStop(0, hexToRgba(ORANGE, 0.18));
-        ag.addColorStop(0.6, hexToRgba(ORANGE, 0.05));
-        ag.addColorStop(1, hexToRgba(ORANGE, 0));
+        ag.addColorStop(0, hexToRgba(P.ORANGE, 0.18));
+        ag.addColorStop(0.6, hexToRgba(P.ORANGE, 0.05));
+        ag.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.fillStyle = ag;
         ctx.fill();
       }
@@ -348,15 +348,15 @@ const FinanceCanvas = () => {
         const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4;
         const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8;
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
-        glow.addColorStop(0, hexToRgba(ORANGE, p.opacity * 0.5 * pulse));
-        glow.addColorStop(1, hexToRgba(ORANGE, 0));
+        glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * 0.5 * pulse));
+        glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.beginPath();
         ctx.arc(px, py, p.radius * 5 * pulse, 0, Math.PI * 2);
         ctx.fillStyle = glow;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(px, py, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = hexToRgba(CREAM, p.opacity * pulse);
+        ctx.fillStyle = hexToRgba(P.CREAM, p.opacity * pulse);
         ctx.fill();
       });
 
