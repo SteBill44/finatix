@@ -374,7 +374,7 @@ const FinanceCanvas = () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animFrameRef.current);
     };
-  }, [initState, generateGraphPoints]);
+  }, [initState, generateGraphPoints, isDark]);
 
   return (
     <canvas
