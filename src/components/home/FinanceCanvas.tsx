@@ -1,17 +1,33 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
-// Background gradient: very dark warm charcoal → near-black
-const BG_TOP    = "#1C0D04"; // dark burnt-orange warmth at the top
-const BG_BOTTOM = "#06060A"; // near-black with a cool anchor at the bottom
+// ---------- Dark theme palette ----------
+const DARK = {
+  BG_TOP:       "#1C0D04",
+  BG_MID:       "#0F0806",
+  BG_BOTTOM:    "#06060A",
+  ORANGE:       "#E85002",
+  ORANGE_LIGHT: "#F16001",
+  ORANGE_DARK:  "#5A1E00",
+  CREAM:        "#D9C3AB",
+  GRAY:         "#A7A7A7",
+  BLOOM:        "#5A1E00",
+};
 
-const ORANGE       = "#E85002";
-const ORANGE_LIGHT = "#F16001";
-const ORANGE_DARK  = "#5A1E00";
-const CREAM        = "#D9C3AB";
-const GRAY         = "#A7A7A7";
+// ---------- Light theme palette ----------
+// Soft cream → warm peach background, with vivid orange accents kept brand-aligned
+const LIGHT = {
+  BG_TOP:       "#FFF6EE",
+  BG_MID:       "#FFE9D6",
+  BG_BOTTOM:    "#FFD9BD",
+  ORANGE:       "#E85002",
+  ORANGE_LIGHT: "#F16001",
+  ORANGE_DARK:  "#C10801",
+  CREAM:        "#FFFFFF",
+  GRAY:         "#7A6A5C",
+  BLOOM:        "#FFB07A",
+};
 
-// Graph line gradient: warm dark → deep orange → bright orange
-const GRADIENT_STOPS = [BG_TOP, ORANGE_DARK, ORANGE, ORANGE_LIGHT];
+const SYMBOLS_LIST = ["£", "$", "%", "¥", "€"];
 
 const SYMBOLS = ["£", "$", "%", "¥", "€"];
 
