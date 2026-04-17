@@ -56,6 +56,88 @@ export type Database = {
         }
         Relationships: []
       }
+      announcement_reads: {
+        Row: {
+          announcement_id: string
+          id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          announcement_id: string
+          id?: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          announcement_id?: string
+          id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcement_reads_announcement_id_fkey"
+            columns: ["announcement_id"]
+            isOneToOne: false
+            referencedRelation: "announcements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      announcements: {
+        Row: {
+          content: string
+          course_id: string | null
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_published: boolean
+          published_at: string | null
+          target_audience: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          course_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          target_audience?: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          course_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string | null
+          target_audience?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcements_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_chat_messages: {
         Row: {
           content: string
@@ -230,6 +312,45 @@ export type Database = {
           },
         ]
       }
+      course_prerequisites: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          is_required: boolean
+          prerequisite_course_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          prerequisite_course_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          prerequisite_course_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_prerequisites_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_prerequisites_prerequisite_course_id_fkey"
+            columns: ["prerequisite_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cost_estimates: {
         Row: {
           ai_cost: number
@@ -351,6 +472,7 @@ export type Database = {
       courses: {
         Row: {
           created_at: string
+          deleted_at: string | null
           description: string | null
           duration_hours: number | null
           id: string
@@ -363,6 +485,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           duration_hours?: number | null
           id?: string
@@ -375,6 +498,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           duration_hours?: number | null
           id?: string
@@ -488,26 +612,32 @@ export type Database = {
       }
       enrollments: {
         Row: {
+          access_type: string
           completed_at: string | null
           completed_course_slug: string | null
           course_id: string
           enrolled_at: string
+          expires_at: string | null
           id: string
           user_id: string
         }
         Insert: {
+          access_type?: string
           completed_at?: string | null
           completed_course_slug?: string | null
           course_id: string
           enrolled_at?: string
+          expires_at?: string | null
           id?: string
           user_id: string
         }
         Update: {
+          access_type?: string
           completed_at?: string | null
           completed_course_slug?: string | null
           course_id?: string
           enrolled_at?: string
+          expires_at?: string | null
           id?: string
           user_id?: string
         }
@@ -521,42 +651,89 @@ export type Database = {
           },
         ]
       }
-      flashcard_decks: {
+      flashcard_cards: {
         Row: {
-          card_count: number | null
-          course_id: string | null
-          created_at: string | null
-          description: string | null
+          back: string
+          created_at: string
+          deck_id: string
+          difficulty_level: number
+          front: string
+          hint: string | null
           id: string
-          is_system_generated: boolean | null
-          lesson_id: string | null
-          title: string
-          updated_at: string | null
-          user_id: string
+          order_index: number
+          times_correct: number
+          times_shown: number
         }
         Insert: {
-          card_count?: number | null
-          course_id?: string | null
-          created_at?: string | null
-          description?: string | null
+          back: string
+          created_at?: string
+          deck_id: string
+          difficulty_level?: number
+          front: string
+          hint?: string | null
           id?: string
-          is_system_generated?: boolean | null
-          lesson_id?: string | null
-          title: string
-          updated_at?: string | null
-          user_id: string
+          order_index?: number
+          times_correct?: number
+          times_shown?: number
         }
         Update: {
-          card_count?: number | null
-          course_id?: string | null
-          created_at?: string | null
+          back?: string
+          created_at?: string
+          deck_id?: string
+          difficulty_level?: number
+          front?: string
+          hint?: string | null
+          id?: string
+          order_index?: number
+          times_correct?: number
+          times_shown?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_cards_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "flashcard_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flashcard_decks: {
+        Row: {
+          card_count: number
+          course_id: string
+          created_at: string
+          description: string | null
+          id: string
+          is_system_generated: boolean
+          lesson_id: string | null
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          card_count?: number
+          course_id: string
+          created_at?: string
           description?: string | null
           id?: string
-          is_system_generated?: boolean | null
+          is_system_generated?: boolean
+          lesson_id?: string | null
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          card_count?: number
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_system_generated?: boolean
           lesson_id?: string | null
           title?: string
-          updated_at?: string | null
-          user_id?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -577,44 +754,54 @@ export type Database = {
       }
       flashcard_progress: {
         Row: {
-          created_at: string | null
-          ease_factor: number | null
-          flashcard_id: string | null
+          card_id: string
+          created_at: string
+          deck_id: string
+          ease_factor: number
           id: string
-          interval_days: number | null
-          last_review: string | null
-          next_review: string | null
-          repetitions: number | null
+          interval_days: number
+          last_reviewed_at: string | null
+          next_review_at: string | null
+          repetitions: number
           user_id: string
         }
         Insert: {
-          created_at?: string | null
-          ease_factor?: number | null
-          flashcard_id?: string | null
+          card_id: string
+          created_at?: string
+          deck_id: string
+          ease_factor?: number
           id?: string
-          interval_days?: number | null
-          last_review?: string | null
-          next_review?: string | null
-          repetitions?: number | null
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          repetitions?: number
           user_id: string
         }
         Update: {
-          created_at?: string | null
-          ease_factor?: number | null
-          flashcard_id?: string | null
+          card_id?: string
+          created_at?: string
+          deck_id?: string
+          ease_factor?: number
           id?: string
-          interval_days?: number | null
-          last_review?: string | null
-          next_review?: string | null
-          repetitions?: number | null
+          interval_days?: number
+          last_reviewed_at?: string | null
+          next_review_at?: string | null
+          repetitions?: number
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "flashcard_progress_flashcard_id_fkey"
-            columns: ["flashcard_id"]
+            foreignKeyName: "flashcard_progress_card_id_fkey"
+            columns: ["card_id"]
             isOneToOne: false
-            referencedRelation: "flashcards"
+            referencedRelation: "flashcard_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "flashcard_progress_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "flashcard_decks"
             referencedColumns: ["id"]
           },
         ]
@@ -685,6 +872,153 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      invoices: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          due_at: string | null
+          id: string
+          issued_at: string
+          paid_at: string | null
+          payment_id: string | null
+          pdf_url: string | null
+          status: string
+          stripe_invoice_id: string | null
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          due_at?: string | null
+          id?: string
+          issued_at?: string
+          paid_at?: string | null
+          payment_id?: string | null
+          pdf_url?: string | null
+          status?: string
+          stripe_invoice_id?: string | null
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          due_at?: string | null
+          id?: string
+          issued_at?: string
+          paid_at?: string | null
+          payment_id?: string | null
+          pdf_url?: string | null
+          status?: string
+          stripe_invoice_id?: string | null
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_path_courses: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          is_required: boolean
+          order_index: number
+          path_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          order_index?: number
+          path_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          order_index?: number
+          path_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_path_courses_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "learning_path_courses_path_id_fkey"
+            columns: ["path_id"]
+            isOneToOne: false
+            referencedRelation: "learning_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_paths: {
+        Row: {
+          created_at: string
+          description: string | null
+          estimated_hours: number | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          level: string | null
+          order_index: number
+          slug: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          estimated_hours?: number | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          level?: string | null
+          order_index?: number
+          slug?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          estimated_hours?: number | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          level?: string | null
+          order_index?: number
+          slug?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       lesson_notes: {
         Row: {
@@ -811,6 +1145,7 @@ export type Database = {
           content: string | null
           course_id: string
           created_at: string
+          deleted_at: string | null
           description: string | null
           duration_minutes: number | null
           id: string
@@ -822,6 +1157,7 @@ export type Database = {
           content?: string | null
           course_id: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           duration_minutes?: number | null
           id?: string
@@ -833,6 +1169,7 @@ export type Database = {
           content?: string | null
           course_id?: string
           created_at?: string
+          deleted_at?: string | null
           description?: string | null
           duration_minutes?: number | null
           id?: string

@@ -25,6 +25,7 @@ interface QuestionResult {
   questionId: string;
   syllabusAreaIndex: number | null;
   isCorrect: boolean;
+  userAnswer: QuizAnswer["answer"];
 }
 
 function isAnswerCorrect(question: QuizQuestion, answer: QuizAnswer["answer"]): boolean {
@@ -52,7 +53,6 @@ function isAnswerCorrect(question: QuizQuestion, answer: QuizAnswer["answer"]): 
 
     case "drag_drop":
       if (!Array.isArray(answer)) return false;
-      // For drag_drop, answer should match expected order
       return answer.every((val, idx) => val === idx);
 
     default:
@@ -71,7 +71,6 @@ serve(async (req) => {
       throw new Error("No authorization header");
     }
 
-    // Create client with user's auth token for authentication
     const supabaseAuth = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? "",
@@ -83,7 +82,6 @@ serve(async (req) => {
       throw new Error("Unauthorized");
     }
 
-    // Create service role client to access questions with correct answers
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
@@ -95,10 +93,10 @@ serve(async (req) => {
       throw new Error("Missing quizId or answers");
     }
 
-    // Get quiz details
+    // Get quiz details including type for pass/fail calculation
     const { data: quiz, error: quizError } = await supabaseAdmin
       .from("quizzes")
-      .select("id, course_id, title")
+      .select("id, course_id, title, quiz_type")
       .eq("id", quizId)
       .single();
 
@@ -106,7 +104,7 @@ serve(async (req) => {
       throw new Error("Quiz not found");
     }
 
-    // Verify user is enrolled in the course
+    // Verify enrollment
     const { data: enrollment, error: enrollmentError } = await supabaseAdmin
       .from("enrollments")
       .select("id")
@@ -118,18 +116,30 @@ serve(async (req) => {
       throw new Error("You must be enrolled in this course to take this quiz");
     }
 
-    // Fetch questions with correct answers and syllabus mapping (server-side only)
+    // Fetch questions server-side (correct answers never sent to client)
     const { data: questions, error: questionsError } = await supabaseAdmin
       .from("quiz_questions")
       .select("id, correct_answer, correct_answers, number_answer, number_tolerance, question_type, order_index, syllabus_area_index")
       .eq("quiz_id", quizId)
+      .is("deleted_at", null)
       .order("order_index");
 
     if (questionsError || !questions) {
       throw new Error("Failed to fetch quiz questions");
     }
 
-    // Get syllabus for mapping area titles
+    // For mock exams, fetch the passing threshold
+    let passingScorePct = 50;
+    if (quiz.quiz_type === "mock_exam") {
+      const { data: mockSpec } = await supabaseAdmin
+        .from("mock_exam_specifications")
+        .select("passing_score_percentage")
+        .eq("quiz_id", quizId)
+        .maybeSingle();
+      if (mockSpec) passingScorePct = mockSpec.passing_score_percentage;
+    }
+
+    // Get syllabus for title mapping
     const { data: syllabus } = await supabaseAdmin
       .from("course_syllabuses")
       .select("syllabus_areas")
@@ -138,7 +148,7 @@ serve(async (req) => {
 
     const syllabusAreas = (syllabus?.syllabus_areas as Array<{ title: string }>) || [];
 
-    // Calculate score SERVER-SIDE and track individual question results
+    // Calculate score — server-side only
     let score = 0;
     const maxScore = questions.length;
     const questionResults: QuestionResult[] = [];
@@ -146,19 +156,21 @@ serve(async (req) => {
     questions.forEach((question, index) => {
       const userAnswer = answers[index];
       const isCorrect = isAnswerCorrect(question, userAnswer);
-      
-      if (isCorrect) {
-        score++;
-      }
-
+      if (isCorrect) score++;
       questionResults.push({
         questionId: question.id,
         syllabusAreaIndex: question.syllabus_area_index,
         isCorrect,
+        userAnswer,
       });
     });
 
-    // Record the attempt using service role (bypasses RLS)
+    // Determine pass/fail for mock exams
+    const passed: boolean | null = quiz.quiz_type === "mock_exam"
+      ? (score / maxScore) * 100 >= passingScorePct
+      : null;
+
+    // Record the attempt
     const { data: attempt, error: insertError } = await supabaseAdmin
       .from("quiz_attempts")
       .insert({
@@ -169,6 +181,7 @@ serve(async (req) => {
         max_score: maxScore,
         time_taken_seconds: timeTakenSeconds || null,
         focus_violations: focusViolations || 0,
+        passed,
       })
       .select()
       .single();
@@ -178,13 +191,14 @@ serve(async (req) => {
       throw new Error("Failed to record quiz attempt");
     }
 
-    // Track individual question attempts for adaptive learning
+    // Track per-question attempts — now includes the student's actual answer
     const questionAttempts = questionResults.map((result) => ({
       user_id: user.id,
       question_id: result.questionId,
       course_id: quiz.course_id,
       syllabus_area_index: result.syllabusAreaIndex,
       is_correct: result.isCorrect,
+      user_answer: result.userAnswer !== undefined ? result.userAnswer : null,
       time_taken_seconds: timeTakenSeconds ? Math.floor(timeTakenSeconds / questions.length) : null,
     }));
 
@@ -194,38 +208,31 @@ serve(async (req) => {
 
     if (attemptInsertError) {
       console.error("Question attempts insert error:", attemptInsertError);
-      // Don't fail the whole submission, just log the error
     }
 
-    // Update question statistics using RPC to increment counters
+    // Update question statistics
     for (const result of questionResults) {
-      // Use direct SQL update via service role
-      const updateData: Record<string, number> = { times_shown: 1 };
-      if (result.isCorrect) {
-        updateData.times_correct = 1;
-      }
-      
-      // Get current values and increment
       const { data: current } = await supabaseAdmin
         .from("quiz_questions")
         .select("times_shown, times_correct")
         .eq("id", result.questionId)
         .single();
-      
+
       if (current) {
         await supabaseAdmin
           .from("quiz_questions")
           .update({
             times_shown: (current.times_shown || 0) + 1,
-            times_correct: result.isCorrect ? (current.times_correct || 0) + 1 : current.times_correct,
+            times_correct: result.isCorrect
+              ? (current.times_correct || 0) + 1
+              : current.times_correct,
           })
           .eq("id", result.questionId);
       }
     }
 
-    // Update syllabus mastery for each unique syllabus area
+    // Update syllabus mastery per area
     const uniqueAreas = new Map<number, { correct: number; total: number }>();
-    
     for (const result of questionResults) {
       if (result.syllabusAreaIndex !== null) {
         const existing = uniqueAreas.get(result.syllabusAreaIndex) || { correct: 0, total: 0 };
@@ -235,13 +242,9 @@ serve(async (req) => {
       }
     }
 
-    // Call mastery update function for each syllabus area
-    for (const [areaIndex, _stats] of uniqueAreas.entries()) {
+    for (const [areaIndex] of uniqueAreas.entries()) {
       const areaTitle = syllabusAreas[areaIndex]?.title || `Area ${areaIndex + 1}`;
-      
-      // Get results for this area
       const areaResults = questionResults.filter(r => r.syllabusAreaIndex === areaIndex);
-      
       for (const result of areaResults) {
         await supabaseAdmin.rpc("update_syllabus_mastery", {
           p_user_id: user.id,
@@ -253,7 +256,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Quiz ${quizId} submitted by user ${user.id}: ${score}/${maxScore}`);
+    console.log(`Quiz ${quizId} submitted by user ${user.id}: ${score}/${maxScore}${passed !== null ? ` (${passed ? "PASS" : "FAIL"})` : ""}`);
 
     return new Response(
       JSON.stringify({
@@ -261,15 +264,15 @@ serve(async (req) => {
         score,
         maxScore,
         percentage: Math.round((score / maxScore) * 100),
+        passed,
+        passingScorePct: quiz.quiz_type === "mock_exam" ? passingScorePct : null,
         attemptId: attempt.id,
         questionResults: questionResults.map((r, i) => ({
           index: i,
           isCorrect: r.isCorrect,
         })),
       }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
