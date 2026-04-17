@@ -255,8 +255,8 @@ const FinanceCanvas = () => {
 
       // Warm radial bloom in upper-left to amplify the orange warmth
       const bloom = ctx.createRadialGradient(w * 0.15, h * 0.25, 0, w * 0.15, h * 0.25, w * 0.65);
-      bloom.addColorStop(0, hexToRgba(P.ORANGE_DARK, 0.35));
-      bloom.addColorStop(1, hexToRgba(P.ORANGE_DARK, 0));
+      bloom.addColorStop(0, hexToRgba(P.BLOOM, BLOOM_ALPHA));
+      bloom.addColorStop(1, hexToRgba(P.BLOOM, 0));
       ctx.fillStyle = bloom;
       ctx.fillRect(0, 0, w, h);
 
