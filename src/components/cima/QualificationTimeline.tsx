@@ -46,8 +46,8 @@ const timelineLevels: TimelineLevel[] = [
     ],
     skills: ["Financial literacy", "Basic accounting", "Business ethics", "Economic principles"],
     icon: BookOpen,
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-500/10 border-blue-500/30"
+    color: "text-teal",
+    bgColor: "bg-teal/10 border-teal/30"
   },
   {
     id: "operational",
