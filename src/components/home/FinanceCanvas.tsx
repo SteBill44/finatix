@@ -1,14 +1,17 @@
 import { useEffect, useRef, useCallback } from "react";
 
-const BLACK        = "#000000";
+// Background gradient: very dark warm charcoal → near-black
+const BG_TOP    = "#1C0D04"; // dark burnt-orange warmth at the top
+const BG_BOTTOM = "#06060A"; // near-black with a cool anchor at the bottom
+
 const ORANGE       = "#E85002";
 const ORANGE_LIGHT = "#F16001";
-const ORANGE_DARK  = "#3D1100";
+const ORANGE_DARK  = "#5A1E00";
 const CREAM        = "#D9C3AB";
 const GRAY         = "#A7A7A7";
 
-// Graph line gradient: black → dark-orange → orange → orange-light
-const GRADIENT_STOPS = [BLACK, ORANGE_DARK, ORANGE, ORANGE_LIGHT];
+// Graph line gradient: warm dark → deep orange → bright orange
+const GRADIENT_STOPS = [BG_TOP, ORANGE_DARK, ORANGE, ORANGE_LIGHT];
 
 const SYMBOLS = ["£", "$", "%", "¥", "€"];
 
@@ -155,9 +158,9 @@ const FinanceCanvas = () => {
       const x0   = points[0].x;
       const tipX = points[count - 1].x;
       const grad = ctx.createLinearGradient(x0, 0, tipX, 0);
-      grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.2));
-      grad.addColorStop(0.35, hexToRgba(GRADIENT_STOPS[1], alpha * 0.55));
-      grad.addColorStop(0.72, hexToRgba(GRADIENT_STOPS[2], alpha));
+      grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.4));
+      grad.addColorStop(0.3,  hexToRgba(GRADIENT_STOPS[1], alpha * 0.75));
+      grad.addColorStop(0.65, hexToRgba(GRADIENT_STOPS[2], alpha));
       grad.addColorStop(1,    hexToRgba(GRADIENT_STOPS[3], alpha));
 
       // Smooth quadratic bezier through midpoints — eliminates all jaggedness
@@ -177,11 +180,12 @@ const FinanceCanvas = () => {
 
       // Glow dot at the leading tip
       const tip  = points[count - 1];
-      const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 20);
-      glow.addColorStop(0, hexToRgba(ORANGE, 0.5 * alpha));
+      const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 28);
+      glow.addColorStop(0, hexToRgba(ORANGE_LIGHT, 0.75 * alpha));
+      glow.addColorStop(0.4, hexToRgba(ORANGE, 0.4 * alpha));
       glow.addColorStop(1, hexToRgba(ORANGE, 0));
       ctx.beginPath();
-      ctx.arc(tip.x, tip.y, 20, 0, Math.PI * 2);
+      ctx.arc(tip.x, tip.y, 28, 0, Math.PI * 2);
       ctx.fillStyle = glow;
       ctx.fill();
     };
@@ -194,12 +198,18 @@ const FinanceCanvas = () => {
       const h = canvas.height / dpr;
 
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = BLACK;
+
+      // Background: diagonal gradient from dark warm charcoal (top-left) to near-black (bottom-right)
+      const bgGrad = ctx.createLinearGradient(0, 0, w * 0.6, h);
+      bgGrad.addColorStop(0,   BG_TOP);
+      bgGrad.addColorStop(0.5, "#0F0806");
+      bgGrad.addColorStop(1,   BG_BOTTOM);
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
-      // Warm radial bloom in upper-left — ties the orange glow into the background
-      const bloom = ctx.createRadialGradient(w * 0.15, h * 0.25, 0, w * 0.15, h * 0.25, w * 0.6);
-      bloom.addColorStop(0, hexToRgba(ORANGE_DARK, 0.22));
+      // Warm radial bloom in upper-left to amplify the orange warmth
+      const bloom = ctx.createRadialGradient(w * 0.15, h * 0.25, 0, w * 0.15, h * 0.25, w * 0.65);
+      bloom.addColorStop(0, hexToRgba(ORANGE_DARK, 0.35));
       bloom.addColorStop(1, hexToRgba(ORANGE_DARK, 0));
       ctx.fillStyle = bloom;
       ctx.fillRect(0, 0, w, h);
@@ -262,8 +272,8 @@ const FinanceCanvas = () => {
       const cycleTime     = s.time % (cycleDuration + holdDuration);
       s.graphProgress = cycleTime < cycleDuration ? Math.min(1, cycleTime / cycleDuration) : 1;
 
-      drawGradientLine(s.graphPoints,  s.graphProgress,        2,   0.7);
-      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 1.2, 0.32);
+      drawGradientLine(s.graphPoints,  s.graphProgress,        3,   0.9);
+      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2,   0.55);
 
       // Area fill under primary graph
       const count = Math.floor(s.graphPoints.length * s.graphProgress);
@@ -279,7 +289,8 @@ const FinanceCanvas = () => {
         ctx.lineTo(s.graphPoints[count - 1].x, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
-        ag.addColorStop(0, hexToRgba(ORANGE, 0.1));
+        ag.addColorStop(0, hexToRgba(ORANGE, 0.18));
+        ag.addColorStop(0.6, hexToRgba(ORANGE, 0.05));
         ag.addColorStop(1, hexToRgba(ORANGE, 0));
         ctx.fillStyle = ag;
         ctx.fill();

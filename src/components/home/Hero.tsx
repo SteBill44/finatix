@@ -31,7 +31,7 @@ const Hero = () => {
       {/* Dark overlay for text readability */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "rgba(0,0,0,0.55)" }}
+        style={{ background: "linear-gradient(160deg, rgba(10,4,2,0.6) 0%, rgba(6,6,10,0.5) 100%)" }}
       />
 
       {/* Top gradient fade for smooth navbar transition */}
