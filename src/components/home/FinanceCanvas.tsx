@@ -263,7 +263,7 @@ const FinanceCanvas = () => {
       s.time += 0.018;
 
       // Faint orange grid
-      ctx.strokeStyle = hexToRgba(P.ORANGE, 0.03);
+      ctx.strokeStyle = hexToRgba(P.ORANGE, GRID_ALPHA);
       ctx.lineWidth   = 0.5;
       const gs = 60;
       for (let x = 0; x < w; x += gs) {
@@ -279,7 +279,7 @@ const FinanceCanvas = () => {
         if (sl.y > h + 10) sl.y = -10;
         const sg = ctx.createLinearGradient(0, sl.y - 8, 0, sl.y + 8);
         sg.addColorStop(0,   hexToRgba(P.ORANGE_LIGHT, 0));
-        sg.addColorStop(0.5, hexToRgba(P.ORANGE_LIGHT, sl.opacity));
+        sg.addColorStop(0.5, hexToRgba(P.ORANGE_LIGHT, sl.opacity * SCAN_BOOST));
         sg.addColorStop(1,   hexToRgba(P.ORANGE_LIGHT, 0));
         ctx.fillStyle = sg;
         ctx.fillRect(0, sl.y - 8, w, 16);
@@ -291,13 +291,13 @@ const FinanceCanvas = () => {
         c.x += c.drift;
         if (c.y < -50) { c.y = h + 50; c.x = Math.random() * w; }
         const col = c.bullish ? P.ORANGE : P.GRAY;
-        ctx.strokeStyle = hexToRgba(col, c.opacity * 0.7);
+        ctx.strokeStyle = hexToRgba(col, c.opacity * 0.7 * CANDLE_BOOST);
         ctx.lineWidth   = 1;
         ctx.beginPath();
         ctx.moveTo(c.x + c.width / 2, c.y - c.wickHeight / 2);
         ctx.lineTo(c.x + c.width / 2, c.y + c.wickHeight / 2);
         ctx.stroke();
-        ctx.fillStyle = hexToRgba(col, c.opacity);
+        ctx.fillStyle = hexToRgba(col, c.opacity * CANDLE_BOOST);
         ctx.fillRect(c.x, c.y - c.bodyHeight / 2, c.width, c.bodyHeight);
       });
 
@@ -307,7 +307,7 @@ const FinanceCanvas = () => {
         sym.x += sym.drift + Math.sin(s.time * 2 + sym.phase) * 0.12;
         if (sym.y < -40) { sym.y = h + 40; sym.x = Math.random() * w; }
         ctx.font      = `300 ${sym.size}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity);
+        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity * SYMBOL_BOOST);
         ctx.textAlign = "center";
         ctx.fillText(sym.symbol, sym.x, sym.y);
       });
@@ -335,8 +335,8 @@ const FinanceCanvas = () => {
         ctx.lineTo(s.graphPoints[count - 1].x, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
-        ag.addColorStop(0, hexToRgba(P.ORANGE, 0.18));
-        ag.addColorStop(0.6, hexToRgba(P.ORANGE, 0.05));
+        ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
+        ag.addColorStop(0.6, hexToRgba(P.ORANGE, AREA_MID_ALPHA));
         ag.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.fillStyle = ag;
         ctx.fill();
@@ -348,7 +348,7 @@ const FinanceCanvas = () => {
         const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4;
         const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8;
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
-        glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * 0.5 * pulse));
+        glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * PARTICLE_GLOW_A * pulse));
         glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.beginPath();
         ctx.arc(px, py, p.radius * 5 * pulse, 0, Math.PI * 2);
@@ -356,7 +356,7 @@ const FinanceCanvas = () => {
         ctx.fill();
         ctx.beginPath();
         ctx.arc(px, py, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = hexToRgba(P.CREAM, p.opacity * pulse);
+        ctx.fillStyle = hexToRgba(PARTICLE_CORE, p.opacity * pulse);
         ctx.fill();
       });
 
