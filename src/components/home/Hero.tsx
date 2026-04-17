@@ -23,9 +23,20 @@ const Hero = () => {
       ref={sectionRef}
       className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
     >
-      {/* Finance-themed canvas animation background */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Solid base background so the area above the canvas stays on-brand */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(135deg, #1C0D04 0%, #0F0806 50%, #06060A 100%)",
+        }}
+      />
+
+      {/* Finance-themed canvas animation — confined to the lower half, behind the text */}
+      <div className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none">
         <FinanceCanvas />
+        {/* Soft fade at the top of the canvas so it blends into the background */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0F0806] to-transparent pointer-events-none" />
       </div>
 
       {/* Warm gradient overlay — charcoal at top-left fading into orange at bottom-right */}
@@ -33,7 +44,7 @@ const Hero = () => {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(135deg, rgba(10,6,4,0.55) 0%, rgba(20,10,5,0.45) 30%, hsl(var(--brand-orange) / 0.35) 65%, hsl(var(--brand-orange-dark) / 0.55) 100%)",
+            "linear-gradient(135deg, rgba(10,6,4,0.4) 0%, rgba(20,10,5,0.3) 30%, hsl(var(--brand-orange) / 0.28) 65%, hsl(var(--brand-orange-dark) / 0.45) 100%)",
         }}
       />
 
