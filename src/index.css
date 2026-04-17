@@ -188,15 +188,15 @@
 
   /* Footer gradient */
   .gradient-footer {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a1a0a 50%, #331a00 100%);
+    background: linear-gradient(135deg, #2a1a0a 0%, #6b2a05 50%, #8a3a08 100%);
   }
 
   :root .gradient-footer {
-    background: linear-gradient(135deg, #333333 0%, #4a2a10 40%, #5a3015 70%, #333333 100%);
+    background: linear-gradient(135deg, #4a2410 0%, #8a3a08 40%, #b8500f 70%, #4a2410 100%);
   }
 
   .dark .gradient-footer {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a00 40%, #2a1500 70%, #0a0a0a 100%);
+    background: linear-gradient(135deg, #1a0a00 0%, #4a1a00 40%, #7a3000 70%, #1a0a00 100%);
   }
 
   /* Light mode hero gradient background */
