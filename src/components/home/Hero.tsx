@@ -23,9 +23,16 @@ const Hero = () => {
       ref={sectionRef}
       className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
     >
-      {/* Solid base background so the area above the canvas stays on-brand */}
+      {/* Solid base background — dark in dark mode, warm cream in light mode */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, #FFF6EE 0%, #FFE9D6 50%, #FFD9BD 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
         style={{
           background:
             "linear-gradient(135deg, #1C0D04 0%, #0F0806 50%, #06060A 100%)",
@@ -36,20 +43,27 @@ const Hero = () => {
       <div className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none">
         <FinanceCanvas />
         {/* Soft fade at the top of the canvas so it blends into the background */}
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0F0806] to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#FFE9D6] dark:from-[#0F0806] to-transparent pointer-events-none" />
       </div>
 
-      {/* Warm gradient overlay — charcoal at top-left fading into orange at bottom-right */}
+      {/* Warm gradient overlay — lighter wash in light mode, dramatic in dark mode */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(255,246,238,0.2) 0%, rgba(255,233,214,0.15) 30%, hsl(var(--brand-orange) / 0.15) 65%, hsl(var(--brand-orange-light) / 0.22) 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
         style={{
           background:
             "linear-gradient(135deg, rgba(10,6,4,0.4) 0%, rgba(20,10,5,0.3) 30%, hsl(var(--brand-orange) / 0.28) 65%, hsl(var(--brand-orange-dark) / 0.45) 100%)",
         }}
       />
 
-      {/* Top gradient fade for smooth navbar transition */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-[1]" />
+      {/* Top gradient fade for smooth navbar transition (subtler in light mode) */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/10 dark:from-black/40 to-transparent pointer-events-none z-[1]" />
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
@@ -61,7 +75,7 @@ const Hero = () => {
             <SplitTextReveal
               as="span"
               delay={0.2}
-              className="block text-white"
+              className="block text-charcoal dark:text-white"
             >
               LAUNCH YOUR CAREER IN
             </SplitTextReveal>
@@ -79,7 +93,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-white/70 max-w-2xl mb-10"
+            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
           >
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </motion.p>
@@ -107,7 +121,7 @@ const Hero = () => {
                 <Button
                   size="xl"
                   variant="outline"
-                  className="shadow-md bg-black/50 border-white/40 text-white hover:bg-black/70 hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
+                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
                 >
                   <BookOpen className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                   Explore courses
@@ -119,7 +133,7 @@ const Hero = () => {
                 <Button
                   size="xl"
                   variant="outline"
-                  className="shadow-md bg-black/50 border-white/40 text-white hover:bg-black/70 hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
+                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
                 >
                   <GraduationCap className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
                   Why CIMA?
@@ -137,18 +151,18 @@ const Hero = () => {
         transition={{ delay: 1.5, duration: 0.8 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
-        <span className="text-xs text-white/40 uppercase tracking-[0.2em] font-medium">
+        <span className="text-xs text-charcoal/50 dark:text-white/40 uppercase tracking-[0.2em] font-medium">
           Scroll to explore
         </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-5 h-8 rounded-full border-2 border-white/20 flex items-start justify-center pt-1.5"
+          className="w-5 h-8 rounded-full border-2 border-charcoal/30 dark:border-white/20 flex items-start justify-center pt-1.5"
         >
           <motion.div
             animate={{ opacity: [1, 0.3, 1], y: [0, 6, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="w-1 h-1.5 rounded-full bg-white/40"
+            className="w-1 h-1.5 rounded-full bg-charcoal/50 dark:bg-white/40"
           />
         </motion.div>
       </motion.div>

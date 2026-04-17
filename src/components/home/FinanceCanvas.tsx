@@ -1,17 +1,31 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
-// Background gradient: very dark warm charcoal → near-black
-const BG_TOP    = "#1C0D04"; // dark burnt-orange warmth at the top
-const BG_BOTTOM = "#06060A"; // near-black with a cool anchor at the bottom
+// ---------- Dark theme palette ----------
+const DARK = {
+  BG_TOP:       "#1C0D04",
+  BG_MID:       "#0F0806",
+  BG_BOTTOM:    "#06060A",
+  ORANGE:       "#E85002",
+  ORANGE_LIGHT: "#F16001",
+  ORANGE_DARK:  "#5A1E00",
+  CREAM:        "#D9C3AB",
+  GRAY:         "#A7A7A7",
+  BLOOM:        "#5A1E00",
+};
 
-const ORANGE       = "#E85002";
-const ORANGE_LIGHT = "#F16001";
-const ORANGE_DARK  = "#5A1E00";
-const CREAM        = "#D9C3AB";
-const GRAY         = "#A7A7A7";
-
-// Graph line gradient: warm dark → deep orange → bright orange
-const GRADIENT_STOPS = [BG_TOP, ORANGE_DARK, ORANGE, ORANGE_LIGHT];
+// ---------- Light theme palette ----------
+// Soft cream → warm peach background, with vivid orange accents kept brand-aligned
+const LIGHT = {
+  BG_TOP:       "#FFF6EE",
+  BG_MID:       "#FFE9D6",
+  BG_BOTTOM:    "#FFD9BD",
+  ORANGE:       "#E85002",
+  ORANGE_LIGHT: "#F16001",
+  ORANGE_DARK:  "#C10801",
+  CREAM:        "#FFFFFF",
+  GRAY:         "#7A6A5C",
+  BLOOM:        "#FFB07A",
+};
 
 const SYMBOLS = ["£", "$", "%", "¥", "€"];
 
@@ -42,6 +56,21 @@ interface ScanLine {
 const FinanceCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
+  const [isDark, setIsDark] = useState<boolean>(() =>
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark"),
+  );
+
+  // Watch theme changes by observing the `dark` class on <html>
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      setIsDark(root.classList.contains("dark"));
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+
   const stateRef = useRef({
     particles:    [] as Particle[],
     symbols:      [] as FloatingSymbol[],
@@ -126,6 +155,23 @@ const FinanceCanvas = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Resolve palette per render — re-runs when isDark changes
+    const P = isDark ? DARK : LIGHT;
+    const GRADIENT_STOPS = isDark
+      ? [P.BG_TOP, P.ORANGE_DARK, P.ORANGE, P.ORANGE_LIGHT]
+      : [P.CREAM, P.ORANGE_LIGHT, P.ORANGE, P.ORANGE_DARK];
+
+    // Visual tuning that differs between themes
+    const GRID_ALPHA       = isDark ? 0.03 : 0.06;
+    const SCAN_BOOST       = isDark ? 1    : 1.6;
+    const CANDLE_BOOST     = isDark ? 1    : 1.8;
+    const SYMBOL_BOOST     = isDark ? 1    : 2.2;
+    const AREA_TOP_ALPHA   = isDark ? 0.18 : 0.22;
+    const AREA_MID_ALPHA   = isDark ? 0.05 : 0.08;
+    const PARTICLE_GLOW_A  = isDark ? 0.5  : 0.55;
+    const BLOOM_ALPHA      = isDark ? 0.35 : 0.45;
+    const PARTICLE_CORE    = isDark ? P.CREAM : P.ORANGE_LIGHT;
+
     let dpr = window.devicePixelRatio || 1;
 
     const resize = () => {
@@ -181,9 +227,9 @@ const FinanceCanvas = () => {
       // Glow dot at the leading tip
       const tip  = points[count - 1];
       const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 28);
-      glow.addColorStop(0, hexToRgba(ORANGE_LIGHT, 0.75 * alpha));
-      glow.addColorStop(0.4, hexToRgba(ORANGE, 0.4 * alpha));
-      glow.addColorStop(1, hexToRgba(ORANGE, 0));
+      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.75 * alpha));
+      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.4 * alpha));
+      glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
       ctx.beginPath();
       ctx.arc(tip.x, tip.y, 28, 0, Math.PI * 2);
       ctx.fillStyle = glow;
@@ -201,23 +247,23 @@ const FinanceCanvas = () => {
 
       // Background: diagonal gradient from dark warm charcoal (top-left) to near-black (bottom-right)
       const bgGrad = ctx.createLinearGradient(0, 0, w * 0.6, h);
-      bgGrad.addColorStop(0,   BG_TOP);
-      bgGrad.addColorStop(0.5, "#0F0806");
-      bgGrad.addColorStop(1,   BG_BOTTOM);
+      bgGrad.addColorStop(0,   P.BG_TOP);
+      bgGrad.addColorStop(0.5, P.BG_MID);
+      bgGrad.addColorStop(1,   P.BG_BOTTOM);
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, w, h);
 
       // Warm radial bloom in upper-left to amplify the orange warmth
       const bloom = ctx.createRadialGradient(w * 0.15, h * 0.25, 0, w * 0.15, h * 0.25, w * 0.65);
-      bloom.addColorStop(0, hexToRgba(ORANGE_DARK, 0.35));
-      bloom.addColorStop(1, hexToRgba(ORANGE_DARK, 0));
+      bloom.addColorStop(0, hexToRgba(P.BLOOM, BLOOM_ALPHA));
+      bloom.addColorStop(1, hexToRgba(P.BLOOM, 0));
       ctx.fillStyle = bloom;
       ctx.fillRect(0, 0, w, h);
 
       s.time += 0.018;
 
       // Faint orange grid
-      ctx.strokeStyle = hexToRgba(ORANGE, 0.03);
+      ctx.strokeStyle = hexToRgba(P.ORANGE, GRID_ALPHA);
       ctx.lineWidth   = 0.5;
       const gs = 60;
       for (let x = 0; x < w; x += gs) {
@@ -232,9 +278,9 @@ const FinanceCanvas = () => {
         sl.y += sl.speed;
         if (sl.y > h + 10) sl.y = -10;
         const sg = ctx.createLinearGradient(0, sl.y - 8, 0, sl.y + 8);
-        sg.addColorStop(0,   hexToRgba(ORANGE_LIGHT, 0));
-        sg.addColorStop(0.5, hexToRgba(ORANGE_LIGHT, sl.opacity));
-        sg.addColorStop(1,   hexToRgba(ORANGE_LIGHT, 0));
+        sg.addColorStop(0,   hexToRgba(P.ORANGE_LIGHT, 0));
+        sg.addColorStop(0.5, hexToRgba(P.ORANGE_LIGHT, sl.opacity * SCAN_BOOST));
+        sg.addColorStop(1,   hexToRgba(P.ORANGE_LIGHT, 0));
         ctx.fillStyle = sg;
         ctx.fillRect(0, sl.y - 8, w, 16);
       });
@@ -244,14 +290,14 @@ const FinanceCanvas = () => {
         c.y -= c.speed;
         c.x += c.drift;
         if (c.y < -50) { c.y = h + 50; c.x = Math.random() * w; }
-        const col = c.bullish ? ORANGE : GRAY;
-        ctx.strokeStyle = hexToRgba(col, c.opacity * 0.7);
+        const col = c.bullish ? P.ORANGE : P.GRAY;
+        ctx.strokeStyle = hexToRgba(col, c.opacity * 0.7 * CANDLE_BOOST);
         ctx.lineWidth   = 1;
         ctx.beginPath();
         ctx.moveTo(c.x + c.width / 2, c.y - c.wickHeight / 2);
         ctx.lineTo(c.x + c.width / 2, c.y + c.wickHeight / 2);
         ctx.stroke();
-        ctx.fillStyle = hexToRgba(col, c.opacity);
+        ctx.fillStyle = hexToRgba(col, c.opacity * CANDLE_BOOST);
         ctx.fillRect(c.x, c.y - c.bodyHeight / 2, c.width, c.bodyHeight);
       });
 
@@ -261,7 +307,7 @@ const FinanceCanvas = () => {
         sym.x += sym.drift + Math.sin(s.time * 2 + sym.phase) * 0.12;
         if (sym.y < -40) { sym.y = h + 40; sym.x = Math.random() * w; }
         ctx.font      = `300 ${sym.size}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = hexToRgba(GRAY, sym.opacity);
+        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity * SYMBOL_BOOST);
         ctx.textAlign = "center";
         ctx.fillText(sym.symbol, sym.x, sym.y);
       });
@@ -289,9 +335,9 @@ const FinanceCanvas = () => {
         ctx.lineTo(s.graphPoints[count - 1].x, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
-        ag.addColorStop(0, hexToRgba(ORANGE, 0.18));
-        ag.addColorStop(0.6, hexToRgba(ORANGE, 0.05));
-        ag.addColorStop(1, hexToRgba(ORANGE, 0));
+        ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
+        ag.addColorStop(0.6, hexToRgba(P.ORANGE, AREA_MID_ALPHA));
+        ag.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.fillStyle = ag;
         ctx.fill();
       }
@@ -302,15 +348,15 @@ const FinanceCanvas = () => {
         const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4;
         const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8;
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
-        glow.addColorStop(0, hexToRgba(ORANGE, p.opacity * 0.5 * pulse));
-        glow.addColorStop(1, hexToRgba(ORANGE, 0));
+        glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * PARTICLE_GLOW_A * pulse));
+        glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
         ctx.beginPath();
         ctx.arc(px, py, p.radius * 5 * pulse, 0, Math.PI * 2);
         ctx.fillStyle = glow;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(px, py, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = hexToRgba(CREAM, p.opacity * pulse);
+        ctx.fillStyle = hexToRgba(PARTICLE_CORE, p.opacity * pulse);
         ctx.fill();
       });
 
@@ -328,7 +374,7 @@ const FinanceCanvas = () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animFrameRef.current);
     };
-  }, [initState, generateGraphPoints]);
+  }, [initState, generateGraphPoints, isDark]);
 
   return (
     <canvas
