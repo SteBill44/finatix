@@ -27,8 +27,6 @@ const LIGHT = {
   BLOOM:        "#FFB07A",
 };
 
-const SYMBOLS_LIST = ["£", "$", "%", "¥", "€"];
-
 const SYMBOLS = ["£", "$", "%", "¥", "€"];
 
 interface Particle {
