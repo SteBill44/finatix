@@ -28,12 +28,12 @@ const Hero = () => {
         <FinanceCanvas />
       </div>
 
-      {/* Warm gradient overlay — brightens the canvas with orange-to-charcoal blend */}
+      {/* Warm gradient overlay — charcoal at top-left fading into orange at bottom-right */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(135deg, hsl(var(--brand-orange-dark) / 0.55) 0%, hsl(var(--brand-orange) / 0.35) 35%, rgba(20,10,5,0.45) 70%, rgba(10,6,4,0.55) 100%)",
+            "linear-gradient(135deg, rgba(10,6,4,0.55) 0%, rgba(20,10,5,0.45) 30%, hsl(var(--brand-orange) / 0.35) 65%, hsl(var(--brand-orange-dark) / 0.55) 100%)",
         }}
       />
 
