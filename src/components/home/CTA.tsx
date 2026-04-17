@@ -86,12 +86,12 @@ const CTA = () => {
           >
             {user ? (
               <>
-                <MagneticButton strength={0.2}>
+                <MagneticButton strength={0.08}>
                   <Link to="/dashboard">
                     <Button size="xl">Go to Dashboard</Button>
                   </Link>
                 </MagneticButton>
-                <MagneticButton strength={0.2}>
+                <MagneticButton strength={0.08}>
                   <Link to="/courses">
                     <Button size="xl" variant="outline">
                       Browse Courses
@@ -101,12 +101,12 @@ const CTA = () => {
               </>
             ) : (
               <>
-                <MagneticButton strength={0.2}>
+                <MagneticButton strength={0.08}>
                   <Link to="/auth?mode=signup">
                     <Button size="xl">Register for Free</Button>
                   </Link>
                 </MagneticButton>
-                <MagneticButton strength={0.2}>
+                <MagneticButton strength={0.08}>
                   <Link to="/courses">
                     <Button size="xl" variant="outline">
                       Explore Courses
