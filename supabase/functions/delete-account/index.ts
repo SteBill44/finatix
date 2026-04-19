@@ -1,106 +1,116 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { getCorsHeaders, corsResponse } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+  const corsHeaders = getCorsHeaders(req);
+
+  if (req.method === "OPTIONS") {
+    return corsResponse(req);
   }
 
   try {
-    // Get the authorization header
-    const authHeader = req.headers.get('Authorization');
+    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      console.error('No authorization header provided');
       return new Response(
-        JSON.stringify({ error: 'No authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: "No authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Create Supabase client with user's token to verify identity
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // First, verify the user with their token
     const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
+      global: { headers: { Authorization: authHeader } },
     });
 
     const { data: { user }, error: userError } = await userClient.auth.getUser();
-    
     if (userError || !user) {
-      console.error('Failed to get user:', userError);
       return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Rate limit: account deletion is extremely sensitive — max 3 per hour
+    const { data: rateLimitResult, error: rateLimitError } = await userClient.rpc(
+      "check_rate_limit",
+      {
+        p_user_id: user.id,
+        p_action_type: "delete_account",
+        p_max_per_minute: 1,
+        p_max_per_hour: 3,
+      }
+    );
+    if (!rateLimitError && rateLimitResult && !rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please try again later." }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Retry-After": "3600",
+          },
+        }
       );
     }
 
     console.log(`Deleting account for user: ${user.id}`);
 
-    // Use service role client to delete user data and auth account
     const adminClient = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Delete user's data from all related tables (cascade should handle most, but let's be thorough)
     const tablesToClean = [
-      'ai_chat_messages',
-      'certificates',
-      'course_reviews',
-      'discussion_posts',
-      'discussion_votes',
-      'enrollments',
-      'lesson_progress',
-      'notification_preferences',
-      'profiles',
-      'quiz_attempts',
-      'study_sessions',
-      'user_badges',
-      'user_roles',
-      'user_streaks',
+      "ai_chat_messages",
+      "certificates",
+      "course_reviews",
+      "discussion_posts",
+      "discussion_votes",
+      "enrollments",
+      "lesson_progress",
+      "notification_preferences",
+      "notifications",
+      "profiles",
+      "quiz_attempts",
+      "study_sessions",
+      "user_badges",
+      "user_learning_paths",
+      "user_roles",
+      "user_streaks",
     ];
 
     for (const table of tablesToClean) {
       const { error: deleteError } = await adminClient
         .from(table)
         .delete()
-        .eq('user_id', user.id);
-      
+        .eq("user_id", user.id);
+
       if (deleteError) {
         console.warn(`Warning: Could not delete from ${table}:`, deleteError.message);
-      } else {
-        console.log(`Deleted user data from ${table}`);
       }
     }
 
-    // Finally, delete the auth user
     const { error: authDeleteError } = await adminClient.auth.admin.deleteUser(user.id);
 
     if (authDeleteError) {
-      console.error('Failed to delete auth user:', authDeleteError);
+      console.error("Failed to delete auth user:", authDeleteError);
       return new Response(
-        JSON.stringify({ error: 'Failed to delete account' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: "Failed to delete account" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     console.log(`Successfully deleted account for user: ${user.id}`);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Account deleted successfully' }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-
-  } catch (error) {
-    console.error('Error in delete-account function:', error);
+  } catch (_error) {
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: "Internal server error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });

@@ -11,7 +11,7 @@ export function sanitizeHtml(dirty: string): string {
       "p", "br", "hr",
       "ul", "ol", "li",
       "strong", "b", "em", "i", "u", "s", "strike",
-      "a", "img", "iframe",
+      "a", "img",
       "blockquote", "pre", "code",
       "table", "thead", "tbody", "tr", "th", "td",
       "div", "span",

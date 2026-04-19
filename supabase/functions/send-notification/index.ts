@@ -1,10 +1,8 @@
+import { getCorsHeaders, corsResponse } from "../_shared/cors.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+
 
 interface NotificationRequest {
   type: "enrollment" | "completion" | "progress_reminder" | "badge_earned";
@@ -13,8 +11,9 @@ interface NotificationRequest {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return corsResponse(req);
   }
 
   try {
