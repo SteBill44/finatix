@@ -48,6 +48,12 @@ const Certificates = lazy(() => import("./pages/Certificates"));
 const Referrals = lazy(() => import("./pages/Referrals"));
 const PracticeMode = lazy(() => import("./pages/PracticeMode"));
 const Brand = lazy(() => import("./pages/Brand"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const Flashcards = lazy(() => import("./pages/Flashcards"));
+const FlashcardStudy = lazy(() => import("./pages/FlashcardStudy"));
+const AITutor = lazy(() => import("./pages/AITutor"));
+const LearningPaths = lazy(() => import("./pages/LearningPaths"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 // Configure QueryClient with global error handling
 const queryClient = new QueryClient({
@@ -133,6 +139,12 @@ const AnimatedRoutes = () => {
           <Route path="/certificates" element={<Protected feature="Certificates"><Certificates /></Protected>} />
           <Route path="/referrals" element={<Protected feature="Referrals"><Referrals /></Protected>} />
           <Route path="/practice/:courseSlug" element={<Protected feature="Practice Mode"><PracticeMode /></Protected>} />
+          <Route path="/notifications" element={<Protected feature="Notifications"><Notifications /></Protected>} />
+          <Route path="/flashcards" element={<Protected feature="Flashcards"><Flashcards /></Protected>} />
+          <Route path="/flashcards/:deckId" element={<Protected feature="Flashcard Study"><FlashcardStudy /></Protected>} />
+          <Route path="/ai-tutor" element={<Protected feature="AI Tutor"><AITutor /></Protected>} />
+          <Route path="/learning-paths" element={<Public feature="Learning Paths"><LearningPaths /></Public>} />
+          <Route path="/checkout" element={<Public feature="Checkout"><Checkout /></Public>} />
 
           <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
         </Routes>

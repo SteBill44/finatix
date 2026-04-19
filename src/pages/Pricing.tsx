@@ -348,13 +348,15 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Button
-                    variant={plan.popular ? "default" : "outline"}
-                    size="lg"
-                    className="w-full mt-auto"
-                  >
-                    {plan.cta}
-                  </Button>
+                  <Link to={`/checkout?plan=${plan.name === "Single Module" ? "monthly" : plan.name === "Monthly Access" ? "monthly" : "annual"}`} className="mt-auto">
+                    <Button
+                      variant={plan.popular ? "default" : "outline"}
+                      size="lg"
+                      className="w-full"
+                    >
+                      {plan.cta}
+                    </Button>
+                  </Link>
                 </div>
               </AnimatedCard>
             ))}
