@@ -73,18 +73,27 @@ export default function AITutor() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         const token = session?.access_token;
+        if (!token) throw new Error("Not authenticated");
 
-        const response = await supabase.functions.invoke("ai-study-assistant", {
-          body: { messages },
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
+        const response = await fetch(`${supabaseUrl}/functions/v1/ai-study-assistant`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            apikey: supabaseKey,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ messages }),
         });
 
-        if (response.error) {
-          throw new Error(response.error.message || "AI service unavailable");
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({ error: "AI service unavailable" }));
+          throw new Error(err.error || err.message || "AI service unavailable");
         }
 
-        // Handle streaming SSE
-        const reader = (response.data as ReadableStream)?.getReader();
+        const reader = response.body?.getReader();
         if (!reader) {
           throw new Error("No stream available");
         }
