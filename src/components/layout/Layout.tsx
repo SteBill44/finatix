@@ -6,6 +6,7 @@ import DynamicBackground from "../DynamicBackground";
 import ScrollProgressBar from "../ScrollProgressBar";
 import BackToTop from "../BackToTop";
 import { NetworkStatusIndicator, OfflineBanner } from "../NetworkStatusIndicator";
+import AnnouncementBanner from "@/components/announcements/AnnouncementBanner";
 import { useTrackUserPresence } from "@/hooks/useActiveUsers";
 
 interface LayoutProps {
@@ -13,7 +14,6 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  // Track user presence for real-time active users counter
   useTrackUserPresence();
 
   return (
@@ -22,6 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
       <NetworkStatusIndicator />
       <DynamicBackground />
       <Navbar />
+      <AnnouncementBanner />
       <main className="flex-1 pb-20 lg:pb-0">
         {children}
       </main>

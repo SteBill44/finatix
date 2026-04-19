@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search, Gift } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search, Gift, Layers, Bot, Map } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import FinatixLogo from "@/components/FinatixLogo";
 import GlobalSearch from "@/components/search/GlobalSearch";
 import AdminViewToggle from "@/components/AdminViewToggle";
+import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -117,7 +118,10 @@ const Navbar = () => {
             
             {/* Global Search */}
             <GlobalSearch />
-            
+
+            {/* Notifications Bell */}
+            {user && <NotificationsBell />}
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
@@ -176,6 +180,24 @@ const Navbar = () => {
                       <Link to="/referrals" className="cursor-pointer flex items-center">
                         <Gift className="w-4 h-4 mr-2" />
                         Referrals
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/flashcards" className="cursor-pointer flex items-center">
+                        <Layers className="w-4 h-4 mr-2" />
+                        Flashcards
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/ai-tutor" className="cursor-pointer flex items-center">
+                        <Bot className="w-4 h-4 mr-2" />
+                        AI Tutor
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/learning-paths" className="cursor-pointer flex items-center">
+                        <Map className="w-4 h-4 mr-2" />
+                        Learning Paths
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
@@ -291,6 +313,24 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Gift className="w-4 h-4" />
                         Referrals
+                      </Button>
+                    </Link>
+                    <Link to="/flashcards" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Layers className="w-4 h-4" />
+                        Flashcards
+                      </Button>
+                    </Link>
+                    <Link to="/ai-tutor" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Bot className="w-4 h-4" />
+                        AI Tutor
+                      </Button>
+                    </Link>
+                    <Link to="/learning-paths" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Map className="w-4 h-4" />
+                        Learning Paths
                       </Button>
                     </Link>
                     <Link to="/account" onClick={() => setIsOpen(false)}>
