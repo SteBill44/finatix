@@ -33,6 +33,10 @@ import {
   ArrowRight,
   Calendar,
   Flame,
+  Layers,
+  Bot,
+  Map,
+  Bell,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -207,6 +211,65 @@ const Dashboard = () => {
               </div>
             </Card>
           )}
+
+          {/* ── Study Tools ── */}
+          <div>
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">Study Tools</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <Link to="/flashcards">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group border-border hover:border-primary/30">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-500/20 transition-colors">
+                      <Layers className="w-4 h-4 text-purple-500" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">Flashcards</p>
+                      <p className="text-xs text-muted-foreground">Spaced repetition</p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+              <Link to="/ai-tutor">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group border-border hover:border-primary/30">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Bot className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">AI Tutor</p>
+                      <p className="text-xs text-muted-foreground">Ask anything</p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+              <Link to="/learning-paths">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group border-border hover:border-primary/30">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-colors">
+                      <Map className="w-4 h-4 text-green-500" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">Paths</p>
+                      <p className="text-xs text-muted-foreground">Guided journeys</p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+              <Link to="/notifications">
+                <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer group border-border hover:border-primary/30">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition-colors">
+                      <Bell className="w-4 h-4 text-blue-500" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">Notifications</p>
+                      <p className="text-xs text-muted-foreground">Updates & alerts</p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            </div>
+          </div>
 
           {totalEnrollments === 0 ? (
             <Card className="p-12 text-center">

@@ -6,7 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History, ListChecks, ChevronDown } from "lucide-react";
+import { Users, BookOpen, Activity, GraduationCap, FileText, ClipboardList, ScrollText, Mail, Building2, DollarSign, LayoutDashboard, History, ListChecks, ChevronDown, Bell, Map } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +27,8 @@ import CourseManagement from "@/components/admin/CourseManagement";
 import UserManagement from "@/components/admin/UserManagement";
 import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
 import QuestionGenerator from "@/components/admin/QuestionGenerator";
+import AnnouncementsManagement from "@/components/admin/AnnouncementsManagement";
+import LearningPathsManagement from "@/components/admin/LearningPathsManagement";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -66,7 +68,7 @@ const Admin = () => {
     return null;
   }
 
-  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources"];
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements", "learning-paths"];
   const usersTabs = ["users", "enrollments", "interest", "corporate"];
   const systemTabs = ["performance", "costs", "audit"];
 
@@ -77,6 +79,8 @@ const Admin = () => {
       syllabus: "Syllabus",
       questions: "Questions",
       resources: "Resources",
+      announcements: "Announcements",
+      "learning-paths": "Learning Paths",
     };
     return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
   };
@@ -139,6 +143,12 @@ const Admin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveTab("resources")}>
                   <FileText className="h-4 w-4 mr-2" /> Resources
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("announcements")}>
+                  <Bell className="h-4 w-4 mr-2" /> Announcements
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("learning-paths")}>
+                  <Map className="h-4 w-4 mr-2" /> Learning Paths
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -267,6 +277,15 @@ const Admin = () => {
             <ContentStatusDashboard />
           </TabsContent>
 
+          {/* Announcements Tab */}
+          <TabsContent value="announcements">
+            <AnnouncementsManagement />
+          </TabsContent>
+
+          {/* Learning Paths Tab */}
+          <TabsContent value="learning-paths">
+            <LearningPathsManagement />
+          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">
