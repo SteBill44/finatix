@@ -117,25 +117,37 @@ const FinanceCanvas = () => {
     s.graphPoints  = generateGraphPoints(w, h, 1.3, h * 0.28);
     s.graphPoints2 = generateGraphPoints(w, h, 4.7, h * 0.2);
 
-    s.particles = Array.from({ length: 20 }, () => ({
-      x:       Math.random() * w,
-      y:       Math.random() * h,
-      radius:  1.5 + Math.random() * 2.5,
-      opacity: 0.2 + Math.random() * 0.35,
-      speed:   0.5 + Math.random() * 0.8,
-      phase:   Math.random() * Math.PI * 2,
-    }));
+    // Doubled particle count (~45) for more vibrant data-flow atmosphere
+    s.particles = Array.from({ length: 45 }, () => {
+      const depth = Math.random(); // 0 = far/background, 1 = near/foreground
+      return {
+        x:       Math.random() * w,
+        y:       Math.random() * h,
+        radius:  (1 + Math.random() * 2) * (0.6 + depth * 0.8),
+        opacity: 0.15 + Math.random() * 0.4,
+        speed:   0.3 + Math.random() * 0.7,
+        phase:   Math.random() * Math.PI * 2,
+        depth,
+      };
+    });
 
-    s.symbols = Array.from({ length: 12 }, () => ({
-      x:       Math.random() * w,
-      y:       Math.random() * h,
-      symbol:  SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-      opacity: 0.04 + Math.random() * 0.06,
-      speed:   0.4 + Math.random() * 0.5,
-      size:    14 + Math.random() * 22,
-      drift:   (Math.random() - 0.5) * 0.35,
-      phase:   Math.random() * Math.PI * 2,
-    }));
+    // Abstract geometric shapes (replaces literal currency symbols)
+    s.shapes = Array.from({ length: 18 }, () => {
+      const depth = Math.random();
+      return {
+        x:        Math.random() * w,
+        y:        Math.random() * h,
+        kind:     SHAPE_KINDS[Math.floor(Math.random() * SHAPE_KINDS.length)],
+        opacity:  0.06 + Math.random() * 0.10,
+        speed:    0.2 + Math.random() * 0.5,
+        size:     3 + Math.random() * 8 * (0.5 + depth),
+        drift:    (Math.random() - 0.5) * 0.3,
+        phase:    Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        depth,
+      };
+    });
 
     s.candlesticks = Array.from({ length: 10 }, () => ({
       x:          Math.random() * w,
