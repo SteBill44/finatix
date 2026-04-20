@@ -222,13 +222,29 @@ const FinanceCanvas = () => {
       offsetY: number = 0,
       withGlowTrail: boolean = false,
     ) => {
-      const count = Math.floor(points.length * progress);
-      if (count < 2) return;
+      if (points.length < 2 || progress <= 0) return;
+
+      // Fractional index — gives sub-segment precision so the line tip moves smoothly
+      // between points instead of jumping one whole segment at a time.
+      const exact = (points.length - 1) * Math.min(1, progress);
+      const fullCount = Math.floor(exact);
+      const frac = exact - fullCount;
+
+      // Compute interpolated tip point
+      let tipPx: number, tipPy: number;
+      if (fullCount >= points.length - 1) {
+        tipPx = points[points.length - 1].x + offsetX;
+        tipPy = points[points.length - 1].y + offsetY;
+      } else {
+        const a = points[fullCount];
+        const b = points[fullCount + 1];
+        tipPx = a.x + (b.x - a.x) * frac + offsetX;
+        tipPy = a.y + (b.y - a.y) * frac + offsetY;
+      }
 
       // Single horizontal gradient spanning the drawn portion
       const x0   = points[0].x + offsetX;
-      const tipX = points[count - 1].x + offsetX;
-      const grad = ctx.createLinearGradient(x0, 0, tipX, 0);
+      const grad = ctx.createLinearGradient(x0, 0, tipPx, 0);
       grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.4));
       grad.addColorStop(0.3,  hexToRgba(GRADIENT_STOPS[1], alpha * 0.75));
       grad.addColorStop(0.65, hexToRgba(GRADIENT_STOPS[2], alpha));
@@ -237,12 +253,23 @@ const FinanceCanvas = () => {
       const buildPath = () => {
         ctx.beginPath();
         ctx.moveTo(points[0].x + offsetX, points[0].y + offsetY);
-        for (let i = 1; i < count - 1; i++) {
+        // Smooth midpoint quadratic up to fullCount
+        for (let i = 1; i < fullCount; i++) {
           const mx = (points[i].x + points[i + 1].x) / 2 + offsetX;
           const my = (points[i].y + points[i + 1].y) / 2 + offsetY;
           ctx.quadraticCurveTo(points[i].x + offsetX, points[i].y + offsetY, mx, my);
         }
-        ctx.lineTo(points[count - 1].x + offsetX, points[count - 1].y + offsetY);
+        // Final partial segment to the interpolated tip
+        if (fullCount >= 1 && fullCount < points.length) {
+          ctx.quadraticCurveTo(
+            points[fullCount].x + offsetX,
+            points[fullCount].y + offsetY,
+            tipPx,
+            tipPy,
+          );
+        } else {
+          ctx.lineTo(tipPx, tipPy);
+        }
       };
 
       // Outer glow trail — soft halo along the entire stroke
@@ -379,28 +406,27 @@ const FinanceCanvas = () => {
       s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
 
       // Draw cycle: line travels from left edge to right edge, holds briefly, then restarts.
-      const drawDuration = 4.5; // seconds for the line to sweep across
-      const holdDuration = 1.2; // pause at full width before restarting
+      const drawDuration = 4.5;
+      const holdDuration = 1.2;
       const cycleTime    = s.time % (drawDuration + holdDuration);
-      s.graphProgress    = cycleTime < drawDuration
+      const rawProgress  = cycleTime < drawDuration
         ? Math.min(1, cycleTime / drawDuration)
         : 1;
+      // Ease in/out so the tip accelerates and decelerates smoothly
+      const eased = rawProgress < 0.5
+        ? 2 * rawProgress * rawProgress
+        : 1 - Math.pow(-2 * rawProgress + 2, 2) / 2;
+      s.graphProgress = eased;
 
       const graphParX = s.parallaxX * 0.15;
       const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
 
-      // Slow horizontal drift (loops seamlessly because the curve extends past both edges)
       const driftX1 = Math.sin(s.time * 0.18) * 24;
       const driftX2 = Math.cos(s.time * 0.13) * 30;
 
-      // Build morphed copies — the perturbation travels as a wave from LEFT to RIGHT.
-      // We negate the time term against the index term so points further right reach a given
-      // wave phase later than points on the left, producing a visible left-to-right flow.
       const morphPoints = (base: { x: number; y: number }[], driftX: number, seed: number) => {
         const out = new Array(base.length);
         for (let i = 0; i < base.length; i++) {
-          // Subtracting the time term means: as time increases, the same wave phase appears
-          // at higher index values → the morph crest sweeps left → right across the curve.
           const morphY =
             Math.sin(i * 0.22 - s.time * 0.55 + seed)        * 8 +
             Math.sin(i * 0.07 - s.time * 0.32 + seed * 1.7)  * 14;
@@ -412,22 +438,45 @@ const FinanceCanvas = () => {
       const morphed1 = morphPoints(s.graphPoints,  driftX1, 0);
       const morphed2 = morphPoints(s.graphPoints2, driftX2, 3.1);
 
-      // Lines reveal left → right based on graphProgress; secondary line trails slightly
       drawGradientLine(morphed1, s.graphProgress,        4.5, 1.0,  graphParX,       graphParY,       false);
       drawGradientLine(morphed2, s.graphProgress * 0.92, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
-      // Area fill under primary graph — only spans the revealed portion so it grows with the line
-      const count = Math.floor(morphed1.length * s.graphProgress);
-      if (count > 1) {
+      // Area fill — uses fractional progress for sub-segment precision (matches the line tip)
+      if (s.graphProgress > 0 && morphed1.length >= 2) {
+        const exact = (morphed1.length - 1) * s.graphProgress;
+        const fullCount = Math.floor(exact);
+        const frac = exact - fullCount;
+
+        let tipX: number, tipY: number;
+        if (fullCount >= morphed1.length - 1) {
+          tipX = morphed1[morphed1.length - 1].x + graphParX;
+          tipY = morphed1[morphed1.length - 1].y + graphParY;
+        } else {
+          const a = morphed1[fullCount];
+          const b = morphed1[fullCount + 1];
+          tipX = (a.x + (b.x - a.x) * frac) + graphParX;
+          tipY = (a.y + (b.y - a.y) * frac) + graphParY;
+        }
+
         ctx.beginPath();
         ctx.moveTo(morphed1[0].x + graphParX, h);
-        for (let i = 1; i < count - 1; i++) {
+        ctx.lineTo(morphed1[0].x + graphParX, morphed1[0].y + graphParY);
+        for (let i = 1; i < fullCount; i++) {
           const mx = (morphed1[i].x + morphed1[i + 1].x) / 2 + graphParX;
           const my = (morphed1[i].y + morphed1[i + 1].y) / 2 + graphParY;
           ctx.quadraticCurveTo(morphed1[i].x + graphParX, morphed1[i].y + graphParY, mx, my);
         }
-        ctx.lineTo(morphed1[count - 1].x + graphParX, morphed1[count - 1].y + graphParY);
-        ctx.lineTo(morphed1[count - 1].x + graphParX, h);
+        if (fullCount >= 1 && fullCount < morphed1.length) {
+          ctx.quadraticCurveTo(
+            morphed1[fullCount].x + graphParX,
+            morphed1[fullCount].y + graphParY,
+            tipX,
+            tipY,
+          );
+        } else {
+          ctx.lineTo(tipX, tipY);
+        }
+        ctx.lineTo(tipX, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
         ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
