@@ -378,11 +378,13 @@ const FinanceCanvas = () => {
       s.parallaxX += (s.targetParallaxX - s.parallaxX) * 0.06;
       s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
 
-      // Graph cycle still drives reseeding, but the line itself always renders fully across
-      const cycleDuration = 3;
-      const holdDuration  = 1.5;
-      const cycleTime     = s.time % (cycleDuration + holdDuration);
-      s.graphProgress = 1;
+      // Draw cycle: line travels from left edge to right edge, holds briefly, then restarts.
+      const drawDuration = 4.5; // seconds for the line to sweep across
+      const holdDuration = 1.2; // pause at full width before restarting
+      const cycleTime    = s.time % (drawDuration + holdDuration);
+      s.graphProgress    = cycleTime < drawDuration
+        ? Math.min(1, cycleTime / drawDuration)
+        : 1;
 
       const graphParX = s.parallaxX * 0.15;
       const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
@@ -410,12 +412,12 @@ const FinanceCanvas = () => {
       const morphed1 = morphPoints(s.graphPoints,  driftX1, 0);
       const morphed2 = morphPoints(s.graphPoints2, driftX2, 3.1);
 
-      // Both lines span edge-to-edge; no glow halo trail
-      drawGradientLine(morphed1, 1, 4.5, 1.0,  graphParX,       graphParY,       false);
-      drawGradientLine(morphed2, 1, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
+      // Lines reveal left → right based on graphProgress; secondary line trails slightly
+      drawGradientLine(morphed1, s.graphProgress,        4.5, 1.0,  graphParX,       graphParY,       false);
+      drawGradientLine(morphed2, s.graphProgress * 0.92, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
-      // Area fill under primary graph — uses the same morphed points so they stay perfectly aligned
-      const count = morphed1.length;
+      // Area fill under primary graph — only spans the revealed portion so it grows with the line
+      const count = Math.floor(morphed1.length * s.graphProgress);
       if (count > 1) {
         ctx.beginPath();
         ctx.moveTo(morphed1[0].x + graphParX, h);
