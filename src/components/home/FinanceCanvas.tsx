@@ -439,7 +439,7 @@ const FinanceCanvas = () => {
       const morphed2 = morphPoints(s.graphPoints2, driftX2, 3.1);
 
       drawGradientLine(morphed1, s.graphProgress,        4.5, 1.0,  graphParX,       graphParY,       false);
-      drawGradientLine(morphed2, s.graphProgress * 0.92, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
+      drawGradientLine(morphed2, s.graphProgress, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
       // Area fill — uses fractional progress for sub-segment precision (matches the line tip)
       if (s.graphProgress > 0 && morphed1.length >= 2) {
