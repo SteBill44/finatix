@@ -78,7 +78,7 @@ const FinanceCanvas = () => {
 
   const stateRef = useRef({
     particles:    [] as Particle[],
-    symbols:      [] as FloatingSymbol[],
+    shapes:       [] as FloatingShape[],
     candlesticks: [] as Candlestick[],
     scanLines:    [] as ScanLine[],
     graphProgress: 0,
@@ -86,6 +86,11 @@ const FinanceCanvas = () => {
     graphPoints2: [] as { x: number; y: number }[],
     initialized:  false,
     time:         0,
+    parallaxX:    0,
+    parallaxY:    0,
+    targetParallaxX: 0,
+    targetParallaxY: 0,
+    scrollY:      0,
   });
 
   // Lower-frequency noise → wider, smoother waves
