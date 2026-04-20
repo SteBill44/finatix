@@ -387,22 +387,43 @@ const FinanceCanvas = () => {
       const graphParX = s.parallaxX * 0.15;
       const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
 
-      // Both lines span edge-to-edge; no glow halo trail
-      drawGradientLine(s.graphPoints,  1,    4.5, 1.0,  graphParX,       graphParY,       false);
-      drawGradientLine(s.graphPoints2, 1,    2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
+      // Slow horizontal drift (loops seamlessly because the curve extends past both edges)
+      const driftX1 = Math.sin(s.time * 0.18) * 24;
+      const driftX2 = Math.cos(s.time * 0.13) * 30;
 
-      // Area fill under primary graph (with parallax offset to match)
-      const count = Math.floor(s.graphPoints.length * s.graphProgress);
+      // Build morphed copies of the base points so the curves slowly reshape over time.
+      // Each point's Y is perturbed by low-frequency sines using its index as phase — this
+      // creates a smooth, organic morph without the curve ever "jumping" or reseeding.
+      const morphPoints = (base: { x: number; y: number }[], driftX: number, seed: number) => {
+        const out = new Array(base.length);
+        for (let i = 0; i < base.length; i++) {
+          const morphY =
+            Math.sin(s.time * 0.35 + i * 0.22 + seed)        * 8 +
+            Math.sin(s.time * 0.18 + i * 0.07 + seed * 1.7)  * 14;
+          out[i] = { x: base[i].x + driftX, y: base[i].y + morphY };
+        }
+        return out;
+      };
+
+      const morphed1 = morphPoints(s.graphPoints,  driftX1, 0);
+      const morphed2 = morphPoints(s.graphPoints2, driftX2, 3.1);
+
+      // Both lines span edge-to-edge; no glow halo trail
+      drawGradientLine(morphed1, 1, 4.5, 1.0,  graphParX,       graphParY,       false);
+      drawGradientLine(morphed2, 1, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
+
+      // Area fill under primary graph — uses the same morphed points so they stay perfectly aligned
+      const count = morphed1.length;
       if (count > 1) {
         ctx.beginPath();
-        ctx.moveTo(s.graphPoints[0].x + graphParX, h);
+        ctx.moveTo(morphed1[0].x + graphParX, h);
         for (let i = 1; i < count - 1; i++) {
-          const mx = (s.graphPoints[i].x + s.graphPoints[i + 1].x) / 2 + graphParX;
-          const my = (s.graphPoints[i].y + s.graphPoints[i + 1].y) / 2 + graphParY;
-          ctx.quadraticCurveTo(s.graphPoints[i].x + graphParX, s.graphPoints[i].y + graphParY, mx, my);
+          const mx = (morphed1[i].x + morphed1[i + 1].x) / 2 + graphParX;
+          const my = (morphed1[i].y + morphed1[i + 1].y) / 2 + graphParY;
+          ctx.quadraticCurveTo(morphed1[i].x + graphParX, morphed1[i].y + graphParY, mx, my);
         }
-        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, s.graphPoints[count - 1].y + graphParY);
-        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, h);
+        ctx.lineTo(morphed1[count - 1].x + graphParX, morphed1[count - 1].y + graphParY);
+        ctx.lineTo(morphed1[count - 1].x + graphParX, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
         ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
@@ -468,10 +489,7 @@ const FinanceCanvas = () => {
         ctx.fill();
       });
 
-      if (cycleTime < 0.02) {
-        s.graphPoints  = generateGraphPoints(w, h, Math.random() * 10, h * 0.28);
-        s.graphPoints2 = generateGraphPoints(w, h, Math.random() * 10, h * 0.2);
-      }
+      // Continuous morph replaces the previous abrupt reseed — no jarring jumps.
 
       animFrameRef.current = requestAnimationFrame(draw);
     };
