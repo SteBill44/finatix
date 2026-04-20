@@ -167,7 +167,7 @@ const CourseLevels = () => {
   ];
 
   return (
-    <section className="py-10 lg:py-12 bg-card">
+    <section className="py-8 lg:py-10 bg-card">
       <div className="container mx-auto px-4">
         {steps.map((step, index) => (
           <StepBlock

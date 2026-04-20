@@ -422,7 +422,7 @@ const Courses = () => {
       </section>
 
       {/* ── Filters + Courses ── */}
-      <section className="py-10 lg:py-12">
+      <section className="py-8 lg:py-10">
         <div className="container mx-auto px-4">
           {/* Filter bar */}
           <div className="flex flex-col sm:flex-row gap-3 mb-10 items-start sm:items-center">
