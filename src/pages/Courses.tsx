@@ -298,7 +298,6 @@ const Courses = () => {
       const { data, error } = await supabase
         .from("courses")
         .select("*")
-        .is("deleted_at", null)
         .order("level", { ascending: true })
         .order("title", { ascending: true });
       if (error) throw error;
@@ -312,8 +311,7 @@ const Courses = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("lessons")
-        .select("course_id")
-        .is("deleted_at", null);
+        .select("course_id");
       if (error) return {} as Record<string, number>;
       return (data || []).reduce((acc, l) => {
         acc[l.course_id] = (acc[l.course_id] || 0) + 1;
