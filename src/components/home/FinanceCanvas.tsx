@@ -273,17 +273,8 @@ const FinanceCanvas = () => {
         ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
       }
 
-      // Horizontal scan lines in orange
-      s.scanLines.forEach((sl) => {
-        sl.y += sl.speed;
-        if (sl.y > h + 10) sl.y = -10;
-        const sg = ctx.createLinearGradient(0, sl.y - 8, 0, sl.y + 8);
-        sg.addColorStop(0,   hexToRgba(P.ORANGE_LIGHT, 0));
-        sg.addColorStop(0.5, hexToRgba(P.ORANGE_LIGHT, sl.opacity * SCAN_BOOST));
-        sg.addColorStop(1,   hexToRgba(P.ORANGE_LIGHT, 0));
-        ctx.fillStyle = sg;
-        ctx.fillRect(0, sl.y - 8, w, 16);
-      });
+      // Horizontal scan lines removed per design preference
+
 
       // Candlesticks
       s.candlesticks.forEach((c) => {
