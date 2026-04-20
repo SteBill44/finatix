@@ -348,7 +348,7 @@ describe("validateForm", () => {
     const result = validateForm(loginSchema, { email: "", password: "" });
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.errors).toHaveProperty("email");
+      expect((result as { success: false; errors: Record<string, string> }).errors).toHaveProperty("email");
     }
   });
 

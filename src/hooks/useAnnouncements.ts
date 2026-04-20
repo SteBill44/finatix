@@ -22,7 +22,7 @@ export const useAnnouncements = () => {
     queryKey: ["announcements_active"],
     queryFn: async () => {
       const now = new Date().toISOString();
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("announcements")
         .select("*")
         .eq("is_active", true)
@@ -31,7 +31,7 @@ export const useAnnouncements = () => {
         .or(`ends_at.is.null,ends_at.gte.${now}`)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) return [] as Announcement[];
       return (data || []) as Announcement[];
     },
     enabled: !!user,

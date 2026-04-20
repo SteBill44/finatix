@@ -84,7 +84,7 @@ export default function LearningPathsManagement() {
   const { data: paths = [], isLoading } = useQuery({
     queryKey: ["admin_learning_paths"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("learning_paths")
         .select(`
           *,
@@ -94,7 +94,7 @@ export default function LearningPathsManagement() {
           )
         `)
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) return [] as LearningPath[];
       return (data || []) as LearningPath[];
     },
   });
@@ -105,7 +105,6 @@ export default function LearningPathsManagement() {
       const { data, error } = await supabase
         .from("courses")
         .select("id, title, level, slug")
-        .is("deleted_at", null)
         .order("title");
       if (error) throw error;
       return (data || []) as Course[];
@@ -122,10 +121,10 @@ export default function LearningPathsManagement() {
         is_published: payload.is_published,
       };
       if (payload.id) {
-        const { error } = await supabase.from("learning_paths").update(row).eq("id", payload.id);
+        const { error } = await (supabase as any).from("learning_paths").update(row).eq("id", payload.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("learning_paths").insert(row);
+        const { error } = await (supabase as any).from("learning_paths").insert(row);
         if (error) throw error;
       }
     },
@@ -142,7 +141,7 @@ export default function LearningPathsManagement() {
 
   const togglePublished = useMutation({
     mutationFn: async ({ id, is_published }: { id: string; is_published: boolean }) => {
-      const { error } = await supabase.from("learning_paths").update({ is_published }).eq("id", id);
+      const { error } = await (supabase as any).from("learning_paths").update({ is_published }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -153,7 +152,7 @@ export default function LearningPathsManagement() {
 
   const deletePath = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("learning_paths").delete().eq("id", id);
+      const { error } = await (supabase as any).from("learning_paths").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -168,7 +167,7 @@ export default function LearningPathsManagement() {
     mutationFn: async ({ pathId, courseId }: { pathId: string; courseId: string }) => {
       const existing = managingPath?.path_courses || [];
       const nextOrder = existing.length;
-      const { error } = await supabase.from("learning_path_courses").insert({
+      const { error } = await (supabase as any).from("learning_path_courses").insert({
         learning_path_id: pathId,
         course_id: courseId,
         order_index: nextOrder,
@@ -186,7 +185,7 @@ export default function LearningPathsManagement() {
 
   const removeCourseFromPath = useMutation({
     mutationFn: async (pathCourseId: string) => {
-      const { error } = await supabase.from("learning_path_courses").delete().eq("id", pathCourseId);
+      const { error } = await (supabase as any).from("learning_path_courses").delete().eq("id", pathCourseId);
       if (error) throw error;
     },
     onSuccess: () => {

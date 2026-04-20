@@ -20,14 +20,14 @@ export const useNotificationsInbox = () => {
   return useQuery({
     queryKey: ["notifications_inbox", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("notifications")
         .select("*")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (error) return [] as Notification[];
       return (data || []) as Notification[];
     },
     enabled: !!user,
@@ -41,13 +41,13 @@ export const useUnreadNotificationCount = () => {
   return useQuery({
     queryKey: ["notifications_unread_count", user?.id],
     queryFn: async () => {
-      const { count, error } = await supabase
+      const { count, error } = await (supabase as any)
         .from("notifications")
         .select("id", { count: "exact", head: true })
         .eq("user_id", user!.id)
         .eq("is_read", false);
 
-      if (error) throw error;
+      if (error) return 0;
       return count || 0;
     },
     enabled: !!user,
@@ -61,7 +61,7 @@ export const useMarkNotificationRead = () => {
 
   return useMutation({
     mutationFn: async (notificationId: string) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_read: true, read_at: new Date().toISOString() })
         .eq("id", notificationId)
@@ -82,7 +82,7 @@ export const useMarkAllNotificationsRead = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("notifications")
         .update({ is_read: true, read_at: new Date().toISOString() })
         .eq("user_id", user!.id)

@@ -381,7 +381,7 @@ const Courses = () => {
       {/* ── Level overview strip ── */}
       <section className="py-8 bg-card border-y border-border">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4">
             {levelOrder.map((level) => {
               const cfg = levelConfig[level];
               const Icon = cfg.icon;

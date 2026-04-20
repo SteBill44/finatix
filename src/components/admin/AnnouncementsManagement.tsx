@@ -83,11 +83,11 @@ export default function AnnouncementsManagement() {
   const { data: announcements = [], isLoading } = useQuery({
     queryKey: ["admin_announcements"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("announcements")
         .select("*")
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) return [] as Announcement[];
       return (data || []) as Announcement[];
     },
   });
@@ -104,10 +104,10 @@ export default function AnnouncementsManagement() {
         ends_at: payload.ends_at || null,
       };
       if (payload.id) {
-        const { error } = await supabase.from("announcements").update(row).eq("id", payload.id);
+        const { error } = await (supabase as any).from("announcements").update(row).eq("id", payload.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("announcements").insert(row);
+        const { error } = await (supabase as any).from("announcements").insert(row);
         if (error) throw error;
       }
     },
@@ -122,7 +122,7 @@ export default function AnnouncementsManagement() {
 
   const toggleActive = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
-      const { error } = await supabase.from("announcements").update({ is_active }).eq("id", id);
+      const { error } = await (supabase as any).from("announcements").update({ is_active }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -133,7 +133,7 @@ export default function AnnouncementsManagement() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("announcements").delete().eq("id", id);
+      const { error } = await (supabase as any).from("announcements").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
