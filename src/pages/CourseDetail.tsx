@@ -492,7 +492,7 @@ const CourseDetail = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative py-12 lg:py-20 overflow-hidden">
+      <section className="relative py-10 lg:py-14 overflow-hidden">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
         
