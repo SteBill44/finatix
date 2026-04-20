@@ -391,15 +391,17 @@ const FinanceCanvas = () => {
       const driftX1 = Math.sin(s.time * 0.18) * 24;
       const driftX2 = Math.cos(s.time * 0.13) * 30;
 
-      // Build morphed copies of the base points so the curves slowly reshape over time.
-      // Each point's Y is perturbed by low-frequency sines using its index as phase — this
-      // creates a smooth, organic morph without the curve ever "jumping" or reseeding.
+      // Build morphed copies — the perturbation travels as a wave from LEFT to RIGHT.
+      // We negate the time term against the index term so points further right reach a given
+      // wave phase later than points on the left, producing a visible left-to-right flow.
       const morphPoints = (base: { x: number; y: number }[], driftX: number, seed: number) => {
         const out = new Array(base.length);
         for (let i = 0; i < base.length; i++) {
+          // Subtracting the time term means: as time increases, the same wave phase appears
+          // at higher index values → the morph crest sweeps left → right across the curve.
           const morphY =
-            Math.sin(s.time * 0.35 + i * 0.22 + seed)        * 8 +
-            Math.sin(s.time * 0.18 + i * 0.07 + seed * 1.7)  * 14;
+            Math.sin(i * 0.22 - s.time * 0.55 + seed)        * 8 +
+            Math.sin(i * 0.07 - s.time * 0.32 + seed * 1.7)  * 14;
           out[i] = { x: base[i].x + driftX, y: base[i].y + morphY };
         }
         return out;
