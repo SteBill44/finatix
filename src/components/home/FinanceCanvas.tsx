@@ -378,11 +378,13 @@ const FinanceCanvas = () => {
       s.parallaxX += (s.targetParallaxX - s.parallaxX) * 0.06;
       s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
 
-      // Graph cycle still drives reseeding, but the line itself always renders fully across
-      const cycleDuration = 3;
-      const holdDuration  = 1.5;
-      const cycleTime     = s.time % (cycleDuration + holdDuration);
-      s.graphProgress = 1;
+      // Draw cycle: line travels from left edge to right edge, holds briefly, then restarts.
+      const drawDuration = 4.5; // seconds for the line to sweep across
+      const holdDuration = 1.2; // pause at full width before restarting
+      const cycleTime    = s.time % (drawDuration + holdDuration);
+      s.graphProgress    = cycleTime < drawDuration
+        ? Math.min(1, cycleTime / drawDuration)
+        : 1;
 
       const graphParX = s.parallaxX * 0.15;
       const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
