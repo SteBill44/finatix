@@ -453,10 +453,29 @@ const FinanceCanvas = () => {
       animFrameRef.current = requestAnimationFrame(draw);
     };
 
+    // Mouse parallax — track cursor relative to canvas center
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      // Normalized -1..1, scaled to a max ~25px parallax shift
+      const nx = (e.clientX - cx) / (rect.width  / 2);
+      const ny = (e.clientY - cy) / (rect.height / 2);
+      stateRef.current.targetParallaxX = Math.max(-1, Math.min(1, nx)) * 25;
+      stateRef.current.targetParallaxY = Math.max(-1, Math.min(1, ny)) * 18;
+    };
+    const handleScroll = () => {
+      stateRef.current.scrollY = window.scrollY;
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     animFrameRef.current = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(animFrameRef.current);
     };
   }, [initState, generateGraphPoints, isDark]);
