@@ -412,12 +412,12 @@ const FinanceCanvas = () => {
       const morphed1 = morphPoints(s.graphPoints,  driftX1, 0);
       const morphed2 = morphPoints(s.graphPoints2, driftX2, 3.1);
 
-      // Both lines span edge-to-edge; no glow halo trail
-      drawGradientLine(morphed1, 1, 4.5, 1.0,  graphParX,       graphParY,       false);
-      drawGradientLine(morphed2, 1, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
+      // Lines reveal left → right based on graphProgress; secondary line trails slightly
+      drawGradientLine(morphed1, s.graphProgress,        4.5, 1.0,  graphParX,       graphParY,       false);
+      drawGradientLine(morphed2, s.graphProgress * 0.92, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
-      // Area fill under primary graph — uses the same morphed points so they stay perfectly aligned
-      const count = morphed1.length;
+      // Area fill under primary graph — only spans the revealed portion so it grows with the line
+      const count = Math.floor(morphed1.length * s.graphProgress);
       if (count > 1) {
         ctx.beginPath();
         ctx.moveTo(morphed1[0].x + graphParX, h);
