@@ -67,11 +67,11 @@ const levelConfig = {
   management: {
     label: "Management Level",
     icon: BarChart3,
-    gradient: "from-purple-600 to-purple-900",
-    lightGradient: "from-purple-500/80 to-purple-700/80",
-    badge: "bg-purple-500/15 text-purple-600 dark:text-purple-400",
-    border: "border-l-purple-500",
-    ring: "ring-purple-500/20",
+    gradient: "from-violet-600 to-violet-900",
+    lightGradient: "from-violet-500/80 to-violet-700/80",
+    badge: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
+    border: "border-l-violet-500",
+    ring: "ring-violet-500/20",
     sub: "E2 · P2 · F2 + Case Study",
   },
   strategic: {
