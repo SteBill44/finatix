@@ -386,27 +386,35 @@ const FinanceCanvas = () => {
         ctx.restore();
       });
 
-      // Graph draw cycle
+      // Smoothly interpolate parallax toward target (mouse position)
+      s.parallaxX += (s.targetParallaxX - s.parallaxX) * 0.06;
+      s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
+
+      // Graph draw cycle — BACKGROUND parallax layer (slowest movement)
       const cycleDuration = 3;
       const holdDuration  = 1.5;
       const cycleTime     = s.time % (cycleDuration + holdDuration);
       s.graphProgress = cycleTime < cycleDuration ? Math.min(1, cycleTime / cycleDuration) : 1;
 
-      drawGradientLine(s.graphPoints,  s.graphProgress,        3,   0.9);
-      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2,   0.55);
+      const graphParX = s.parallaxX * 0.15;
+      const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
 
-      // Area fill under primary graph
+      // Thicker, more prominent primary graph with glow trail
+      drawGradientLine(s.graphPoints,  s.graphProgress,        4.5, 1.0,  graphParX, graphParY, true);
+      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2);
+
+      // Area fill under primary graph (with parallax offset to match)
       const count = Math.floor(s.graphPoints.length * s.graphProgress);
       if (count > 1) {
         ctx.beginPath();
-        ctx.moveTo(s.graphPoints[0].x, h);
+        ctx.moveTo(s.graphPoints[0].x + graphParX, h);
         for (let i = 1; i < count - 1; i++) {
-          const mx = (s.graphPoints[i].x + s.graphPoints[i + 1].x) / 2;
-          const my = (s.graphPoints[i].y + s.graphPoints[i + 1].y) / 2;
-          ctx.quadraticCurveTo(s.graphPoints[i].x, s.graphPoints[i].y, mx, my);
+          const mx = (s.graphPoints[i].x + s.graphPoints[i + 1].x) / 2 + graphParX;
+          const my = (s.graphPoints[i].y + s.graphPoints[i + 1].y) / 2 + graphParY;
+          ctx.quadraticCurveTo(s.graphPoints[i].x + graphParX, s.graphPoints[i].y + graphParY, mx, my);
         }
-        ctx.lineTo(s.graphPoints[count - 1].x, s.graphPoints[count - 1].y);
-        ctx.lineTo(s.graphPoints[count - 1].x, h);
+        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, s.graphPoints[count - 1].y + graphParY);
+        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
         ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
@@ -416,11 +424,14 @@ const FinanceCanvas = () => {
         ctx.fill();
       }
 
-      // Particles — pulsing orange glow with cream core
+      // Particles — FOREGROUND parallax layer (strongest mouse/scroll response)
       s.particles.forEach((p) => {
         const pulse = 0.7 + 0.3 * Math.sin(s.time * 3 + p.phase);
-        const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4;
-        const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8;
+        // Foreground parallax: deeper particles (depth→1) move most with mouse
+        const parX = s.parallaxX * (0.8 + p.depth * 1.4);
+        const parY = s.parallaxY * (0.8 + p.depth * 1.4) - s.scrollY * 0.3 * p.depth;
+        const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4 + parX;
+        const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8 + parY;
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
         glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * PARTICLE_GLOW_A * pulse));
         glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
