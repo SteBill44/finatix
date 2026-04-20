@@ -212,34 +212,56 @@ const FinanceCanvas = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Draw a smooth bezier path with a single horizontal gradient — no per-segment stroking
+    // Draw a smooth bezier path with a single horizontal gradient — supports parallax offset and glow trail
     const drawGradientLine = (
       points: { x: number; y: number }[],
       progress: number,
       lineWidth: number,
       alpha: number,
+      offsetX: number = 0,
+      offsetY: number = 0,
+      withGlowTrail: boolean = false,
     ) => {
       const count = Math.floor(points.length * progress);
       if (count < 2) return;
 
       // Single horizontal gradient spanning the drawn portion
-      const x0   = points[0].x;
-      const tipX = points[count - 1].x;
+      const x0   = points[0].x + offsetX;
+      const tipX = points[count - 1].x + offsetX;
       const grad = ctx.createLinearGradient(x0, 0, tipX, 0);
       grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.4));
       grad.addColorStop(0.3,  hexToRgba(GRADIENT_STOPS[1], alpha * 0.75));
       grad.addColorStop(0.65, hexToRgba(GRADIENT_STOPS[2], alpha));
       grad.addColorStop(1,    hexToRgba(GRADIENT_STOPS[3], alpha));
 
-      // Smooth quadratic bezier through midpoints — eliminates all jaggedness
-      ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
-      for (let i = 1; i < count - 1; i++) {
-        const mx = (points[i].x + points[i + 1].x) / 2;
-        const my = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
+      const buildPath = () => {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x + offsetX, points[0].y + offsetY);
+        for (let i = 1; i < count - 1; i++) {
+          const mx = (points[i].x + points[i + 1].x) / 2 + offsetX;
+          const my = (points[i].y + points[i + 1].y) / 2 + offsetY;
+          ctx.quadraticCurveTo(points[i].x + offsetX, points[i].y + offsetY, mx, my);
+        }
+        ctx.lineTo(points[count - 1].x + offsetX, points[count - 1].y + offsetY);
+      };
+
+      // Outer glow trail — soft halo along the entire stroke
+      if (withGlowTrail) {
+        buildPath();
+        ctx.strokeStyle = hexToRgba(P.ORANGE, alpha * 0.18);
+        ctx.lineWidth   = lineWidth * 4;
+        ctx.lineCap     = "round";
+        ctx.lineJoin    = "round";
+        ctx.stroke();
+
+        buildPath();
+        ctx.strokeStyle = hexToRgba(P.ORANGE_LIGHT, alpha * 0.28);
+        ctx.lineWidth   = lineWidth * 2.2;
+        ctx.stroke();
       }
-      ctx.lineTo(points[count - 1].x, points[count - 1].y);
+
+      // Main stroke (smooth bezier through midpoints)
+      buildPath();
       ctx.strokeStyle = grad;
       ctx.lineWidth   = lineWidth;
       ctx.lineCap     = "round";
@@ -248,12 +270,15 @@ const FinanceCanvas = () => {
 
       // Glow dot at the leading tip
       const tip  = points[count - 1];
-      const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 28);
-      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.75 * alpha));
-      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.4 * alpha));
+      const tx = tip.x + offsetX;
+      const ty = tip.y + offsetY;
+      const glowR = withGlowTrail ? 36 : 28;
+      const glow = ctx.createRadialGradient(tx, ty, 0, tx, ty, glowR);
+      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.85 * alpha));
+      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.45 * alpha));
       glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
       ctx.beginPath();
-      ctx.arc(tip.x, tip.y, 28, 0, Math.PI * 2);
+      ctx.arc(tx, ty, glowR, 0, Math.PI * 2);
       ctx.fillStyle = glow;
       ctx.fill();
     };
