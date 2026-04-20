@@ -269,6 +269,7 @@ const FinanceCanvas = () => {
       ctx.stroke();
 
       // Leading-tip glow removed: the lines now span the full width, so a "tip" highlight at the off-screen edge would look out of place.
+    };
 
     const draw = () => {
       const s = stateRef.current;
