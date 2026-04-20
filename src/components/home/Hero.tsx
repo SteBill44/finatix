@@ -71,7 +71,7 @@ const Hero = () => {
       >
         <div className="max-w-4xl">
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-8 tracking-tight">
+          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight">
             <SplitTextReveal
               as="span"
               delay={0.2}
@@ -93,7 +93,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-12"
+            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-8"
           >
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </motion.p>
