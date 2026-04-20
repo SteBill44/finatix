@@ -27,19 +27,24 @@ const LIGHT = {
   BLOOM:        "#FFB07A",
 };
 
-const SYMBOLS = ["£", "$", "%", "¥", "€"];
+// Abstract geometric shape types — replaces literal currency symbols
+type ShapeKind = "dot" | "dash" | "square" | "ring" | "tick";
+const SHAPE_KINDS: ShapeKind[] = ["dot", "dash", "square", "ring", "tick"];
 
 interface Particle {
   x: number; y: number;
   radius: number; opacity: number;
   speed: number; phase: number;
+  depth: number; // 0..1, used for parallax + size scaling
 }
 
-interface FloatingSymbol {
+interface FloatingShape {
   x: number; y: number;
-  symbol: string; opacity: number;
+  kind: ShapeKind; opacity: number;
   speed: number; size: number;
   drift: number; phase: number;
+  rotation: number; rotSpeed: number;
+  depth: number; // parallax depth
 }
 
 interface Candlestick {
@@ -73,7 +78,7 @@ const FinanceCanvas = () => {
 
   const stateRef = useRef({
     particles:    [] as Particle[],
-    symbols:      [] as FloatingSymbol[],
+    shapes:       [] as FloatingShape[],
     candlesticks: [] as Candlestick[],
     scanLines:    [] as ScanLine[],
     graphProgress: 0,
@@ -81,6 +86,11 @@ const FinanceCanvas = () => {
     graphPoints2: [] as { x: number; y: number }[],
     initialized:  false,
     time:         0,
+    parallaxX:    0,
+    parallaxY:    0,
+    targetParallaxX: 0,
+    targetParallaxY: 0,
+    scrollY:      0,
   });
 
   // Lower-frequency noise → wider, smoother waves
@@ -107,25 +117,37 @@ const FinanceCanvas = () => {
     s.graphPoints  = generateGraphPoints(w, h, 1.3, h * 0.28);
     s.graphPoints2 = generateGraphPoints(w, h, 4.7, h * 0.2);
 
-    s.particles = Array.from({ length: 20 }, () => ({
-      x:       Math.random() * w,
-      y:       Math.random() * h,
-      radius:  1.5 + Math.random() * 2.5,
-      opacity: 0.2 + Math.random() * 0.35,
-      speed:   0.5 + Math.random() * 0.8,
-      phase:   Math.random() * Math.PI * 2,
-    }));
+    // Doubled particle count (~45) for more vibrant data-flow atmosphere
+    s.particles = Array.from({ length: 45 }, () => {
+      const depth = Math.random(); // 0 = far/background, 1 = near/foreground
+      return {
+        x:       Math.random() * w,
+        y:       Math.random() * h,
+        radius:  (1 + Math.random() * 2) * (0.6 + depth * 0.8),
+        opacity: 0.15 + Math.random() * 0.4,
+        speed:   0.3 + Math.random() * 0.7,
+        phase:   Math.random() * Math.PI * 2,
+        depth,
+      };
+    });
 
-    s.symbols = Array.from({ length: 12 }, () => ({
-      x:       Math.random() * w,
-      y:       Math.random() * h,
-      symbol:  SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-      opacity: 0.04 + Math.random() * 0.06,
-      speed:   0.4 + Math.random() * 0.5,
-      size:    14 + Math.random() * 22,
-      drift:   (Math.random() - 0.5) * 0.35,
-      phase:   Math.random() * Math.PI * 2,
-    }));
+    // Abstract geometric shapes (replaces literal currency symbols)
+    s.shapes = Array.from({ length: 18 }, () => {
+      const depth = Math.random();
+      return {
+        x:        Math.random() * w,
+        y:        Math.random() * h,
+        kind:     SHAPE_KINDS[Math.floor(Math.random() * SHAPE_KINDS.length)],
+        opacity:  0.06 + Math.random() * 0.10,
+        speed:    0.2 + Math.random() * 0.5,
+        size:     3 + Math.random() * 8 * (0.5 + depth),
+        drift:    (Math.random() - 0.5) * 0.3,
+        phase:    Math.random() * Math.PI * 2,
+        rotation: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.01,
+        depth,
+      };
+    });
 
     s.candlesticks = Array.from({ length: 10 }, () => ({
       x:          Math.random() * w,
@@ -190,34 +212,56 @@ const FinanceCanvas = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Draw a smooth bezier path with a single horizontal gradient — no per-segment stroking
+    // Draw a smooth bezier path with a single horizontal gradient — supports parallax offset and glow trail
     const drawGradientLine = (
       points: { x: number; y: number }[],
       progress: number,
       lineWidth: number,
       alpha: number,
+      offsetX: number = 0,
+      offsetY: number = 0,
+      withGlowTrail: boolean = false,
     ) => {
       const count = Math.floor(points.length * progress);
       if (count < 2) return;
 
       // Single horizontal gradient spanning the drawn portion
-      const x0   = points[0].x;
-      const tipX = points[count - 1].x;
+      const x0   = points[0].x + offsetX;
+      const tipX = points[count - 1].x + offsetX;
       const grad = ctx.createLinearGradient(x0, 0, tipX, 0);
       grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.4));
       grad.addColorStop(0.3,  hexToRgba(GRADIENT_STOPS[1], alpha * 0.75));
       grad.addColorStop(0.65, hexToRgba(GRADIENT_STOPS[2], alpha));
       grad.addColorStop(1,    hexToRgba(GRADIENT_STOPS[3], alpha));
 
-      // Smooth quadratic bezier through midpoints — eliminates all jaggedness
-      ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
-      for (let i = 1; i < count - 1; i++) {
-        const mx = (points[i].x + points[i + 1].x) / 2;
-        const my = (points[i].y + points[i + 1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
+      const buildPath = () => {
+        ctx.beginPath();
+        ctx.moveTo(points[0].x + offsetX, points[0].y + offsetY);
+        for (let i = 1; i < count - 1; i++) {
+          const mx = (points[i].x + points[i + 1].x) / 2 + offsetX;
+          const my = (points[i].y + points[i + 1].y) / 2 + offsetY;
+          ctx.quadraticCurveTo(points[i].x + offsetX, points[i].y + offsetY, mx, my);
+        }
+        ctx.lineTo(points[count - 1].x + offsetX, points[count - 1].y + offsetY);
+      };
+
+      // Outer glow trail — soft halo along the entire stroke
+      if (withGlowTrail) {
+        buildPath();
+        ctx.strokeStyle = hexToRgba(P.ORANGE, alpha * 0.18);
+        ctx.lineWidth   = lineWidth * 4;
+        ctx.lineCap     = "round";
+        ctx.lineJoin    = "round";
+        ctx.stroke();
+
+        buildPath();
+        ctx.strokeStyle = hexToRgba(P.ORANGE_LIGHT, alpha * 0.28);
+        ctx.lineWidth   = lineWidth * 2.2;
+        ctx.stroke();
       }
-      ctx.lineTo(points[count - 1].x, points[count - 1].y);
+
+      // Main stroke (smooth bezier through midpoints)
+      buildPath();
       ctx.strokeStyle = grad;
       ctx.lineWidth   = lineWidth;
       ctx.lineCap     = "round";
@@ -226,12 +270,15 @@ const FinanceCanvas = () => {
 
       // Glow dot at the leading tip
       const tip  = points[count - 1];
-      const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 28);
-      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.75 * alpha));
-      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.4 * alpha));
+      const tx = tip.x + offsetX;
+      const ty = tip.y + offsetY;
+      const glowR = withGlowTrail ? 36 : 28;
+      const glow = ctx.createRadialGradient(tx, ty, 0, tx, ty, glowR);
+      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.85 * alpha));
+      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.45 * alpha));
       glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
       ctx.beginPath();
-      ctx.arc(tip.x, tip.y, 28, 0, Math.PI * 2);
+      ctx.arc(tx, ty, glowR, 0, Math.PI * 2);
       ctx.fillStyle = glow;
       ctx.fill();
     };
@@ -292,38 +339,82 @@ const FinanceCanvas = () => {
         ctx.fillRect(c.x, c.y - c.bodyHeight / 2, c.width, c.bodyHeight);
       });
 
-      // Floating currency symbols
-      s.symbols.forEach((sym) => {
-        sym.y -= sym.speed;
-        sym.x += sym.drift + Math.sin(s.time * 2 + sym.phase) * 0.12;
-        if (sym.y < -40) { sym.y = h + 40; sym.x = Math.random() * w; }
-        ctx.font      = `300 ${sym.size}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity * SYMBOL_BOOST);
-        ctx.textAlign = "center";
-        ctx.fillText(sym.symbol, sym.x, sym.y);
+      // Floating abstract shapes (mid-depth parallax layer)
+      s.shapes.forEach((sh) => {
+        sh.y -= sh.speed;
+        sh.x += sh.drift + Math.sin(s.time * 2 + sh.phase) * 0.12;
+        sh.rotation += sh.rotSpeed;
+        if (sh.y < -40) { sh.y = h + 40; sh.x = Math.random() * w; }
+
+        // Mid-layer parallax: shapes shift moderately with mouse + scroll
+        const px = sh.x + s.parallaxX * (0.4 + sh.depth * 0.6);
+        const py = sh.y + s.parallaxY * (0.4 + sh.depth * 0.6) - s.scrollY * 0.15 * sh.depth;
+
+        const a = sh.opacity * SYMBOL_BOOST;
+        const col = sh.depth > 0.5 ? P.ORANGE : P.GRAY;
+        ctx.save();
+        ctx.translate(px, py);
+        ctx.rotate(sh.rotation);
+        ctx.fillStyle   = hexToRgba(col, a);
+        ctx.strokeStyle = hexToRgba(col, a * 1.2);
+        ctx.lineWidth   = 1;
+        switch (sh.kind) {
+          case "dot":
+            ctx.beginPath();
+            ctx.arc(0, 0, sh.size * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+          case "dash":
+            ctx.fillRect(-sh.size * 0.6, -sh.size * 0.08, sh.size * 1.2, sh.size * 0.16);
+            break;
+          case "square":
+            ctx.strokeRect(-sh.size * 0.4, -sh.size * 0.4, sh.size * 0.8, sh.size * 0.8);
+            break;
+          case "ring":
+            ctx.beginPath();
+            ctx.arc(0, 0, sh.size * 0.45, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+          case "tick":
+            ctx.beginPath();
+            ctx.moveTo(-sh.size * 0.4, sh.size * 0.1);
+            ctx.lineTo(-sh.size * 0.05, sh.size * 0.4);
+            ctx.lineTo(sh.size * 0.5, -sh.size * 0.3);
+            ctx.stroke();
+            break;
+        }
+        ctx.restore();
       });
 
-      // Graph draw cycle
+      // Smoothly interpolate parallax toward target (mouse position)
+      s.parallaxX += (s.targetParallaxX - s.parallaxX) * 0.06;
+      s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
+
+      // Graph draw cycle — BACKGROUND parallax layer (slowest movement)
       const cycleDuration = 3;
       const holdDuration  = 1.5;
       const cycleTime     = s.time % (cycleDuration + holdDuration);
       s.graphProgress = cycleTime < cycleDuration ? Math.min(1, cycleTime / cycleDuration) : 1;
 
-      drawGradientLine(s.graphPoints,  s.graphProgress,        3,   0.9);
-      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2,   0.55);
+      const graphParX = s.parallaxX * 0.15;
+      const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
 
-      // Area fill under primary graph
+      // Thicker, more prominent primary graph with glow trail
+      drawGradientLine(s.graphPoints,  s.graphProgress,        4.5, 1.0,  graphParX, graphParY, true);
+      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2);
+
+      // Area fill under primary graph (with parallax offset to match)
       const count = Math.floor(s.graphPoints.length * s.graphProgress);
       if (count > 1) {
         ctx.beginPath();
-        ctx.moveTo(s.graphPoints[0].x, h);
+        ctx.moveTo(s.graphPoints[0].x + graphParX, h);
         for (let i = 1; i < count - 1; i++) {
-          const mx = (s.graphPoints[i].x + s.graphPoints[i + 1].x) / 2;
-          const my = (s.graphPoints[i].y + s.graphPoints[i + 1].y) / 2;
-          ctx.quadraticCurveTo(s.graphPoints[i].x, s.graphPoints[i].y, mx, my);
+          const mx = (s.graphPoints[i].x + s.graphPoints[i + 1].x) / 2 + graphParX;
+          const my = (s.graphPoints[i].y + s.graphPoints[i + 1].y) / 2 + graphParY;
+          ctx.quadraticCurveTo(s.graphPoints[i].x + graphParX, s.graphPoints[i].y + graphParY, mx, my);
         }
-        ctx.lineTo(s.graphPoints[count - 1].x, s.graphPoints[count - 1].y);
-        ctx.lineTo(s.graphPoints[count - 1].x, h);
+        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, s.graphPoints[count - 1].y + graphParY);
+        ctx.lineTo(s.graphPoints[count - 1].x + graphParX, h);
         ctx.closePath();
         const ag = ctx.createLinearGradient(0, 0, 0, h);
         ag.addColorStop(0, hexToRgba(P.ORANGE, AREA_TOP_ALPHA));
@@ -333,11 +424,14 @@ const FinanceCanvas = () => {
         ctx.fill();
       }
 
-      // Particles — pulsing orange glow with cream core
+      // Particles — FOREGROUND parallax layer (strongest mouse/scroll response)
       s.particles.forEach((p) => {
         const pulse = 0.7 + 0.3 * Math.sin(s.time * 3 + p.phase);
-        const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4;
-        const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8;
+        // Foreground parallax: deeper particles (depth→1) move most with mouse
+        const parX = s.parallaxX * (0.8 + p.depth * 1.4);
+        const parY = s.parallaxY * (0.8 + p.depth * 1.4) - s.scrollY * 0.3 * p.depth;
+        const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4 + parX;
+        const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8 + parY;
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
         glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * PARTICLE_GLOW_A * pulse));
         glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
@@ -359,10 +453,29 @@ const FinanceCanvas = () => {
       animFrameRef.current = requestAnimationFrame(draw);
     };
 
+    // Mouse parallax — track cursor relative to canvas center
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const cx = rect.left + rect.width  / 2;
+      const cy = rect.top  + rect.height / 2;
+      // Normalized -1..1, scaled to a max ~25px parallax shift
+      const nx = (e.clientX - cx) / (rect.width  / 2);
+      const ny = (e.clientY - cy) / (rect.height / 2);
+      stateRef.current.targetParallaxX = Math.max(-1, Math.min(1, nx)) * 25;
+      stateRef.current.targetParallaxY = Math.max(-1, Math.min(1, ny)) * 18;
+    };
+    const handleScroll = () => {
+      stateRef.current.scrollY = window.scrollY;
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     animFrameRef.current = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(animFrameRef.current);
     };
   }, [initState, generateGraphPoints, isDark]);
