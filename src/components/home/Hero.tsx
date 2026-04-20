@@ -21,7 +21,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[85vh] flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
+      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
     >
       {/* Solid base background — dark in dark mode, warm cream in light mode */}
       <div
@@ -71,7 +71,7 @@ const Hero = () => {
       >
         <div className="max-w-4xl">
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 tracking-tight">
+          <div className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.05] mb-8 tracking-tight">
             <SplitTextReveal
               as="span"
               delay={0.2}
@@ -93,7 +93,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
+            className="text-xl md:text-2xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-12"
           >
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </motion.p>
