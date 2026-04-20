@@ -222,13 +222,29 @@ const FinanceCanvas = () => {
       offsetY: number = 0,
       withGlowTrail: boolean = false,
     ) => {
-      const count = Math.floor(points.length * progress);
-      if (count < 2) return;
+      if (points.length < 2 || progress <= 0) return;
+
+      // Fractional index — gives sub-segment precision so the line tip moves smoothly
+      // between points instead of jumping one whole segment at a time.
+      const exact = (points.length - 1) * Math.min(1, progress);
+      const fullCount = Math.floor(exact);
+      const frac = exact - fullCount;
+
+      // Compute interpolated tip point
+      let tipPx: number, tipPy: number;
+      if (fullCount >= points.length - 1) {
+        tipPx = points[points.length - 1].x + offsetX;
+        tipPy = points[points.length - 1].y + offsetY;
+      } else {
+        const a = points[fullCount];
+        const b = points[fullCount + 1];
+        tipPx = a.x + (b.x - a.x) * frac + offsetX;
+        tipPy = a.y + (b.y - a.y) * frac + offsetY;
+      }
 
       // Single horizontal gradient spanning the drawn portion
       const x0   = points[0].x + offsetX;
-      const tipX = points[count - 1].x + offsetX;
-      const grad = ctx.createLinearGradient(x0, 0, tipX, 0);
+      const grad = ctx.createLinearGradient(x0, 0, tipPx, 0);
       grad.addColorStop(0,    hexToRgba(GRADIENT_STOPS[0], alpha * 0.4));
       grad.addColorStop(0.3,  hexToRgba(GRADIENT_STOPS[1], alpha * 0.75));
       grad.addColorStop(0.65, hexToRgba(GRADIENT_STOPS[2], alpha));
@@ -237,12 +253,23 @@ const FinanceCanvas = () => {
       const buildPath = () => {
         ctx.beginPath();
         ctx.moveTo(points[0].x + offsetX, points[0].y + offsetY);
-        for (let i = 1; i < count - 1; i++) {
+        // Smooth midpoint quadratic up to fullCount
+        for (let i = 1; i < fullCount; i++) {
           const mx = (points[i].x + points[i + 1].x) / 2 + offsetX;
           const my = (points[i].y + points[i + 1].y) / 2 + offsetY;
           ctx.quadraticCurveTo(points[i].x + offsetX, points[i].y + offsetY, mx, my);
         }
-        ctx.lineTo(points[count - 1].x + offsetX, points[count - 1].y + offsetY);
+        // Final partial segment to the interpolated tip
+        if (fullCount >= 1 && fullCount < points.length) {
+          ctx.quadraticCurveTo(
+            points[fullCount].x + offsetX,
+            points[fullCount].y + offsetY,
+            tipPx,
+            tipPy,
+          );
+        } else {
+          ctx.lineTo(tipPx, tipPy);
+        }
       };
 
       // Outer glow trail — soft halo along the entire stroke
