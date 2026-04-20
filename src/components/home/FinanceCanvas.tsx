@@ -268,20 +268,7 @@ const FinanceCanvas = () => {
       ctx.lineJoin    = "round";
       ctx.stroke();
 
-      // Glow dot at the leading tip
-      const tip  = points[count - 1];
-      const tx = tip.x + offsetX;
-      const ty = tip.y + offsetY;
-      const glowR = withGlowTrail ? 36 : 28;
-      const glow = ctx.createRadialGradient(tx, ty, 0, tx, ty, glowR);
-      glow.addColorStop(0, hexToRgba(P.ORANGE_LIGHT, 0.85 * alpha));
-      glow.addColorStop(0.4, hexToRgba(P.ORANGE, 0.45 * alpha));
-      glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
-      ctx.beginPath();
-      ctx.arc(tx, ty, glowR, 0, Math.PI * 2);
-      ctx.fillStyle = glow;
-      ctx.fill();
-    };
+      // Leading-tip glow removed: the lines now span the full width, so a "tip" highlight at the off-screen edge would look out of place.
 
     const draw = () => {
       const s = stateRef.current;
