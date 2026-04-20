@@ -489,10 +489,7 @@ const FinanceCanvas = () => {
         ctx.fill();
       });
 
-      if (cycleTime < 0.02) {
-        s.graphPoints  = generateGraphPoints(w, h, Math.random() * 10, h * 0.28);
-        s.graphPoints2 = generateGraphPoints(w, h, Math.random() * 10, h * 0.2);
-      }
+      // Continuous morph replaces the previous abrupt reseed — no jarring jumps.
 
       animFrameRef.current = requestAnimationFrame(draw);
     };
