@@ -258,7 +258,7 @@ const Pricing = () => {
         keywords="CIMA pricing, CIMA course fees, CIMA training cost, affordable CIMA courses"
       />
       {/* Hero */}
-      <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
+      <section className="relative py-10 lg:py-14 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-10 pointer-events-none" />
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/3 -right-20 pointer-events-none" />
@@ -284,7 +284,7 @@ const Pricing = () => {
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-16 lg:py-24">
+      <section className="py-10 lg:py-12">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -374,7 +374,7 @@ const Pricing = () => {
 
       {/* Individual Courses by Level */}
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
-        <section className="py-16 lg:py-20 bg-secondary/30">
+        <section className="py-10 lg:py-12 bg-secondary/30">
           <div className="container mx-auto px-4 overflow-hidden">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -516,7 +516,7 @@ const Pricing = () => {
       )}
 
       {/* Comparison Section */}
-      <section className="py-16 lg:py-24 bg-secondary/30">
+      <section className="py-10 lg:py-12 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -570,7 +570,7 @@ const Pricing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-28">
+      <section className="py-10 lg:py-14">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Start Your Journey?

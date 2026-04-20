@@ -80,7 +80,7 @@ const Contact = () => {
         keywords="contact Finatix, CIMA support, help, customer service"
       />
       {/* Hero */}
-      <section className="relative py-20 lg:py-28 overflow-hidden hero-gradient-light">
+      <section className="relative py-10 lg:py-14 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -right-20 pointer-events-none" />
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -left-20 pointer-events-none" />
@@ -106,7 +106,7 @@ const Contact = () => {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 lg:py-24 bg-secondary/30">
+      <section id="faq" className="py-10 lg:py-12 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -142,7 +142,7 @@ const Contact = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 lg:py-24">
+      <section className="py-10 lg:py-12">
         <div className="container mx-auto px-4 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}

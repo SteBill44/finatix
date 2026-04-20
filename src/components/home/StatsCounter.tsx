@@ -50,7 +50,7 @@ const StatsCounter = () => {
   const bgX = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
 
   return (
-    <section ref={ref} className="py-12 lg:py-16 bg-background border-y border-border/50 overflow-hidden">
+    <section ref={ref} className="py-10 lg:py-12 bg-background border-y border-border/50 overflow-hidden">
       <motion.div style={{ x: bgX }} className="container mx-auto px-4">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {stats.map((stat) => (
