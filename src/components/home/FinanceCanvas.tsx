@@ -27,19 +27,24 @@ const LIGHT = {
   BLOOM:        "#FFB07A",
 };
 
-const SYMBOLS = ["£", "$", "%", "¥", "€"];
+// Abstract geometric shape types — replaces literal currency symbols
+type ShapeKind = "dot" | "dash" | "square" | "ring" | "tick";
+const SHAPE_KINDS: ShapeKind[] = ["dot", "dash", "square", "ring", "tick"];
 
 interface Particle {
   x: number; y: number;
   radius: number; opacity: number;
   speed: number; phase: number;
+  depth: number; // 0..1, used for parallax + size scaling
 }
 
-interface FloatingSymbol {
+interface FloatingShape {
   x: number; y: number;
-  symbol: string; opacity: number;
+  kind: ShapeKind; opacity: number;
   speed: number; size: number;
   drift: number; phase: number;
+  rotation: number; rotSpeed: number;
+  depth: number; // parallax depth
 }
 
 interface Candlestick {
