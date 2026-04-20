@@ -314,15 +314,51 @@ const FinanceCanvas = () => {
         ctx.fillRect(c.x, c.y - c.bodyHeight / 2, c.width, c.bodyHeight);
       });
 
-      // Floating currency symbols
-      s.symbols.forEach((sym) => {
-        sym.y -= sym.speed;
-        sym.x += sym.drift + Math.sin(s.time * 2 + sym.phase) * 0.12;
-        if (sym.y < -40) { sym.y = h + 40; sym.x = Math.random() * w; }
-        ctx.font      = `300 ${sym.size}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = hexToRgba(P.GRAY, sym.opacity * SYMBOL_BOOST);
-        ctx.textAlign = "center";
-        ctx.fillText(sym.symbol, sym.x, sym.y);
+      // Floating abstract shapes (mid-depth parallax layer)
+      s.shapes.forEach((sh) => {
+        sh.y -= sh.speed;
+        sh.x += sh.drift + Math.sin(s.time * 2 + sh.phase) * 0.12;
+        sh.rotation += sh.rotSpeed;
+        if (sh.y < -40) { sh.y = h + 40; sh.x = Math.random() * w; }
+
+        // Mid-layer parallax: shapes shift moderately with mouse + scroll
+        const px = sh.x + s.parallaxX * (0.4 + sh.depth * 0.6);
+        const py = sh.y + s.parallaxY * (0.4 + sh.depth * 0.6) - s.scrollY * 0.15 * sh.depth;
+
+        const a = sh.opacity * SYMBOL_BOOST;
+        const col = sh.depth > 0.5 ? P.ORANGE : P.GRAY;
+        ctx.save();
+        ctx.translate(px, py);
+        ctx.rotate(sh.rotation);
+        ctx.fillStyle   = hexToRgba(col, a);
+        ctx.strokeStyle = hexToRgba(col, a * 1.2);
+        ctx.lineWidth   = 1;
+        switch (sh.kind) {
+          case "dot":
+            ctx.beginPath();
+            ctx.arc(0, 0, sh.size * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+          case "dash":
+            ctx.fillRect(-sh.size * 0.6, -sh.size * 0.08, sh.size * 1.2, sh.size * 0.16);
+            break;
+          case "square":
+            ctx.strokeRect(-sh.size * 0.4, -sh.size * 0.4, sh.size * 0.8, sh.size * 0.8);
+            break;
+          case "ring":
+            ctx.beginPath();
+            ctx.arc(0, 0, sh.size * 0.45, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+          case "tick":
+            ctx.beginPath();
+            ctx.moveTo(-sh.size * 0.4, sh.size * 0.1);
+            ctx.lineTo(-sh.size * 0.05, sh.size * 0.4);
+            ctx.lineTo(sh.size * 0.5, -sh.size * 0.3);
+            ctx.stroke();
+            break;
+        }
+        ctx.restore();
       });
 
       // Graph draw cycle
