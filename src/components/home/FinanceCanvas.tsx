@@ -425,13 +425,48 @@ const FinanceCanvas = () => {
       }
 
       // Particles — FOREGROUND parallax layer (strongest mouse/scroll response)
+      // First pass: compute final on-screen positions so we can draw constellation lines underneath.
+      const particlePositions: { x: number; y: number; pulse: number; p: typeof s.particles[number] }[] = [];
       s.particles.forEach((p) => {
         const pulse = 0.7 + 0.3 * Math.sin(s.time * 3 + p.phase);
-        // Foreground parallax: deeper particles (depth→1) move most with mouse
         const parX = s.parallaxX * (0.8 + p.depth * 1.4);
         const parY = s.parallaxY * (0.8 + p.depth * 1.4) - s.scrollY * 0.3 * p.depth;
         const px = p.x + Math.cos(s.time * p.speed * 2 + p.phase) * 4 + parX;
         const py = p.y + Math.sin(s.time * p.speed * 3 + p.phase) * 8 + parY;
+        particlePositions.push({ x: px, y: py, pulse, p });
+      });
+
+      // Constellation lines — connect particles within MAX_DIST, fading by distance
+      const MAX_DIST = 140;
+      const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
+      const LINE_BASE_ALPHA = isDark ? 0.18 : 0.22;
+      ctx.lineWidth = 0.6;
+      ctx.lineCap   = "round";
+      for (let i = 0; i < particlePositions.length; i++) {
+        const a = particlePositions[i];
+        for (let j = i + 1; j < particlePositions.length; j++) {
+          const b = particlePositions[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq > MAX_DIST_SQ) continue;
+          const d = Math.sqrt(dSq);
+          // Fade by distance, modulated by both particles' opacity & depth
+          const proximity = 1 - d / MAX_DIST;
+          const depthAvg  = (a.p.depth + b.p.depth) / 2;
+          const alpha = LINE_BASE_ALPHA * proximity * proximity * (0.4 + depthAvg * 0.6)
+                      * Math.min(1, (a.p.opacity + b.p.opacity));
+          if (alpha < 0.005) continue;
+          ctx.strokeStyle = hexToRgba(P.ORANGE, alpha);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+
+      // Draw particles on top of the constellation web
+      particlePositions.forEach(({ x: px, y: py, pulse, p }) => {
         const glow = ctx.createRadialGradient(px, py, 0, px, py, p.radius * 5 * pulse);
         glow.addColorStop(0, hexToRgba(P.ORANGE, p.opacity * PARTICLE_GLOW_A * pulse));
         glow.addColorStop(1, hexToRgba(P.ORANGE, 0));
