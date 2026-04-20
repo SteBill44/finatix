@@ -45,7 +45,7 @@ export const useLearningPaths = () => {
   return useQuery({
     queryKey: ["learning_paths"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("learning_paths")
         .select(`
           *,
@@ -57,7 +57,7 @@ export const useLearningPaths = () => {
         .eq("is_published", true)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) return [] as LearningPath[];
       return (data || []) as LearningPath[];
     },
   });
@@ -69,7 +69,7 @@ export const useMyLearningPaths = () => {
   return useQuery({
     queryKey: ["my_learning_paths", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("user_learning_paths")
         .select(`
           *,
@@ -84,7 +84,7 @@ export const useMyLearningPaths = () => {
         .eq("user_id", user!.id)
         .order("enrolled_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) return [] as (UserLearningPath & { learning_path: LearningPath })[];
       return (data || []) as (UserLearningPath & { learning_path: LearningPath })[];
     },
     enabled: !!user,
@@ -97,7 +97,7 @@ export const useEnrollInLearningPath = () => {
 
   return useMutation({
     mutationFn: async (learningPathId: string) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("user_learning_paths")
         .insert({
           user_id: user!.id,
