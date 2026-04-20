@@ -390,18 +390,18 @@ const FinanceCanvas = () => {
       s.parallaxX += (s.targetParallaxX - s.parallaxX) * 0.06;
       s.parallaxY += (s.targetParallaxY - s.parallaxY) * 0.06;
 
-      // Graph draw cycle — BACKGROUND parallax layer (slowest movement)
+      // Graph cycle still drives reseeding, but the line itself always renders fully across
       const cycleDuration = 3;
       const holdDuration  = 1.5;
       const cycleTime     = s.time % (cycleDuration + holdDuration);
-      s.graphProgress = cycleTime < cycleDuration ? Math.min(1, cycleTime / cycleDuration) : 1;
+      s.graphProgress = 1;
 
       const graphParX = s.parallaxX * 0.15;
       const graphParY = s.parallaxY * 0.15 - s.scrollY * 0.05;
 
-      // Thicker, more prominent primary graph with glow trail
-      drawGradientLine(s.graphPoints,  s.graphProgress,        4.5, 1.0,  graphParX, graphParY, true);
-      drawGradientLine(s.graphPoints2, s.graphProgress * 0.85, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2);
+      // Both lines span edge-to-edge; no glow halo trail
+      drawGradientLine(s.graphPoints,  1,    4.5, 1.0,  graphParX,       graphParY,       false);
+      drawGradientLine(s.graphPoints2, 1,    2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
       // Area fill under primary graph (with parallax offset to match)
       const count = Math.floor(s.graphPoints.length * s.graphProgress);
