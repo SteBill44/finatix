@@ -5,8 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
-
-
+import FinanceCanvas from "./FinanceCanvas";
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
