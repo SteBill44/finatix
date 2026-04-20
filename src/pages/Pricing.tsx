@@ -284,7 +284,7 @@ const Pricing = () => {
       </section>
 
       {/* Pricing Cards */}
-      <section className="py-10 lg:py-12">
+      <section className="py-8 lg:py-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -374,7 +374,7 @@ const Pricing = () => {
 
       {/* Individual Courses by Level */}
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
-        <section className="py-10 lg:py-12 bg-secondary/30">
+        <section className="py-8 lg:py-10 bg-secondary/30">
           <div className="container mx-auto px-4 overflow-hidden">
             <div className="text-center mb-12">
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -516,7 +516,7 @@ const Pricing = () => {
       )}
 
       {/* Comparison Section */}
-      <section className="py-10 lg:py-12 bg-secondary/30">
+      <section className="py-8 lg:py-10 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">

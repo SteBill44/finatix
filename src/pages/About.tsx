@@ -72,7 +72,7 @@ const About = () => {
       </section>
 
       {/* Vision Section */}
-      <section className="py-10 lg:py-12">
+      <section className="py-8 lg:py-10">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-3">
@@ -102,7 +102,7 @@ const About = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-10 lg:py-12 bg-secondary/30">
+      <section className="py-8 lg:py-10 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-10">
             <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium mb-3">
@@ -131,7 +131,7 @@ const About = () => {
       </section>
 
       {/* Success Rate Section */}
-      <section className="py-10 lg:py-12 bg-gradient-to-br from-primary/5 to-accent/5">
+      <section className="py-8 lg:py-10 bg-gradient-to-br from-primary/5 to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <Award className="w-12 h-12 text-primary mx-auto mb-4" />

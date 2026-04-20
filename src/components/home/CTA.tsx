@@ -47,7 +47,7 @@ const CTA = () => {
   const bgScale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
 
   return (
-    <section ref={sectionRef} className="py-20 lg:py-32 bg-background hex-pattern overflow-hidden">
+    <section ref={sectionRef} className="py-12 lg:py-20 bg-background hex-pattern overflow-hidden">
       <motion.div style={{ scale: bgScale }} className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center">
           {user ? (
