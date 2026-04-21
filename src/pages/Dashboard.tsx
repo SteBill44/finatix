@@ -207,18 +207,62 @@ const Dashboard = () => {
 
               {/* Main column */}
               <div className="lg:col-span-2 space-y-6 min-w-0">
-                {activeCourses.length > 0 && (
-                  <div>
-                    <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                      My Courses
-                    </h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {activeCourses.map((e) => (
-                        <CourseProgressCard key={e.id} enrollment={e} />
-                      ))}
+                {activeCourses.length > 0 && (() => {
+                  const grouped = LEVEL_GROUPS.map((g) => ({
+                    ...g,
+                    courses: activeCourses.filter(
+                      (e) => (e.courses?.level || "").toLowerCase() === g.key,
+                    ),
+                  })).filter((g) => g.courses.length > 0);
+                  const defaultOpen = grouped.map((g) => g.key);
+                  return (
+                    <div>
+                      <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                        My Courses
+                      </h2>
+                      <Accordion
+                        type="multiple"
+                        defaultValue={defaultOpen}
+                        className="space-y-3"
+                      >
+                        {grouped.map((g) => {
+                          const Icon = g.icon;
+                          return (
+                            <AccordionItem
+                              key={g.key}
+                              value={g.key}
+                              className="border border-border rounded-xl bg-card overflow-hidden"
+                            >
+                              <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-secondary/40">
+                                <div className="flex items-center gap-3 flex-1 min-w-0">
+                                  <Icon className={`w-4 h-4 flex-shrink-0 ${g.color}`} />
+                                  <div className="flex-1 min-w-0 text-left">
+                                    <p className="text-sm font-semibold text-foreground truncate">
+                                      {g.label}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground truncate">
+                                      {g.sub}
+                                    </p>
+                                  </div>
+                                  <span className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded-full flex-shrink-0">
+                                    {g.courses.length}
+                                  </span>
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent className="px-4 pb-4 pt-1">
+                                <div className="grid sm:grid-cols-2 gap-4">
+                                  {g.courses.map((e) => (
+                                    <CourseProgressCard key={e.id} enrollment={e} />
+                                  ))}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        })}
+                      </Accordion>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {completedCourses.length > 0 && (
                   <div>
