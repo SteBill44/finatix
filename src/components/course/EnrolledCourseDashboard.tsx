@@ -69,18 +69,45 @@ interface EnrolledCourseDashboardProps {
   unenrollPending: boolean;
 }
 
-// Derive a short axis label from a full syllabus area title.
-// "A. External Analysis" → "A"   |   "Management Accounting" → "Mgmt. Acc"
-const shortAxisLabel = (title: string): string => {
-  const prefixMatch = title.match(/^([A-Z]\d*)[.\s]/);
-  if (prefixMatch) return prefixMatch[1];
-  const words = title.split(" ");
-  if (words.length === 1) return title.slice(0, 10);
-  // Take first 2 words, abbreviate each to ≤6 chars
-  return words
-    .slice(0, 2)
-    .map((w) => (w.length > 6 ? w.slice(0, 5) + "." : w))
-    .join(" ");
+// Split a syllabus area title into a short prefix code (e.g. "A") and a subtitle.
+// Examples:
+//   "A: Strategy Process"   → { prefix: "A",  subtitle: "Strategy Process" }
+//   "A. External Analysis"  → { prefix: "A",  subtitle: "External Analysis" }
+//   "Management Accounting" → { prefix: "",   subtitle: "Management Accounting" }
+const splitAxisLabel = (title: string): { prefix: string; subtitle: string } => {
+  const prefixMatch = title.match(/^([A-Z]\d*)\s*[:.\-)]\s*(.*)$/);
+  if (prefixMatch) {
+    return { prefix: prefixMatch[1], subtitle: prefixMatch[2].trim() };
+  }
+  return { prefix: "", subtitle: title.trim() };
+};
+
+// Wrap a subtitle into up to `maxLines` lines, each ≤ `maxChars`, breaking on word boundaries.
+const wrapSubtitle = (text: string, maxChars: number, maxLines: number): string[] => {
+  if (!text) return [];
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const w of words) {
+    const candidate = current ? `${current} ${w}` : w;
+    if (candidate.length <= maxChars) {
+      current = candidate;
+    } else {
+      if (current) lines.push(current);
+      current = w;
+      if (lines.length === maxLines - 1) break;
+    }
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  // Truncate the final line if there are more words remaining
+  const used = lines.join(" ").split(/\s+/).length;
+  if (used < words.length && lines.length > 0) {
+    const last = lines[lines.length - 1];
+    lines[lines.length - 1] = last.length > maxChars - 1
+      ? last.slice(0, Math.max(1, maxChars - 1)) + "…"
+      : last + "…";
+  }
+  return lines;
 };
 
 const EnrolledCourseDashboard = ({
