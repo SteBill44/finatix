@@ -501,29 +501,29 @@ const EnrolledCourseDashboard = ({
                         if (!d) return null;
                         const aboveTarget = d.score >= 75;
                         return (
-                          <div className="bg-popover border border-border rounded-lg px-3 py-2.5 shadow-lg text-left min-w-[160px]">
-                            <p className="text-sm font-semibold text-foreground mb-1">{d.fullTitle}</p>
+                          <div className="bg-popover border border-border rounded-md px-2 py-1.5 shadow-md text-left min-w-[120px] max-w-[180px]">
+                            <p className="text-xs font-semibold text-foreground leading-tight mb-0.5 line-clamp-2">{d.fullTitle}</p>
                             {d.weight && (
-                              <p className="text-xs text-muted-foreground mb-2">Exam weight: {d.weight}</p>
+                              <p className="text-[10px] text-muted-foreground mb-1">Weight: {d.weight}</p>
                             )}
                             {d.attempted > 0 ? (
                               <>
-                                <div className="flex items-center justify-between gap-4">
-                                  <span className="text-xs text-muted-foreground">Mastery</span>
-                                  <span className={`text-sm font-bold ${getScoreColor(d.score)}`}>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span className="text-[10px] text-muted-foreground">Mastery</span>
+                                  <span className={`text-xs font-bold ${getScoreColor(d.score)}`}>
                                     {d.score}%
                                   </span>
                                 </div>
-                                <div className="flex items-center justify-between gap-4">
-                                  <span className="text-xs text-muted-foreground">Questions</span>
-                                  <span className="text-xs font-medium text-foreground">{d.attempted}</span>
+                                <div className="flex items-center justify-between gap-3">
+                                  <span className="text-[10px] text-muted-foreground">Qs</span>
+                                  <span className="text-[10px] font-medium text-foreground">{d.attempted}</span>
                                 </div>
-                                <div className={`mt-2 text-xs font-medium ${aboveTarget ? "text-accent" : "text-yellow-500"}`}>
-                                  {aboveTarget ? "Above pass threshold" : `${75 - d.score}% below target`}
+                                <div className={`mt-1 text-[10px] font-medium ${aboveTarget ? "text-accent" : "text-yellow-500"}`}>
+                                  {aboveTarget ? "Above target" : `${75 - d.score}% below`}
                                 </div>
                               </>
                             ) : (
-                              <p className="text-xs text-muted-foreground">Not practised yet</p>
+                              <p className="text-[10px] text-muted-foreground">Not practised yet</p>
                             )}
                           </div>
                         );
