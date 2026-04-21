@@ -21,13 +21,13 @@ const FaviconManager = () => {
       ctx.arc(32, 32, 30, 0, Math.PI * 2);
       
       if (isDark) {
-        // Dark mode: gold background with dark text
+        // Dark mode: orange background with dark text
         const gradient = ctx.createLinearGradient(0, 0, 64, 64);
-        gradient.addColorStop(0, "#C9A55C");
-        gradient.addColorStop(1, "#9A7B3D");
+        gradient.addColorStop(0, "#f05007");
+        gradient.addColorStop(1, "#f57b0c");
         ctx.fillStyle = gradient;
       } else {
-        // Light mode: dark background with gold text
+        // Light mode: dark background with orange text
         const gradient = ctx.createLinearGradient(0, 0, 64, 64);
         gradient.addColorStop(0, "#1A1F2C");
         gradient.addColorStop(1, "#0F1218");
@@ -43,7 +43,7 @@ const FaviconManager = () => {
       if (isDark) {
         ctx.fillStyle = "#1A1F2C";
       } else {
-        ctx.fillStyle = "#C9A55C";
+        ctx.fillStyle = "#f05007";
       }
       ctx.fillText("F", 32, 34);
 
