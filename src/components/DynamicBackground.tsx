@@ -44,7 +44,7 @@ const DynamicBackground = () => {
     const drawParticle = (particle: typeof particles[0]) => {
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(174, 72%, 40%, ${particle.opacity})`;
+      ctx.fillStyle = `hsla(25, 95%, 53%, ${particle.opacity})`;
       ctx.fill();
     };
 
@@ -59,7 +59,7 @@ const DynamicBackground = () => {
           if (distance < maxDistance) {
             const opacity = (1 - distance / maxDistance) * 0.15;
             ctx.beginPath();
-            ctx.strokeStyle = `hsla(174, 72%, 40%, ${opacity})`;
+            ctx.strokeStyle = `hsla(25, 95%, 53%, ${opacity})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
