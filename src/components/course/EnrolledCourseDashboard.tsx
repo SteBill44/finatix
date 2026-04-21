@@ -1,5 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -685,57 +687,6 @@ const EnrolledCourseDashboard = ({
 
         {/* Sidebar */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Assessments — quizzes, mock exams, final exam */}
-          {totalAssessments > 0 && (
-            <Card className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                  <Trophy className="w-3.5 h-3.5 text-primary" />
-                  Assessments
-                </div>
-                <span className="text-[10px] text-muted-foreground">
-                  Pass ≥ {PASS_THRESHOLD}%
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                {/* Practice Quizzes */}
-                {assessments.practiceQuizzes.length > 0 && (
-                  <AssessmentGroup
-                    label="Practice Quizzes"
-                    icon={<ClipboardList className="w-3 h-3" />}
-                    items={assessments.practiceQuizzes}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                  />
-                )}
-
-                {/* Mock Exams */}
-                {assessments.mockExams.length > 0 && (
-                  <AssessmentGroup
-                    label="Mock Exams"
-                    icon={<GraduationCap className="w-3 h-3" />}
-                    items={assessments.mockExams}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                  />
-                )}
-
-                {/* Final Exam */}
-                {assessments.finalExams.length > 0 && (
-                  <AssessmentGroup
-                    label="Final Exam"
-                    icon={<Award className="w-3 h-3" />}
-                    items={assessments.finalExams}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                    highlight
-                  />
-                )}
-              </div>
-            </Card>
-          )}
-
           {/* Next Lesson */}
           {nextLesson ? (
             <Card className="p-5 border-primary/20 bg-primary/[0.03]">
@@ -767,6 +718,58 @@ const EnrolledCourseDashboard = ({
               </p>
             </Card>
           ) : null}
+
+          {/* Assessments — quizzes, mock exams, final exam */}
+          {totalAssessments > 0 && (
+            <Card className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+                  <Trophy className="w-3.5 h-3.5 text-primary" />
+                  Assessments
+                </div>
+                <span className="text-[10px] text-muted-foreground">
+                  Pass ≥ {PASS_THRESHOLD}%
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {/* Practice Quizzes */}
+                {assessments.practiceQuizzes.length > 0 && (
+                  <AssessmentGroup
+                    label="Practice Quizzes"
+                    icon={<ClipboardList className="w-3 h-3" />}
+                    items={assessments.practiceQuizzes}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Mock Exams */}
+                {assessments.mockExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Mock Exams"
+                    icon={<GraduationCap className="w-3 h-3" />}
+                    items={assessments.mockExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Final Exam */}
+                {assessments.finalExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Final Exam"
+                    icon={<Award className="w-3 h-3" />}
+                    items={assessments.finalExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                    highlight
+                    defaultOpen={false}
+                  />
+                )}
+              </div>
+            </Card>
+          )}
 
           {/* Recommendations */}
           {readiness.weakAreas.length > 0 && (
@@ -912,6 +915,7 @@ const AssessmentGroup = ({
   onLaunch,
   getScoreColor,
   highlight = false,
+  defaultOpen = true,
 }: {
   label: string;
   icon: React.ReactNode;
@@ -919,82 +923,100 @@ const AssessmentGroup = ({
   onLaunch: (item: AssessmentGroupItem) => void;
   getScoreColor: (score: number) => string;
   highlight?: boolean;
+  defaultOpen?: boolean;
 }) => {
+  const [open, setOpen] = useState(defaultOpen);
   const completedCount = items.filter((i) => i.passed).length;
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
-          {icon}
-          {label}
-        </p>
-        <span className="text-[10px] text-muted-foreground">
-          {completedCount}/{items.length} passed
-        </span>
-      </div>
-      <div className="space-y-1.5">
-        {items.map((item) => {
-          const notStarted = item.attemptsCount === 0;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onLaunch(item)}
-              className={`w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md border transition-colors ${
-                highlight
-                  ? "border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.06]"
-                  : item.passed
-                  ? "border-accent/20 bg-accent/[0.04] hover:bg-accent/[0.08]"
-                  : "border-border/60 hover:bg-muted/50"
+    <Collapsible open={open} onOpenChange={setOpen} className="border border-border/50 rounded-md">
+      <CollapsibleTrigger asChild>
+        <button
+          type="button"
+          className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md hover:bg-muted/50 transition-colors ${
+            highlight ? "bg-primary/[0.04]" : ""
+          }`}
+        >
+          <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+            {icon}
+            {label}
+          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-muted-foreground">
+              {completedCount}/{items.length} passed
+            </span>
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${
+                open ? "rotate-180" : ""
               }`}
-            >
-              <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
-                  item.passed
-                    ? "bg-accent/15 text-accent"
-                    : item.attemptsCount > 0
-                    ? "bg-yellow-500/15 text-yellow-600"
-                    : "bg-muted text-muted-foreground"
+            />
+          </div>
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="space-y-1.5 px-2 pb-2 pt-1">
+          {items.map((item) => {
+            const notStarted = item.attemptsCount === 0;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onLaunch(item)}
+                className={`w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md border transition-colors ${
+                  highlight
+                    ? "border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.06]"
+                    : item.passed
+                    ? "border-accent/20 bg-accent/[0.04] hover:bg-accent/[0.08]"
+                    : "border-border/60 hover:bg-muted/50"
                 }`}
               >
-                {item.passed ? (
-                  <CheckCircle className="w-3.5 h-3.5" />
-                ) : item.attemptsCount > 0 ? (
-                  <RotateCcw className="w-3 h-3" />
-                ) : (
-                  <Play className="w-3 h-3" />
-                )}
-              </div>
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                    item.passed
+                      ? "bg-accent/15 text-accent"
+                      : item.attemptsCount > 0
+                      ? "bg-yellow-500/15 text-yellow-600"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {item.passed ? (
+                    <CheckCircle className="w-3.5 h-3.5" />
+                  ) : item.attemptsCount > 0 ? (
+                    <RotateCcw className="w-3 h-3" />
+                  ) : (
+                    <Play className="w-3 h-3" />
+                  )}
+                </div>
 
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-foreground truncate">
-                  {item.title}
-                </p>
-                <p className="text-[10px] text-muted-foreground">
-                  {notStarted
-                    ? "Not started"
-                    : `${item.attemptsCount} attempt${item.attemptsCount !== 1 ? "s" : ""}`}
-                </p>
-              </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">
+                    {item.title}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {notStarted
+                      ? "Not started"
+                      : `${item.attemptsCount} attempt${item.attemptsCount !== 1 ? "s" : ""}`}
+                  </p>
+                </div>
 
-              <div className="text-right shrink-0">
-                {item.bestScorePct !== null ? (
-                  <>
-                    <p className={`text-xs font-bold ${getScoreColor(item.bestScorePct)}`}>
-                      {item.bestScorePct}%
-                    </p>
-                    <p className="text-[9px] text-muted-foreground leading-none">best</p>
-                  </>
-                ) : (
-                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
-                )}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+                <div className="text-right shrink-0">
+                  {item.bestScorePct !== null ? (
+                    <>
+                      <p className={`text-xs font-bold ${getScoreColor(item.bestScorePct)}`}>
+                        {item.bestScorePct}%
+                      </p>
+                      <p className="text-[9px] text-muted-foreground leading-none">best</p>
+                    </>
+                  ) : (
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
