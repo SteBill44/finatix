@@ -345,17 +345,6 @@ const EnrolledCourseDashboard = ({
             </p>
           )}
         </div>
-        <Button
-          size="lg"
-          className="gap-2 shrink-0"
-          onClick={() => {
-            if (nextLesson) navigate(`/courses/${course.id}/lesson/${nextLesson.id}`);
-            else if (lessons.length > 0) navigate(`/courses/${course.id}/lesson/${lessons[0].id}`);
-          }}
-        >
-          <Play className="w-5 h-5" />
-          {progressPercentage > 0 ? "Continue Learning" : "Start Learning"}
-        </Button>
       </div>
 
       {/* Stat strip */}
