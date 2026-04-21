@@ -329,13 +329,13 @@ const EnrolledCourseDashboard = ({
       : "hsl(var(--primary))";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">{course.title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">{course.title}</h1>
           {readiness.lastActivityDays !== null && (
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Last active{" "}
               {readiness.lastActivityDays === 0
                 ? "today"
