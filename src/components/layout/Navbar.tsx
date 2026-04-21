@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search, Gift, Layers, Bot, Map } from "lucide-react";
+import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, LayoutDashboard, Award, Search, Gift, Layers, Map } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";

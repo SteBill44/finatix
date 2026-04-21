@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, BookOpen, LayoutDashboard, User, GraduationCap, Layers, Bot } from "lucide-react";
+import { Home, BookOpen, LayoutDashboard, User, GraduationCap, Layers } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const MobileBottomNav = () => {
@@ -12,7 +12,6 @@ const MobileBottomNav = () => {
         { icon: BookOpen, label: "Courses", path: "/courses" },
         { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
         { icon: Layers, label: "Flashcards", path: "/flashcards" },
-        { icon: Bot, label: "AI Tutor", path: "/ai-tutor" },
         { icon: User, label: "Account", path: "/account" },
       ]
     : [
