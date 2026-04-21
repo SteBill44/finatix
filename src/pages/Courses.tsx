@@ -363,7 +363,11 @@ const Courses = () => {
       />
 
       {/* ── Hero ── */}
-      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
+      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, hsl(20 60% 96%) 0%, hsl(24 70% 92%) 25%, hsl(20 80% 88%) 50%, hsl(20 90% 85%) 75%, hsl(20 95% 82%) 100%)'
+        }}>
+        <div className="absolute inset-0 hex-pattern opacity-60" />
         <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10">
