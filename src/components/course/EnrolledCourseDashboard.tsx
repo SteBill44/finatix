@@ -50,6 +50,15 @@ interface Lesson {
   order_index: number;
 }
 
+interface AssessmentQuiz {
+  id: string;
+  title: string;
+  description?: string | null;
+  quiz_type?: string;
+  order_index?: number;
+  lesson_id?: string | null;
+}
+
 interface EnrolledCourseDashboardProps {
   course: {
     id: string;
@@ -63,6 +72,7 @@ interface EnrolledCourseDashboardProps {
   readinessScore: ReadinessScore | null | undefined;
   syllabusAreas: SyllabusArea[];
   quizAttempts: Array<{ quiz_id: string | null; score: number; max_score: number; attempted_at: string }> | null;
+  quizzes?: AssessmentQuiz[] | null;
   levelColor: string;
   levelBgColor: string;
   onUnenroll: () => void;
