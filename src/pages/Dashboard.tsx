@@ -137,9 +137,7 @@ const Dashboard = () => {
               <Button
                 size="lg"
                 className="shrink-0 gap-2"
-                onClick={() =>
-                  navigate(`/courses/${lastLesson.course_id}/lesson/${lastLesson.lesson_id}`)
-                }
+                onClick={() => navigate(`/courses/${lastLesson.course_slug}`)}
               >
                 <Play className="w-4 h-4" />
                 Continue Learning
