@@ -240,10 +240,10 @@ const Dashboard = () => {
                                   </span>
                                 </div>
                               </AccordionTrigger>
-                              <AccordionContent className="pb-4 pt-1">
-                                <div className="grid sm:grid-cols-2 gap-4">
+                              <AccordionContent className="pb-3 pt-0">
+                                <div className="divide-y divide-border/60">
                                   {g.courses.map((e) => (
-                                    <CourseProgressCard key={e.id} enrollment={e} />
+                                    <CourseProgressRow key={e.id} enrollment={e} />
                                   ))}
                                 </div>
                               </AccordionContent>
@@ -260,9 +260,9 @@ const Dashboard = () => {
                     <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
                       Completed — {completedCourses.length}
                     </h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="divide-y divide-border/60 border-y border-border">
                       {completedCourses.map((e) => (
-                        <CourseProgressCard key={e.id} enrollment={e} />
+                        <CourseProgressRow key={e.id} enrollment={e} />
                       ))}
                     </div>
                   </div>
