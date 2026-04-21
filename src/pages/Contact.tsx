@@ -80,7 +80,7 @@ const Contact = () => {
         keywords="contact Finatix, CIMA support, help, customer service"
       />
       {/* Hero */}
-      <section className="relative py-10 lg:py-14 overflow-hidden hero-gradient-light">
+      <section className="relative py-16 lg:py-20 overflow-hidden hero-gradient-light">
         <div className="absolute inset-0 gradient-bg opacity-95" />
         <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -right-20 pointer-events-none" />
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -left-20 pointer-events-none" />
