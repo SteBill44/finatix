@@ -99,22 +99,30 @@ export const useReadinessScore = (courseId: string) => {
       const { data: lessons } = await from("lessons")
         .select("id, title, order_index").eq("course_id", courseId).order("order_index");
       const totalLessons = lessons?.length || 0;
+      const lessonIdList = lessons?.map((l) => l.id) || [];
 
-      const { data: lessonProgress } = await from("lesson_progress")
-        .select("lesson_id, completed, completed_at").eq("user_id", user.id).eq("completed", true);
+      // [6] Filter lessonProgress at DB level using course lesson IDs
+      const { data: lessonProgress } = lessonIdList.length > 0
+        ? await from("lesson_progress")
+            .select("lesson_id, completed, completed_at")
+            .eq("user_id", user.id)
+            .in("lesson_id", lessonIdList)
+            .eq("completed", true)
+        : { data: [] as { lesson_id: string; completed: boolean; completed_at: string | null }[] };
 
-      const lessonIds = new Set(lessons?.map((l) => l.id) || []);
-      const completedLessonIds = new Set(
-        lessonProgress?.filter((p) => lessonIds.has(p.lesson_id)).map((p) => p.lesson_id) || []
-      );
+      const completedLessonIds = new Set(lessonProgress?.map((p) => p.lesson_id) || []);
       const completedLessons = completedLessonIds.size;
       const incompleteLessons = lessons?.filter((l) => !completedLessonIds.has(l.id)) || [];
 
+      // [1] Fetch quiz_type for proper exam classification
       const { data: quizzes } = await from("quizzes")
-        .select("id, title, lesson_id").eq("course_id", courseId);
+        .select("id, title, quiz_type, lesson_id").eq("course_id", courseId);
 
-      const regularQuizzes = quizzes?.filter((q) => !q.title.toLowerCase().includes("mock")) || [];
-      const mockExams = quizzes?.filter((q) => q.title.toLowerCase().includes("mock")) || [];
+      const isExam = (q: { quiz_type?: string | null; title: string }) =>
+        q.quiz_type === "mock_exam" || q.quiz_type === "final_exam";
+
+      const regularQuizzes = quizzes?.filter((q) => !isExam(q)) || [];
+      const mockExams = quizzes?.filter((q) => isExam(q)) || [];
       const regularQuizIds = regularQuizzes.map((q) => q.id);
       const mockExamIds = mockExams.map((q) => q.id);
 
@@ -123,59 +131,55 @@ export const useReadinessScore = (courseId: string) => {
         .eq("user_id", user.id).eq("course_id", courseId)
         .order("attempted_at", { ascending: false });
 
-      const regularQuizAttempts = quizAttempts?.filter((a) => a.quiz_id && regularQuizIds.includes(a.quiz_id));
-      const quizScores = new Map<string, { score: number; recencyWeight: number; title: string }>();
-      regularQuizAttempts?.forEach((attempt) => {
-        if (attempt.quiz_id) {
-          const percentage = (attempt.score / attempt.max_score) * 100;
-          const daysAgo = getDaysSince(attempt.attempted_at);
-          const recencyWeight = getRecencyWeight(daysAgo);
-          const quiz = regularQuizzes.find((q) => q.id === attempt.quiz_id);
-          const current = quizScores.get(attempt.quiz_id);
-          const weightedScore = percentage * recencyWeight;
-          const currentWeightedScore = current ? current.score * current.recencyWeight : 0;
-          if (!current || weightedScore > currentWeightedScore) {
-            quizScores.set(attempt.quiz_id, { score: percentage, recencyWeight, title: quiz?.title || "Quiz" });
-          }
+      // [2] Most-recent attempt per quiz — no double-weighting
+      const latestAttemptByQuiz = new Map<string, { score: number; max_score: number; attempted_at: string }>();
+      [...(quizAttempts || [])].forEach((a) => {
+        if (a.quiz_id && !latestAttemptByQuiz.has(a.quiz_id)) {
+          latestAttemptByQuiz.set(a.quiz_id, a);
+        }
+      });
+
+      // [3] Raw percentage only — no recency decay on scores
+      const quizScores = new Map<string, { score: number; title: string }>();
+      regularQuizIds.forEach((id) => {
+        const attempt = latestAttemptByQuiz.get(id);
+        if (attempt && attempt.max_score > 0) {
+          const quiz = regularQuizzes.find((q) => q.id === id);
+          quizScores.set(id, {
+            score: (attempt.score / attempt.max_score) * 100,
+            title: quiz?.title || "Quiz",
+          });
         }
       });
 
       const quizzesTaken = quizScores.size;
-      let averageQuizScore = 0;
-      if (quizzesTaken > 0) {
-        const totalWeightedScore = Array.from(quizScores.values()).reduce((sum, q) => sum + q.score * q.recencyWeight, 0);
-        const totalWeight = Array.from(quizScores.values()).reduce((sum, q) => sum + q.recencyWeight, 0);
-        averageQuizScore = totalWeightedScore / totalWeight;
-      }
+      const averageQuizScore =
+        quizzesTaken > 0
+          ? Array.from(quizScores.values()).reduce((sum, q) => sum + q.score, 0) / quizzesTaken
+          : 0;
 
-      const mockExamAttempts = quizAttempts?.filter((a) => a.quiz_id && mockExamIds.includes(a.quiz_id));
-      const mockScores = new Map<string, { score: number; recencyWeight: number; title: string }>();
-      mockExamAttempts?.forEach((attempt) => {
-        if (attempt.quiz_id) {
-          const percentage = (attempt.score / attempt.max_score) * 100;
-          const daysAgo = getDaysSince(attempt.attempted_at);
-          const recencyWeight = getRecencyWeight(daysAgo);
-          const mock = mockExams.find((m) => m.id === attempt.quiz_id);
-          const current = mockScores.get(attempt.quiz_id);
-          const weightedScore = percentage * recencyWeight;
-          const currentWeightedScore = current ? current.score * current.recencyWeight : 0;
-          if (!current || weightedScore > currentWeightedScore) {
-            mockScores.set(attempt.quiz_id, { score: percentage, recencyWeight, title: mock?.title || "Mock Exam" });
-          }
+      const mockScores = new Map<string, { score: number; title: string }>();
+      mockExamIds.forEach((id) => {
+        const attempt = latestAttemptByQuiz.get(id);
+        if (attempt && attempt.max_score > 0) {
+          const mock = mockExams.find((m) => m.id === id);
+          mockScores.set(id, {
+            score: (attempt.score / attempt.max_score) * 100,
+            title: mock?.title || "Mock Exam",
+          });
         }
       });
 
       const mockExamsTaken = mockScores.size;
-      let averageMockScore = 0;
-      if (mockExamsTaken > 0) {
-        const totalWeightedScore = Array.from(mockScores.values()).reduce((sum, m) => sum + m.score * m.recencyWeight, 0);
-        const totalWeight = Array.from(mockScores.values()).reduce((sum, m) => sum + m.recencyWeight, 0);
-        averageMockScore = totalWeightedScore / totalWeight;
-      }
+      const averageMockScore =
+        mockExamsTaken > 0
+          ? Array.from(mockScores.values()).reduce((sum, m) => sum + m.score, 0) / mockExamsTaken
+          : 0;
 
       let lastActivityDays: number | null = null;
       const allAttemptDates = quizAttempts?.map((a) => getDaysSince(a.attempted_at)) || [];
-      const lessonCompletionDates = lessonProgress?.filter((p) => p.completed_at).map((p) => getDaysSince(p.completed_at!)) || [];
+      const lessonCompletionDates =
+        lessonProgress?.filter((p) => p.completed_at).map((p) => getDaysSince(p.completed_at!)) || [];
       const allActivityDays = [...allAttemptDates, ...lessonCompletionDates];
       if (allActivityDays.length > 0) lastActivityDays = Math.min(...allActivityDays);
 
@@ -183,61 +187,92 @@ export const useReadinessScore = (courseId: string) => {
       const totalPossiblePoints = totalLessons + regularQuizzes.length + mockExams.length;
 
       const lessonProgressScore = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
-      const quizPerformanceScore = averageQuizScore;
-      const mockExamPerformanceScore = averageMockScore;
 
-      let lessonWeight = 0.4, quizWeight = 0.4, mockWeight = 0.2;
-      if (regularQuizIds.length === 0 && mockExamIds.length === 0) { lessonWeight = 1.0; quizWeight = 0; mockWeight = 0; }
-      else if (regularQuizIds.length === 0) { lessonWeight = 0.6; quizWeight = 0; mockWeight = 0.4; }
-      else if (mockExamIds.length === 0) { lessonWeight = 0.5; quizWeight = 0.5; mockWeight = 0; }
+      // [4] Rebalanced weights: lessons 20%, quizzes 55%, mocks 25%
+      let lessonWeight = 0.2, quizWeight = 0.55, mockWeight = 0.25;
+      if (regularQuizIds.length === 0 && mockExamIds.length === 0) {
+        lessonWeight = 1.0; quizWeight = 0; mockWeight = 0;
+      } else if (regularQuizIds.length === 0) {
+        lessonWeight = 0.4; quizWeight = 0; mockWeight = 0.6;
+      } else if (mockExamIds.length === 0) {
+        lessonWeight = 0.3; quizWeight = 0.7; mockWeight = 0;
+      }
 
       const overallScore = Math.round(
-        lessonProgressScore * lessonWeight + quizPerformanceScore * quizWeight + mockExamPerformanceScore * mockWeight
+        lessonProgressScore * lessonWeight +
+        averageQuizScore * quizWeight +
+        averageMockScore * mockWeight
       );
 
       const { confidence, level: confidenceLevel } = calculateConfidence(lastActivityDays, dataPoints, totalPossiblePoints);
 
       const weakAreas: WeakArea[] = [];
-      incompleteLessons.slice(0, 3).forEach((lesson) => {
-        weakAreas.push({ type: "lesson", title: lesson.title, score: 0,
-          recommendation: `Complete lesson "${lesson.title}" to build your foundation`,
-          priority: lesson.order_index < 3 ? "high" : "medium", lessonId: lesson.id });
-      });
 
-      Array.from(quizScores.entries()).filter(([, data]) => data.score < 70)
-        .sort((a, b) => a[1].score - b[1].score).slice(0, 3)
+      // [5] Only surface lesson recommendations when quiz average is weak
+      if (averageQuizScore < 75 || quizzesTaken === 0) {
+        incompleteLessons.slice(0, 3).forEach((lesson) => {
+          weakAreas.push({
+            type: "lesson", title: lesson.title, score: 0,
+            recommendation: `Complete lesson "${lesson.title}" to build your foundation`,
+            priority: lesson.order_index < 3 ? "high" : "medium", lessonId: lesson.id,
+          });
+        });
+      }
+
+      Array.from(quizScores.entries())
+        .filter(([, data]) => data.score < 70)
+        .sort((a, b) => a[1].score - b[1].score)
+        .slice(0, 3)
         .forEach(([quizId, data]) => {
-          weakAreas.push({ type: "quiz", title: data.title, score: Math.round(data.score),
+          weakAreas.push({
+            type: "quiz", title: data.title, score: Math.round(data.score),
             recommendation: `Review and retake "${data.title}" to improve your score`,
-            priority: data.score < 50 ? "high" : "medium", quizId });
+            priority: data.score < 50 ? "high" : "medium", quizId,
+          });
         });
 
       const takenQuizIds = new Set(quizScores.keys());
-      regularQuizzes.filter((q) => !takenQuizIds.has(q.id) && (!q.lesson_id || completedLessonIds.has(q.lesson_id)))
-        .slice(0, 2).forEach((quiz) => {
-          weakAreas.push({ type: "quiz", title: quiz.title, score: 0,
-            recommendation: `Take "${quiz.title}" to test your understanding`, priority: "medium", quizId: quiz.id });
+      regularQuizzes
+        .filter((q) => !takenQuizIds.has(q.id) && (!q.lesson_id || completedLessonIds.has(q.lesson_id)))
+        .slice(0, 2)
+        .forEach((quiz) => {
+          weakAreas.push({
+            type: "quiz", title: quiz.title, score: 0,
+            recommendation: `Take "${quiz.title}" to test your understanding`,
+            priority: "medium", quizId: quiz.id,
+          });
         });
 
       if (mockExamsTaken === 0 && lessonProgressScore >= 50 && mockExams.length > 0) {
-        weakAreas.push({ type: "mock", title: "Mock Exam Practice", score: 0,
-          recommendation: "Take a mock exam to simulate real exam conditions", priority: "medium" });
+        weakAreas.push({
+          type: "mock", title: "Mock Exam Practice", score: 0,
+          recommendation: "Take a mock exam to simulate real exam conditions",
+          priority: "medium",
+        });
       } else if (averageMockScore < 60 && mockExamsTaken > 0) {
-        weakAreas.push({ type: "mock", title: "Mock Exam Performance", score: Math.round(averageMockScore),
-          recommendation: "Retake mock exams after reviewing weak topics", priority: "high" });
+        weakAreas.push({
+          type: "mock", title: "Mock Exam Performance", score: Math.round(averageMockScore),
+          recommendation: "Retake mock exams after reviewing weak topics",
+          priority: "high",
+        });
       }
 
       if (lastActivityDays !== null && lastActivityDays > 14) {
-        weakAreas.unshift({ type: "lesson", title: "Study Consistency", score: 0,
-          recommendation: `Resume studying - it's been ${lastActivityDays} days since your last activity`, priority: "high" });
+        weakAreas.unshift({
+          type: "lesson", title: "Study Consistency", score: 0,
+          recommendation: `Resume studying - it's been ${lastActivityDays} days since your last activity`,
+          priority: "high",
+        });
       }
 
       const priorityOrder = { high: 0, medium: 1, low: 2 };
       weakAreas.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
       return {
-        overall: overallScore, lessonProgress: Math.round(lessonProgressScore),
-        quizPerformance: Math.round(quizPerformanceScore), mockExamPerformance: Math.round(mockExamPerformanceScore),
+        overall: overallScore,
+        lessonProgress: Math.round(lessonProgressScore),
+        quizPerformance: Math.round(averageQuizScore),
+        mockExamPerformance: Math.round(averageMockScore),
         lessonsCompleted: completedLessons, totalLessons, quizzesTaken,
         averageQuizScore: Math.round(averageQuizScore), mockExamsTaken,
         averageMockScore: Math.round(averageMockScore), level: getReadinessLevel(overallScore),
