@@ -469,6 +469,7 @@ const CourseDetail = () => {
               readinessScore={readinessScore}
               syllabusAreas={parsedSyllabusAreas}
               quizAttempts={quizAttempts || null}
+              quizzes={quizzes || null}
               levelColor={levelColor}
               levelBgColor={levelBgColor}
               onUnenroll={handleUnenroll}

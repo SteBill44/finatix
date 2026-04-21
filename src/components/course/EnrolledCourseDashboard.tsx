@@ -32,6 +32,10 @@ import {
   TrendingDown,
   Minus,
   Hash,
+  Award,
+  ClipboardList,
+  RotateCcw,
+  Trophy,
 } from "lucide-react";
 import { ReadinessScore, WeakArea } from "@/hooks/useReadinessScore";
 import { useSyllabusMastery } from "@/hooks/useSyllabusMastery";
@@ -50,6 +54,15 @@ interface Lesson {
   order_index: number;
 }
 
+interface AssessmentQuiz {
+  id: string;
+  title: string;
+  description?: string | null;
+  quiz_type?: string;
+  order_index?: number;
+  lesson_id?: string | null;
+}
+
 interface EnrolledCourseDashboardProps {
   course: {
     id: string;
@@ -63,6 +76,7 @@ interface EnrolledCourseDashboardProps {
   readinessScore: ReadinessScore | null | undefined;
   syllabusAreas: SyllabusArea[];
   quizAttempts: Array<{ quiz_id: string | null; score: number; max_score: number; attempted_at: string }> | null;
+  quizzes?: AssessmentQuiz[] | null;
   levelColor: string;
   levelBgColor: string;
   onUnenroll: () => void;
@@ -117,6 +131,7 @@ const EnrolledCourseDashboard = ({
   readinessScore,
   syllabusAreas,
   quizAttempts,
+  quizzes,
   levelColor,
   levelBgColor,
   onUnenroll,
@@ -204,6 +219,78 @@ const EnrolledCourseDashboard = ({
       .sort((a, b) => Number(b.mastery_score) - Number(a.mastery_score))
       .slice(0, 3);
   }, [masteryData]);
+
+  // ── Assessments: group quizzes by type, attach attempt history ──
+  type AssessmentItem = {
+    id: string;
+    title: string;
+    type: "lesson_quiz" | "mock_exam" | "final_exam" | "other";
+    description?: string | null;
+    attemptsCount: number;
+    bestScorePct: number | null;
+    lastScorePct: number | null;
+    lastAttemptedAt: string | null;
+    passed: boolean;
+  };
+
+  const PASS_THRESHOLD = 70;
+
+  const assessments = useMemo(() => {
+    const empty = {
+      practiceQuizzes: [] as AssessmentItem[],
+      mockExams: [] as AssessmentItem[],
+      finalExams: [] as AssessmentItem[],
+    };
+    if (!quizzes?.length) return empty;
+    const sorted = [...quizzes].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+    const items: AssessmentItem[] = sorted.map((q) => {
+      const attempts = (quizAttempts || []).filter(
+        (a) => a.quiz_id === q.id && a.max_score > 0
+      );
+      const pcts = attempts.map((a) => Math.round((a.score / a.max_score) * 100));
+      const best = pcts.length ? Math.max(...pcts) : null;
+      const sortedAttempts = [...attempts].sort(
+        (a, b) => new Date(b.attempted_at).getTime() - new Date(a.attempted_at).getTime()
+      );
+      const last = sortedAttempts[0]
+        ? Math.round((sortedAttempts[0].score / sortedAttempts[0].max_score) * 100)
+        : null;
+      const rawType = q.quiz_type || "lesson_quiz";
+      const type: AssessmentItem["type"] =
+        rawType === "mock_exam" || rawType === "final_exam" || rawType === "lesson_quiz"
+          ? rawType
+          : "other";
+      return {
+        id: q.id,
+        title: q.title,
+        type,
+        description: q.description,
+        attemptsCount: attempts.length,
+        bestScorePct: best,
+        lastScorePct: last,
+        lastAttemptedAt: sortedAttempts[0]?.attempted_at || null,
+        passed: best !== null && best >= PASS_THRESHOLD,
+      };
+    });
+    return {
+      practiceQuizzes: items.filter((i) => i.type === "lesson_quiz" || i.type === "other"),
+      mockExams: items.filter((i) => i.type === "mock_exam"),
+      finalExams: items.filter((i) => i.type === "final_exam"),
+    };
+  }, [quizzes, quizAttempts]);
+
+  const totalAssessments =
+    assessments.practiceQuizzes.length +
+    assessments.mockExams.length +
+    assessments.finalExams.length;
+
+  const launchAssessment = (item: AssessmentItem) => {
+    if (item.type === "mock_exam" || item.type === "final_exam") {
+      navigate(`/mock-exam/${item.id}`);
+    } else {
+      navigate(`/quiz/${item.id}`);
+    }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 75) return "text-accent";
@@ -598,6 +685,57 @@ const EnrolledCourseDashboard = ({
 
         {/* Sidebar */}
         <div className="lg:col-span-2 space-y-4">
+          {/* Assessments — quizzes, mock exams, final exam */}
+          {totalAssessments > 0 && (
+            <Card className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+                  <Trophy className="w-3.5 h-3.5 text-primary" />
+                  Assessments
+                </div>
+                <span className="text-[10px] text-muted-foreground">
+                  Pass ≥ {PASS_THRESHOLD}%
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {/* Practice Quizzes */}
+                {assessments.practiceQuizzes.length > 0 && (
+                  <AssessmentGroup
+                    label="Practice Quizzes"
+                    icon={<ClipboardList className="w-3 h-3" />}
+                    items={assessments.practiceQuizzes}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Mock Exams */}
+                {assessments.mockExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Mock Exams"
+                    icon={<GraduationCap className="w-3 h-3" />}
+                    items={assessments.mockExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Final Exam */}
+                {assessments.finalExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Final Exam"
+                    icon={<Award className="w-3 h-3" />}
+                    items={assessments.finalExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                    highlight
+                  />
+                )}
+              </div>
+            </Card>
+          )}
+
           {/* Next Lesson */}
           {nextLesson ? (
             <Card className="p-5 border-primary/20 bg-primary/[0.03]">
@@ -753,6 +891,109 @@ const EnrolledCourseDashboard = ({
             })}
         </div>
       </Card>
+    </div>
+  );
+};
+
+// ── Sub-component: a labelled group of assessments inside the sidebar card ──
+type AssessmentGroupItem = {
+  id: string;
+  title: string;
+  type: "lesson_quiz" | "mock_exam" | "final_exam" | "other";
+  attemptsCount: number;
+  bestScorePct: number | null;
+  passed: boolean;
+};
+
+const AssessmentGroup = ({
+  label,
+  icon,
+  items,
+  onLaunch,
+  getScoreColor,
+  highlight = false,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  items: AssessmentGroupItem[];
+  onLaunch: (item: AssessmentGroupItem) => void;
+  getScoreColor: (score: number) => string;
+  highlight?: boolean;
+}) => {
+  const completedCount = items.filter((i) => i.passed).length;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+          {icon}
+          {label}
+        </p>
+        <span className="text-[10px] text-muted-foreground">
+          {completedCount}/{items.length} passed
+        </span>
+      </div>
+      <div className="space-y-1.5">
+        {items.map((item) => {
+          const notStarted = item.attemptsCount === 0;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onLaunch(item)}
+              className={`w-full text-left flex items-center gap-2.5 px-2.5 py-2 rounded-md border transition-colors ${
+                highlight
+                  ? "border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.06]"
+                  : item.passed
+                  ? "border-accent/20 bg-accent/[0.04] hover:bg-accent/[0.08]"
+                  : "border-border/60 hover:bg-muted/50"
+              }`}
+            >
+              <div
+                className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                  item.passed
+                    ? "bg-accent/15 text-accent"
+                    : item.attemptsCount > 0
+                    ? "bg-yellow-500/15 text-yellow-600"
+                    : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {item.passed ? (
+                  <CheckCircle className="w-3.5 h-3.5" />
+                ) : item.attemptsCount > 0 ? (
+                  <RotateCcw className="w-3 h-3" />
+                ) : (
+                  <Play className="w-3 h-3" />
+                )}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-foreground truncate">
+                  {item.title}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {notStarted
+                    ? "Not started"
+                    : `${item.attemptsCount} attempt${item.attemptsCount !== 1 ? "s" : ""}`}
+                </p>
+              </div>
+
+              <div className="text-right shrink-0">
+                {item.bestScorePct !== null ? (
+                  <>
+                    <p className={`text-xs font-bold ${getScoreColor(item.bestScorePct)}`}>
+                      {item.bestScorePct}%
+                    </p>
+                    <p className="text-[9px] text-muted-foreground leading-none">best</p>
+                  </>
+                ) : (
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
