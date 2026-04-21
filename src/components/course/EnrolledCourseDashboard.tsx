@@ -69,18 +69,45 @@ interface EnrolledCourseDashboardProps {
   unenrollPending: boolean;
 }
 
-// Derive a short axis label from a full syllabus area title.
-// "A. External Analysis" → "A"   |   "Management Accounting" → "Mgmt. Acc"
-const shortAxisLabel = (title: string): string => {
-  const prefixMatch = title.match(/^([A-Z]\d*)[.\s]/);
-  if (prefixMatch) return prefixMatch[1];
-  const words = title.split(" ");
-  if (words.length === 1) return title.slice(0, 10);
-  // Take first 2 words, abbreviate each to ≤6 chars
-  return words
-    .slice(0, 2)
-    .map((w) => (w.length > 6 ? w.slice(0, 5) + "." : w))
-    .join(" ");
+// Split a syllabus area title into a short prefix code (e.g. "A") and a subtitle.
+// Examples:
+//   "A: Strategy Process"   → { prefix: "A",  subtitle: "Strategy Process" }
+//   "A. External Analysis"  → { prefix: "A",  subtitle: "External Analysis" }
+//   "Management Accounting" → { prefix: "",   subtitle: "Management Accounting" }
+const splitAxisLabel = (title: string): { prefix: string; subtitle: string } => {
+  const prefixMatch = title.match(/^([A-Z]\d*)\s*[:.\-)]\s*(.*)$/);
+  if (prefixMatch) {
+    return { prefix: prefixMatch[1], subtitle: prefixMatch[2].trim() };
+  }
+  return { prefix: "", subtitle: title.trim() };
+};
+
+// Wrap a subtitle into up to `maxLines` lines, each ≤ `maxChars`, breaking on word boundaries.
+const wrapSubtitle = (text: string, maxChars: number, maxLines: number): string[] => {
+  if (!text) return [];
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let current = "";
+  for (const w of words) {
+    const candidate = current ? `${current} ${w}` : w;
+    if (candidate.length <= maxChars) {
+      current = candidate;
+    } else {
+      if (current) lines.push(current);
+      current = w;
+      if (lines.length === maxLines - 1) break;
+    }
+  }
+  if (current && lines.length < maxLines) lines.push(current);
+  // Truncate the final line if there are more words remaining
+  const used = lines.join(" ").split(/\s+/).length;
+  if (used < words.length && lines.length > 0) {
+    const last = lines[lines.length - 1];
+    lines[lines.length - 1] = last.length > maxChars - 1
+      ? last.slice(0, Math.max(1, maxChars - 1)) + "…"
+      : last + "…";
+  }
+  return lines;
 };
 
 const EnrolledCourseDashboard = ({
@@ -142,8 +169,11 @@ const EnrolledCourseDashboard = ({
       const mastery = masteryData?.find((m) => m.syllabus_area_index === index);
       const attempted = mastery?.questions_attempted || 0;
       const score = attempted > 0 ? Math.round(Number(mastery!.mastery_score)) : 0;
+      const { prefix, subtitle } = splitAxisLabel(area.title);
       return {
-        area: shortAxisLabel(area.title),
+        area: prefix || subtitle,
+        labelPrefix: prefix,
+        labelSubtitle: subtitle,
         fullTitle: area.title,
         score,
         target: 75,
@@ -345,39 +375,95 @@ const EnrolledCourseDashboard = ({
 
           {hasRadarData ? (
             <>
-              <div className="w-full" style={{ height: isMobile ? 280 : 360 }}>
+              <div className="w-full -mx-2" style={{ height: isMobile ? 300 : 380 }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart
                     cx="50%"
                     cy="50%"
-                    outerRadius={isMobile ? "58%" : "65%"}
+                    outerRadius={isMobile ? "70%" : "78%"}
                     data={radarData}
+                    margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
                   >
                     <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
                     <PolarAngleAxis
                       dataKey="area"
                       tickLine={false}
-                      tick={({ x, y, payload, cx: chartCx, cy: chartCy }: any) => {
+                      tick={({ x, y, payload, cx: chartCx, cy: chartCy, index }: any) => {
                         const dx = x - (chartCx || 0);
                         const dy = y - (chartCy || 0);
                         const dist = Math.sqrt(dx * dx + dy * dy);
-                        const push = isMobile ? 12 : 16;
+                        const push = isMobile ? 8 : 10;
                         const lx = dist > 0 ? x + (dx / dist) * push : x;
                         const ly = dist > 0 ? y + (dy / dist) * push : y;
+                        const isTop = dy < -2;
+                        const isBottom = dy > 2;
                         const anchor =
                           Math.abs(dx) < 12 ? "middle" : dx > 0 ? "start" : "end";
+
+                        const datum: any = radarData[index] || {};
+                        const prefix: string = datum.labelPrefix || "";
+                        const subtitle: string = datum.labelSubtitle || datum.fullTitle || "";
+                        // Wrap subtitle to up to 2 lines so the chart can stay big
+                        const maxChars = isMobile ? 12 : 16;
+                        const lines = wrapSubtitle(subtitle, maxChars, 2);
+
+                        const prefixSize = isMobile ? 11 : 13;
+                        const subSize = isMobile ? 9 : 10;
+                        const lineH = subSize + 2;
+
+                        // When the label sits above the chart, render subtitle ABOVE the prefix
+                        // so neither overlaps the polygon.
+                        const blockHeight =
+                          (prefix ? prefixSize : 0) + lines.length * lineH;
+                        const startY = isTop
+                          ? ly - blockHeight + prefixSize / 2
+                          : isBottom
+                          ? ly + prefixSize / 2
+                          : ly - ((lines.length * lineH) / 2) + prefixSize / 2;
+
                         return (
-                          <text
-                            x={lx}
-                            y={ly}
-                            textAnchor={anchor}
-                            dominantBaseline="central"
-                            fill="hsl(var(--muted-foreground))"
-                            fontSize={isMobile ? 9 : 11}
-                            fontWeight={500}
-                          >
-                            {payload.value}
-                          </text>
+                          <g>
+                            {prefix && (
+                              <text
+                                x={lx}
+                                y={startY}
+                                textAnchor={anchor}
+                                dominantBaseline="central"
+                                fill="hsl(var(--foreground))"
+                                fontSize={prefixSize}
+                                fontWeight={700}
+                              >
+                                {prefix}
+                              </text>
+                            )}
+                            {lines.map((line, i) => (
+                              <text
+                                key={i}
+                                x={lx}
+                                y={startY + (prefix ? prefixSize / 2 + 2 : 0) + i * lineH + lineH / 2}
+                                textAnchor={anchor}
+                                dominantBaseline="central"
+                                fill="hsl(var(--muted-foreground))"
+                                fontSize={subSize}
+                                fontWeight={500}
+                              >
+                                {line}
+                              </text>
+                            ))}
+                            {/* Fallback: when there is no prefix and subtitle wrapped to nothing */}
+                            {!prefix && lines.length === 0 && (
+                              <text
+                                x={lx}
+                                y={ly}
+                                textAnchor={anchor}
+                                dominantBaseline="central"
+                                fill="hsl(var(--muted-foreground))"
+                                fontSize={subSize}
+                              >
+                                {payload.value}
+                              </text>
+                            )}
+                          </g>
                         );
                       }}
                     />
