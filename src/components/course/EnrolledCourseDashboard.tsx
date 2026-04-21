@@ -127,6 +127,7 @@ const EnrolledCourseDashboard = ({
   readinessScore,
   syllabusAreas,
   quizAttempts,
+  quizzes,
   levelColor,
   levelBgColor,
   onUnenroll,
