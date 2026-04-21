@@ -17,6 +17,7 @@ import {
   useLastAccessedLesson,
 } from "@/hooks/useStudentProgress";
 import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
+import CourseProgressRow from "@/components/dashboard/CourseProgressRow";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
