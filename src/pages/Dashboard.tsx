@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useStudentProgress";
 import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import CourseProgressRow from "@/components/dashboard/CourseProgressRow";
+import CurrentCourseCard from "@/components/dashboard/CurrentCourseCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
@@ -128,22 +129,27 @@ const Dashboard = () => {
                   : "Get started by enrolling in your first course."}
               </p>
             </div>
-            {enrolledCount === 0 ? (
+            {enrolledCount === 0 && (
               <Button size="lg" className="shrink-0" onClick={() => navigate("/courses")}>
                 <GraduationCap className="w-5 h-5 mr-2" />
                 Browse Courses
               </Button>
-            ) : lastLesson ? (
-              <Button
-                size="lg"
-                className="shrink-0 gap-2"
-                onClick={() => navigate(`/courses/${lastLesson.course_slug}`)}
-              >
-                <Play className="w-4 h-4" />
-                Continue Learning
-              </Button>
-            ) : null}
+            )}
           </div>
+
+          {/* Current Course */}
+          {enrolledCount > 0 && lastLesson && (
+            <CurrentCourseCard
+              courseId={lastLesson.course_id}
+              courseTitle={lastLesson.course_title}
+              courseSlug={lastLesson.course_slug}
+              courseLevel={
+                enrollments?.find((e) => e.course_id === lastLesson.course_id)?.courses?.level
+              }
+              nextLessonId={lastLesson.lesson_id}
+              nextLessonTitle={lastLesson.lesson_title}
+            />
+          )}
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4">
