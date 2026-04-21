@@ -21,7 +21,7 @@ import {
   FileQuestion,
   Play,
   Layers,
-  Bot,
+  
   Map,
   Trophy,
   MessageSquare,
