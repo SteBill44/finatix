@@ -96,11 +96,7 @@ const CurrentCourseCard = ({
   const levelLabel = courseLevel ? LEVEL_LABELS[courseLevel.toLowerCase()] : null;
 
   const handleContinue = () => {
-    if (nextLessonId) {
-      navigate(`/courses/${courseSlug}/lesson/${nextLessonId}`);
-    } else {
-      navigate(`/courses/${courseSlug}`);
-    }
+    navigate(`/courses/${courseSlug}`);
   };
 
   return (
@@ -136,15 +132,6 @@ const CurrentCourseCard = ({
           <Button size="sm" onClick={handleContinue} className="gap-1.5">
             <Play className="w-3.5 h-3.5" />
             {allComplete ? "Review" : "Continue"}
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => navigate(`/courses/${courseSlug}`)}
-            className="gap-1.5"
-          >
-            Open
-            <ArrowRight className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>
