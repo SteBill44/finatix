@@ -771,30 +771,8 @@ const EnrolledCourseDashboard = ({
             </Card>
           )}
 
-          {/* Recommendations */}
-          {readiness.weakAreas.length > 0 && (
-            <Card className="p-5">
-              <div className="flex items-center gap-2 text-xs font-medium text-foreground mb-3">
-                <Lightbulb className="w-3.5 h-3.5 text-yellow-500" />
-                Recommendations
-              </div>
-              <div className="space-y-3">
-                {readiness.weakAreas.slice(0, 3).map((area, i) => (
-                  <div key={i} className="flex items-start gap-2.5">
-                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
-                      area.priority === "high" ? "bg-destructive" : "bg-yellow-500"
-                    }`} />
-                    <div className="min-w-0">
-                      <p className="text-sm text-foreground leading-snug">{area.recommendation}</p>
-                      {area.score > 0 && (
-                        <span className="text-xs text-muted-foreground">Current: {area.score}%</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+
+
 
           {/* Readiness Breakdown */}
           <Card className="p-5">
