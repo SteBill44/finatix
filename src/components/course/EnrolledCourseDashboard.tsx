@@ -685,57 +685,6 @@ const EnrolledCourseDashboard = ({
 
         {/* Sidebar */}
         <div className="lg:col-span-2 space-y-4">
-          {/* Assessments — quizzes, mock exams, final exam */}
-          {totalAssessments > 0 && (
-            <Card className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-xs font-medium text-foreground">
-                  <Trophy className="w-3.5 h-3.5 text-primary" />
-                  Assessments
-                </div>
-                <span className="text-[10px] text-muted-foreground">
-                  Pass ≥ {PASS_THRESHOLD}%
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                {/* Practice Quizzes */}
-                {assessments.practiceQuizzes.length > 0 && (
-                  <AssessmentGroup
-                    label="Practice Quizzes"
-                    icon={<ClipboardList className="w-3 h-3" />}
-                    items={assessments.practiceQuizzes}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                  />
-                )}
-
-                {/* Mock Exams */}
-                {assessments.mockExams.length > 0 && (
-                  <AssessmentGroup
-                    label="Mock Exams"
-                    icon={<GraduationCap className="w-3 h-3" />}
-                    items={assessments.mockExams}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                  />
-                )}
-
-                {/* Final Exam */}
-                {assessments.finalExams.length > 0 && (
-                  <AssessmentGroup
-                    label="Final Exam"
-                    icon={<Award className="w-3 h-3" />}
-                    items={assessments.finalExams}
-                    onLaunch={launchAssessment}
-                    getScoreColor={getScoreColor}
-                    highlight
-                  />
-                )}
-              </div>
-            </Card>
-          )}
-
           {/* Next Lesson */}
           {nextLesson ? (
             <Card className="p-5 border-primary/20 bg-primary/[0.03]">
@@ -767,6 +716,58 @@ const EnrolledCourseDashboard = ({
               </p>
             </Card>
           ) : null}
+
+          {/* Assessments — quizzes, mock exams, final exam */}
+          {totalAssessments > 0 && (
+            <Card className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+                  <Trophy className="w-3.5 h-3.5 text-primary" />
+                  Assessments
+                </div>
+                <span className="text-[10px] text-muted-foreground">
+                  Pass ≥ {PASS_THRESHOLD}%
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {/* Practice Quizzes */}
+                {assessments.practiceQuizzes.length > 0 && (
+                  <AssessmentGroup
+                    label="Practice Quizzes"
+                    icon={<ClipboardList className="w-3 h-3" />}
+                    items={assessments.practiceQuizzes}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Mock Exams */}
+                {assessments.mockExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Mock Exams"
+                    icon={<GraduationCap className="w-3 h-3" />}
+                    items={assessments.mockExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                  />
+                )}
+
+                {/* Final Exam */}
+                {assessments.finalExams.length > 0 && (
+                  <AssessmentGroup
+                    label="Final Exam"
+                    icon={<Award className="w-3 h-3" />}
+                    items={assessments.finalExams}
+                    onLaunch={launchAssessment}
+                    getScoreColor={getScoreColor}
+                    highlight
+                    defaultOpen={false}
+                  />
+                )}
+              </div>
+            </Card>
+          )}
 
           {/* Recommendations */}
           {readiness.weakAreas.length > 0 && (
