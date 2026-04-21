@@ -169,8 +169,11 @@ const EnrolledCourseDashboard = ({
       const mastery = masteryData?.find((m) => m.syllabus_area_index === index);
       const attempted = mastery?.questions_attempted || 0;
       const score = attempted > 0 ? Math.round(Number(mastery!.mastery_score)) : 0;
+      const { prefix, subtitle } = splitAxisLabel(area.title);
       return {
-        area: shortAxisLabel(area.title),
+        area: prefix || subtitle,
+        labelPrefix: prefix,
+        labelSubtitle: subtitle,
         fullTitle: area.title,
         score,
         target: 75,
