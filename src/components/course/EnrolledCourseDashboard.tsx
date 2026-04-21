@@ -32,6 +32,10 @@ import {
   TrendingDown,
   Minus,
   Hash,
+  Award,
+  ClipboardList,
+  RotateCcw,
+  Trophy,
 } from "lucide-react";
 import { ReadinessScore, WeakArea } from "@/hooks/useReadinessScore";
 import { useSyllabusMastery } from "@/hooks/useSyllabusMastery";
