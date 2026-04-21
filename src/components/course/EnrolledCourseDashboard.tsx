@@ -400,7 +400,7 @@ const EnrolledCourseDashboard = ({
                         const anchor =
                           Math.abs(dx) < 12 ? "middle" : dx > 0 ? "start" : "end";
 
-                        const datum = radarData[index] || {};
+                        const datum: any = radarData[index] || {};
                         const prefix: string = datum.labelPrefix || "";
                         const subtitle: string = datum.labelSubtitle || datum.fullTitle || "";
                         // Wrap subtitle to up to 2 lines so the chart can stay big
