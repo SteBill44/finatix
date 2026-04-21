@@ -214,7 +214,7 @@ const Dashboard = () => {
                       (e) => (e.courses?.level || "").toLowerCase() === g.key,
                     ),
                   })).filter((g) => g.courses.length > 0);
-                  const defaultOpen = grouped.map((g) => g.key);
+                  
                   return (
                     <div>
                       <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
