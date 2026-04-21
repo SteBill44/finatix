@@ -915,7 +915,7 @@ const AssessmentGroup = ({
   onLaunch,
   getScoreColor,
   highlight = false,
-  defaultOpen = true,
+  defaultOpen = false,
 }: {
   label: string;
   icon: React.ReactNode;
