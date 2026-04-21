@@ -216,6 +216,78 @@ const EnrolledCourseDashboard = ({
       .slice(0, 3);
   }, [masteryData]);
 
+  // ── Assessments: group quizzes by type, attach attempt history ──
+  type AssessmentItem = {
+    id: string;
+    title: string;
+    type: "lesson_quiz" | "mock_exam" | "final_exam" | "other";
+    description?: string | null;
+    attemptsCount: number;
+    bestScorePct: number | null;
+    lastScorePct: number | null;
+    lastAttemptedAt: string | null;
+    passed: boolean;
+  };
+
+  const PASS_THRESHOLD = 70;
+
+  const assessments = useMemo(() => {
+    const empty = {
+      practiceQuizzes: [] as AssessmentItem[],
+      mockExams: [] as AssessmentItem[],
+      finalExams: [] as AssessmentItem[],
+    };
+    if (!quizzes?.length) return empty;
+    const sorted = [...quizzes].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+    const items: AssessmentItem[] = sorted.map((q) => {
+      const attempts = (quizAttempts || []).filter(
+        (a) => a.quiz_id === q.id && a.max_score > 0
+      );
+      const pcts = attempts.map((a) => Math.round((a.score / a.max_score) * 100));
+      const best = pcts.length ? Math.max(...pcts) : null;
+      const sortedAttempts = [...attempts].sort(
+        (a, b) => new Date(b.attempted_at).getTime() - new Date(a.attempted_at).getTime()
+      );
+      const last = sortedAttempts[0]
+        ? Math.round((sortedAttempts[0].score / sortedAttempts[0].max_score) * 100)
+        : null;
+      const rawType = q.quiz_type || "lesson_quiz";
+      const type: AssessmentItem["type"] =
+        rawType === "mock_exam" || rawType === "final_exam" || rawType === "lesson_quiz"
+          ? rawType
+          : "other";
+      return {
+        id: q.id,
+        title: q.title,
+        type,
+        description: q.description,
+        attemptsCount: attempts.length,
+        bestScorePct: best,
+        lastScorePct: last,
+        lastAttemptedAt: sortedAttempts[0]?.attempted_at || null,
+        passed: best !== null && best >= PASS_THRESHOLD,
+      };
+    });
+    return {
+      practiceQuizzes: items.filter((i) => i.type === "lesson_quiz" || i.type === "other"),
+      mockExams: items.filter((i) => i.type === "mock_exam"),
+      finalExams: items.filter((i) => i.type === "final_exam"),
+    };
+  }, [quizzes, quizAttempts]);
+
+  const totalAssessments =
+    assessments.practiceQuizzes.length +
+    assessments.mockExams.length +
+    assessments.finalExams.length;
+
+  const launchAssessment = (item: AssessmentItem) => {
+    if (item.type === "mock_exam" || item.type === "final_exam") {
+      navigate(`/mock-exam/${item.id}`);
+    } else {
+      navigate(`/quiz/${item.id}`);
+    }
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 75) return "text-accent";
     if (score >= 50) return "text-primary";
