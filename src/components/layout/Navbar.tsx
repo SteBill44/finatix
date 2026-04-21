@@ -189,12 +189,6 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/ai-tutor" className="cursor-pointer flex items-center">
-                        <Bot className="w-4 h-4 mr-2" />
-                        AI Tutor
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <Link to="/learning-paths" className="cursor-pointer flex items-center">
                         <Map className="w-4 h-4 mr-2" />
                         Learning Paths
@@ -319,12 +313,6 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Layers className="w-4 h-4" />
                         Flashcards
-                      </Button>
-                    </Link>
-                    <Link to="/ai-tutor" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <Bot className="w-4 h-4" />
-                        AI Tutor
                       </Button>
                     </Link>
                     <Link to="/learning-paths" onClick={() => setIsOpen(false)}>
