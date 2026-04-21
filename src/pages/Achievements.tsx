@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Flame, Trophy, Award, Target, Lock, Crown, Medal, Star } from "lucide-react";
 import { useEffect } from "react";
+import BadgeIcon from "@/components/achievements/BadgeIcon";
 
 const Achievements = () => {
   const navigate = useNavigate();
@@ -150,7 +151,9 @@ const Achievements = () => {
                                 <Lock className="w-4 h-4 text-muted-foreground" />
                               </div>
                             )}
-                            <div className="text-3xl mb-2">{badge.icon}</div>
+                            <div className="flex justify-center mb-2">
+                              <BadgeIcon icon={badge.icon} isEarned={isEarned} size={48} />
+                            </div>
                             <p className="font-medium text-sm">{badge.name}</p>
                             <p className="text-xs text-muted-foreground mt-1">{badge.description}</p>
                             {isEarned && (
