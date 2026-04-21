@@ -23,7 +23,7 @@ const Layout = ({ children }: LayoutProps) => {
       <DynamicBackground />
       <Navbar />
       <AnnouncementBanner />
-      <main className="flex-1 pb-20 lg:pb-0">
+      <main className="flex-1 pt-16 pb-20 lg:pb-0">
         {children}
       </main>
       <Footer className="hidden lg:block" />
