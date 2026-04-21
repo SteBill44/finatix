@@ -97,7 +97,7 @@ const Dashboard = () => {
     return (
       <Layout>
         <SEOHead title="Dashboard" noIndex />
-        <div className="pt-24 lg:pt-28 pb-12">
+        <div className="pt-[4rem] pb-6 lg:pt-[4.5rem] lg:pb-9">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-3 gap-4 mb-8">
               {[1, 2, 3].map((i) => <DashboardCardSkeleton key={i} />)}
@@ -113,7 +113,7 @@ const Dashboard = () => {
       <SEOHead title="Dashboard" noIndex />
       <OnboardingModal open={showOnboarding} onComplete={completeOnboarding} />
 
-      <div className="pt-24 lg:pt-28 pb-12">
+      <div className="pt-[4rem] pb-6 lg:pt-[4.5rem] lg:pb-9">
         <div className="container mx-auto px-4 space-y-6">
 
           {/* Header */}
