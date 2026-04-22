@@ -109,7 +109,7 @@ const Hero = () => {
                   size="xl"
                   className="shadow-lg shadow-primary/20 group transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
                 >
-                  Register for Free
+                  Start for Free
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
