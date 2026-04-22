@@ -150,7 +150,7 @@ function CourseCard({
                 <Badge variant="outline" className="text-xs text-primary border-primary/40">Enrolled</Badge>
               )}
             </div>
-            <h3 className="font-semibold text-sm text-foreground truncate">{course.title}</h3>
+            <h3 className="font-semibold text-sm text-foreground break-words">{course.title}</h3>
             {course.description && (
               <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{course.description}</p>
             )}
