@@ -38,11 +38,6 @@ const Hero = () => {
         }}
       />
 
-      {/* Finance-themed canvas animation — confined to the lower half, behind the text */}
-      <div className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none">
-        <FinanceCanvas />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#FFE9D6] dark:from-[#0F0806] to-transparent pointer-events-none" />
-      </div>
 
       {/* Warm gradient overlay — lighter wash in light mode, dramatic in dark mode */}
       <div
