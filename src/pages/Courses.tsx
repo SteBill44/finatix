@@ -396,12 +396,12 @@ const Courses = () => {
                       : "border-border hover:border-primary/30 hover:bg-secondary/50"
                   }`}
                 >
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mx-auto mb-1.5 sm:mb-2 ${
+                  <div className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 ${
                     selectedLevel === level ? "bg-white/20" : `bg-gradient-to-br ${cfg.gradient}/10`
                   }`}>
-                    <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${selectedLevel === level ? "text-white" : ""}`} />
+                    <Icon className={`w-3.5 h-3.5 sm:w-5 sm:h-5 ${selectedLevel === level ? "text-white" : ""}`} />
                   </div>
-                  <h3 className={`font-semibold text-[11px] leading-tight sm:text-sm mb-0.5 ${selectedLevel === level ? "text-white" : "text-foreground"}`}>
+                  <h3 className={`font-semibold text-[10px] leading-tight sm:text-sm mb-0.5 break-words ${selectedLevel === level ? "text-white" : "text-foreground"}`}>
                     <span className="sm:hidden">{cfg.label.replace(" Level", "").replace(" (CBA)", "")}</span>
                     <span className="hidden sm:inline">{cfg.label}</span>
                   </h3>
