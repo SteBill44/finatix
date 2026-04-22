@@ -144,7 +144,7 @@ const CTA = () => {
             >
               <MagneticButton strength={0.08}>
                 <Link to="/auth?mode=signup">
-                  <Button size="xl">Register for Free</Button>
+                  <Button size="xl">Start for Free</Button>
                 </Link>
               </MagneticButton>
               <MagneticButton strength={0.08}>
