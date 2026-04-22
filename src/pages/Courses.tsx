@@ -486,39 +486,59 @@ const Courses = () => {
                   </span>
                 </div>
 
-                {view === "grid" ? (
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {levelCourses.map((course) => (
-                      <CourseCard
-                        key={course.id}
-                        course={course}
-                        isEffectiveAdmin={isEffectiveAdmin}
-                        isEnrolled={!!enrolledMap[course.id]}
-                        isCompleted={!!enrolledMap[course.id]?.completed_at}
-                        completedLessons={completedPerCourse[course.id] || 0}
-                        totalLessons={lessonCountMap[course.id] || 0}
-                        onImageUpdate={(url) => handleCourseImageUpdate(course.id, url)}
-                        view="grid"
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-2.5">
-                    {levelCourses.map((course) => (
-                      <CourseCard
-                        key={course.id}
-                        course={course}
-                        isEffectiveAdmin={isEffectiveAdmin}
-                        isEnrolled={!!enrolledMap[course.id]}
-                        isCompleted={!!enrolledMap[course.id]?.completed_at}
-                        completedLessons={completedPerCourse[course.id] || 0}
-                        totalLessons={lessonCountMap[course.id] || 0}
-                        onImageUpdate={(url) => handleCourseImageUpdate(course.id, url)}
-                        view="list"
-                      />
-                    ))}
-                  </div>
-                )}
+                {/* Mobile: always list view */}
+                <div className="space-y-2.5 sm:hidden">
+                  {levelCourses.map((course) => (
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      isEffectiveAdmin={isEffectiveAdmin}
+                      isEnrolled={!!enrolledMap[course.id]}
+                      isCompleted={!!enrolledMap[course.id]?.completed_at}
+                      completedLessons={completedPerCourse[course.id] || 0}
+                      totalLessons={lessonCountMap[course.id] || 0}
+                      onImageUpdate={(url) => handleCourseImageUpdate(course.id, url)}
+                      view="list"
+                    />
+                  ))}
+                </div>
+
+                {/* Desktop: respect grid/list toggle */}
+                <div className="hidden sm:block">
+                  {view === "grid" ? (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                      {levelCourses.map((course) => (
+                        <CourseCard
+                          key={course.id}
+                          course={course}
+                          isEffectiveAdmin={isEffectiveAdmin}
+                          isEnrolled={!!enrolledMap[course.id]}
+                          isCompleted={!!enrolledMap[course.id]?.completed_at}
+                          completedLessons={completedPerCourse[course.id] || 0}
+                          totalLessons={lessonCountMap[course.id] || 0}
+                          onImageUpdate={(url) => handleCourseImageUpdate(course.id, url)}
+                          view="grid"
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {levelCourses.map((course) => (
+                        <CourseCard
+                          key={course.id}
+                          course={course}
+                          isEffectiveAdmin={isEffectiveAdmin}
+                          isEnrolled={!!enrolledMap[course.id]}
+                          isCompleted={!!enrolledMap[course.id]?.completed_at}
+                          completedLessons={completedPerCourse[course.id] || 0}
+                          totalLessons={lessonCountMap[course.id] || 0}
+                          onImageUpdate={(url) => handleCourseImageUpdate(course.id, url)}
+                          view="list"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
