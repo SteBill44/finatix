@@ -390,28 +390,29 @@ const Courses = () => {
                 <button
                   key={level}
                   onClick={() => setSelectedLevel(selectedLevel === level ? "all" : level)}
-                  className={`text-center p-4 rounded-xl border transition-all ${
+                  className={`text-center p-2 sm:p-4 rounded-xl border transition-all ${
                     selectedLevel === level
                       ? `border-transparent bg-gradient-to-br ${cfg.gradient} text-white shadow-md`
                       : "border-border hover:border-primary/30 hover:bg-secondary/50"
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mx-auto mb-1.5 sm:mb-2 ${
                     selectedLevel === level ? "bg-white/20" : `bg-gradient-to-br ${cfg.gradient}/10`
                   }`}>
-                    <Icon className={`w-5 h-5 ${selectedLevel === level ? "text-white" : ""}`} />
+                    <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${selectedLevel === level ? "text-white" : ""}`} />
                   </div>
-                  <h3 className={`font-semibold text-sm mb-0.5 ${selectedLevel === level ? "text-white" : "text-foreground"}`}>
-                    {cfg.label}
+                  <h3 className={`font-semibold text-[11px] leading-tight sm:text-sm mb-0.5 ${selectedLevel === level ? "text-white" : "text-foreground"}`}>
+                    <span className="sm:hidden">{cfg.label.replace(" Level", "").replace(" (CBA)", "")}</span>
+                    <span className="hidden sm:inline">{cfg.label}</span>
                   </h3>
-                  <p className={`text-xs ${selectedLevel === level ? "text-white/70" : "text-muted-foreground"}`}>
+                  <p className={`hidden sm:block text-xs ${selectedLevel === level ? "text-white/70" : "text-muted-foreground"}`}>
                     {cfg.sub}
                   </p>
                   {count > 0 && (
-                    <span className={`inline-block mt-1.5 text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                    <span className={`inline-block mt-1 sm:mt-1.5 text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-medium ${
                       selectedLevel === level ? "bg-white/20 text-white" : "bg-secondary text-muted-foreground"
                     }`}>
-                      {count} courses
+                      {count}<span className="hidden sm:inline"> courses</span>
                     </span>
                   )}
                 </button>
