@@ -1,7 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import Hero from "@/components/home/Hero";
-import TrustedBy from "@/components/home/TrustedBy";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 import Features from "@/components/home/Features";
 import LearningPathway from "@/components/home/LearningPathway";
@@ -19,7 +18,6 @@ const Index = () => {
         keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep"
       />
       <Hero />
-      <TrustedBy />
       <WhatIsCIMA />
       <Features />
       <LearningPathway />
