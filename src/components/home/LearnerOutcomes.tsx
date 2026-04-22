@@ -3,10 +3,10 @@ import { Star } from "lucide-react";
 import SplitTextReveal from "./SplitTextReveal";
 import { useCountUp } from "@/hooks/useCountUp";
 
-const stats = [
+const stats: Array<{ end?: number; suffix?: string; label: string; display?: string }> = [
   { end: 92, suffix: "%", label: "Exam Pass Rate" },
   { end: 2500, suffix: "+", label: "Learners Trained" },
-  { end: 4.9, suffix: "/5", label: "Average Rating", decimals: 1 },
+  { display: "4.9/5", label: "Average Rating" },
   { end: 45, suffix: "+", label: "Countries Reached" },
 ];
 
@@ -41,19 +41,18 @@ const StatBlock = ({
   end,
   suffix,
   label,
-  decimals,
+  display,
 }: {
-  end: number;
-  suffix: string;
+  end?: number;
+  suffix?: string;
   label: string;
-  decimals?: number;
+  display?: string;
 }) => {
-  const { count, elementRef } = useCountUp({ end, duration: 2200, decimals });
+  const { count, elementRef } = useCountUp({ end: end ?? 0, duration: 2200 });
   return (
     <div ref={elementRef} className="text-center md:text-left">
       <div className="text-4xl md:text-5xl font-bold text-charcoal tabular-nums">
-        {decimals ? count.toFixed(decimals) : count.toLocaleString()}
-        {suffix}
+        {display ?? `${count.toLocaleString()}${suffix ?? ""}`}
       </div>
       <div className="text-sm text-muted-foreground mt-1.5">{label}</div>
     </div>
