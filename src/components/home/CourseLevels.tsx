@@ -126,7 +126,7 @@ const CourseLevels = () => {
         "No credit card details required",
         "Quick and easy setup",
       ],
-      cta: user ? "Go to Dashboard" : "Start for Free",
+      cta: user ? "Go to Dashboard" : "Start for free",
       ctaLink: user ? "/dashboard" : "/auth?mode=signup",
       imagePosition: "right" as const,
       image: stepAccountImg,

@@ -228,7 +228,7 @@ const WhyCIMA = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/auth?mode=signup">
               <Button size="lg" variant="secondary" className="gap-2">
-                Start for Free
+                Start for free
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
