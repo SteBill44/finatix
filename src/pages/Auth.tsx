@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, LogIn } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import FinatixLogo from "@/components/FinatixLogo";
 import LoginForm from "@/components/auth/LoginForm";
 import SignupForm from "@/components/auth/SignupForm";
 import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
+
+const PAGE_NAMES: Record<string, string> = {
+  "/flashcards": "Flashcards",
+  "/achievements": "Achievements",
+  "/discussions": "Discussions",
+  "/dashboard": "your Dashboard",
+  "/learning-paths": "Learning Paths",
+  "/ai-tutor": "the AI Tutor",
+  "/certificates": "your Certificates",
+  "/referrals": "Referrals",
+  "/account": "your Account",
+};
 
 type AuthMode = "login" | "signup" | "forgot" | "reset";
 
@@ -27,6 +39,9 @@ const HEADERS: Record<AuthMode, { title: string; subtitle: string }> = {
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const redirectedFrom = (location.state as { from?: string } | null)?.from;
+  const redirectedFromName = redirectedFrom ? PAGE_NAMES[redirectedFrom] ?? null : null;
   const [mode, setMode] = useState<AuthMode>(() => modeFromParams(searchParams));
 
   useEffect(() => {
@@ -66,6 +81,13 @@ const Auth = () => {
                   <ArrowLeft className="w-4 h-4" />
                   Back to sign in
                 </button>
+              )}
+
+              {redirectedFromName && mode === "login" && (
+                <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 border border-primary/20 rounded-lg px-4 py-2.5 mb-6">
+                  <LogIn className="w-4 h-4 flex-shrink-0" />
+                  <span>Sign in to access {redirectedFromName}</span>
+                </div>
               )}
 
               <div className="text-center mb-8">
