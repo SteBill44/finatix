@@ -80,28 +80,20 @@ const Contact = () => {
         keywords="contact Finatix, CIMA support, help, customer service"
       />
       {/* Hero */}
-      <section className="relative py-24 lg:py-28 overflow-hidden hero-gradient-light">
-        <div className="absolute inset-0 gradient-bg opacity-95" />
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -right-20 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -left-20 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-primary w-[150px] h-[150px] sm:w-[250px] sm:h-[250px] bottom-0 right-1/4 pointer-events-none" />
+      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
+        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-10 pointer-events-none" />
+        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/3 -right-20 pointer-events-none" />
         
         <div className="container mx-auto px-4 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             Get in Touch
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             We're Here to Help
           </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-2xl">
+          <p className="text-xl text-muted-foreground max-w-2xl">
             Have a question about our courses or need support? Our team is ready to assist you.
           </p>
-        </div>
-        
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-            <path d="M0 60L1440 60L1440 0C1200 40 720 60 0 20L0 60Z" fill="hsl(var(--background))"/>
-          </svg>
         </div>
       </section>
 
