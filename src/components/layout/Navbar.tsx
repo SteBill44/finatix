@@ -52,9 +52,18 @@ const Navbar = () => {
           .eq("user_id", user.id)
           .maybeSingle();
         
+        const metadataFirstName =
+          user.user_metadata?.first_name ||
+          user.user_metadata?.full_name?.split(" ")[0] ||
+          user.user_metadata?.name?.split(" ")[0] ||
+          null;
+
         if (data) {
-          setFirstName(data.first_name || data.full_name?.split(" ")[0] || null);
+          setFirstName(data.first_name || data.full_name?.split(" ")[0] || metadataFirstName || "Student");
           setAvatarUrl(data.avatar_url);
+        } else {
+          setFirstName(metadataFirstName || "Student");
+          setAvatarUrl(null);
         }
       } else {
         setFirstName(null);
@@ -145,7 +154,7 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm font-bold max-w-[120px] truncate">
-                      {firstName || user.email?.split("@")[0]}
+                      {firstName || "Student"}
                     </span>
                   </button>
                 </DropdownMenuTrigger>
