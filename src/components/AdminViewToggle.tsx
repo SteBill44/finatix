@@ -21,7 +21,11 @@ const AdminViewToggle = () => {
           variant={isStudentView ? "default" : "outline"}
           size="sm"
           onClick={toggleView}
-          className={`gap-2 ${isStudentView ? "bg-primary text-primary-foreground" : ""}`}
+          className={`gap-2 border font-bold shadow-sm ${
+            isStudentView
+              ? "border-primary bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/25"
+              : "border-border bg-background text-foreground hover:bg-secondary"
+          }`}
         >
           {isStudentView ? (
             <>
