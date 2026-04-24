@@ -149,7 +149,7 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm font-bold max-w-[120px] truncate">
-                      {firstName || "Student"}
+                      Members Area
                     </span>
                   </button>
                 </DropdownMenuTrigger>
