@@ -20,6 +20,16 @@ export async function getCourses(): Promise<ApiResult<Tables["courses"]["Row"][]
   );
 }
 
+/** Catalog ordering for the public Courses page (level then title). */
+export async function getCoursesForCatalog(): Promise<ApiResult<Tables["courses"]["Row"][]>> {
+  return tracked("courses:catalog", () =>
+    from("courses")
+      .select("*")
+      .order("level", { ascending: true })
+      .order("title", { ascending: true })
+  );
+}
+
 export async function getCourseBySlug(slug: string): Promise<ApiResult<Tables["courses"]["Row"]>> {
   return tracked("courses:getBySlug", () =>
     from("courses")
