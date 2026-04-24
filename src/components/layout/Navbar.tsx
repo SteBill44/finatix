@@ -106,10 +106,10 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-xs font-medium tracking-wide transition-colors duration-200 ${
+                className={`text-xs tracking-wide transition-colors duration-200 underline-offset-8 decoration-2 ${
                   isActive(link.path)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "font-bold text-primary underline decoration-primary"
+                    : "font-medium text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.name}
@@ -267,10 +267,10 @@ const Navbar = () => {
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`px-4 py-3 text-xs font-medium tracking-wide transition-colors duration-200 ${
+                  className={`px-4 py-3 text-xs tracking-wide transition-colors duration-200 underline-offset-4 decoration-2 ${
                     isActive(link.path)
-                      ? "text-foreground bg-secondary"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "font-bold text-primary underline decoration-primary bg-secondary"
+                      : "font-medium text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {link.name}
