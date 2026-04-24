@@ -32,7 +32,7 @@ const Contact = () => {
     e.preventDefault();
     toast({
       title: "Message sent!",
-      description: "We'll get back to you within 24 hours.",
+      description: "We'll get back to you within 24 - 48 hours, Monday to Friday, 9am to 5pm.",
     });
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
@@ -89,10 +89,10 @@ const Contact = () => {
             Get in Touch
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            We're Here to Help
+            Contact Finatix
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            Have a question about our courses or need support? Our team is ready to assist you.
+            Have a question about our courses or need support? We respond within 24 - 48 hours, Monday to Friday, 9am to 5pm.
           </p>
         </div>
       </section>
