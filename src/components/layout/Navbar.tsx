@@ -5,11 +5,9 @@ import { Menu, X, Moon, Sun, LogOut, Shield, Trophy, MessageSquare, Settings, La
 import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
-import { useAdminView } from "@/contexts/AdminViewContext";
 import { supabase } from "@/integrations/supabase/client";
 import FinatixLogo from "@/components/FinatixLogo";
 import GlobalSearch from "@/components/search/GlobalSearch";
-import AdminViewToggle from "@/components/AdminViewToggle";
 import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -122,9 +120,6 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Admin View Toggle */}
-            <AdminViewToggle />
-            
             {/* Global Search */}
             <GlobalSearch />
 
