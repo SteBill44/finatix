@@ -50,7 +50,7 @@ const About = () => {
         <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-3xl">
             <span className="inline-block px-3 py-1 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-3">
               Our Story
             </span>
