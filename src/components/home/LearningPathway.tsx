@@ -35,6 +35,21 @@ const tiers = [
     ctaLink: "/courses",
   },
   {
+    badge: "Management",
+    badgeTone: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
+    title: "Step Into Leadership",
+    description:
+      "Advance through E2, P2 and F2. Develop the project management, advanced costing, and advanced financial reporting skills needed to manage teams and complex finance functions.",
+    features: [
+      "E2 · Managing Performance",
+      "P2 · Advanced Management Accounting",
+      "F2 · Advanced Financial Reporting",
+      "Management case study prep",
+    ],
+    cta: "Explore Management",
+    ctaLink: "/courses",
+  },
+  {
     badge: "Strategic",
     badgeTone: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
     title: "Lead at the Top",
