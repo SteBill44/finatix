@@ -50,7 +50,7 @@ const StepBlock = ({
         >
           <SplitTextReveal
             as="h2"
-            className="text-2xl md:text-3xl font-bold uppercase tracking-wide mb-3"
+            className="text-2xl md:text-3xl font-bold mb-3"
             delay={0.1}
           >
             {step.title}
