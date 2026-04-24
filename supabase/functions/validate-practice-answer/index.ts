@@ -1,5 +1,7 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getCorsHeaders, corsResponse } from "../_shared/cors.ts";
+import { authenticate, isAuthFailure } from "../_shared/auth.ts";
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { errorResponse, jsonResponse } from "../_shared/response.ts";
 
 Deno.serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
@@ -9,75 +11,33 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Not authenticated" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-    // Verify the user via their own token
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user }, error: userError } = await userClient.auth.getUser();
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const auth = await authenticate(req, corsHeaders);
+    if (isAuthFailure(auth)) return auth.response;
+    const { user, userClient, adminClient } = auth;
 
     // Rate limit: 60 practice checks per minute, 300 per hour
-    const { data: rateLimitResult, error: rateLimitError } = await userClient.rpc(
-      "check_rate_limit",
-      {
-        p_user_id: user.id,
-        p_action_type: "practice_answer",
-        p_max_per_minute: 60,
-        p_max_per_hour: 300,
-      }
-    );
-    if (!rateLimitError && rateLimitResult && !rateLimitResult.allowed) {
-      return new Response(
-        JSON.stringify({ error: "Too many requests. Please slow down." }),
-        {
-          status: 429,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-            "Retry-After": String(rateLimitResult.retryAfter || 60),
-          },
-        }
-      );
-    }
+    const limited = await enforceRateLimit(userClient, corsHeaders, {
+      userId: user.id,
+      actionType: "practice_answer",
+      maxPerMinute: 60,
+      maxPerHour: 300,
+    });
+    if (limited) return limited;
 
     // Parse and validate input
     let body: { questionId?: unknown; answer?: unknown };
     try {
       body = await req.json();
     } catch {
-      return new Response(JSON.stringify({ error: "Invalid JSON body" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return errorResponse("Invalid JSON body", 400, corsHeaders);
     }
 
     const { questionId, answer } = body;
     if (!questionId || typeof questionId !== "string") {
-      return new Response(JSON.stringify({ error: "questionId is required" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return errorResponse("questionId is required", 400, corsHeaders);
     }
 
     // Use service role to fetch the question (bypasses RLS; answer never sent back)
-    const adminClient = createClient(supabaseUrl, supabaseServiceKey);
     const { data: question, error: qError } = await adminClient
       .from("quiz_questions")
       .select(
@@ -88,10 +48,7 @@ Deno.serve(async (req) => {
       .single();
 
     if (qError || !question) {
-      return new Response(JSON.stringify({ error: "Question not found" }), {
-        status: 404,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return errorResponse("Question not found", 404, corsHeaders);
     }
 
     let isCorrect = false;
@@ -146,18 +103,9 @@ Deno.serve(async (req) => {
 
     // SECURITY: Never return the correct answer or explanation in the response.
     // The client receives only a boolean result.
-    return new Response(
-      JSON.stringify({ isCorrect }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return jsonResponse({ isCorrect }, 200, corsHeaders);
   } catch (_error) {
     // Generic error — never leak internal details
-    return new Response(
-      JSON.stringify({ error: "An unexpected error occurred" }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return errorResponse("An unexpected error occurred", 500, corsHeaders);
   }
 });
