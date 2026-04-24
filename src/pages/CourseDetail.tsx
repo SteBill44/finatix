@@ -279,8 +279,19 @@ const CourseDetail = () => {
     }
   };
 
+  const getLevelGradientClass = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "certificate": return "course-hero-gradient-certificate";
+      case "operational": return "course-hero-gradient-operational";
+      case "management": return "course-hero-gradient-management";
+      case "strategic": return "course-hero-gradient-strategic";
+      default: return "course-hero-gradient";
+    }
+  };
+
   const levelColor = getLevelColor(course?.level || "");
   const levelBgColor = getLevelBgColor(course?.level || "");
+  const levelGradientClass = getLevelGradientClass(course?.level || "");
 
   const features = [
     `${course.duration_hours || 40}+ hours of video content`,
@@ -494,7 +505,7 @@ const CourseDetail = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-10 lg:py-14 overflow-hidden">
-        <div className="absolute inset-0 course-hero-gradient opacity-95" />
+        <div className={`absolute inset-0 ${levelGradientClass} opacity-95`} />
         <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container mx-auto px-4 relative z-10 overflow-hidden">
