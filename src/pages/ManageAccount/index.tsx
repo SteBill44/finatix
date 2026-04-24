@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard, Loader2, Save, Shield } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 import { useAccountData } from "./useAccountData";
 import { AvatarSection } from "./AvatarSection";
 import { ProfileSection } from "./ProfileSection";
@@ -17,7 +17,6 @@ import { DangerZone } from "./DangerZone";
 const ManageAccount = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const { profile, setProfile, notifications, setNotifications, loading } = useAccountData();
   const [saving, setSaving] = useState(false);
 
@@ -45,13 +44,9 @@ const ManageAccount = () => {
     setSaving(false);
 
     if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to update profile. Please try again.");
     } else {
-      toast({ title: "Success", description: "Your profile has been updated." });
+      toast.success("Changes saved");
     }
   };
 
