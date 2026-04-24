@@ -49,6 +49,19 @@ export async function getLessonsByCourse(courseId: string): Promise<ApiResult<Ta
   );
 }
 
+/** Lesson counts keyed by course_id. Used by listing pages that don't need full rows. */
+export async function getLessonCountsByCourse(): Promise<ApiResult<Record<string, number>>> {
+  const result = await tracked("lessons:countsByCourse", () =>
+    from("lessons").select("course_id")
+  );
+  if (result.error) return result as ApiResult<Record<string, number>>;
+  const counts = (result.data || []).reduce((acc, l) => {
+    acc[l.course_id] = (acc[l.course_id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  return { data: counts, error: null };
+}
+
 export async function getLessonById(lessonId: string): Promise<ApiResult<Tables["lessons"]["Row"]>> {
   return tracked("lessons:getById", () =>
     from("lessons")
