@@ -343,7 +343,7 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
             {/* Courses Section */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-muted-foreground">
                   Enrolled Courses ({enrollments.length})
                 </h4>
               </div>
@@ -474,7 +474,7 @@ const UserDetailSheet = ({ userId, userRole, open, onOpenChange }: UserDetailShe
 
                           <CollapsibleContent>
                             <div className="border-t bg-muted/30 p-4">
-                              <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                              <h5 className="text-sm font-semibold text-muted-foreground mb-3">
                                 Lesson Progress
                               </h5>
                               {lessons.length === 0 ? (
