@@ -1,8 +1,7 @@
 import { getCorsHeaders, corsResponse } from "../_shared/cors.ts";
+import { authenticate, isAuthFailure } from "../_shared/auth.ts";
+import { errorResponse, jsonResponse } from "../_shared/response.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-
 
 interface QuizAnswer {
   questionIndex: number;
@@ -65,31 +64,21 @@ serve(async (req) => {
   }
 
   try {
+    // Original behaviour: missing auth → 401 with message "No authorization header",
+    // invalid token → 401 with message "Unauthorized". Preserve both.
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
-      throw new Error("No authorization header");
+      return errorResponse("No authorization header", 401, corsHeaders);
     }
 
-    const supabaseAuth = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const auth = await authenticate(req, corsHeaders, { invalidTokenMessage: "Unauthorized" });
+    if (isAuthFailure(auth)) return auth.response;
+    const { user, adminClient: supabaseAdmin } = auth;
 
-    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
-    if (userError || !user) {
-      throw new Error("Unauthorized");
-    }
-
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
-
-    const { quizId, answers, timeTakenSeconds, isPracticeMode, focusViolations } = await req.json();
+    const { quizId, answers, timeTakenSeconds, focusViolations } = await req.json();
 
     if (!quizId || !answers) {
-      throw new Error("Missing quizId or answers");
+      return errorResponse("Missing quizId or answers", 400, corsHeaders);
     }
 
     // Get quiz details including type for pass/fail calculation
@@ -100,7 +89,7 @@ serve(async (req) => {
       .single();
 
     if (quizError || !quiz) {
-      throw new Error("Quiz not found");
+      return errorResponse("Quiz not found", 400, corsHeaders);
     }
 
     // Verify enrollment
@@ -112,7 +101,7 @@ serve(async (req) => {
       .single();
 
     if (enrollmentError || !enrollment) {
-      throw new Error("You must be enrolled in this course to take this quiz");
+      return errorResponse("You must be enrolled in this course to take this quiz", 400, corsHeaders);
     }
 
     // Fetch questions server-side (correct answers never sent to client)
@@ -124,7 +113,7 @@ serve(async (req) => {
       .order("order_index");
 
     if (questionsError || !questions) {
-      throw new Error("Failed to fetch quiz questions");
+      return errorResponse("Failed to fetch quiz questions", 400, corsHeaders);
     }
 
     // For mock exams, fetch the passing threshold
@@ -187,7 +176,7 @@ serve(async (req) => {
 
     if (insertError) {
       console.error("Insert error:", insertError);
-      throw new Error("Failed to record quiz attempt");
+      return errorResponse("Failed to record quiz attempt", 400, corsHeaders);
     }
 
     // Track per-question attempts — now includes the student's actual answer
@@ -257,8 +246,8 @@ serve(async (req) => {
 
     console.log(`Quiz ${quizId} submitted by user ${user.id}: ${score}/${maxScore}${passed !== null ? ` (${passed ? "PASS" : "FAIL"})` : ""}`);
 
-    return new Response(
-      JSON.stringify({
+    return jsonResponse(
+      {
         success: true,
         score,
         maxScore,
@@ -270,18 +259,13 @@ serve(async (req) => {
           index: i,
           isCorrect: r.isCorrect,
         })),
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      },
+      200,
+      corsHeaders
     );
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error("Submit quiz error:", errorMessage);
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      {
-        status: error instanceof Error && error.message === "Unauthorized" ? 401 : 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return errorResponse(errorMessage, 400, corsHeaders);
   }
 });
