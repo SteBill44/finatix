@@ -76,6 +76,7 @@ const Navbar = () => {
     { name: "WHY CIMA?", path: "/why-cima" },
     { name: "EXPLORE COURSES", path: "/courses" },
     { name: "PRICING", path: "/pricing" },
+    { name: "ABOUT", path: "/about" },
     { name: "CONTACT", path: "/contact" },
     ...(user ? [{ name: "DASHBOARD", path: "/dashboard" }] : []),
   ];
