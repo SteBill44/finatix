@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
-import FinatixLogo from "@/components/FinatixLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,7 +89,7 @@ const Contact = () => {
             Get in Touch
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Contact <FinatixLogo size="lg" showText linkTo={null} className="hidden" />
+            Contact <span className="text-foreground">Fin</span><span className="text-primary">atix</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
             Have a question about our courses or need support? We respond within 24 - 48 hours, Monday to Friday, 9am to 5pm.
