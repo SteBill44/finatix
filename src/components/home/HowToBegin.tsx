@@ -39,7 +39,7 @@ const HowToBegin = () => {
           </span>
           <SplitTextReveal
             as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-[1.15]"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-tight pb-1"
           >
             How to Begin Your CIMA Journey
           </SplitTextReveal>
