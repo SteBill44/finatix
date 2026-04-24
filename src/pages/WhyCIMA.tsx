@@ -218,7 +218,7 @@ const WhyCIMA = () => {
       {/* CTA Section */}
       <section className="py-16 text-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             Start Your CIMA Journey Today
           </h2>
           <p className="text-white/80 max-w-2xl mx-auto mb-8">
