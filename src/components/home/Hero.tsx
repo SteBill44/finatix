@@ -55,6 +55,10 @@ const Hero = () => {
         }}
       />
 
+      <div className="absolute inset-0 hex-pattern opacity-80 dark:opacity-100 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
+
       {/* Top gradient fade for smooth navbar transition (subtler in light mode) */}
       <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/10 dark:from-black/40 to-transparent pointer-events-none z-[1]" />
 
