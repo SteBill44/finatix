@@ -144,7 +144,7 @@ const About = () => {
       </section>
 
       {/* Success Rate Section */}
-      <section className="py-16 gradient-bg">
+      <section className="py-16 gradient-footer">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <Award className="w-12 h-12 text-primary-foreground mx-auto mb-4" />
