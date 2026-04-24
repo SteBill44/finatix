@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
 import { useIsAdmin } from "@/hooks/useUserRole";
 
 interface AdminViewContextType {
@@ -10,10 +10,9 @@ interface AdminViewContextType {
 const AdminViewContext = createContext<AdminViewContextType | undefined>(undefined);
 
 export const AdminViewProvider = ({ children }: { children: ReactNode }) => {
-  const [isStudentView, setIsStudentView] = useState(false);
-
-  const toggleView = () => setIsStudentView((prev) => !prev);
-  const setStudentView = (value: boolean) => setIsStudentView(value);
+  const isStudentView = false;
+  const toggleView = () => undefined;
+  const setStudentView = () => undefined;
 
   return (
     <AdminViewContext.Provider value={{ isStudentView, toggleView, setStudentView }}>
