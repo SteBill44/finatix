@@ -92,7 +92,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
           >
-            Master CIMA with modern, competency-based training trusted by leading professionals worldwide
+            Build exam-ready confidence with structured CIMA lessons, adaptive practice, mock exams, progress insights, and focused revision tools for every qualification level.
           </motion.p>
 
           {/* CTA Buttons */}
