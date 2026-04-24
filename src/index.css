@@ -200,6 +200,22 @@
     background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--brand-orange)) 100%);
   }
 
+  .course-hero-gradient-certificate {
+    background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--orange)) 100%);
+  }
+
+  .course-hero-gradient-operational {
+    background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--primary)) 100%);
+  }
+
+  .course-hero-gradient-management {
+    background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--purple)) 100%);
+  }
+
+  .course-hero-gradient-strategic {
+    background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--red)) 100%);
+  }
+
   /* Footer gradient */
   .gradient-footer {
     background: linear-gradient(135deg, #2a1a0a 0%, #6b2a05 50%, #8a3a08 100%);
