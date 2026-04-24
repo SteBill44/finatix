@@ -94,6 +94,22 @@ const Contact = () => {
           <p className="text-xl text-muted-foreground max-w-2xl">
             Have a question about our courses or need support? We respond within 24 - 48 hours, Monday to Friday, 9am to 5pm.
           </p>
+          <div className="mt-10 grid gap-6 sm:grid-cols-3 max-w-3xl rounded-lg border border-border bg-card/80 p-6 shadow-lg backdrop-blur-sm">
+            {[
+              { value: "24 - 48h", label: "Response time" },
+              { value: "Mon - Fri", label: "9am - 5pm" },
+              { value: "GMT", label: "Support hours" },
+            ].map((item) => (
+              <div key={item.label} className="border-l-2 border-primary pl-5">
+                <p className="font-mono text-2xl font-bold leading-none text-foreground md:text-3xl">
+                  {item.value}
+                </p>
+                <p className="mt-3 font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
