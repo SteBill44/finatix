@@ -137,14 +137,14 @@ const Navbar = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 px-3 py-2 rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+                  <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25 hover:bg-primary/90 transition-colors">
                     <Avatar className="w-7 h-7">
                       <AvatarImage src={avatarUrl || undefined} alt="Profile" />
-                      <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                      <AvatarFallback className="bg-primary-foreground text-primary text-xs font-bold">
                         {firstName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
+                    <span className="text-sm font-bold max-w-[120px] truncate">
                       {firstName || user.email?.split("@")[0]}
                     </span>
                   </button>
