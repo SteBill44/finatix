@@ -20,6 +20,16 @@ export async function getCourses(): Promise<ApiResult<Tables["courses"]["Row"][]
   );
 }
 
+/** Catalog ordering for the public Courses page (level then title). */
+export async function getCoursesForCatalog(): Promise<ApiResult<Tables["courses"]["Row"][]>> {
+  return tracked("courses:catalog", () =>
+    from("courses")
+      .select("*")
+      .order("level", { ascending: true })
+      .order("title", { ascending: true })
+  );
+}
+
 export async function getCourseBySlug(slug: string): Promise<ApiResult<Tables["courses"]["Row"]>> {
   return tracked("courses:getBySlug", () =>
     from("courses")
@@ -47,6 +57,19 @@ export async function getLessonsByCourse(courseId: string): Promise<ApiResult<Ta
       .eq("course_id", courseId)
       .order("order_index", { ascending: true })
   );
+}
+
+/** Lesson counts keyed by course_id. Used by listing pages that don't need full rows. */
+export async function getLessonCountsByCourse(): Promise<ApiResult<Record<string, number>>> {
+  const result = await tracked("lessons:countsByCourse", () =>
+    from("lessons").select("course_id")
+  );
+  if (result.error) return result as ApiResult<Record<string, number>>;
+  const counts = (result.data || []).reduce((acc, l) => {
+    acc[l.course_id] = (acc[l.course_id] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  return { data: counts, error: null };
 }
 
 export async function getLessonById(lessonId: string): Promise<ApiResult<Tables["lessons"]["Row"]>> {

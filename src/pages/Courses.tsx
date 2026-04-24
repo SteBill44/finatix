@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { queries } from "@/lib/api";
 import { CourseGridSkeleton } from "@/components/skeletons/ContentSkeletons";
 import {
   Search,
@@ -295,13 +296,9 @@ const Courses = () => {
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("courses")
-        .select("*")
-        .order("level", { ascending: true })
-        .order("title", { ascending: true });
+      const { data, error } = await queries.getCoursesForCatalog();
       if (error) throw error;
-      return data as Course[];
+      return (data || []) as Course[];
     },
   });
 
@@ -309,14 +306,9 @@ const Courses = () => {
   const { data: lessonCountMap = {} } = useQuery({
     queryKey: ["lesson_counts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("lessons")
-        .select("course_id");
+      const { data, error } = await queries.getLessonCountsByCourse();
       if (error) return {} as Record<string, number>;
-      return (data || []).reduce((acc, l) => {
-        acc[l.course_id] = (acc[l.course_id] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      return data || {};
     },
   });
 
