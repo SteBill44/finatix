@@ -91,29 +91,6 @@ const Hero = () => {
             Master CIMA with modern, competency-based training trusted by leading professionals worldwide
           </motion.p>
 
-          {/* Inline stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-wrap items-start gap-x-10 gap-y-6 mb-10"
-          >
-            {[
-              { value: "2,500+", label: "Learners" },
-              { value: "92%", label: "Pass Rate" },
-              { value: "45+", label: "Countries" },
-            ].map((stat) => (
-              <div key={stat.label} className="flex flex-col">
-                <span className="text-3xl md:text-4xl font-bold text-charcoal dark:text-white tabular-nums">
-                  {stat.value}
-                </span>
-                <span className="text-xs md:text-sm uppercase tracking-wider text-charcoal/60 dark:text-white/55 font-medium mt-1">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
