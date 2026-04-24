@@ -222,7 +222,7 @@ const Dashboard = () => {
                   
                   return (
                     <div>
-                      <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                      <h2 className="text-sm font-semibold text-muted-foreground mb-3">
                         My Courses
                       </h2>
                       <Accordion type="multiple" className="divide-y divide-border border-y border-border">
@@ -262,7 +262,7 @@ const Dashboard = () => {
 
                 {completedCourses.length > 0 && (
                   <div>
-                    <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                    <h2 className="text-sm font-semibold text-muted-foreground mb-3">
                       Completed — {completedCourses.length}
                     </h2>
                     <div className="divide-y divide-border/60 border-y border-border">
@@ -280,7 +280,7 @@ const Dashboard = () => {
 
                 {/* Study Tools */}
                 <Card className="p-4">
-                  <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+                  <h3 className="text-sm font-semibold text-muted-foreground mb-2">
                     Study Tools
                   </h3>
                   <div className="space-y-0.5">
@@ -301,7 +301,7 @@ const Dashboard = () => {
                 {/* Recent Quiz Results */}
                 {recentQuizAttempts.length > 0 && (
                   <Card className="p-4">
-                    <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                    <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground mb-3">
                       <Calendar className="w-3.5 h-3.5" />
                       Recent Results
                     </div>
