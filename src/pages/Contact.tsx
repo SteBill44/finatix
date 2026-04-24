@@ -86,14 +86,14 @@ const Contact = () => {
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -left-20 pointer-events-none" />
         <div className="gradient-orb gradient-orb-primary w-[150px] h-[150px] sm:w-[250px] sm:h-[250px] bottom-0 right-1/4 pointer-events-none" />
         
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="container mx-auto px-4 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4">
             Get in Touch
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
             We're Here to Help
           </h1>
-          <p className="text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-xl text-primary-foreground/80 max-w-2xl">
             Have a question about our courses or need support? Our team is ready to assist you.
           </p>
         </div>

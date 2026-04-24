@@ -262,14 +262,14 @@ const Pricing = () => {
         <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-10 pointer-events-none" />
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/3 -right-20 pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative z-10 text-center">
+        <div className="container mx-auto px-4 relative z-10">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             Simple, Transparent Pricing
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             INVEST IN YOUR <span className="text-primary">CIMA SUCCESS</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl">
             Choose the plan that fits your goals. All plans include our modern analytics and learning tools.
           </p>
         </div>
