@@ -119,9 +119,6 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            {/* Notifications Bell */}
-            {user && <NotificationsBell />}
-
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
@@ -233,6 +230,9 @@ const Navbar = () => {
                 </Link>
               </>
             )}
+
+            {/* Notifications Bell */}
+            {user && <NotificationsBell />}
           </div>
 
           {/* Mobile Menu Toggle */}
