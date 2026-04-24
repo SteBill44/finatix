@@ -5,7 +5,7 @@ import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 import Features from "@/components/home/Features";
 import LearningPathway from "@/components/home/LearningPathway";
 import CareerPathways from "@/components/home/CareerPathways";
-import LearnerOutcomes from "@/components/home/LearnerOutcomes";
+
 import HowToBegin from "@/components/home/HowToBegin";
 import FAQ from "@/components/home/FAQ";
 import CTA from "@/components/home/CTA";
@@ -22,7 +22,7 @@ const Index = () => {
       <Features />
       <LearningPathway />
       <CareerPathways />
-      <LearnerOutcomes />
+      
       <HowToBegin />
       <FAQ />
       <CTA />
