@@ -35,6 +35,21 @@ const tiers = [
     ctaLink: "/courses",
   },
   {
+    badge: "Management",
+    badgeTone: "bg-blue-500/15 text-blue-600 dark:text-blue-400",
+    title: "Step Into Leadership",
+    description:
+      "Advance through E2, P2 and F2. Develop the project management, advanced costing, and advanced financial reporting skills needed to manage teams and complex finance functions.",
+    features: [
+      "E2 · Managing Performance",
+      "P2 · Advanced Management Accounting",
+      "F2 · Advanced Financial Reporting",
+      "Management case study prep",
+    ],
+    cta: "Explore Management",
+    ctaLink: "/courses",
+  },
+  {
     badge: "Strategic",
     badgeTone: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
     title: "Lead at the Top",
@@ -71,7 +86,7 @@ const LearningPathway = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.badge}
