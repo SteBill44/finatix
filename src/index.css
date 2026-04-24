@@ -196,6 +196,10 @@
     background: linear-gradient(135deg, #000000 0%, #C10801 40%, #F16001 70%, #D9C3AB 100%);
   }
 
+  .course-hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--brand-black)) 0%, hsl(var(--brand-orange)) 100%);
+  }
+
   /* Footer gradient */
   .gradient-footer {
     background: linear-gradient(135deg, #2a1a0a 0%, #6b2a05 50%, #8a3a08 100%);

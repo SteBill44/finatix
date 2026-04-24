@@ -494,7 +494,7 @@ const CourseDetail = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative py-10 lg:py-14 overflow-hidden">
-        <div className="absolute inset-0 gradient-bg opacity-95" />
+        <div className="absolute inset-0 course-hero-gradient opacity-95" />
         <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
         
         <div className="container mx-auto px-4 relative z-10 overflow-hidden">
@@ -525,7 +525,7 @@ const CourseDetail = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4 capitalize">
                 {course.level} Level
               </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4">{course.title}</h1>
+              <h1 className="!text-3xl md:!text-4xl lg:!text-4xl font-bold text-primary-foreground mb-4">{course.title}</h1>
               <p className="text-lg text-primary-foreground/80 mb-6">
                 {course.description || "Comprehensive course designed to help you master the exam content and pass with confidence."}
               </p>
