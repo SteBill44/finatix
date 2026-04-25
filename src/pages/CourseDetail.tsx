@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import SEOHead from "@/components/SEOHead";
+import JsonLd from "@/components/JsonLd";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -501,8 +503,40 @@ const CourseDetail = () => {
     );
   }
 
+  const courseSchema = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: course.title,
+    description: course.description || `Comprehensive CIMA ${course.title} course with practice exams, flashcards, and AI-powered study tools.`,
+    url: `https://finatix.com/courses/${course.slug}`,
+    provider: { "@type": "Organization", name: "Finatix", url: "https://finatix.com" },
+    educationalCredentialAwarded: "CIMA Certificate",
+    courseCode: course.slug?.toUpperCase(),
+    hasCourseInstance: {
+      "@type": "CourseInstance",
+      courseMode: "online",
+      courseWorkload: course.duration_hours ? `PT${course.duration_hours}H` : undefined,
+    },
+    ...(ratingData?.averageRating && ratingData.totalReviews > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: ratingData.averageRating.toFixed(1),
+        reviewCount: ratingData.totalReviews,
+        bestRating: "5",
+        worstRating: "1",
+      },
+    }),
+  }), [course, ratingData]);
+
   return (
     <Layout>
+      <SEOHead
+        title={course.title}
+        description={course.description || `Master ${course.title} with Finatix. Practice exams, AI study tools, competency analytics and expert-led lessons.`}
+        keywords={`CIMA ${course.slug?.toUpperCase()}, ${course.title}, CIMA exam prep, management accounting`}
+        canonicalUrl={`https://finatix.com/courses/${course.slug}`}
+      />
+      <JsonLd schema={courseSchema} id={`course-schema-${course.slug}`} />
       {/* Hero Section */}
       <section className="relative py-10 lg:py-14 overflow-hidden">
         <div className={`absolute inset-0 ${levelGradientClass} opacity-95`} />

@@ -252,10 +252,11 @@ const Pricing = () => {
 
   return (
     <Layout>
-      <SEOHead 
-        title="Pricing"
+      <SEOHead
+        title="Pricing | Affordable CIMA Training"
         description="Affordable CIMA training packages. Choose individual modules, full level bundles, or unlimited lifetime access. Competitive pricing with flexible payment options."
-        keywords="CIMA pricing, CIMA course fees, CIMA training cost, affordable CIMA courses"
+        keywords="CIMA pricing, CIMA course fees, CIMA training cost, affordable CIMA courses, CIMA subscription"
+        canonicalUrl="https://finatix.com/pricing"
       />
       {/* Hero */}
       <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hex-pattern hero-gradient-light overflow-hidden">
