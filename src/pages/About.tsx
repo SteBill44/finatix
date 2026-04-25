@@ -63,7 +63,7 @@ const About = () => {
               Our mission is to make that journey as efficient and effective as possible.
             </p>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
-              Finatix grew from a simple idea: CIMA students investing in themselves deserve a polished, capable learning experience without unnecessary barriers.
+              Finatix grew from a simple idea: CIMA students deserve a polished, capable learning experience that feels built around their journey.
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
               <Link to="/courses">
