@@ -27,14 +27,14 @@ const Hero = () => {
         className="absolute inset-0 pointer-events-none dark:hidden"
         style={{
           background:
-            "linear-gradient(135deg, #FFFDF9 0%, #FFF0E3 42%, #FFC489 100%)",
+            "linear-gradient(135deg, #FFF6EE 0%, #FFE9D6 50%, #FFD9BD 100%)",
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none hidden dark:block"
         style={{
           background:
-            "linear-gradient(135deg, #351303 0%, #1D0B04 48%, #080608 100%)",
+            "linear-gradient(135deg, #1C0D04 0%, #0F0806 50%, #06060A 100%)",
         }}
       />
 
@@ -44,14 +44,14 @@ const Hero = () => {
         className="absolute inset-0 pointer-events-none dark:hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(255,255,255,0.34) 0%, rgba(255,237,219,0.26) 28%, hsl(var(--brand-orange) / 0.28) 64%, hsl(var(--brand-orange-light) / 0.38) 100%)",
+            "linear-gradient(135deg, rgba(255,246,238,0.2) 0%, rgba(255,233,214,0.15) 30%, hsl(var(--brand-orange) / 0.15) 65%, hsl(var(--brand-orange-light) / 0.22) 100%)",
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none hidden dark:block"
         style={{
           background:
-            "linear-gradient(135deg, rgba(48,18,4,0.56) 0%, rgba(34,13,5,0.44) 30%, hsl(var(--brand-orange) / 0.42) 65%, hsl(var(--brand-orange-dark) / 0.58) 100%)",
+            "linear-gradient(135deg, rgba(10,6,4,0.4) 0%, rgba(20,10,5,0.3) 30%, hsl(var(--brand-orange) / 0.28) 65%, hsl(var(--brand-orange-dark) / 0.45) 100%)",
         }}
       />
 
