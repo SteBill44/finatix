@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { lovable } from "@/integrations/lovable";
+import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { loginSchema } from "@/lib/validation";
 
@@ -22,6 +23,8 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState("");
 
   const { signIn } = useAuth();
   const { toast } = useToast();
@@ -53,6 +56,13 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           variant: "destructive",
         });
       } else {
+        const { data } = await supabase.auth.mfa.listFactors();
+        const verifiedTotp = data?.totp.find((factor) => factor.status === "verified");
+        if (verifiedTotp) {
+          setMfaFactorId(verifiedTotp.id);
+          return;
+        }
+
         toast({ title: "Welcome back!", description: "You have successfully logged in." });
         navigate("/dashboard");
       }
@@ -61,6 +71,26 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMfaSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mfaFactorId || mfaCode.length < 6) return;
+
+    setLoading(true);
+    const { error } = await supabase.auth.mfa.challengeAndVerify({
+      factorId: mfaFactorId,
+      code: mfaCode,
+    });
+    setLoading(false);
+
+    if (error) {
+      toast({ title: "Verification failed", description: "Please check the code and try again.", variant: "destructive" });
+      return;
+    }
+
+    toast({ title: "Welcome back!", description: "You have successfully logged in." });
+    navigate("/dashboard");
   };
 
   const handleGoogleSignIn = async () => {
@@ -91,6 +121,29 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
 
   return (
     <>
+      {mfaFactorId ? (
+        <form onSubmit={handleMfaSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="mfaCode">Authenticator code</Label>
+            <Input
+              id="mfaCode"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              value={mfaCode}
+              onChange={(event) => setMfaCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+              placeholder="123456"
+            />
+          </div>
+
+          <Button type="submit" className="w-full" disabled={loading || mfaCode.length < 6}>
+            {loading ? "Verifying..." : "Verify Code"}
+          </Button>
+
+          <Button type="button" variant="ghost" className="w-full" onClick={() => setMfaFactorId(null)} disabled={loading}>
+            Back to sign in
+          </Button>
+        </form>
+      ) : (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
@@ -144,8 +197,9 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           {loading ? "Please wait..." : "Sign In"}
         </Button>
       </form>
+      )}
 
-      <div className="relative my-6">
+      {!mfaFactorId && <><div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-border" />
         </div>
@@ -189,6 +243,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           </button>
         </p>
       </div>
+      </>}
     </>
   );
 };
