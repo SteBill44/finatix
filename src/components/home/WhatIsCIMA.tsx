@@ -32,9 +32,11 @@ const WhatIsCIMA = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              CIMA is a practical route into management accounting. It helps you build
-              the finance, business, and decision-making skills needed to support real
-              organisations — not just pass exams.
+              The Chartered Institute of Management Accountants (CIMA) is the world's
+              leading professional body for management accountants. As both a qualification
+              and a designation, it certifies expertise in financial management, strategic
+              decision-making, and business performance — skills that drive organisations
+              forward, not just balance the books.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -42,9 +44,10 @@ const WhatIsCIMA = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              As you move through the qualification, you learn how to turn numbers into
-              useful advice: spotting trends, weighing up options, understanding costs,
-              and helping teams make better calls.
+              CIMA-qualified professionals translate financial data into business strategy.
+              They forecast performance, evaluate investments, optimise costs, and partner
+              with leadership to make the calls that shape the future of an organisation —
+              from FTSE 100 boards to high-growth startups.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -52,9 +55,10 @@ const WhatIsCIMA = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              The qualification is split into four stages, from the Certificate level
-              through to Strategic. Each stage builds on the last, so you can grow your
-              confidence step by step.
+              The qualification spans four progressive levels: Certificate in Business
+              Accounting establishes the fundamentals; Operational develops short-term
+              decision-making; Management focuses on medium-term performance; and Strategic
+              equips you for senior leadership and long-term strategy.
             </motion.p>
           </div>
 

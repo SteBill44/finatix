@@ -3,19 +3,19 @@ import SplitTextReveal from "./SplitTextReveal";
 
 const steps = [
   {
-    title: "Create your free account",
+    title: "Create Your Free Account",
     description:
-      "Sign up with your email and start exploring without needing a card.",
+      "Sign up in under 60 seconds with just your email. No credit card, no commitments.",
   },
   {
-    title: "Start with the Certificate level",
+    title: "Start the Certificate Level Free",
     description:
-      "Begin with BA1 and build your foundation in management accounting at a steady pace.",
+      "Jump straight into BA1 the moment you register. Begin building your foundation in management accounting.",
   },
   {
-    title: "Study at your own pace",
+    title: "Train at Your Own Pace",
     description:
-      "Work through lessons, examples, and practice when it suits you, without feeling rushed.",
+      "Work through video lessons, practical examples, and adaptive practice on your schedule. Lifetime access means no pressure.",
   },
   {
     title: "Progress to Higher Levels",
@@ -44,8 +44,8 @@ const HowToBegin = () => {
             How to Begin Your CIMA Journey
           </SplitTextReveal>
           <p className="text-lg text-muted-foreground">
-            A simple path from first lesson to exam day, designed to fit around the rest
-            of your life.
+            A straightforward pathway from registration to certification — designed to fit
+            around your schedule and your career.
           </p>
         </div>
 
