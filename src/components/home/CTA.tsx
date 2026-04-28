@@ -108,7 +108,7 @@ const CTA = () => {
               as="h2"
               className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-tight"
             >
-              Create your account. Start for free.
+              Start small. Build momentum.
             </SplitTextReveal>
 
             <motion.p
@@ -117,7 +117,7 @@ const CTA = () => {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-lg text-muted-foreground mb-8"
             >
-              Everything you need to pass CIMA — in one place. No credit card required.
+              Begin with free access, learn at a pace that suits you, and come back whenever you are ready for the next step.
             </motion.p>
 
             {/* Perks list */}
