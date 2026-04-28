@@ -57,21 +57,21 @@ const Features = () => {
   const features = [
     {
       icon: Brain,
-      title: "Competency-Based Analytics",
+      title: "Know Where to Focus",
       description:
-        "Our AI identifies your weak areas and creates personalized study plans that adapt as you learn.",
+        "See the topics that need more attention, so your study time feels clearer and more useful.",
     },
     {
       icon: Target,
-      title: "Adaptive Learning",
+      title: "Practice That Adjusts",
       description:
-        "Focus on what matters most. Our system prioritizes topics where you need the most improvement.",
+        "Work through questions that respond to your progress and help you strengthen weaker areas.",
     },
     {
       icon: BarChart2,
-      title: "Visual Progress Tracking",
+      title: "Progress You Can See",
       description:
-        "See your improvement across all competencies with beautiful, intuitive charts and insights.",
+        "Track how you are improving across each syllabus area without digging through spreadsheets.",
     },
     {
       icon: FileQuestion,
@@ -83,13 +83,13 @@ const Features = () => {
       icon: Smartphone,
       title: "Phone Compatible",
       description:
-        "Access your studies from any device. Our responsive platform works seamlessly on phones, tablets, and desktops.",
+        "Fit a lesson or quick practice session into the gaps in your day, whether you are on mobile, tablet, or desktop.",
     },
     {
       icon: Zap,
       title: "Instant Feedback",
       description:
-        "Get immediate explanations for every question, helping you learn from mistakes quickly.",
+        "Get clear explanations straight away, so mistakes become part of the learning process.",
     },
   ];
 
@@ -102,7 +102,7 @@ const Features = () => {
             as="h2"
             className="text-3xl md:text-4xl font-bold text-charcoal mb-4"
           >
-            Why Choose Finatix
+            Built for Real Study Days
           </SplitTextReveal>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -110,8 +110,8 @@ const Features = () => {
             transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg text-muted-foreground"
           >
-            Our platform goes beyond traditional learning with data-driven
-            insights that help you pass first time.
+            Clear structure, helpful practice, and progress tools that make it easier
+            to keep going when life is busy.
           </motion.p>
         </div>
 

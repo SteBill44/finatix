@@ -74,14 +74,14 @@ const Hero = () => {
               delay={0.2}
               className="block text-charcoal dark:text-white"
             >
-              LAUNCH YOUR CAREER IN
+              FEEL READY FOR
             </SplitTextReveal>
             <SplitTextReveal
               as="span"
               delay={0.5}
               className="block text-primary drop-shadow-sm"
             >
-              MANAGEMENT ACCOUNTING
+              YOUR CIMA EXAMS
             </SplitTextReveal>
           </div>
 
@@ -92,7 +92,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
           >
-            Build exam-ready confidence with structured CIMA lessons, adaptive practice, mock exams, progress insights, and focused revision tools for every qualification level.
+            Study at your own pace with clear lessons, realistic practice, mock exams, and simple progress insights that help you know what to work on next.
           </motion.p>
 
           {/* CTA Buttons */}
