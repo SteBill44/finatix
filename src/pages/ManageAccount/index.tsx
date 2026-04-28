@@ -13,6 +13,7 @@ import { AvatarSection } from "./AvatarSection";
 import { ProfileSection } from "./ProfileSection";
 import { NotificationsSection } from "./NotificationsSection";
 import { DangerZone } from "./DangerZone";
+import { TwoFactorSection } from "./TwoFactorSection";
 
 const ManageAccount = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -87,9 +88,10 @@ const ManageAccount = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 To change your password, please use the password reset feature on the login page.
               </p>
-              <Button variant="outline" onClick={() => navigate("/auth?mode=reset")}>
+              <Button variant="outline" onClick={() => navigate("/auth?mode=reset")} className="mb-4">
                 Reset Password
               </Button>
+              <TwoFactorSection />
             </CardContent>
           </Card>
 
