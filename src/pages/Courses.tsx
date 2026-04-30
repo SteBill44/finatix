@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -314,36 +314,48 @@ const Courses = () => {
 
   // Enrollment data
   const { data: enrollments = [] } = useEnrollments();
-  const enrolledMap = Object.fromEntries(enrollments.map((e) => [e.course_id, e]));
+  const enrolledMap = useMemo(
+    () => Object.fromEntries(enrollments.map((e) => [e.course_id, e])),
+    [enrollments]
+  );
 
   // Completed lessons per course
   const { data: allProgress = [] } = useLessonProgress();
-  const completedPerCourse: Record<string, number> = {};
-  (allProgress as Array<{ completed: boolean; lessons: { course_id: string } | null }>).forEach((p) => {
-    if (p.completed && p.lessons?.course_id) {
-      const cid = p.lessons.course_id;
-      completedPerCourse[cid] = (completedPerCourse[cid] || 0) + 1;
-    }
-  });
+  const completedPerCourse = useMemo(() => {
+    const map: Record<string, number> = {};
+    (allProgress as Array<{ completed: boolean; lessons: { course_id: string } | null }>).forEach((p) => {
+      if (p.completed && p.lessons?.course_id) {
+        const cid = p.lessons.course_id;
+        map[cid] = (map[cid] || 0) + 1;
+      }
+    });
+    return map;
+  }, [allProgress]);
 
   const handleCourseImageUpdate = async (courseId: string, newUrl: string) => {
     await supabase.from("courses").update({ image_url: newUrl }).eq("id", courseId);
     queryClient.invalidateQueries({ queryKey: ["courses"] });
   };
 
-  const filteredCourses = courses
-    .sort((a, b) => getCourseOrder(a.slug) - getCourseOrder(b.slug))
-    .filter((course) => {
-      const matchesSearch =
-        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.slug.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (course.description || "").toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
-      return matchesSearch && matchesLevel;
-    });
+  const filteredCourses = useMemo(
+    () =>
+      [...courses]
+        .sort((a, b) => getCourseOrder(a.slug) - getCourseOrder(b.slug))
+        .filter((course) => {
+          const q = searchTerm.toLowerCase();
+          const matchesSearch =
+            course.title.toLowerCase().includes(q) ||
+            course.slug.toLowerCase().includes(q) ||
+            (course.description || "").toLowerCase().includes(q);
+          const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
+          return matchesSearch && matchesLevel;
+        }),
+    [courses, searchTerm, selectedLevel]
+  );
 
-  const groupedCourses = Object.fromEntries(
-    levelOrder.map((level) => [level, filteredCourses.filter((c) => c.level === level)])
+  const groupedCourses = useMemo(
+    () => Object.fromEntries(levelOrder.map((level) => [level, filteredCourses.filter((c) => c.level === level)])),
+    [filteredCourses]
   );
 
   return (

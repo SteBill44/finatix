@@ -155,14 +155,27 @@ const CourseDetail = () => {
     enabled: !!course?.id && !!user?.id,
   });
 
-  const isEnrolled = enrollments?.some((e) => e.course_id === course?.id);
-  const completedLessons = lessonProgress?.filter((p) => p.completed).length || 0;
-  const totalLessons = lessons?.length || 0;
-  const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const isEnrolled = useMemo(
+    () => enrollments?.some((e) => e.course_id === course?.id) ?? false,
+    [enrollments, course?.id]
+  );
 
-  const isLessonCompleted = (lessonId: string) => {
-    return lessonProgress?.some((p) => p.lesson_id === lessonId && p.completed);
-  };
+  const { completedLessons, totalLessons, progressPercentage } = useMemo(() => {
+    const total = lessons?.length ?? 0;
+    const completed = lessonProgress?.filter((p) => p.completed).length ?? 0;
+    return {
+      completedLessons: completed,
+      totalLessons: total,
+      progressPercentage: total > 0 ? Math.round((completed / total) * 100) : 0,
+    };
+  }, [lessons, lessonProgress]);
+
+  const completedLessonIds = useMemo(
+    () => new Set(lessonProgress?.filter((p) => p.completed).map((p) => p.lesson_id) ?? []),
+    [lessonProgress]
+  );
+
+  const isLessonCompleted = (lessonId: string) => completedLessonIds.has(lessonId);
 
   // Scroll spy for desktop sticky nav
   useEffect(() => {

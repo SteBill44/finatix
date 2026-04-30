@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -194,4 +195,4 @@ const CurrentCourseCard = ({
   );
 };
 
-export default CurrentCourseCard;
+export default memo(CurrentCourseCard);

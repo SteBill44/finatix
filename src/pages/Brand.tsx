@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { Navigate } from "react-router-dom";
-import html2canvas from "html2canvas";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import Layout from "@/components/layout/Layout";
@@ -24,9 +23,9 @@ const Brand = () => {
 
   const downloadFullLogoLight = async () => {
     if (!fullLogoLightRef.current) return;
-    // Temporarily show the light version
     fullLogoLightRef.current.style.display = "flex";
     try {
+      const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(fullLogoLightRef.current, {
         backgroundColor: null,
         scale: 6,
@@ -49,6 +48,7 @@ const Brand = () => {
     if (!ref.current) return;
 
     try {
+      const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(ref.current, {
         backgroundColor: null,
         scale: scale,

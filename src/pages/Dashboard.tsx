@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -72,14 +73,18 @@ const Dashboard = () => {
   const { showOnboarding, completeOnboarding } = useOnboarding();
 
   const enrolledCount = enrollments?.length || 0;
-  const completedLessonsCount = (lessonProgress as any[])?.filter((p) => p.completed).length || 0;
-  const totalQuizzes = quizAttempts?.length || 0;
-  const averageScore =
-    totalQuizzes > 0
-      ? Math.round(
-          quizAttempts!.reduce((sum, a) => sum + (a.score / a.max_score) * 100, 0) / totalQuizzes
-        )
-      : 0;
+  const completedLessonsCount = useMemo(
+    () => lessonProgress?.filter((p) => p.completed).length ?? 0,
+    [lessonProgress]
+  );
+  const { totalQuizzes, averageScore } = useMemo(() => {
+    const total = quizAttempts?.length || 0;
+    const avg =
+      total > 0
+        ? Math.round(quizAttempts!.reduce((sum, a) => sum + (a.score / a.max_score) * 100, 0) / total)
+        : 0;
+    return { totalQuizzes: total, averageScore: avg };
+  }, [quizAttempts]);
 
   const userName =
     user?.user_metadata?.first_name ||
@@ -87,12 +92,17 @@ const Dashboard = () => {
     user?.email?.split("@")[0] ||
     "Student";
 
-  const sorted = [...(enrollments || [])].sort(
-    (a, b) => getCimaIndex(a.courses?.title || "") - getCimaIndex(b.courses?.title || "")
-  );
-  const activeCourses = sorted.filter((e) => !e.completed_at);
-  const completedCourses = sorted.filter((e) => e.completed_at);
-  const recentQuizAttempts = quizAttempts?.slice(0, 3) || [];
+  const { activeCourses, completedCourses } = useMemo(() => {
+    const sorted = [...(enrollments || [])].sort(
+      (a, b) => getCimaIndex(a.courses?.title || "") - getCimaIndex(b.courses?.title || "")
+    );
+    return {
+      activeCourses: sorted.filter((e) => !e.completed_at),
+      completedCourses: sorted.filter((e) => e.completed_at),
+    };
+  }, [enrollments]);
+
+  const recentQuizAttempts = useMemo(() => quizAttempts?.slice(0, 3) ?? [], [quizAttempts]);
 
   if (enrollmentsLoading) {
     return (

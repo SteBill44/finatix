@@ -95,7 +95,7 @@ export const useQuizQuestions = (quizId: string, includeAnswers: boolean = false
     queryFn: async () => {
       const result = await rpc("get_quiz_questions", { _quiz_id: quizId });
       if (result.error) throw result.error;
-      return ((result.data as any[]) || []).map((q: any) => ({
+      return ((result.data as Record<string, unknown>[]) || []).map((q) => ({
         id: q.id,
         quiz_id: q.quiz_id,
         question: q.question,

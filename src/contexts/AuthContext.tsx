@@ -120,19 +120,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         return { error: error as Error };
       }
 
-      // If signup successful and we have CIMA data, update the profile
+      // Persist CIMA profile data if provided at signup
       if (data.user && cimaData) {
-        // Use setTimeout to defer the Supabase call and avoid deadlock
-        setTimeout(async () => {
-          await supabase.from("profiles").upsert({
-            user_id: data.user!.id,
-            full_name: fullName,
-            first_name: cimaData.first_name,
-            last_name: cimaData.last_name,
-            cima_id: cimaData.cima_id,
-            cima_start_date: new Date().toISOString().split("T")[0],
-          }, { onConflict: 'user_id' });
-        }, 0);
+        await supabase.from("profiles").upsert({
+          user_id: data.user.id,
+          full_name: fullName,
+          first_name: cimaData.first_name,
+          last_name: cimaData.last_name,
+          cima_id: cimaData.cima_id,
+          cima_start_date: new Date().toISOString().split("T")[0],
+        }, { onConflict: "user_id" });
       }
       
       return { error: null };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -205,4 +205,4 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
   );
 };
 
-export default CourseProgressCard;
+export default memo(CourseProgressCard);
