@@ -181,7 +181,7 @@ const Quiz = () => {
           <div className="absolute inset-0 gradient-bg opacity-95" />
           <div className="container mx-auto px-4 relative z-10 text-center">
             <Trophy className="w-16 h-16 mx-auto text-primary-foreground mb-4" />
-            <h1 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
+            <h1 className="text-base md:text-lg font-bold text-primary-foreground mb-2">
               Quiz Complete!
             </h1>
             <p className="text-primary-foreground/70">{quiz.title}</p>
