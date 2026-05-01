@@ -161,7 +161,7 @@ const MockExam = () => {
           <Card className="p-8">
             <div className="text-center mb-8">
               <GraduationCap className="w-16 h-16 mx-auto text-primary mb-4" />
-              <h1 className="text-3xl font-bold text-foreground mb-2">
+              <h1 className="text-2xl font-bold text-foreground mb-2">
                 CIMA Mock Exam
               </h1>
               <p className="text-muted-foreground">
