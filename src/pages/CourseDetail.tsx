@@ -583,7 +583,7 @@ const CourseDetail = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4 capitalize">
                 {course.level} Level
               </span>
-              <h1 className="!text-[8px] md:!text-[9px] lg:!text-[9px] font-bold text-primary-foreground mb-4">{course.title}</h1>
+              <h1 className="!text-[8px] md:!text-[7px] lg:!text-[6px] font-bold text-primary-foreground mb-4">{course.title}</h1>
               <p className="text-lg text-primary-foreground/80 mb-6">
                 {course.description || "Comprehensive course designed to help you master the exam content and pass with confidence."}
               </p>
