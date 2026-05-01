@@ -373,7 +373,7 @@ const Courses = () => {
         <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="animate-fade-up text-3xl md:text-4xl font-bold text-foreground mb-4">
               EXPLORE <span className="text-primary">CIMA COURSES</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
