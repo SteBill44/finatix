@@ -254,7 +254,7 @@ const Quiz = () => {
               </Button>
             </Link>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
+          <h1 className="text-xl md:text-2xl font-bold text-primary-foreground mb-2">
             {quiz.title}
           </h1>
           {quiz.description && (
