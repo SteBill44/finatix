@@ -210,7 +210,11 @@ export const useMarkLessonComplete = () => {
 
       if (isFirstLesson) {
         // Referral completion is optional — failure is non-fatal
-        await supabase.rpc("complete_referral", { p_referred_id: user.id }).catch(() => {});
+        try {
+          await supabase.rpc("complete_referral", { p_referred_id: user.id });
+        } catch {
+          // ignore
+        }
       }
 
       // Check if all lessons in the course are now complete
