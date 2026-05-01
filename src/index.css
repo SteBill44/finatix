@@ -170,8 +170,8 @@
     @apply font-semibold tracking-tight text-charcoal;
   }
 
-  main > section:first-of-type h1,
-  main > div:first-child h1:first-of-type {
+  main > section:first-of-type h1:not(.course-title),
+  main > div:first-child h1:first-of-type:not(.course-title) {
     @apply !text-4xl md:!text-5xl lg:!text-6xl;
   }
 
