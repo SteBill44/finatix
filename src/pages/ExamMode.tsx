@@ -261,7 +261,7 @@ const ExamMode = () => {
         {/* Results Header */}
         <div className="bg-gradient-to-r from-primary to-primary/80 py-12 text-center">
           <Trophy className="w-16 h-16 mx-auto text-primary-foreground mb-4" />
-          <h1 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
+          <h1 className="text-xl md:text-2xl font-bold text-primary-foreground mb-2 text-balance line-clamp-2">
             Exam Complete!
           </h1>
           <p className="text-primary-foreground/70">{quiz.title}</p>
