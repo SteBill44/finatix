@@ -516,7 +516,7 @@ const CourseDetail = () => {
     );
   }
 
-  const courseSchema = useMemo(() => ({
+  const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
@@ -539,7 +539,7 @@ const CourseDetail = () => {
         worstRating: "1",
       },
     }),
-  }), [course, ratingData]);
+  };
 
   return (
     <Layout>
