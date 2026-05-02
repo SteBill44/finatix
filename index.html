@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Content Security Policy: restricts what resources the browser will load -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'wasm-unsafe-eval';
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' https: data: blob:;
+      font-src 'self' https: data:;
+      connect-src 'self' https://itsbzlmixdigsbzuzpbi.supabase.co wss://itsbzlmixdigsbzuzpbi.supabase.co https://ai.gateway.lovable.dev;
+      media-src 'self' https: blob:;
+      worker-src 'self' blob:;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self';
+    " />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <title>Finatix | CIMA Training &amp; Exam Prep</title>

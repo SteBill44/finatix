@@ -60,8 +60,22 @@ const AdminImageDropZone = ({
       if (files.length === 0) return;
 
       const file = files[0];
-      if (!file.type.startsWith("image/")) {
-        toast.error("Please drop an image file");
+
+      const ALLOWED_MIME_TYPES: Record<string, string> = {
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        png: "image/png",
+        gif: "image/gif",
+        webp: "image/webp",
+        avif: "image/avif",
+      };
+
+      const rawExt = file.name.toLowerCase().split(".").pop() ?? "";
+      const ext = rawExt in ALLOWED_MIME_TYPES ? rawExt : "";
+      const expectedMime = ALLOWED_MIME_TYPES[ext];
+
+      if (!ext || !expectedMime || file.type !== expectedMime) {
+        toast.error("Only JPG, PNG, GIF, WebP, or AVIF images are allowed");
         return;
       }
 
@@ -72,7 +86,6 @@ const AdminImageDropZone = ({
 
       setIsUploading(true);
       try {
-        const ext = file.name.split(".").pop() || "jpg";
         const fileName = `${storageFolder}/${crypto.randomUUID()}.${ext}`;
 
         const { error: uploadError } = await supabase.storage

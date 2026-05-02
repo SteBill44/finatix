@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { lovable } from "@/integrations/lovable";
@@ -21,6 +22,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [appleLoading, setAppleLoading] = useState(false);
   const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
@@ -46,7 +48,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
 
     setLoading(true);
     try {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(email, password, rememberMe);
       if (error) {
         toast({
           title: "Login failed",
@@ -191,6 +193,17 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
             </button>
           </div>
           {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="rememberMe"
+            checked={rememberMe}
+            onCheckedChange={(checked) => setRememberMe(checked === true)}
+          />
+          <Label htmlFor="rememberMe" className="text-sm font-normal cursor-pointer">
+            Stay signed in for 7 days
+          </Label>
         </div>
 
         <Button type="submit" className="w-full" disabled={busy}>

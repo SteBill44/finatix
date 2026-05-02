@@ -33,6 +33,15 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Reject anonymous/anon-key requests — only authenticated users may use the AI
+    if (claimsData.claims.aud !== "authenticated") {
+      return new Response(JSON.stringify({ error: "Authenticated users only" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const user = { id: claimsData.claims.sub as string };
 
     // Check rate limit before processing
