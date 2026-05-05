@@ -68,7 +68,7 @@ const Hero = () => {
       >
         <div className="max-w-4xl">
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight">
+          <div className="text-7xl md:text-8xl lg:text-9xl font-bold leading-[1.1] mb-4 tracking-tight">
             <SplitTextReveal
               as="span"
               delay={0.2}
