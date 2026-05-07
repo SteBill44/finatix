@@ -78,7 +78,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
         />
 
         {/* Subtle hexagon pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.04] hex-pattern" />
+        <div className="absolute inset-0 opacity-[0.04]" />
 
         {/* Decorative corner accents - responsive sizing */}
         <div className={`absolute top-0 left-0 ${isEmbed ? "w-6 h-6" : "w-8 h-8 sm:w-16 sm:h-16 md:w-24 md:h-24 lg:w-32 lg:h-32"}`}>

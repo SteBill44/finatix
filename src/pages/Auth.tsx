@@ -68,7 +68,7 @@ const Auth = () => {
         }
         noIndex
       />
-      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20 hex-pattern">
+      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
             <div className="bg-card rounded-xl border border-border p-8 shadow-lg">
