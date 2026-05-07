@@ -25,10 +25,14 @@ const DynamicBackground = () => {
       canvas.height = window.innerHeight;
     };
 
+    const isLight = () => !document.documentElement.classList.contains('dark');
+
     const createParticles = () => {
       particles = [];
       const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
-      
+      const baseOpacity = isLight() ? 0.5 : 0.1;
+      const opacityRange = isLight() ? 0.5 : 0.5;
+
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
@@ -36,7 +40,7 @@ const DynamicBackground = () => {
           size: Math.random() * 2 + 0.5,
           speedX: (Math.random() - 0.5) * 0.3,
           speedY: (Math.random() - 0.5) * 0.3,
-          opacity: Math.random() * 0.5 + 0.1,
+          opacity: Math.random() * opacityRange + baseOpacity,
         });
       }
     };
@@ -50,6 +54,7 @@ const DynamicBackground = () => {
 
     const connectParticles = () => {
       const maxDistance = 150;
+      const lineMultiplier = isLight() ? 0.5 : 0.15;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
@@ -57,7 +62,7 @@ const DynamicBackground = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < maxDistance) {
-            const opacity = (1 - distance / maxDistance) * 0.15;
+            const opacity = (1 - distance / maxDistance) * lineMultiplier;
             ctx.beginPath();
             ctx.strokeStyle = `hsla(25, 95%, 53%, ${opacity})`;
             ctx.lineWidth = 0.5;
