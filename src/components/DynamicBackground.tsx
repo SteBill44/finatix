@@ -113,7 +113,7 @@ const DynamicBackground = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-br from-background to-secondary dark:to-[hsl(210,11%,8%)]"
+      className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-br from-background via-[hsl(25,95%,85%)] to-[hsl(25,95%,75%)] dark:from-background dark:via-[hsl(25,60%,12%)] dark:to-[hsl(210,11%,8%)]"
     />
   );
 };
