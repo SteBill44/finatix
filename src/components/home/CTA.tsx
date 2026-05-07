@@ -98,7 +98,7 @@ const CTA = () => {
 
   // Logged-out state: two-column layout with dashboard screenshot
   return (
-    <section ref={sectionRef} className="py-12 lg:py-24 bg-background hex-pattern overflow-hidden">
+    <section ref={sectionRef} className="py-12 lg:py-24 bg-background overflow-hidden">
       <motion.div style={{ scale: bgScale }} className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
 
