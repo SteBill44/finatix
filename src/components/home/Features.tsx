@@ -94,7 +94,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-12 lg:py-20 bg-background hex-pattern">
+    <section className="py-12 lg:py-20 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
