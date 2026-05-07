@@ -20,47 +20,9 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
+      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 bg-secondary/[0.38]"
     >
-      {/* Solid base background — dark in dark mode, warm cream in light mode */}
-      <div
-        className="absolute inset-0 pointer-events-none dark:hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #FFF6EE 0%, #FFE9D6 50%, #FFD9BD 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none hidden dark:block"
-        style={{
-          background:
-            "linear-gradient(135deg, #1C0D04 0%, #0F0806 50%, #06060A 100%)",
-        }}
-      />
 
-
-      {/* Warm gradient overlay — lighter wash in light mode, dramatic in dark mode */}
-      <div
-        className="absolute inset-0 pointer-events-none dark:hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,246,238,0.2) 0%, rgba(255,233,214,0.15) 30%, hsl(var(--brand-orange) / 0.15) 65%, hsl(var(--brand-orange-light) / 0.22) 100%)",
-        }}
-      />
-      <div
-        className="absolute inset-0 pointer-events-none hidden dark:block"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(10,6,4,0.4) 0%, rgba(20,10,5,0.3) 30%, hsl(var(--brand-orange) / 0.28) 65%, hsl(var(--brand-orange-dark) / 0.45) 100%)",
-        }}
-      />
-
-      
-      <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
-      <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
-
-      {/* Top gradient fade for smooth navbar transition (subtler in light mode) */}
-      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black/10 dark:from-black/40 to-transparent pointer-events-none z-[1]" />
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
