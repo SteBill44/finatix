@@ -55,7 +55,7 @@ const Hero = () => {
         }}
       />
 
-      <div className="absolute inset-0 hex-pattern opacity-80 dark:opacity-100 pointer-events-none" />
+      
       <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
       <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
 
