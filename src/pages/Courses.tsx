@@ -363,9 +363,27 @@ const Courses = () => {
     <Layout>
       <SEOHead
         title="CIMA Courses"
-        description="Explore our comprehensive CIMA courses from Certificate level to Strategic Professional. BA1–BA4, Operational, Management, and Strategic levels with practice exams and AI tools."
+        description="Browse Finatix CIMA courses from Certificate (BA1–BA4) through Operational, Management and Strategic levels — with practice exams and AI tools."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
-        canonicalUrl="https://finatix.lovable.app/courses"
+        canonicalUrl="/courses"
+      />
+      <JsonLd
+        id="courses-itemlist-jsonld"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "CIMA Courses",
+          url: "https://finatix.lovable.app/courses",
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: courses.map((c, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: `https://finatix.lovable.app/courses/${c.slug}`,
+              name: c.title,
+            })),
+          },
+        }}
       />
 
       {/* ── Hero ── */}
