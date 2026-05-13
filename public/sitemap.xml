@@ -121,16 +121,33 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Legal -->
+  <!-- Auth -->
   <url>
-    <loc>https://finatix.lovable.app/privacy-policy</loc>
+    <loc>https://finatix.lovable.app/auth</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Legal & support -->
+  <url>
+    <loc>https://finatix.lovable.app/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://finatix.lovable.app/terms-of-service</loc>
+    <loc>https://finatix.lovable.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://finatix.lovable.app/cookies</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://finatix.lovable.app/help</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 
 </urlset>
