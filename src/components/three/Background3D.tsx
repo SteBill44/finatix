@@ -1,6 +1,19 @@
-import { Suspense, useRef, useMemo } from "react";
+import { Suspense, useRef, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+
+const useIsDark = () => {
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+  );
+  useEffect(() => {
+    const el = document.documentElement;
+    const obs = new MutationObserver(() => setIsDark(el.classList.contains("dark")));
+    obs.observe(el, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+  return isDark;
+};
 
 // Smooth-tracked scroll progress (0 at top, grows with scroll). Updated each frame.
 const useScrollProgress = () => {
@@ -15,7 +28,7 @@ const useScrollProgress = () => {
   return ref;
 };
 
-const Particles = ({ count = 800, scrollRef }: { count?: number; scrollRef: React.MutableRefObject<{ raw: number; smooth: number }> }) => {
+const Particles = ({ count = 800, scrollRef, isDark }: { count?: number; scrollRef: React.MutableRefObject<{ raw: number; smooth: number }>; isDark: boolean }) => {
   const ref = useRef<THREE.Points>(null);
 
   const positions = useMemo(() => {
@@ -47,10 +60,10 @@ const Particles = ({ count = 800, scrollRef }: { count?: number; scrollRef: Reac
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.04}
+        size={isDark ? 0.04 : 0.06}
         color="#f97316"
         transparent
-        opacity={0.85}
+        opacity={isDark ? 0.85 : 1}
         sizeAttenuation
         depthWrite={false}
         blending={THREE.AdditiveBlending}
@@ -66,6 +79,7 @@ const FloatingShape = ({
   speed,
   scrollFactor,
   scrollRef,
+  isDark,
 }: {
   position: [number, number, number];
   scale: number;
@@ -73,6 +87,7 @@ const FloatingShape = ({
   speed: number;
   scrollFactor: number;
   scrollRef: React.MutableRefObject<{ raw: number; smooth: number }>;
+  isDark: boolean;
 }) => {
   const ref = useRef<THREE.Mesh>(null);
   useFrame((state) => {
@@ -89,25 +104,26 @@ const FloatingShape = ({
   return (
     <mesh ref={ref} position={position} scale={scale}>
       <icosahedronGeometry args={[1, 0]} />
-      <meshBasicMaterial color={color} wireframe transparent opacity={0.25} />
+      <meshBasicMaterial color={color} wireframe transparent opacity={isDark ? 0.25 : 0.6} />
     </mesh>
   );
 };
 
-const SceneContents = () => {
+const SceneContents = ({ isDark }: { isDark: boolean }) => {
   const scrollRef = useScrollProgress();
   return (
     <>
-      <Particles count={700} scrollRef={scrollRef} />
-      <FloatingShape position={[-4, 1.5, -2]} scale={0.9} color="#f97316" speed={0.3} scrollFactor={1} scrollRef={scrollRef} />
-      <FloatingShape position={[4, -1, -3]} scale={1.3} color="#fb923c" speed={0.25} scrollFactor={-0.8} scrollRef={scrollRef} />
-      <FloatingShape position={[2, 2.5, -4]} scale={0.6} color="#fdba74" speed={0.4} scrollFactor={0.6} scrollRef={scrollRef} />
-      <FloatingShape position={[-3, -2, -2]} scale={0.7} color="#fb923c" speed={0.35} scrollFactor={-1.1} scrollRef={scrollRef} />
+      <Particles count={700} scrollRef={scrollRef} isDark={isDark} />
+      <FloatingShape position={[-4, 1.5, -2]} scale={0.9} color="#f97316" speed={0.3} scrollFactor={1} scrollRef={scrollRef} isDark={isDark} />
+      <FloatingShape position={[4, -1, -3]} scale={1.3} color="#fb923c" speed={0.25} scrollFactor={-0.8} scrollRef={scrollRef} isDark={isDark} />
+      <FloatingShape position={[2, 2.5, -4]} scale={0.6} color="#fdba74" speed={0.4} scrollFactor={0.6} scrollRef={scrollRef} isDark={isDark} />
+      <FloatingShape position={[-3, -2, -2]} scale={0.7} color="#fb923c" speed={0.35} scrollFactor={-1.1} scrollRef={scrollRef} isDark={isDark} />
     </>
   );
 };
 
 const Background3D = () => {
+  const isDark = useIsDark();
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-br from-background via-[hsl(25,95%,85%)] to-[hsl(25,95%,75%)] dark:from-background dark:via-[hsl(25,60%,12%)] dark:to-[hsl(210,11%,8%)]">
       <Canvas
@@ -116,7 +132,7 @@ const Background3D = () => {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <Suspense fallback={null}>
-          <SceneContents />
+          <SceneContents isDark={isDark} />
         </Suspense>
       </Canvas>
     </div>
