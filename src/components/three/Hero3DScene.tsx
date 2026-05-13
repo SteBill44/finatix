@@ -1,6 +1,6 @@
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Environment, ContactShadows } from "@react-three/drei";
+import { Float, MeshDistortMaterial, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 
 const useHeroScroll = () => {
