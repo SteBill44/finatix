@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
-import Hero3DScene from "../three/Hero3DScene";
+
 
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -25,10 +25,6 @@ const Hero = () => {
     >
 
 
-      {/* 3D scene — desktop right side */}
-      <div className="hidden lg:block absolute top-0 right-0 w-1/2 h-full pointer-events-none z-0 opacity-90">
-        <Hero3DScene />
-      </div>
 
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
