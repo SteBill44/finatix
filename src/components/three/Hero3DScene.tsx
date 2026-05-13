@@ -1,6 +1,6 @@
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Environment, ContactShadows } from "@react-three/drei";
+import { Float, MeshDistortMaterial, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 
 const useHeroScroll = () => {
@@ -101,7 +101,7 @@ const SceneContents = () => {
       <OrbitingSphere radius={2.1} speed={0.7} size={0.09} color="#f97316" offset={4} scrollRef={scrollRef} />
 
       <ContactShadows position={[0, -1.8, 0]} opacity={0.35} scale={8} blur={2.4} far={3} />
-      <Environment preset="city" />
+      
     </>
   );
 };
