@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
+import JsonLd from "@/components/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -76,8 +77,35 @@ const Contact = () => {
     <Layout>
       <SEOHead 
         title="Contact Us"
-        description="Get in touch with the Finatix team. We're here to help with your CIMA training questions, technical support, or course inquiries."
+        description="Get in touch with the Finatix team for help with your CIMA training, technical support or course inquiries."
         keywords="contact Finatix, CIMA support, help, customer service"
+        canonicalUrl="/contact"
+      />
+      <JsonLd
+        id="local-business-jsonld"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Finatix",
+          url: "https://finatix.lovable.app/contact",
+          email: "hello@finatix.com",
+          telephone: "+44 20 1234 5678",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "123 Learning Street",
+            addressLocality: "London",
+            postalCode: "EC1A 1BB",
+            addressCountry: "GB",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "17:00",
+            },
+          ],
+        }}
       />
       {/* Hero */}
       <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hero-gradient-light overflow-hidden">
