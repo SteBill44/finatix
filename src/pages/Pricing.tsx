@@ -551,7 +551,7 @@ const Pricing = () => {
                     {row.kaplan === true ? (
                       <CheckCircle className="w-5 h-5 text-muted-foreground" />
                     ) : row.kaplan === false ? (
-                      <X className="w-5 h-5 text-muted-foreground/50" />
+                      <X className="w-5 h-5 text-muted-foreground" />
                     ) : (
                       <span className="text-sm text-muted-foreground">{row.kaplan}</span>
                     )}

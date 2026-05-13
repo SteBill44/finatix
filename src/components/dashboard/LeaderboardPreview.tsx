@@ -18,7 +18,7 @@ const LeaderboardPreview = () => {
       case 0:
         return "text-yellow-500";
       case 1:
-        return "text-gray-400";
+        return "text-muted-foreground";
       case 2:
         return "text-orange";
       default:
