@@ -10,6 +10,7 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { AdminViewProvider } from "@/contexts/AdminViewContext";
 import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
+import SmoothScroll from "@/components/SmoothScroll";
 
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
@@ -166,6 +167,7 @@ const App = () => {
                   <Sonner />
                   <BrowserRouter>
                     <PerformanceProvider>
+                      <SmoothScroll />
                       <ScrollToTop />
                       <AnimatedRoutes />
                       <CookieConsent />
