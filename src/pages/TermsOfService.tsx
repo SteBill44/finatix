@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +14,11 @@ import { Home } from "lucide-react";
 const TermsOfService = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Terms of Service"
+        description="The terms and conditions that govern your use of the Finatix CIMA training platform."
+        canonicalUrl="/terms"
+      />
         <div className="container mx-auto px-4 pt-24 pb-16 max-w-4xl">
         {/* Breadcrumb */}
         <Breadcrumb className="mb-6">
