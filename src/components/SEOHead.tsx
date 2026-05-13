@@ -10,9 +10,17 @@ interface SEOHeadProps {
   noIndex?: boolean;
 }
 
+const SITE_URL = "https://finatix.lovable.app";
 const DEFAULT_TITLE = "Finatix | CIMA Training & Exam Prep";
-const DEFAULT_DESCRIPTION = "Master your CIMA qualification with Finatix. Comprehensive courses from Certificate to Strategic level, practice exams, and AI-powered study tools.";
-const DEFAULT_OG_IMAGE = "/og-image.png";
+const DEFAULT_DESCRIPTION =
+  "CIMA training from Certificate to Strategic level — courses, mock exams, AI study tools, and competency analytics to help you pass faster.";
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+
+const toAbsolute = (url: string) => {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+};
 
 const SEOHead = ({
   title,
@@ -24,12 +32,16 @@ const SEOHead = ({
   noIndex = false,
 }: SEOHeadProps) => {
   const fullTitle = title ? `${title} | Finatix` : DEFAULT_TITLE;
+  const absoluteOgImage = toAbsolute(ogImage);
+  // Self-referencing canonical: use provided value or current pathname
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+  const resolvedCanonical = canonicalUrl
+    ? toAbsolute(canonicalUrl)
+    : `${SITE_URL}${pathname}`;
 
   useEffect(() => {
-    // Update document title
     document.title = fullTitle;
 
-    // Helper to update or create meta tag
     const updateMeta = (name: string, content: string, isProperty = false) => {
       const attr = isProperty ? "property" : "name";
       let meta = document.querySelector(`meta[${attr}="${name}"]`);
@@ -41,7 +53,6 @@ const SEOHead = ({
       meta.setAttribute("content", content);
     };
 
-    // Update or create link tag
     const updateLink = (rel: string, href: string) => {
       let link = document.querySelector(`link[rel="${rel}"]`);
       if (!link) {
@@ -52,43 +63,35 @@ const SEOHead = ({
       link.setAttribute("href", href);
     };
 
-    // Basic meta tags
     updateMeta("description", description);
-    if (keywords) {
-      updateMeta("keywords", keywords);
-    }
+    if (keywords) updateMeta("keywords", keywords);
 
-    // Open Graph tags
+    // Open Graph
     updateMeta("og:title", fullTitle, true);
     updateMeta("og:description", description, true);
     updateMeta("og:type", ogType, true);
-    updateMeta("og:image", ogImage, true);
+    updateMeta("og:image", absoluteOgImage, true);
+    updateMeta("og:url", resolvedCanonical, true);
+    updateMeta("og:site_name", "Finatix", true);
 
-    // Twitter Card tags
+    // Twitter
     updateMeta("twitter:card", "summary_large_image");
     updateMeta("twitter:title", fullTitle);
     updateMeta("twitter:description", description);
-    updateMeta("twitter:image", ogImage);
+    updateMeta("twitter:image", absoluteOgImage);
 
-    // Canonical URL
-    if (canonicalUrl) {
-      updateLink("canonical", canonicalUrl);
-    }
+    // Canonical (self-referencing by default)
+    updateLink("canonical", resolvedCanonical);
 
-    // Robots meta
-    if (noIndex) {
-      updateMeta("robots", "noindex, nofollow");
-    } else {
-      updateMeta("robots", "index, follow");
-    }
+    if (noIndex) updateMeta("robots", "noindex, nofollow");
+    else updateMeta("robots", "index, follow");
 
-    // Cleanup function to reset to defaults when component unmounts
     return () => {
       document.title = DEFAULT_TITLE;
     };
-  }, [fullTitle, description, keywords, ogImage, ogType, canonicalUrl, noIndex]);
+  }, [fullTitle, description, keywords, absoluteOgImage, ogType, resolvedCanonical, noIndex]);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default SEOHead;

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +14,11 @@ import { Home } from "lucide-react";
 const CookiePolicy = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Cookie Policy"
+        description="Details on the cookies and similar technologies Finatix uses, and how you can manage your preferences."
+        canonicalUrl="/cookies"
+      />
         <div className="container mx-auto px-4 pt-24 pb-16 max-w-4xl">
         {/* Breadcrumb */}
         <Breadcrumb className="mb-6">

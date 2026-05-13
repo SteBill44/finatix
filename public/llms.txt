@@ -1,0 +1,41 @@
+# Finatix
+
+> Online CIMA training platform — courses, mock exams, AI study tools and competency analytics covering every paper from Certificate (BA1–BA4) to Strategic Case Study.
+
+Finatix helps students preparing for the CIMA qualification practice, track readiness and pass exams faster with adaptive study tools and tutor support.
+
+## Pages
+
+- [Home](/): Platform overview and CIMA training intro.
+- [Why CIMA](/why-cima): Career value and benefits of the CIMA qualification.
+- [Courses](/courses): Full directory of CIMA papers (BA1–BA4, E1–E3, P1–P3, F1–F3, OCS, MCS, SCS).
+- [Pricing](/pricing): Subscription plans for individuals and corporate teams.
+- [About](/about): Mission, team and approach.
+- [Contact](/contact): Support, sales and FAQ.
+- [Help Centre](/help): Common questions and platform guides.
+- [Learning Paths](/learning-paths): Structured study routes through the qualification.
+
+## Courses
+
+- [BA1 Fundamentals of Business Economics](/courses/ba1)
+- [BA2 Fundamentals of Management Accounting](/courses/ba2)
+- [BA3 Fundamentals of Financial Accounting](/courses/ba3)
+- [BA4 Fundamentals of Ethics, Corporate Governance and Business Law](/courses/ba4)
+- [E1 Managing Finance in a Digital World](/courses/e1)
+- [P1 Management Accounting](/courses/p1)
+- [F1 Financial Reporting](/courses/f1)
+- [Operational Case Study (OCS)](/courses/ocs)
+- [E2 Managing Performance](/courses/e2)
+- [P2 Advanced Management Accounting](/courses/p2)
+- [F2 Advanced Financial Reporting](/courses/f2)
+- [Management Case Study (MCS)](/courses/mcs)
+- [E3 Strategic Management](/courses/e3)
+- [P3 Risk Management](/courses/p3)
+- [F3 Financial Strategy](/courses/f3)
+- [Strategic Case Study (SCS)](/courses/scs)
+
+## Optional
+
+- [Privacy Policy](/privacy)
+- [Terms of Service](/terms)
+- [Cookie Policy](/cookies)

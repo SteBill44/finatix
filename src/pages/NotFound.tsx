@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Home, BookOpen, HelpCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import FinatixLogo from "@/components/FinatixLogo";
 
 const NotFound = () => {
@@ -14,6 +15,7 @@ const NotFound = () => {
 
   return (
     <Layout>
+      <SEOHead title="Page Not Found" description="The page you're looking for doesn't exist on Finatix." noIndex />
       <div className="min-h-[80vh] flex items-center justify-center px-4">
         <div className="text-center max-w-lg">
           {/* Logo */}
