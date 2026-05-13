@@ -3,132 +3,132 @@
 
   <!-- Core pages -->
   <url>
-    <loc>https://finatix.com/</loc>
+    <loc>https://finatix.lovable.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://finatix.com/why-cima</loc>
+    <loc>https://finatix.lovable.app/why-cima</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses</loc>
+    <loc>https://finatix.lovable.app/courses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/pricing</loc>
+    <loc>https://finatix.lovable.app/pricing</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://finatix.com/about</loc>
+    <loc>https://finatix.lovable.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://finatix.com/contact</loc>
+    <loc>https://finatix.lovable.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <!-- Certificate Level (CBA) -->
   <url>
-    <loc>https://finatix.com/courses/ba1</loc>
+    <loc>https://finatix.lovable.app/courses/ba1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/ba2</loc>
+    <loc>https://finatix.lovable.app/courses/ba2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/ba3</loc>
+    <loc>https://finatix.lovable.app/courses/ba3</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/ba4</loc>
+    <loc>https://finatix.lovable.app/courses/ba4</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Operational Level -->
   <url>
-    <loc>https://finatix.com/courses/e1</loc>
+    <loc>https://finatix.lovable.app/courses/e1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/p1</loc>
+    <loc>https://finatix.lovable.app/courses/p1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/f1</loc>
+    <loc>https://finatix.lovable.app/courses/f1</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/ocs</loc>
+    <loc>https://finatix.lovable.app/courses/ocs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Management Level -->
   <url>
-    <loc>https://finatix.com/courses/e2</loc>
+    <loc>https://finatix.lovable.app/courses/e2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/p2</loc>
+    <loc>https://finatix.lovable.app/courses/p2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/f2</loc>
+    <loc>https://finatix.lovable.app/courses/f2</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/mcs</loc>
+    <loc>https://finatix.lovable.app/courses/mcs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Strategic Level -->
   <url>
-    <loc>https://finatix.com/courses/e3</loc>
+    <loc>https://finatix.lovable.app/courses/e3</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/p3</loc>
+    <loc>https://finatix.lovable.app/courses/p3</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/f3</loc>
+    <loc>https://finatix.lovable.app/courses/f3</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.com/courses/scs</loc>
+    <loc>https://finatix.lovable.app/courses/scs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Legal -->
   <url>
-    <loc>https://finatix.com/privacy-policy</loc>
+    <loc>https://finatix.lovable.app/privacy-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://finatix.com/terms-of-service</loc>
+    <loc>https://finatix.lovable.app/terms-of-service</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -16,4 +16,4 @@ Disallow: /dashboard
 Disallow: /auth
 Disallow: /admin
 
-Sitemap: https://finatix.com/sitemap.xml
+Sitemap: https://finatix.lovable.app/sitemap.xml

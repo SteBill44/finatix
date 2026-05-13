@@ -12,7 +12,7 @@ import HowToBegin from "@/components/home/HowToBegin";
 import FAQ from "@/components/home/FAQ";
 import CTA from "@/components/home/CTA";
 
-const BASE_URL = "https://finatix.com";
+const BASE_URL = "https://finatix.lovable.app";
 
 const homepageSchemas = [
   {

@@ -521,8 +521,8 @@ const CourseDetail = () => {
     "@type": "Course",
     name: course.title,
     description: course.description || `Comprehensive CIMA ${course.title} course with practice exams, flashcards, and AI-powered study tools.`,
-    url: `https://finatix.com/courses/${course.slug}`,
-    provider: { "@type": "Organization", name: "Finatix", url: "https://finatix.com" },
+    url: `https://finatix.lovable.app/courses/${course.slug}`,
+    provider: { "@type": "Organization", name: "Finatix", url: "https://finatix.lovable.app" },
     educationalCredentialAwarded: "CIMA Certificate",
     courseCode: course.slug?.toUpperCase(),
     hasCourseInstance: {
@@ -547,7 +547,7 @@ const CourseDetail = () => {
         title={course.title}
         description={course.description || `Master ${course.title} with Finatix. Practice exams, AI study tools, competency analytics and expert-led lessons.`}
         keywords={`CIMA ${course.slug?.toUpperCase()}, ${course.title}, CIMA exam prep, management accounting`}
-        canonicalUrl={`https://finatix.com/courses/${course.slug}`}
+        canonicalUrl={`https://finatix.lovable.app/courses/${course.slug}`}
       />
       <JsonLd schema={courseSchema} id={`course-schema-${course.slug}`} />
       {/* Hero Section */}

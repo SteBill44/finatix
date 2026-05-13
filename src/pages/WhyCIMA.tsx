@@ -77,7 +77,7 @@ const WhyCIMA = () => {
         title="Why CIMA? | Benefits of CIMA Qualification"
         description="Discover why CIMA is the world's largest professional body of management accountants. Learn about career benefits, salary premium, global recognition, and qualification pathway."
         keywords="CIMA qualification, management accounting, CGMA, chartered accountant, finance career, CIMA benefits, CIMA salary"
-        canonicalUrl="https://finatix.com/why-cima"
+        canonicalUrl="https://finatix.lovable.app/why-cima"
       />
       
       {/* Hero Section */}
