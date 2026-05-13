@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
-import DynamicBackground from "../DynamicBackground";
+import Background3D from "../three/Background3D";
 import ScrollProgressBar from "../ScrollProgressBar";
 import BackToTop from "../BackToTop";
 import { NetworkStatusIndicator, OfflineBanner } from "../NetworkStatusIndicator";
@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col relative">
       <ScrollProgressBar />
       <NetworkStatusIndicator />
-      <DynamicBackground />
+      <Background3D />
       <Navbar />
       <AnnouncementBanner />
       <main className="flex-1 pt-16 pb-20 lg:pb-0">

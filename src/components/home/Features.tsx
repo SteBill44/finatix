@@ -9,6 +9,7 @@ import {
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
+import TiltCard from "../three/TiltCard";
 
 const FeatureCard = ({
   icon: Icon,
@@ -31,21 +32,20 @@ const FeatureCard = ({
         delay: index * 0.08,
         ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={{ y: -8, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }}
-      className="feature-card transition-shadow duration-500 hover:shadow-lg hover:shadow-primary/10 group"
     >
-      {/* Icon with smooth scale */}
-      <motion.div
-        whileHover={{ scale: 1.15, rotate: -5 }}
-        transition={{ type: "spring", stiffness: 300, damping: 15 }}
-        className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
+      <TiltCard
+        intensity={10}
+        className="feature-card transition-shadow duration-500 hover:shadow-2xl hover:shadow-primary/20 group will-change-transform"
       >
-        <Icon className="w-6 h-6 text-primary transition-transform duration-300 group-hover:scale-110" />
-      </motion.div>
-
-      {/* Content */}
-      <h3 className="text-lg font-semibold text-charcoal mb-2">{title}</h3>
-      <p className="text-muted-foreground text-sm">{description}</p>
+        <div
+          style={{ transform: "translateZ(40px)" }}
+          className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
+        >
+          <Icon className="w-6 h-6 text-primary" />
+        </div>
+        <h3 style={{ transform: "translateZ(25px)" }} className="text-lg font-semibold text-charcoal mb-2">{title}</h3>
+        <p style={{ transform: "translateZ(15px)" }} className="text-muted-foreground text-sm">{description}</p>
+      </TiltCard>
     </motion.div>
   );
 };
