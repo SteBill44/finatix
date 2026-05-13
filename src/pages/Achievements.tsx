@@ -53,7 +53,7 @@ const Achievements = () => {
 
   const getRankIcon = (index: number) => {
     if (index === 0) return <Crown className="w-5 h-5 text-yellow-500" />;
-    if (index === 1) return <Medal className="w-5 h-5 text-gray-400" />;
+    if (index === 1) return <Medal className="w-5 h-5 text-muted-foreground" />;
     if (index === 2) return <Medal className="w-5 h-5 text-amber-600" />;
     return <span className="w-5 h-5 flex items-center justify-center text-muted-foreground font-medium">{index + 1}</span>;
   };

@@ -333,9 +333,9 @@ const Pricing = () => {
                         {feature.included ? (
                           <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                         ) : (
-                          <X className="w-5 h-5 text-muted-foreground/50 flex-shrink-0 mt-0.5" />
+                          <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
                         )}
-                        <span className={feature.included ? "text-foreground" : "text-muted-foreground/50"}>
+                        <span className={feature.included ? "text-foreground" : "text-muted-foreground"}>
                           {feature.text}
                         </span>
                       </li>
@@ -551,7 +551,7 @@ const Pricing = () => {
                     {row.kaplan === true ? (
                       <CheckCircle className="w-5 h-5 text-muted-foreground" />
                     ) : row.kaplan === false ? (
-                      <X className="w-5 h-5 text-muted-foreground/50" />
+                      <X className="w-5 h-5 text-muted-foreground" />
                     ) : (
                       <span className="text-sm text-muted-foreground">{row.kaplan}</span>
                     )}
