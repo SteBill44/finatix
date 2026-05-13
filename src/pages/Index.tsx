@@ -3,7 +3,7 @@ import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
-import ScrollReveal from "@/components/home/ScrollReveal";
+
 import Features from "@/components/home/Features";
 import LearningPathway from "@/components/home/LearningPathway";
 import CareerPathways from "@/components/home/CareerPathways";
@@ -80,7 +80,7 @@ const Index = () => {
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
       <WhatIsCIMA />
-      <ScrollReveal />
+      
       <Features />
       <LearningPathway />
       <CareerPathways />
