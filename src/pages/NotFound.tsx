@@ -15,6 +15,7 @@ const NotFound = () => {
 
   return (
     <Layout>
+      <SEOHead title="Page Not Found" description="The page you're looking for doesn't exist on Finatix." noIndex />
       <div className="min-h-[80vh] flex items-center justify-center px-4">
         <div className="text-center max-w-lg">
           {/* Logo */}

@@ -128,6 +128,11 @@ const HelpCentre = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Help Centre"
+        description="Answers to common questions about Finatix CIMA courses, accounts, billing, and study tools."
+        canonicalUrl="/help"
+      />
       <div className="container mx-auto px-4 pt-24 pb-16 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
