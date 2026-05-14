@@ -11,16 +11,17 @@ import { useTrackUserPresence } from "@/hooks/useActiveUsers";
 
 interface LayoutProps {
   children: ReactNode;
+  disableAnimations?: boolean;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, disableAnimations = false }: LayoutProps) => {
   useTrackUserPresence();
 
   return (
     <div className="min-h-screen flex flex-col relative">
-      <ScrollProgressBar />
+      {!disableAnimations && <ScrollProgressBar />}
       <NetworkStatusIndicator />
-      <Background3D />
+      {!disableAnimations && <Background3D />}
       <Navbar />
       <AnnouncementBanner />
       <main className="flex-1 pt-16 pb-20 lg:pb-0">
