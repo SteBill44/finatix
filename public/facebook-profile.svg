@@ -1,9 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#000000"/>
-      <stop offset="100%" stop-color="#000000"/>
-    </linearGradient>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&amp;display=swap');
+    </style>
     <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#f05007"/>
       <stop offset="100%" stop-color="#f57b0c"/>
@@ -14,13 +13,13 @@
     </filter>
   </defs>
 
-  <!-- Background circle fill (Facebook clips to circle) -->
-  <rect width="180" height="180" fill="url(#bgGrad)"/>
+  <!-- Background -->
+  <rect width="180" height="180" fill="#1a3a27"/>
 
   <!-- Subtle glow behind hex -->
-  <ellipse cx="90" cy="82" rx="52" ry="52" fill="#f05007" opacity="0.12" filter="url(#glow)"/>
+  <ellipse cx="90" cy="82" rx="52" ry="52" fill="#f05007" opacity="0.10" filter="url(#glow)"/>
 
-  <!-- Hexagon logo — centred, scaled to ~110px tall -->
+  <!-- Hexagon logo — centred -->
   <g transform="translate(90,82) scale(1.08) translate(-50,-50)">
     <path
       d="M25 10 L75 10 L95 50 L75 90 L25 90 L5 50 Z"
@@ -34,15 +33,15 @@
     </g>
   </g>
 
-  <!-- Wordmark -->
+  <!-- Wordmark — Inter Bold -->
   <text
     x="90"
     y="158"
-    font-family="'Segoe UI', Arial, sans-serif"
+    font-family="'Inter', 'Segoe UI', Arial, sans-serif"
     font-size="22"
     font-weight="700"
     text-anchor="middle"
-    letter-spacing="1"
+    letter-spacing="0.5"
   >
     <tspan fill="#ffffff">Fin</tspan><tspan fill="#f05007">atix</tspan>
   </text>
