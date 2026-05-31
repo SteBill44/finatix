@@ -54,7 +54,7 @@ const FAQ = () => {
               Frequently asked questions
             </SplitTextReveal>
             <motion.p
-              initial={{ opacity: 0, y: 10 }}
+              initial={false}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-muted-foreground"
@@ -69,7 +69,7 @@ const FAQ = () => {
             {faqs.map((faq, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
