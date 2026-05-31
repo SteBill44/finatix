@@ -32,18 +32,18 @@ const Hero = () => {
       >
         <div className="max-w-2xl">
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] mb-4 tracking-tight">
+          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight">
             <SplitTextReveal
               as="span"
               delay={0.2}
-              className="block text-charcoal dark:text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.15)]"
+              className="block text-charcoal dark:text-white"
             >
               LAUNCH YOUR CAREER IN
             </SplitTextReveal>
             <SplitTextReveal
               as="span"
               delay={0.5}
-              className="block text-primary drop-shadow-[0_2px_4px_rgba(232,80,2,0.4)]"
+              className="block text-primary drop-shadow-sm"
             >
               MANAGEMENT ACCOUNTING
             </SplitTextReveal>
