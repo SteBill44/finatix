@@ -21,7 +21,7 @@ const Layout = ({ children, disableAnimations = false }: LayoutProps) => {
     <div className="min-h-screen flex flex-col relative">
       {!disableAnimations && <ScrollProgressBar />}
       <NetworkStatusIndicator />
-      {!disableAnimations && <Background3D />}
+      
       <Navbar />
       <AnnouncementBanner />
       <main className="flex-1 pt-16 pb-20 lg:pb-0">
