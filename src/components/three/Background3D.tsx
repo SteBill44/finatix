@@ -114,10 +114,6 @@ const SceneContents = ({ isDark }: { isDark: boolean }) => {
   return (
     <>
       <Particles count={700} scrollRef={scrollRef} isDark={isDark} />
-      <FloatingShape position={[-4, 1.5, -2]} scale={0.9} color="#f97316" speed={0.3} scrollFactor={1} scrollRef={scrollRef} isDark={isDark} />
-      <FloatingShape position={[4, -1, -3]} scale={1.3} color="#fb923c" speed={0.25} scrollFactor={-0.8} scrollRef={scrollRef} isDark={isDark} />
-      <FloatingShape position={[2, 2.5, -4]} scale={0.6} color="#fdba74" speed={0.4} scrollFactor={0.6} scrollRef={scrollRef} isDark={isDark} />
-      <FloatingShape position={[-3, -2, -2]} scale={0.7} color="#fb923c" speed={0.35} scrollFactor={-1.1} scrollRef={scrollRef} isDark={isDark} />
     </>
   );
 };
