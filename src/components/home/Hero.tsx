@@ -21,8 +21,11 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 bg-secondary/[0.38]"
+      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 hero-gradient-light"
     >
+      <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
+      <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
+
 
 
 
