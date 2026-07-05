@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
 import FuturisticGrid from "../three/FuturisticGrid";
+import HeroHUD from "./HeroHUD";
 
 
 const Hero = () => {
@@ -15,9 +16,14 @@ const Hero = () => {
     offset: ["start start", "end start"],
   });
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.7], [1, 0.95]);
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const smooth = useSpring(scrollYProgress, { stiffness: 80, damping: 20, mass: 0.4 });
+  const heroOpacity = useTransform(smooth, [0, 0.7], [1, 0]);
+  const heroScale = useTransform(smooth, [0, 0.7], [1, 0.92]);
+  const heroY = useTransform(smooth, [0, 1], [0, 120]);
+  const headingSkew = useTransform(smooth, [0, 1], [0, -8]);
+  const headingBlur = useTransform(smooth, [0, 0.6], [0, 6]);
+  const headingFilter = useTransform(headingBlur, (b) => `blur(${b}px)`);
+  const hudOpacity = useTransform(smooth, [0, 0.4], [1, 0]);
 
   return (
     <section
@@ -50,13 +56,20 @@ const Hero = () => {
 
 
 
+      <motion.div style={{ opacity: hudOpacity }}>
+        <HeroHUD />
+      </motion.div>
+
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
         className="container mx-auto px-4 py-20 relative z-10"
       >
         <div className="max-w-2xl">
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight">
+          <motion.div
+            style={{ skewX: headingSkew, filter: headingFilter }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight"
+          >
             <SplitTextReveal
               as="span"
               delay={0.2}
@@ -67,11 +80,11 @@ const Hero = () => {
             <SplitTextReveal
               as="span"
               delay={0.5}
-              className="block text-primary drop-shadow-sm"
+              className="block text-primary drop-shadow-[0_0_18px_hsl(var(--primary)/0.35)]"
             >
               MANAGEMENT ACCOUNTING
             </SplitTextReveal>
-          </div>
+          </motion.div>
 
           {/* Subheading */}
           <motion.p
@@ -82,6 +95,7 @@ const Hero = () => {
           >
             Build exam-ready confidence with structured CIMA lessons, adaptive practice, mock exams, progress insights, and focused revision tools for every qualification level.
           </motion.p>
+
 
           {/* CTA Buttons */}
           <motion.div
