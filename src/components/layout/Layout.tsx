@@ -6,6 +6,7 @@ import Background3D from "../three/Background3D";
 import ScrollProgressBar from "../ScrollProgressBar";
 import BackToTop from "../BackToTop";
 import CursorSpotlight from "../CursorSpotlight";
+import ScrollTelemetryHUD from "../ScrollTelemetryHUD";
 import { NetworkStatusIndicator, OfflineBanner } from "../NetworkStatusIndicator";
 import AnnouncementBanner from "@/components/announcements/AnnouncementBanner";
 import { useTrackUserPresence } from "@/hooks/useActiveUsers";
@@ -22,6 +23,7 @@ const Layout = ({ children, disableAnimations = false }: LayoutProps) => {
     <div className="min-h-screen flex flex-col relative">
       {!disableAnimations && <ScrollProgressBar />}
       {!disableAnimations && <CursorSpotlight />}
+      {!disableAnimations && <ScrollTelemetryHUD />}
       <NetworkStatusIndicator />
       
       <Navbar />
