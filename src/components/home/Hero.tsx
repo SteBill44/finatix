@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
+import FuturisticGrid from "../three/FuturisticGrid";
 
 
 const Hero = () => {
@@ -23,8 +24,28 @@ const Hero = () => {
       ref={sectionRef}
       className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 hero-gradient-light"
     >
+      <FuturisticGrid />
       <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
       <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
+      {/* Scanline overlay */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none opacity-[0.07] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(0,0,0,0.6) 0px, rgba(0,0,0,0.6) 1px, transparent 1px, transparent 3px)",
+        }}
+      />
+      {/* Vignette */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 40%, transparent 40%, hsl(var(--background) / 0.6) 100%)",
+        }}
+      />
+
 
 
 
