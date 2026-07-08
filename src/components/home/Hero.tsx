@@ -114,7 +114,7 @@ const Hero = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                 Built for the 2025 CIMA syllabus
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight max-w-2xl">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight max-w-2xl !text-background">
                 Mastering CIMA, <br />
                 <span className="text-primary">simplified.</span>
               </h1>
