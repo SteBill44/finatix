@@ -243,7 +243,7 @@ const Hero = () => {
             className="md:col-span-5 bg-foreground text-background rounded-[2rem] p-8 flex flex-col justify-between min-h-[220px] relative overflow-hidden"
           >
             <div className="relative z-10">
-              <h3 className="text-2xl font-bold mb-1">Ready to qualify?</h3>
+              <h3 className="text-2xl font-bold mb-1 !text-background">Ready to qualify?</h3>
               <p className="text-background/60 text-sm">
                 Join thousands of candidates using Finatix to accelerate their careers.
               </p>
