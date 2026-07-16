@@ -20,7 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen flex flex-col relative">
       <ScrollProgressBar />
       <NetworkStatusIndicator />
-      <Background3D />
+      <div className="fixed inset-0 -z-10 pointer-events-none bg-gradient-to-br from-background via-[hsl(25,95%,92%)] to-[hsl(25,95%,85%)] dark:from-background dark:via-[hsl(25,40%,14%)] dark:to-[hsl(210,11%,10%)]" />
       <Navbar />
       <AnnouncementBanner />
       <main className="flex-1 pt-16 pb-20 lg:pb-0">
