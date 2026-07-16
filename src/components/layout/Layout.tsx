@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import MobileBottomNav from "./MobileBottomNav";
-import Background3D from "../three/Background3D";
+
 import ScrollProgressBar from "../ScrollProgressBar";
 import BackToTop from "../BackToTop";
 import { NetworkStatusIndicator, OfflineBanner } from "../NetworkStatusIndicator";
