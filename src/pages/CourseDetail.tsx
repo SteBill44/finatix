@@ -252,7 +252,7 @@ const CourseDetail = () => {
 
   if (isLoading) {
     return (
-      <Layout disableAnimations>
+      <Layout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
         </div>
@@ -262,7 +262,7 @@ const CourseDetail = () => {
 
   if (!course) {
     return (
-      <Layout disableAnimations>
+      <Layout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-foreground mb-2">Course not found</h2>
@@ -485,7 +485,7 @@ const CourseDetail = () => {
   // ── Enrolled admins (not in student view) see the dashboard ──
   if (isEnrolled && isEffectiveAdmin) {
     return (
-      <Layout disableAnimations>
+      <Layout>
         <section className="pt-[4rem] pb-6 lg:pt-[4.5rem] lg:pb-9">
           <div className="container mx-auto px-4">
             <EnrolledCourseDashboard
@@ -542,7 +542,7 @@ const CourseDetail = () => {
   };
 
   return (
-    <Layout disableAnimations>
+    <Layout>
       <SEOHead
         title={course.title}
         description={course.description || `Master ${course.title} with Finatix. Practice exams, AI study tools, competency analytics and expert-led lessons.`}

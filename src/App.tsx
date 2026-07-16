@@ -114,7 +114,7 @@ const AnimatedRoutes = () => {
           <Route path="/" element={<Public feature="Home"><Index /></Public>} />
           <Route path="/why-cima" element={<Public feature="Why CIMA"><WhyCIMA /></Public>} />
           <Route path="/courses" element={<Public feature="Courses"><Courses /></Public>} />
-          <Route path="/courses/:courseId" element={<FeatureErrorBoundary featureName="Course Detail"><CourseDetail /></FeatureErrorBoundary>} />
+          <Route path="/courses/:courseId" element={<Public feature="Course Detail"><CourseDetail /></Public>} />
           <Route path="/pricing" element={<Public feature="Pricing"><Pricing /></Public>} />
           <Route path="/about" element={<Public feature="About"><About /></Public>} />
           <Route path="/contact" element={<Public feature="Contact"><Contact /></Public>} />

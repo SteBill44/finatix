@@ -24,7 +24,7 @@ const FeatureCard = ({
 }) => {
   return (
     <motion.div
-      initial={false}
+      initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
@@ -105,7 +105,7 @@ const Features = () => {
             Why Choose Finatix
           </SplitTextReveal>
           <motion.p
-            initial={false}
+            initial={{ opacity: 0, y: 15 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="text-lg text-muted-foreground"

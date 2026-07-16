@@ -9,7 +9,7 @@ const WhatIsCIMA = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <motion.span
-            initial={false}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
@@ -27,7 +27,7 @@ const WhatIsCIMA = () => {
 
           <div className="space-y-5 text-base md:text-lg text-muted-foreground leading-relaxed">
             <motion.p
-              initial={false}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -39,7 +39,7 @@ const WhatIsCIMA = () => {
               forward, not just balance the books.
             </motion.p>
             <motion.p
-              initial={false}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -50,7 +50,7 @@ const WhatIsCIMA = () => {
               from FTSE 100 boards to high-growth startups.
             </motion.p>
             <motion.p
-              initial={false}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -63,7 +63,7 @@ const WhatIsCIMA = () => {
           </div>
 
           <motion.div
-            initial={false}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
