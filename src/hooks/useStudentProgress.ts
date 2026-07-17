@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { queryKeys } from "@/lib/queryKeys";
 
 export interface Enrollment {
   id: string;
@@ -44,7 +45,7 @@ export const useEnrollments = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["enrollments", user?.id],
+    queryKey: queryKeys.enrollments.byUser(user?.id || ""),
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
@@ -73,7 +74,7 @@ export const useEnrollments = () => {
 
 export const useCourses = () => {
   return useQuery({
-    queryKey: ["courses"],
+    queryKey: queryKeys.courses.list(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
@@ -88,7 +89,7 @@ export const useCourses = () => {
 
 export const useLessons = (courseId?: string) => {
   return useQuery({
-    queryKey: ["lessons", courseId],
+    queryKey: courseId ? queryKeys.lessons.byCourse(courseId) : queryKeys.lessons.list(),
     queryFn: async () => {
       let query = supabase
         .from("lessons")
@@ -110,7 +111,9 @@ export const useLessonProgress = (courseId?: string) => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["lesson_progress", user?.id, courseId],
+    queryKey: courseId
+      ? [...queryKeys.lessons.progress(user?.id || ""), courseId]
+      : queryKeys.lessons.progress(user?.id || ""),
     queryFn: async () => {
       if (!user) return [];
       
@@ -153,7 +156,7 @@ export const useLastAccessedLesson = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["last_accessed_lesson", user?.id],
+    queryKey: queryKeys.lessons.list(), // Using list as fallback since we don't have a dedicated key
     queryFn: async (): Promise<LastLesson | null> => {
       if (!user) return null;
       
@@ -289,7 +292,7 @@ export const useQuizAttempts = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["quiz_attempts", user?.id],
+    queryKey: queryKeys.quizAttempts.byUser(user?.id || ""),
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
@@ -309,7 +312,7 @@ export const useStudySessions = () => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: ["study_sessions", user?.id],
+    queryKey: queryKeys.studySessions.byUser(user?.id || ""),
     queryFn: async () => {
       if (!user) return [];
       const { data, error } = await supabase
@@ -356,7 +359,7 @@ export const useEnrollInCourse = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.enrollments.all });
     },
   });
 };
@@ -420,7 +423,7 @@ export const useEnrollInMultipleCourses = () => {
       return { enrolled: data.length, message: `Enrolled in ${data.length} courses` };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.enrollments.all });
     },
   });
 };
@@ -494,8 +497,8 @@ export const useMarkLessonComplete = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["lesson_progress"] });
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.lessons.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.enrollments.all });
       queryClient.invalidateQueries({ queryKey: ["referral-stats"] });
     },
   });
@@ -532,8 +535,8 @@ export const useRecordQuizAttempt = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["quiz_attempts"] });
-      queryClient.invalidateQueries({ queryKey: ["lesson_quiz_attempts"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.quizAttempts.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.all });
     },
   });
 };
@@ -560,7 +563,7 @@ export const useStartStudySession = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["study_sessions"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.studySessions.all });
     },
   });
 };
@@ -584,7 +587,7 @@ export const useEndStudySession = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["study_sessions"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.studySessions.all });
     },
   });
 };
