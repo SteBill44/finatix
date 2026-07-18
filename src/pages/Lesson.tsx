@@ -22,8 +22,9 @@ import {
   useLessonProgress,
   useMarkLessonComplete,
 } from "@/hooks/useStudentProgress";
-import { useLessonResources, useIncrementDownloadCount } from "@/hooks/useResources";
-import { useQuizzes, useLessonQuizAttempts } from "@/hooks/useQuizzes";
+import { useIncrementDownloadCount } from "@/hooks/useResources";
+import { useLessonQuizAttempts } from "@/hooks/useQuizzes";
+import { useLessonDetailOptimized } from "@/hooks/useLessonDetailOptimized";
 import { useVideoProgress } from "@/hooks/useVideoProgress";
 import VideoPlayer from "@/components/lesson/VideoPlayer";
 import PdfViewer from "@/components/lesson/PdfViewer";
@@ -62,31 +63,27 @@ const Lesson = () => {
   // Video progress tracking
   const { progress: videoProgress, saveProgress } = useVideoProgress(lessonId);
 
-  // Fetch course details
-  const { data: course } = useQuery({
-    queryKey: ["course", courseId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("courses")
-        .select("*")
-        .eq("id", courseId)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!courseId,
-  });
+  // Fetch lesson details with all related data in one optimized call (reduces N+1)
+  const { data: lessonDetail, isLoading: isLoadingLesson } = useLessonDetailOptimized(lessonId || "");
 
-  // Fetch lessons for this course
-  const { data: lessons, isLoading: lessonsLoading } = useLessons(courseId);
-  const { data: progress } = useLessonProgress(courseId);
-  const { data: resources } = useLessonResources(lessonId || "");
-  const { data: lessonQuizzes } = useQuizzes(courseId, lessonId);
-  const { data: courseQuizzes } = useQuizzes(courseId);
-  const { data: lessonQuizAttempts } = useLessonQuizAttempts(lessonId);
+  // Fetch all lessons for sidebar navigation (still needed for UX)
+  const { data: allLessons, isLoading: lessonsLoading } = useLessons(courseId);
+
+  // Extract individual pieces from the optimized response
+  const course = lessonDetail?.course?.[0] || null;
+  const lesson = lessonDetail?.lesson?.[0] || null;
+  const resources = lessonDetail?.resources || [];
+  const quizzesToShow = lessonDetail?.quizzes || [];
   const incrementDownload = useIncrementDownloadCount();
-  // Use lesson-specific quizzes if available, otherwise fall back to course quizzes
-  const quizzesToShow = lessonQuizzes && lessonQuizzes.length > 0 ? lessonQuizzes : courseQuizzes;
+
+  // Get lesson progress for all lessons (for sidebar completion indicators)
+  const { data: progress } = useLessonProgress(courseId);
+
+  // Fetch quiz attempts separately (not included in optimized hook)
+  const { data: lessonQuizAttempts } = useLessonQuizAttempts(lessonId);
+
+  // Use all lessons for sidebar, but use optimized data for current lesson details
+  const lessons = allLessons;
 
   // Check if user has passed the lesson quiz (score >= 50%)
   const hasPassedLessonQuiz = lessonQuizAttempts?.some(
@@ -117,8 +114,10 @@ const Lesson = () => {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // Current lesson
-  const currentLesson = lessons?.find((l) => l.id === lessonId);
+  // Current lesson - optimized hook provides detailed data
+  const currentLesson = lesson;
+
+  // Prev/next navigation from all course lessons
   const currentIndex = lessons?.findIndex((l) => l.id === lessonId) ?? -1;
   const prevLesson = currentIndex > 0 ? lessons?.[currentIndex - 1] : null;
   const nextLesson = lessons && currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null;
