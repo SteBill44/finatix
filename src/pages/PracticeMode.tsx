@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import QuestionRenderer, { Answer } from "@/components/quiz/QuestionRenderer";
+import QuizFocusHeader from "@/components/quiz/QuizFocusHeader";
 import SyllabusMasteryCard from "@/components/course/SyllabusMasteryCard";
 import { 
   ArrowLeft, 
@@ -137,11 +138,10 @@ const PracticeMode = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-      setSelectedAnswer(null);
-      setShowResult(false);
-    }
+    // Advancing past the last question intentionally triggers the results screen
+    setCurrentQuestionIndex((prev) => prev + 1);
+    setSelectedAnswer(null);
+    setShowResult(false);
   };
 
   const handleStartSession = () => {
@@ -377,44 +377,35 @@ const PracticeMode = () => {
     );
   }
 
-  // Active practice session
+  // Active practice session — full-screen focus mode
   return (
-    <Layout>
-      <SEOHead 
+    <div className="min-h-screen bg-background flex flex-col">
+      <SEOHead
         title={`Practice Mode - ${course.title}`}
         description="Practice questions"
       />
-      <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
-        <div className="max-w-3xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <Button variant="ghost" onClick={handleRestartSession}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Exit Session
-            </Button>
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">
-                {sessionStats.correct} / {sessionStats.total} correct
-              </Badge>
-              <span className="text-sm text-muted-foreground">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </span>
-            </div>
-          </div>
 
-          {/* Progress */}
-          <Progress 
-            value={((currentQuestionIndex + 1) / questions.length) * 100} 
-            className="h-2 mb-6" 
-          />
+      <QuizFocusHeader
+        title={`Practice · ${course.title}`}
+        onExit={handleRestartSession}
+        current={currentQuestionIndex + 1}
+        total={questions.length}
+        right={
+          <Badge variant="outline" className="gap-1">
+            <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+            {sessionStats.correct}/{sessionStats.total}
+          </Badge>
+        }
+      />
 
-          {/* Question Card */}
-          <Card className="p-6">
+      <main className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
+          <div key={currentQuestionIndex} className="animate-fade-in">
             {/* Question metadata */}
             <div className="flex items-center gap-2 mb-4">
               {currentQuestion.syllabus_area_index !== null && (
                 <Badge variant="secondary">
-                  {syllabusAreas[currentQuestion.syllabus_area_index]?.title || 
+                  {syllabusAreas[currentQuestion.syllabus_area_index]?.title ||
                     `Area ${currentQuestion.syllabus_area_index + 1}`}
                 </Badge>
               )}
@@ -440,48 +431,53 @@ const PracticeMode = () => {
 
             {/* Result feedback */}
             {showResult && (
-              <div className={`mt-4 p-4 rounded-lg ${
-                isCorrect ? "bg-accent/10 border border-accent/20" : "bg-destructive/10 border border-destructive/20"
+              <div className={`mt-6 p-4 rounded-lg animate-scale-in ${
+                isCorrect ? "bg-success/10 border border-success/20" : "bg-destructive/10 border border-destructive/20"
               }`}>
                 <div className="flex items-center gap-2">
                   {isCorrect ? (
-                    <CheckCircle2 className="h-5 w-5 text-accent" />
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                   ) : (
                     <XCircle className="h-5 w-5 text-destructive" />
                   )}
-                  <span className={`font-medium ${isCorrect ? "text-accent" : "text-destructive"}`}>
+                  <span className={`font-medium ${isCorrect ? "text-success" : "text-destructive"}`}>
                     {isCorrect ? "Correct!" : "Incorrect"}
                   </span>
                 </div>
               </div>
             )}
-
-            {/* Actions */}
-            <div className="flex justify-end gap-3 mt-6">
-              {!showResult ? (
-                <Button 
-                  onClick={handleAnswerSubmit}
-                  disabled={selectedAnswer === null}
-                >
-                  Submit Answer
-                </Button>
-              ) : (
-                <Button onClick={handleNext}>
-                  {currentQuestionIndex < questions.length - 1 ? (
-                    <>
-                      Next Question
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </>
-                  ) : (
-                    "View Results"
-                  )}
-                </Button>
-              )}
-            </div>
-          </Card>
+          </div>
         </div>
-      </div>
-    </Layout>
+      </main>
+
+      {/* Sticky bottom action bar */}
+      <footer className="sticky bottom-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border safe-area-bottom">
+        <div className="container mx-auto px-4 py-3 max-w-3xl flex items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            Question {currentQuestionIndex + 1} of {questions.length}
+          </p>
+          {!showResult ? (
+            <Button
+              onClick={handleAnswerSubmit}
+              disabled={selectedAnswer === null}
+            >
+              Submit Answer
+            </Button>
+          ) : (
+            <Button onClick={handleNext} className="gap-2">
+              {currentQuestionIndex < questions.length - 1 ? (
+                <>
+                  Next Question
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              ) : (
+                "View Results"
+              )}
+            </Button>
+          )}
+        </div>
+      </footer>
+    </div>
   );
 };
 
