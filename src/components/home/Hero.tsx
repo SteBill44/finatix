@@ -43,7 +43,8 @@ const Hero = () => {
             <SplitTextReveal
               as="span"
               delay={0.5}
-              className="block text-primary drop-shadow-sm"
+              className="block"
+              wordClassName="text-gradient-brand"
             >
               MANAGEMENT ACCOUNTING
             </SplitTextReveal>

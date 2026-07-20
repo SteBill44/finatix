@@ -4,6 +4,9 @@ import { useRef } from "react";
 interface SplitTextRevealProps {
   children: string;
   className?: string;
+  /** Applied to each animated word — needed for effects like background-clip
+   *  gradients, which don't survive being applied to a transformed child's parent. */
+  wordClassName?: string;
   as?: "h1" | "h2" | "h3" | "p" | "span";
   delay?: number;
   staggerChildren?: number;
@@ -16,6 +19,7 @@ interface SplitTextRevealProps {
 const SplitTextReveal = ({
   children,
   className = "",
+  wordClassName = "",
   as: Tag = "h1",
   delay = 0,
   staggerChildren = 0.04,
@@ -32,7 +36,7 @@ const SplitTextReveal = ({
         {words.map((word, i) => (
           <span key={i} className="inline-block overflow-hidden align-bottom">
             <motion.span
-              className="inline-block"
+              className={`inline-block ${wordClassName}`}
               initial={{ y: "110%", rotateX: 40, opacity: 0 }}
               animate={isInView ? { y: "0%", rotateX: 0, opacity: 1 } : {}}
               transition={{
