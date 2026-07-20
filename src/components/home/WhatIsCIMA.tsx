@@ -5,7 +5,7 @@ import SplitTextReveal from "./SplitTextReveal";
 
 const WhatIsCIMA = () => {
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-16 lg:py-24 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <motion.span

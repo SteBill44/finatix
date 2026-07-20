@@ -56,7 +56,7 @@ const CTA = () => {
   // Logged-in state: keep centred layout
   if (user) {
     return (
-      <section ref={sectionRef} className="py-12 lg:py-20 bg-background overflow-hidden">
+      <section ref={sectionRef} className="py-12 lg:py-20 bg-background/80 backdrop-blur-xl overflow-hidden">
         <motion.div style={{ scale: bgScale }} className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <SplitTextReveal

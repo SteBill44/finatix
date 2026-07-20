@@ -42,7 +42,7 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-12 lg:py-20 bg-card">
+    <section className="py-12 lg:py-20 bg-card/80 backdrop-blur-xl">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           {/* Header */}

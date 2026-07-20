@@ -94,7 +94,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-12 lg:py-20 bg-background">
+    <section className="py-12 lg:py-20 bg-background/80 backdrop-blur-xl">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">

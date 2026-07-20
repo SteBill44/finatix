@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
@@ -11,6 +12,9 @@ import CareerPathways from "@/components/home/CareerPathways";
 import HowToBegin from "@/components/home/HowToBegin";
 import FAQ from "@/components/home/FAQ";
 import CTA from "@/components/home/CTA";
+
+// Heavy three.js background — lazy so it never blocks first paint
+const HexField3D = lazy(() => import("@/components/home/HexField3D"));
 
 const BASE_URL = "https://finatix.lovable.app";
 
@@ -78,16 +82,21 @@ const Index = () => {
         canonicalUrl={BASE_URL}
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
-      <Hero />
-      <WhatIsCIMA />
-      
-      <Features />
-      <LearningPathway />
-      <CareerPathways />
-      
-      <HowToBegin />
-      <FAQ />
-      <CTA />
+      <Suspense fallback={null}>
+        <HexField3D />
+      </Suspense>
+      <div className="relative z-10">
+        <Hero />
+        <WhatIsCIMA />
+
+        <Features />
+        <LearningPathway />
+        <CareerPathways />
+
+        <HowToBegin />
+        <FAQ />
+        <CTA />
+      </div>
     </Layout>
   );
 };
