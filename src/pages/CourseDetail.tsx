@@ -19,11 +19,11 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse, useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
-import { useQuizzes } from "@/hooks/useQuizzes";
+import { useEnrollments, useEnrollInCourse, useUnenrollFromCourse } from "@/hooks/useStudentProgress";
 import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
+import { useCourseDetailOptimized } from "@/hooks/useCourseDetailOptimized";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
@@ -95,7 +95,8 @@ const CourseDetail = () => {
 
   const isEffectiveAdmin = isAdmin && !isStudentView;
 
-  const { data: course, isLoading } = useQuery({
+  // First, fetch course to get its ID (needed for optimized hook)
+  const { data: course, isLoading: courseLoading } = useQuery({
     queryKey: ["course", courseId],
     queryFn: async () => {
       let { data, error } = await supabase
@@ -120,6 +121,14 @@ const CourseDetail = () => {
     enabled: !!courseId,
   });
 
+  // Fetch course details with optimized hook (lessons, progress, quizzes in one call)
+  const { data: courseDetail, isLoading: detailLoading } = useCourseDetailOptimized(course?.id || "");
+
+  // Extract data from optimized response
+  const lessons = courseDetail?.lessons || [];
+  const lessonProgress = courseDetail?.progress || [];
+  const quizzes = courseDetail?.quizzes || [];
+
   const { data: syllabusData } = useQuery({
     queryKey: ["course-syllabus", course?.id],
     queryFn: async () => {
@@ -134,9 +143,7 @@ const CourseDetail = () => {
     enabled: !!course?.id,
   });
 
-  const { data: lessons } = useLessons(course?.id);
-  const { data: lessonProgress } = useLessonProgress(course?.id);
-  const { data: quizzes } = useQuizzes(course?.id);
+  const isLoading = courseLoading || detailLoading;
   const { data: ratingData } = useCourseRating(course?.id || "");
   const { data: readinessScore } = useReadinessScore(course?.id || "");
 
