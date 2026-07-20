@@ -6,39 +6,39 @@
 
 @layer base {
   :root {
-    /* Core palette — Orange & Black branding (updated for modern look) */
-    --background: 0 0% 99%;
-    --foreground: 0 0% 8%;
+    /* Core palette — Charcoal & Orange */
+    --background: 20 20% 99%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 0 0% 10%;
 
     --primary: 20 98% 46%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 189 82% 51%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 20 15% 95%;
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 0 0% 93%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 20 10% 94%;
+    --muted-foreground: 0 0% 42%;
 
-    --accent: 142 72% 45%;
+    --accent: 24 99% 47%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 88%;
-    --input: 0 0% 90%;
+    --border: 20 10% 89%;
+    --input: 20 10% 90%;
     --ring: 20 98% 46%;
 
     --radius: 0.625rem;
 
     /* Extended design tokens */
-    --charcoal: 0 0% 20%;
+    --charcoal: 0 0% 16%;
     --brand-orange: 20 98% 46%;
     --brand-orange-dark: 2 99% 38%;
     --brand-orange-light: 24 99% 47%;
@@ -47,33 +47,19 @@
     --brand-gray-light: 0 0% 65%;
     --brand-gray-dark: 0 0% 20%;
 
-    /* New UI color palette */
-    /* Progress & Achievement (Teal) */
-    --progress: 189 82% 51%;
-    --progress-light: 189 82% 70%;
-    --progress-dark: 189 82% 35%;
-
-    /* Success & Completion (Green) */
-    --success: 142 72% 45%;
-    --success-light: 142 72% 65%;
-    --success-dark: 142 72% 30%;
+    /* Functional state colors (feedback only — not branding) */
+    --success: 142 72% 40%;
     --success-foreground: 0 0% 100%;
-
-    /* Premium & Featured (Purple) */
-    --premium: 262 83% 58%;
-    --premium-light: 262 83% 75%;
-    --premium-dark: 262 83% 42%;
-
-    /* Status colors */
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 0%;
     --info: 199 89% 48%;
     --info-foreground: 0 0% 100%;
 
-    /* Legacy accent colors */
-    --teal: 189 82% 51%;
-    --teal-dark: 189 82% 35%;
-    --teal-light: 189 82% 70%;
+    /* Legacy accent colors (course level differentiation) */
+    --teal: 174 72% 40%;
+    --teal-dark: 174 72% 35%;
+    --teal-light: 174 72% 50%;
+    --purple: 262 83% 58%;
     --orange: 25 95% 53%;
     --red: 0 72% 50%;
     
@@ -99,11 +85,11 @@
     --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
     
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.06);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.06);
-    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.12), 0 8px 10px -6px hsl(0 0% 0% / 0.06);
+    /* Shadows — layered, warm-tinted for a softer premium feel */
+    --shadow-sm: 0 1px 2px hsl(20 30% 10% / 0.05);
+    --shadow-md: 0 2px 4px hsl(20 30% 10% / 0.04), 0 6px 16px hsl(20 30% 10% / 0.06);
+    --shadow-lg: 0 4px 8px hsl(20 30% 10% / 0.04), 0 14px 28px hsl(20 30% 10% / 0.08);
+    --shadow-xl: 0 8px 16px hsl(20 30% 10% / 0.05), 0 28px 56px hsl(20 30% 10% / 0.1);
     --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
 
     /* Sidebar tokens */
@@ -118,40 +104,44 @@
   }
 
   .dark {
-    --background: 222 84% 5%;
-    --foreground: 0 0% 95%;
+    --background: 0 0% 4%;
+    --foreground: 0 0% 96%;
 
-    --card: 222 84% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 222 84% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 96%;
 
     --primary: 20 98% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 189 82% 55%;
-    --secondary-foreground: 222 84% 5%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 222 84% 18%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 64%;
 
-    --accent: 142 72% 55%;
-    --accent-foreground: 222 84% 5%;
+    --accent: 24 99% 52%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
+    --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 84% 15%;
-    --input: 222 84% 15%;
+    --border: 0 0% 14%;
+    --input: 0 0% 14%;
     --ring: 20 98% 50%;
 
     /* Dark mode state colors */
-    --success: 142 72% 55%;
-    --warning: 38 92% 60%;
-    --info: 199 89% 60%;
+    --success: 142 72% 50%;
+    --warning: 38 92% 55%;
+    --info: 199 89% 58%;
 
     --charcoal: 0 0% 90%;
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --shadow-md: 0 2px 4px hsl(0 0% 0% / 0.3), 0 6px 16px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 4px 8px hsl(0 0% 0% / 0.3), 0 14px 28px hsl(0 0% 0% / 0.5);
+    --shadow-xl: 0 8px 16px hsl(0 0% 0% / 0.4), 0 28px 56px hsl(0 0% 0% / 0.6);
     --shadow-glow: 0 0 30px hsl(var(--primary) / 0.2);
     
     --sidebar-background: 0 0% 5%;
@@ -181,15 +171,20 @@
   }
 
   h1 {
-    @apply text-4xl font-bold tracking-tight mb-2;
+    @apply text-4xl font-bold mb-2;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
   }
 
   h2 {
-    @apply text-3xl font-bold tracking-tight mb-2;
+    @apply text-3xl font-bold mb-2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
   }
 
   h3 {
-    @apply text-2xl font-semibold tracking-tight mb-1;
+    @apply text-2xl font-semibold mb-1;
+    letter-spacing: -0.015em;
   }
 
   h4 {
@@ -200,14 +195,25 @@
     @apply font-semibold tracking-tight;
   }
 
-  /* Typography improvements */
+  /* Typography */
   body {
     line-height: 1.7;
-    letter-spacing: 0.3px;
   }
 
   p {
     @apply text-base leading-relaxed;
+  }
+
+  /* Premium detail: branded text selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+  }
+
+  /* Visible, consistent keyboard focus */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 
   main > section:first-of-type h1:not(.course-title),
@@ -307,6 +313,50 @@
 
   .dark .hex-pattern {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23E85002' fill-opacity='0.03'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ── Premium polish utilities ── */
+
+  /* Gradient headline accent — wrap key words in hero copy */
+  .text-gradient-brand {
+    background: linear-gradient(120deg, hsl(var(--brand-orange)) 0%, hsl(var(--brand-orange-light)) 60%, hsl(38 95% 55%) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Elevated card: hairline border + layered shadow + lift on hover */
+  .card-premium {
+    @apply bg-card rounded-2xl border border-border;
+    box-shadow: var(--shadow-md);
+    transition: box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+  }
+
+  .card-premium:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    border-color: hsl(var(--primary) / 0.25);
+  }
+
+  /* Hairline divider that fades at both ends */
+  .divider-fade {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
+  }
+
+  /* Soft orange glow for hero CTAs */
+  .btn-glow {
+    box-shadow: 0 4px 14px hsl(var(--primary) / 0.3);
+    transition: box-shadow 0.3s var(--ease-out), transform 0.15s var(--ease-out);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 6px 24px hsl(var(--primary) / 0.4);
+  }
+
+  /* Subtle top highlight on dark surfaces — gives cards physical depth */
+  .dark .card-premium {
+    background-image: linear-gradient(180deg, hsl(0 0% 100% / 0.03), transparent 40%);
   }
 
   .stat-card {
