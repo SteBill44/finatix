@@ -117,7 +117,7 @@ const Contact = () => {
             Get in Touch
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Contact <span className="text-foreground">Fin</span><span className="text-primary">atix</span>
+            Contact <span className="text-gradient-brand">Finatix</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
             Have a question about our courses or need support? We respond within 24 - 48 hours, Monday to Friday, 9am to 5pm.

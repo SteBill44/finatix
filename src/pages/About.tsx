@@ -56,7 +56,7 @@ const About = () => {
               Our Story
             </span>
             <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Helping CIMA Students Learn Smarter
+              Helping CIMA Students <span className="text-gradient-brand">Learn Smarter</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
               We believe that with the right tools and approach, anyone can achieve their CIMA qualification. 

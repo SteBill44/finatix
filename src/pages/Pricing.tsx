@@ -268,7 +268,7 @@ const Pricing = () => {
             Simple, Transparent Pricing
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            INVEST IN YOUR <span className="text-primary">CIMA SUCCESS</span>
+            INVEST IN YOUR <span className="text-gradient-brand">CIMA SUCCESS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
             Choose the plan that fits your goals. All plans include our modern analytics and learning tools.
