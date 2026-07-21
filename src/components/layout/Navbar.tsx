@@ -120,6 +120,14 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            {isAdmin && (
+              <Link to="/admin">
+                <Button size="sm" variant="destructive" className="flex items-center gap-1.5 shadow-sm">
+                  <Shield className="w-4 h-4" />
+                  Admin
+                </Button>
+              </Link>
+            )}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -263,6 +271,14 @@ const Navbar = () => {
         {isOpen && (
           <div className="lg:hidden py-4 border-t border-border animate-fade-up max-h-[70vh] overflow-y-auto">
             <div className="flex flex-col gap-2">
+              {isAdmin && (
+                <Link to="/admin" onClick={() => setIsOpen(false)}>
+                  <Button variant="destructive" className="w-full flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Admin Dashboard
+                  </Button>
+                </Link>
+              )}
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
