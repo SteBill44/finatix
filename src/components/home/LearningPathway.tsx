@@ -68,7 +68,7 @@ const tiers = [
 
 const LearningPathway = () => {
   return (
-    <section className="py-16 lg:py-24 bg-card/80 backdrop-blur-xl">
+    <section className="py-16 lg:py-24 bg-card">
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-4">

@@ -21,7 +21,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16"
+      className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 bg-secondary/[0.38]"
     >
 
 
