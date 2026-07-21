@@ -15,19 +15,43 @@ export const useCourseDetailOptimized = (courseId: string) => {
 
   return useQuery({
     queryKey: queryKeys.courses.detail(courseId),
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc(
-        "get_course_detail_with_progress",
-        {
-          p_course_id: courseId,
-          p_user_id: user?.id || null,
-        }
-      );
+    queryFn: async (): Promise<CourseDetailResponse> => {
+      const [courseRes, lessonsRes, quizzesRes] = await Promise.all([
+        supabase.from("courses").select("*").eq("id", courseId).maybeSingle(),
+        supabase
+          .from("lessons")
+          .select("*")
+          .eq("course_id", courseId)
+          .order("order_index", { ascending: true }),
+        supabase.from("quizzes").select("*").eq("course_id", courseId),
+      ]);
 
-      if (error) throw error;
-      return data as CourseDetailResponse;
+      if (courseRes.error) throw courseRes.error;
+      if (lessonsRes.error) throw lessonsRes.error;
+      if (quizzesRes.error) throw quizzesRes.error;
+
+      const lessons = lessonsRes.data || [];
+
+      let progress: Array<{ [key: string]: any }> | null = null;
+      if (user?.id && lessons.length > 0) {
+        const lessonIds = lessons.map((l: any) => l.id);
+        const { data, error } = await supabase
+          .from("lesson_progress")
+          .select("*")
+          .eq("user_id", user.id)
+          .in("lesson_id", lessonIds);
+        if (error) throw error;
+        progress = data || [];
+      }
+
+      return {
+        course: courseRes.data ? [courseRes.data] : [],
+        lessons,
+        progress,
+        quizzes: quizzesRes.data || [],
+      };
     },
     enabled: !!courseId,
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   });
 };
