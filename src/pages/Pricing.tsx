@@ -327,15 +327,15 @@ const Pricing = () => {
                     )}
                   </div>
 
-                  <ul className="space-y-4 mb-8 flex-1">
+                  <ul className="space-y-2.5 mb-6 flex-1">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
+                      <li key={featureIndex} className="flex items-start gap-2.5">
                         {feature.included ? (
-                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                         ) : (
-                          <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                          <X className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                         )}
-                        <span className={feature.included ? "text-foreground" : "text-muted-foreground"}>
+                        <span className={`text-sm ${feature.included ? "text-foreground" : "text-muted-foreground"}`}>
                           {feature.text}
                         </span>
                       </li>
