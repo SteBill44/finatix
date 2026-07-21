@@ -116,7 +116,7 @@ const CourseDetail = () => {
       }
 
       if (error) throw error;
-      return (data || []).filter((attempt) => attempt.quiz_id !== null);
+      return data;
     },
     enabled: !!courseId,
   });
@@ -138,7 +138,9 @@ const CourseDetail = () => {
         .eq("course_id", course!.id)
         .maybeSingle();
       if (error) throw error;
-      return data;
+      return (data || [])
+        .filter((attempt) => attempt.quiz_id !== null)
+        .map((attempt) => ({ ...attempt, quiz_id: attempt.quiz_id as string }));
     },
     enabled: !!course?.id,
   });
