@@ -120,6 +120,14 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            {isAdmin && (
+              <Link to="/admin">
+                <Button size="sm" variant="destructive" className="flex items-center gap-1.5 shadow-sm">
+                  <Shield className="w-4 h-4" />
+                  Admin
+                </Button>
+              </Link>
+            )}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
