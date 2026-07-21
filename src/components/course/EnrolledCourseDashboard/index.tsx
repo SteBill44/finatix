@@ -168,6 +168,16 @@ const EnrolledCourseDashboard = ({
         </div>
       </div>
 
+      {/* Mobile/tablet: surface Start Lesson at the top */}
+      <div className="lg:hidden">
+        <NextLessonCard
+          courseId={course.id}
+          nextLesson={nextLesson}
+          nextLessonIndex={nextLessonIndex}
+          totalLessons={totalLessons}
+        />
+      </div>
+
       <StatsStrip
         readiness={readiness}
         completedLessons={completedLessons}
@@ -189,12 +199,15 @@ const EnrolledCourseDashboard = ({
         />
 
         <div className="lg:col-span-2 space-y-4">
-          <NextLessonCard
-            courseId={course.id}
-            nextLesson={nextLesson}
-            nextLessonIndex={nextLessonIndex}
-            totalLessons={totalLessons}
-          />
+          <div className="hidden lg:block">
+            <NextLessonCard
+              courseId={course.id}
+              nextLesson={nextLesson}
+              nextLessonIndex={nextLessonIndex}
+              totalLessons={totalLessons}
+            />
+          </div>
+
 
           <AssessmentsPanel
             practiceQuizzes={assessments.practiceQuizzes}
