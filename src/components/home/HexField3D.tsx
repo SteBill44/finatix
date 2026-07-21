@@ -1,33 +1,41 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  Environment,
+  Lightformer,
+  MeshTransmissionMaterial,
+  MeshDistortMaterial,
+} from "@react-three/drei";
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * HexField3D — scroll-reactive 3D background for the homepage.
+ * HexField3D — scroll-reactive "liquid glass" background for the homepage.
  *
- * A field of floating hexagonal prisms (the Finatix logo shape) rendered as
- * crisp edge outlines with faint solid cores. The whole field rotates and
- * rises with scroll while the camera dollies in; each hex idles with its own
- * spin and bob, and the pointer adds a gentle parallax.
+ * Inspired by the iridescent-glass genre (haoqi.design et al.): a refractive
+ * glass hexagon centrepiece with chromatic dispersion, orbited by morphing
+ * molten-glass blobs, all lit by a warm orange studio environment so
+ * reflections stay on-brand. Scroll rotates the field, dollies the camera,
+ * and pushes the dispersion; the pointer adds parallax.
  *
- * Performance/UX guardrails:
- * - Lazy-loaded chunk (three.js never blocks initial paint)
- * - DPR capped, edge-line rendering is cheap, ~26 shapes desktop / 12 mobile
- * - Skipped entirely for prefers-reduced-motion or missing WebGL
- * - pointer-events: none, aria-hidden — purely decorative
+ * Guardrails:
+ * - Lazy-loaded chunk (three.js never blocks first paint)
+ * - Skipped for prefers-reduced-motion / missing WebGL
+ * - DPR capped; transmission kept cheap (low samples/res); fewer blobs + no
+ *   transmissive centrepiece on mobile
+ * - pointer-events:none, aria-hidden — purely decorative; theme-aware
  */
 
-interface HexData {
+interface BlobData {
   position: [number, number, number];
   scale: number;
-  rotation: [number, number, number];
-  spinX: number;
-  spinY: number;
+  color: string;
+  speed: number;
+  distort: number;
+  spin: number;
   bobPhase: number;
   bobAmp: number;
 }
 
-// Deterministic pseudo-random so the field looks composed, not chaotic
 const mulberry32 = (seed: number) => () => {
   seed |= 0;
   seed = (seed + 0x6d2b79f5) | 0;
@@ -36,65 +44,105 @@ const mulberry32 = (seed: number) => () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
-const buildField = (count: number): HexData[] => {
-  const rand = mulberry32(1337);
-  const hexes: HexData[] = [];
+// Warm on-brand blob tints — molten orange through amber to cream
+const BLOB_COLORS = ["#E85002", "#F16001", "#F97A1F", "#FFB07A", "#D9C3AB"];
+
+const buildBlobs = (count: number): BlobData[] => {
+  const rand = mulberry32(7);
+  const blobs: BlobData[] = [];
   for (let i = 0; i < count; i++) {
-    const z = -12 + rand() * 13; // -12 (far) … 1 (near)
-    const depth = (z + 12) / 13; // 0 far … 1 near
-    hexes.push({
-      position: [(rand() - 0.5) * 30, (rand() - 0.5) * 18, z],
-      scale: 0.35 + depth * 1.3 + rand() * 0.5,
-      rotation: [rand() * Math.PI, rand() * Math.PI, rand() * Math.PI],
-      spinX: (rand() - 0.5) * 0.35,
-      spinY: (rand() - 0.5) * 0.45,
+    const z = -11 + rand() * 11; // -11 far … 0 near
+    const depth = (z + 11) / 11;
+    blobs.push({
+      position: [(rand() - 0.5) * 26, (rand() - 0.5) * 15, z],
+      scale: 0.7 + depth * 1.8 + rand() * 0.6,
+      color: BLOB_COLORS[Math.floor(rand() * BLOB_COLORS.length)],
+      speed: 0.6 + rand() * 1.4,
+      distort: 0.3 + rand() * 0.35,
+      spin: (rand() - 0.5) * 0.4,
       bobPhase: rand() * Math.PI * 2,
-      bobAmp: 0.3 + rand() * 0.7,
+      bobAmp: 0.3 + rand() * 0.8,
     });
   }
-  return hexes;
+  return blobs;
 };
 
-interface Palette {
-  line: string;
-  lineFaint: string;
-  fill: string;
-  lineOpacity: number;
-  faintOpacity: number;
-  fillOpacity: number;
-}
+const GlassHex = ({ scrollRef }: { scrollRef: React.MutableRefObject<number> }) => {
+  const ref = useRef<THREE.Group>(null);
+  const matRef = useRef<any>(null);
+  const geo = useMemo(() => new THREE.CylinderGeometry(1, 1, 0.5, 6), []);
 
-const DARK_PALETTE: Palette = {
-  line: "#F16001",
-  lineFaint: "#D9C3AB",
-  fill: "#E85002",
-  lineOpacity: 0.55,
-  faintOpacity: 0.14,
-  fillOpacity: 0.05,
+  useFrame((state, delta) => {
+    const t = state.clock.elapsedTime;
+    const s = scrollRef.current;
+    const g = ref.current;
+    if (g) {
+      g.rotation.z = t * 0.12 - s * Math.PI * 0.5;
+      g.rotation.x = 0.4 + Math.sin(t * 0.2) * 0.15 + s * 0.4;
+      g.position.y = 0.4 - s * 9;
+      g.rotation.y += delta * 0.15;
+    }
+    // Dispersion intensifies as you scroll — the rainbow edges bloom
+    if (matRef.current) matRef.current.chromaticAberration = 0.22 + s * 0.5;
+  });
+
+  return (
+    <group ref={ref} position={[7.5, 0.4, -2]} scale={4.6} rotation={[0.4, 0, 0]}>
+      <mesh geometry={geo}>
+        <MeshTransmissionMaterial
+          ref={matRef}
+          samples={6}
+          resolution={256}
+          transmission={1}
+          roughness={0.08}
+          thickness={1.6}
+          ior={1.35}
+          chromaticAberration={0.3}
+          anisotropy={0.3}
+          distortion={0.2}
+          distortionScale={0.4}
+          temporalDistortion={0.2}
+          attenuationColor="#ffd9bd"
+          attenuationDistance={2}
+          color="#fff2e8"
+        />
+      </mesh>
+    </group>
+  );
 };
 
-const LIGHT_PALETTE: Palette = {
-  line: "#E85002",
-  lineFaint: "#3a2c22",
-  fill: "#F16001",
-  lineOpacity: 0.4,
-  faintOpacity: 0.1,
-  fillOpacity: 0.035,
+const Blob = ({ data }: { data: BlobData }) => {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state, delta) => {
+    const t = state.clock.elapsedTime;
+    const m = ref.current;
+    if (m) {
+      m.rotation.x += data.spin * delta;
+      m.rotation.y += data.spin * 0.7 * delta;
+      m.position.y = data.position[1] + Math.sin(t * 0.4 + data.bobPhase) * data.bobAmp;
+    }
+  });
+  return (
+    <mesh ref={ref} position={data.position} scale={data.scale}>
+      <icosahedronGeometry args={[1, 8]} />
+      <MeshDistortMaterial
+        color={data.color}
+        speed={data.speed}
+        distort={data.distort}
+        metalness={0.9}
+        roughness={0.12}
+        envMapIntensity={1.4}
+      />
+    </mesh>
+  );
 };
 
-const Field = ({ hexes, palette }: { hexes: HexData[]; palette: Palette }) => {
+const Scene = ({ blobs, includeGlass }: { blobs: BlobData[]; includeGlass: boolean }) => {
   const groupRef = useRef<THREE.Group>(null);
-  const heroHexRef = useRef<THREE.Group>(null);
   const scrollRef = useRef(0);
-  const smoothScroll = useRef(0);
+  const smooth = useRef(0);
   const pointer = useRef({ x: 0, y: 0 });
   const { camera } = useThree();
-
-  // Shared geometry: hexagonal prism + its edge outline
-  const { hexGeo, edgesGeo } = useMemo(() => {
-    const geo = new THREE.CylinderGeometry(1, 1, 0.24, 6);
-    return { hexGeo: geo, edgesGeo: new THREE.EdgesGeometry(geo) };
-  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -115,67 +163,41 @@ const Field = ({ hexes, palette }: { hexes: HexData[]; palette: Palette }) => {
   }, []);
 
   useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
-    // Ease toward the real scroll position so motion feels weighty
-    smoothScroll.current += (scrollRef.current - smoothScroll.current) * Math.min(delta * 4, 1);
-    const s = smoothScroll.current;
-
-    const group = groupRef.current;
-    if (group) {
-      group.rotation.y = s * Math.PI * 0.65 + pointer.current.x * 0.06;
-      group.rotation.x = s * 0.3 + pointer.current.y * 0.04;
-      group.position.y = s * 8; // field rises as the page scrolls down
-      group.children.forEach((child, i) => {
-        const hex = hexes[i];
-        if (!hex) return;
-        child.rotation.x += hex.spinX * delta;
-        child.rotation.y += hex.spinY * delta;
-        child.position.y = hex.position[1] + Math.sin(t * 0.5 + hex.bobPhase) * hex.bobAmp;
-      });
+    smooth.current += (scrollRef.current - smooth.current) * Math.min(delta * 4, 1);
+    const s = smooth.current;
+    const g = groupRef.current;
+    if (g) {
+      g.rotation.y = s * Math.PI * 0.55 + pointer.current.x * 0.08;
+      g.rotation.x = s * 0.28 + pointer.current.y * 0.05;
+      g.position.y = s * 7;
     }
-
-    // Statement piece: large hex ring slowly counter-rotating behind the hero copy
-    const heroHex = heroHexRef.current;
-    if (heroHex) {
-      heroHex.rotation.z = t * 0.05 - s * Math.PI * 0.4;
-      heroHex.rotation.x = 0.35 + s * 0.5;
-      heroHex.position.y = 0.5 - s * 10; // sinks away as you scroll
-    }
-
-    // Camera dolly + slight lift
-    camera.position.z = 15 - s * 5;
+    camera.position.z = 14 - s * 4.5;
     camera.position.y = s * 1.5;
+    camera.position.x += (pointer.current.x * 0.6 - camera.position.x) * Math.min(delta * 2, 1);
     camera.lookAt(0, s * 2, 0);
   });
 
   return (
     <>
+      {/* Warm studio environment — drives every reflection/refraction on-brand */}
+      <Environment resolution={256} frames={1}>
+        <color attach="background" args={["#0a0a0a"]} />
+        <Lightformer intensity={3} color="#F16001" position={[-5, 3, 2]} scale={[6, 6, 1]} />
+        <Lightformer intensity={2.2} color="#FFB07A" position={[5, -2, 1]} scale={[5, 5, 1]} />
+        <Lightformer intensity={1.6} color="#D9C3AB" position={[0, 5, -3]} scale={[8, 3, 1]} />
+        <Lightformer intensity={2.5} color="#ffffff" position={[3, 4, 4]} scale={[3, 3, 1]} />
+      </Environment>
+
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[5, 6, 4]} intensity={1.2} color="#ffd9bd" />
+
       <group ref={groupRef}>
-        {hexes.map((hex, i) => (
-          <group key={i} position={hex.position} rotation={hex.rotation} scale={hex.scale}>
-            <lineSegments geometry={edgesGeo}>
-              <lineBasicMaterial
-                color={i % 3 === 2 ? palette.lineFaint : palette.line}
-                transparent
-                opacity={i % 3 === 2 ? palette.faintOpacity : palette.lineOpacity * (0.45 + hex.scale * 0.3)}
-              />
-            </lineSegments>
-            <mesh geometry={hexGeo}>
-              <meshBasicMaterial color={palette.fill} transparent opacity={palette.fillOpacity} />
-            </mesh>
-          </group>
+        {blobs.map((b, i) => (
+          <Blob key={i} data={b} />
         ))}
       </group>
 
-      {/* Large hero hexagon — echoes the logo at architectural scale */}
-      <group ref={heroHexRef} position={[8.5, 0.5, -3]} scale={5.2} rotation={[0.35, 0, 0]}>
-        <lineSegments geometry={edgesGeo}>
-          <lineBasicMaterial color={palette.line} transparent opacity={palette.lineOpacity * 0.8} />
-        </lineSegments>
-        <mesh geometry={hexGeo}>
-          <meshBasicMaterial color={palette.fill} transparent opacity={palette.fillOpacity * 1.6} />
-        </mesh>
-      </group>
+      {includeGlass && <GlassHex scrollRef={smooth} />}
     </>
   );
 };
@@ -186,13 +208,11 @@ const HexField3D = () => {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   useEffect(() => {
-    // Bail out for reduced motion or missing WebGL
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const probe = document.createElement("canvas");
     if (!probe.getContext("webgl2") && !probe.getContext("webgl")) return;
     setReady(true);
 
-    // Track light/dark theme via the root class next-themes toggles
     const root = document.documentElement;
     const update = () => setIsDark(root.classList.contains("dark"));
     update();
@@ -201,19 +221,31 @@ const HexField3D = () => {
     return () => observer.disconnect();
   }, []);
 
-  const hexes = useMemo(() => buildField(isMobile ? 12 : 26), [isMobile]);
+  const blobs = useMemo(() => buildBlobs(isMobile ? 5 : 9), [isMobile]);
 
   if (!ready) return null;
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+    <div
+      className="fixed inset-0 z-0 pointer-events-none"
+      aria-hidden="true"
+      style={{ opacity: isDark ? 0.9 : 0.8 }}
+    >
       <Canvas
-        dpr={[1, 1.75]}
-        camera={{ position: [0, 0, 15], fov: 50 }}
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 0, 14], fov: 50 }}
         gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       >
-        <Field hexes={hexes} palette={isDark ? DARK_PALETTE : LIGHT_PALETTE} />
+        <Scene blobs={blobs} includeGlass={!isMobile} />
       </Canvas>
+      {/* Film grain — the premium texture layer over the glass */}
+      <div
+        className="absolute inset-0 mix-blend-overlay opacity-[0.15]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
     </div>
   );
 };
