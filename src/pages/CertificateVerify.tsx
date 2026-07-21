@@ -96,34 +96,22 @@ const CertificateVerify = () => {
     setCertificate(null);
 
     try {
-      const { data, error: fetchError } = await supabase
-        .from("certificates")
-        .select(`
-          certificate_number,
-          issued_at,
-          user_id,
-          course:courses(title)
-        `)
-        .eq("certificate_number", certNumber.trim())
-        .single();
+      const { data, error: fetchError } = await supabase.rpc("verify_certificate", {
+        p_certificate_number: certNumber.trim(),
+      });
 
-      if (fetchError || !data) {
+      const row = Array.isArray(data) ? data[0] : null;
+      if (fetchError || !row) {
         setError("Certificate not found or invalid");
         setIsLoading(false);
         return;
       }
 
-      // Fetch profile separately
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("user_id", data.user_id)
-        .single();
-
       setCertificate({
-        ...data,
-        course: data.course as { title: string },
-        profile: profileData?.full_name ? { full_name: profileData.full_name } : null,
+        certificate_number: row.certificate_number,
+        issued_at: row.issued_at,
+        course: row.course_title ? { title: row.course_title } : ({ title: "" } as { title: string }),
+        profile: row.holder_name ? { full_name: row.holder_name } : null,
       });
     } catch (err) {
       setError("Failed to verify certificate");
