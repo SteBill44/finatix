@@ -90,10 +90,12 @@ const Lesson = () => {
     (a: any) => a.score > 0 && a.max_score > 0 && (a.score / a.max_score) >= 0.5
   ) ?? false;
 
-  // Handle resource download with tracking
-  const handleDownload = (resource: { id: string; file_url: string | null }) => {
+  // Handle resource download with tracking (private bucket -> signed URL)
+  const handleDownload = async (resource: { id: string; file_url: string | null }) => {
     incrementDownload.mutate(resource.id);
-    if (resource.file_url) window.open(resource.file_url, "_blank");
+    if (!resource.file_url) return;
+    const url = await resolveStorageUrl(resource.file_url);
+    if (url) window.open(url, "_blank");
   };
 
   // Helper to get file icon based on type
