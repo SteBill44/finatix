@@ -54,7 +54,7 @@ export function CostMonitoringDashboard() {
     { name: "Edge Functions", value: data.currentMonth.edgeFunctions.cost, count: data.currentMonth.edgeFunctions.count },
     { name: "Database", value: data.currentMonth.database.cost, sizeMB: data.currentMonth.database.sizeMB },
     { name: "Storage", value: data.currentMonth.storage.cost, sizeMB: data.currentMonth.storage.sizeMB },
-  ].filter(item => item.value > 0 || item.count > 0 || item.sizeMB > 0) : [];
+  ].filter(item => item.value > 0 || (item.count ?? 0) > 0 || (item.sizeMB ?? 0) > 0) : [];
 
   return (
     <div className="space-y-6">

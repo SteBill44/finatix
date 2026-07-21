@@ -43,7 +43,7 @@ export class FeatureErrorBoundary extends Component<Props, State> {
     this.setState({ errorInfo });
     
     // Log to error tracking
-    captureReactError(error, errorInfo);
+    captureReactError(error, { componentStack: errorInfo.componentStack ?? undefined });
     
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);

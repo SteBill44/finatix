@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Trophy, ClipboardList, GraduationCap, Award } from "lucide-react";
-import { AssessmentGroup } from "./AssessmentGroup";
+import { AssessmentGroup, type AssessmentGroupItem } from "./AssessmentGroup";
 import type { AssessmentItem } from "./helpers";
 import { PASS_THRESHOLD, getScoreColor } from "./helpers";
 
@@ -8,7 +8,7 @@ interface Props {
   practiceQuizzes: AssessmentItem[];
   mockExams: AssessmentItem[];
   finalExams: AssessmentItem[];
-  onLaunch: (item: AssessmentItem) => void;
+  onLaunch: (item: AssessmentGroupItem) => void;
 }
 
 export const AssessmentsPanel = ({

@@ -115,10 +115,10 @@ export const useUpdateStreak = () => {
 
       let newStreak = 1;
       if (lastDate === yesterdayStr) {
-        newStreak = existingStreak.current_streak + 1;
+        newStreak = (existingStreak.current_streak ?? 0) + 1;
       }
 
-      const longestStreak = Math.max(newStreak, existingStreak.longest_streak);
+      const longestStreak = Math.max(newStreak, existingStreak.longest_streak ?? 0);
 
       const { error } = await from("user_streaks")
         .update({

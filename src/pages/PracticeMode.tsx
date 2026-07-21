@@ -34,7 +34,7 @@ const PracticeMode = () => {
 
   // State
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<Answer>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [sessionStats, setSessionStats] = useState({ correct: 0, total: 0 });
@@ -50,7 +50,7 @@ const PracticeMode = () => {
       const { data, error } = await supabase
         .from("courses")
         .select("id, title, slug")
-        .eq("slug", courseSlug)
+        .eq("slug", courseSlug!)
         .maybeSingle();
       if (error) throw error;
       return data;
@@ -417,7 +417,7 @@ const PracticeMode = () => {
               question={{
                 ...currentQuestion,
                 correct_answer: 0,
-                explanation: null,
+                explanation: undefined,
                 options: currentQuestion.options || [],
                 correct_answers: undefined,
                 number_answer: undefined,

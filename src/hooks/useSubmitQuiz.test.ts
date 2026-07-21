@@ -141,7 +141,7 @@ describe("useSubmitQuiz", () => {
     const { result } = renderHook(() => useSubmitQuiz(), { wrapper: makeWrapper() });
 
     await act(async () => {
-      await result.current.mutateAsync({ quizId: "quiz-abc", answers: { 0: null } });
+      await result.current.mutateAsync({ quizId: "quiz-abc", answers: { 0: null as any } });
     });
 
     expect(mockInvoke()).toHaveBeenCalledWith(
