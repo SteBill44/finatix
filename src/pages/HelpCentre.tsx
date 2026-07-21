@@ -136,7 +136,7 @@ const HelpCentre = () => {
       <div className="container mx-auto px-4 pt-24 pb-16 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Help <span className="text-gradient-brand">Centre</span></h1>
+          <h1 className="text-4xl font-bold mb-4 uppercase">Help <span className="text-gradient-brand">Centre</span></h1>
           <p className="text-xl text-muted-foreground mb-8">
             Find answers to common questions or get in touch with our support team
           </p>

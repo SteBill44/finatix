@@ -55,7 +55,7 @@ const About = () => {
               <Heart className="w-4 h-4" />
               Our Story
             </span>
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4">
+            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
               Helping CIMA Students <span className="text-gradient-brand">Learn Smarter</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">

@@ -117,7 +117,7 @@ export default function Referrals() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
               <Gift className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold">Invite Friends, <span className="text-gradient-brand">Earn Discounts</span></h1>
+            <h1 className="text-4xl font-bold uppercase">Invite Friends, <span className="text-gradient-brand">Earn Discounts</span></h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Share your unique referral code with friends. When they sign up and complete their first lesson, 
               you both earn credits worth {CREDITS_TO_DISCOUNT_RATE}% off courses each—up to {MAX_DISCOUNT_PERCENT}% total!

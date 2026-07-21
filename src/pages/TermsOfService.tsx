@@ -38,7 +38,7 @@ const TermsOfService = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 className="text-4xl font-bold mb-8">Terms of <span className="text-gradient-brand">Service</span></h1>
+        <h1 className="text-4xl font-bold mb-8 uppercase">Terms of <span className="text-gradient-brand">Service</span></h1>
         <p className="text-muted-foreground mb-8">Last updated: January 2025</p>
 
         <div className="prose prose-lg dark:prose-invert max-w-none space-y-8">
