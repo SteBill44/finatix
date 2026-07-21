@@ -271,6 +271,14 @@ const Navbar = () => {
         {isOpen && (
           <div className="lg:hidden py-4 border-t border-border animate-fade-up max-h-[70vh] overflow-y-auto">
             <div className="flex flex-col gap-2">
+              {isAdmin && (
+                <Link to="/admin" onClick={() => setIsOpen(false)}>
+                  <Button variant="destructive" className="w-full flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    Admin Dashboard
+                  </Button>
+                </Link>
+              )}
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
