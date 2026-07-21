@@ -60,6 +60,7 @@ const Lesson = () => {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const markComplete = useMarkLessonComplete();
+  const [signedVideoUrl, setSignedVideoUrl] = useState<string | null>(null);
   
   // Video progress tracking
   const { progress: videoProgress, saveProgress } = useVideoProgress(lessonId);
