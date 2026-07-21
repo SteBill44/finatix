@@ -121,6 +121,21 @@ const Lesson = () => {
   // Current lesson - optimized hook provides detailed data
   const currentLesson = lesson;
 
+  useEffect(() => {
+    let cancelled = false;
+    const raw = currentLesson?.video_url ?? null;
+    if (!raw) {
+      setSignedVideoUrl(null);
+      return;
+    }
+    resolveStorageUrl(raw).then((url) => {
+      if (!cancelled) setSignedVideoUrl(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLesson?.video_url]);
+
   // Prev/next navigation from all course lessons
   const currentIndex = lessons?.findIndex((l) => l.id === lessonId) ?? -1;
   const prevLesson = currentIndex > 0 ? lessons?.[currentIndex - 1] : null;
