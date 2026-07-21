@@ -123,7 +123,7 @@ const CertificateVerify = () => {
       setCertificate({
         ...data,
         course: data.course as { title: string },
-        profile: profileData,
+        profile: profileData?.full_name ? { full_name: profileData.full_name } : null,
       });
     } catch (err) {
       setError("Failed to verify certificate");

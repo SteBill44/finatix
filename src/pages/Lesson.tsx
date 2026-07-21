@@ -91,9 +91,9 @@ const Lesson = () => {
   ) ?? false;
 
   // Handle resource download with tracking
-  const handleDownload = (resource: { id: string; file_url: string }) => {
+  const handleDownload = (resource: { id: string; file_url: string | null }) => {
     incrementDownload.mutate(resource.id);
-    window.open(resource.file_url, "_blank");
+    if (resource.file_url) window.open(resource.file_url, "_blank");
   };
 
   // Helper to get file icon based on type

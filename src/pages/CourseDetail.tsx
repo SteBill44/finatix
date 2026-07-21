@@ -102,14 +102,14 @@ const CourseDetail = () => {
       let { data, error } = await supabase
         .from("courses")
         .select("*")
-        .eq("slug", courseId)
+        .eq("slug", courseId!)
         .maybeSingle();
 
       if (!data) {
         const result = await supabase
           .from("courses")
           .select("*")
-          .eq("id", courseId)
+          .eq("id", courseId!)
           .maybeSingle();
         data = result.data;
         error = result.error;
@@ -157,7 +157,9 @@ const CourseDetail = () => {
         .eq("user_id", user!.id)
         .order("attempted_at", { ascending: true });
       if (error) throw error;
-      return data;
+      return (data || [])
+        .filter((attempt) => attempt.quiz_id !== null)
+        .map((attempt) => ({ ...attempt, quiz_id: attempt.quiz_id as string }));
     },
     enabled: !!course?.id && !!user?.id,
   });

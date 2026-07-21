@@ -38,7 +38,7 @@ export const AssessmentsPanel = ({
             label="Practice Quizzes"
             icon={<ClipboardList className="w-3 h-3" />}
             items={practiceQuizzes}
-            onLaunch={onLaunch}
+            onLaunch={(item) => onLaunch(item as AssessmentItem)}
             getScoreColor={getScoreColor}
           />
         )}
@@ -48,7 +48,7 @@ export const AssessmentsPanel = ({
             label="Mock Exams"
             icon={<GraduationCap className="w-3 h-3" />}
             items={mockExams}
-            onLaunch={onLaunch}
+            onLaunch={(item) => onLaunch(item as AssessmentItem)}
             getScoreColor={getScoreColor}
           />
         )}
@@ -58,7 +58,7 @@ export const AssessmentsPanel = ({
             label="Final Exam"
             icon={<Award className="w-3 h-3" />}
             items={finalExams}
-            onLaunch={onLaunch}
+            onLaunch={(item) => onLaunch(item as AssessmentItem)}
             getScoreColor={getScoreColor}
             highlight
             defaultOpen={false}

@@ -13,18 +13,25 @@ export const useQuizDetailOptimized = (quizId: string) => {
   const { user } = useAuth();
 
   return useQuery({
-    queryKey: queryKeys.quizzes.detail(quizId),
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc(
-        "get_quiz_with_questions",
-        {
-          p_quiz_id: quizId,
-          p_user_id: user?.id || null,
-        }
-      );
+    queryKey: [...queryKeys.quizzes.detail(quizId), user?.id],
+    queryFn: async (): Promise<QuizDetailResponse> => {
+      const [quizRes, questionsRes] = await Promise.all([
+        supabase.from("quizzes").select("*").eq("id", quizId).maybeSingle(),
+        supabase
+          .from("quiz_questions")
+          .select("*")
+          .eq("quiz_id", quizId)
+          .order("order_index", { ascending: true }),
+      ]);
 
-      if (error) throw error;
-      return data as QuizDetailResponse;
+      if (quizRes.error) throw quizRes.error;
+      if (questionsRes.error) throw questionsRes.error;
+
+      return {
+        quiz: quizRes.data ? [quizRes.data] : [],
+        questions: questionsRes.data || [],
+        userAnswers: null,
+      };
     },
     enabled: !!quizId,
     staleTime: 30000, // 30 seconds
