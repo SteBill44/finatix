@@ -138,9 +138,7 @@ const CourseDetail = () => {
         .eq("course_id", course!.id)
         .maybeSingle();
       if (error) throw error;
-      return (data || [])
-        .filter((attempt) => attempt.quiz_id !== null)
-        .map((attempt) => ({ ...attempt, quiz_id: attempt.quiz_id as string }));
+      return data;
     },
     enabled: !!course?.id,
   });
@@ -159,7 +157,9 @@ const CourseDetail = () => {
         .eq("user_id", user!.id)
         .order("attempted_at", { ascending: true });
       if (error) throw error;
-      return data;
+      return (data || [])
+        .filter((attempt) => attempt.quiz_id !== null)
+        .map((attempt) => ({ ...attempt, quiz_id: attempt.quiz_id as string }));
     },
     enabled: !!course?.id && !!user?.id,
   });
