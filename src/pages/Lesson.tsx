@@ -17,6 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveStorageUrl } from "@/lib/storageUrl";
 import {
   useLessons,
   useLessonProgress,
@@ -59,6 +60,7 @@ const Lesson = () => {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const markComplete = useMarkLessonComplete();
+  const [signedVideoUrl, setSignedVideoUrl] = useState<string | null>(null);
   
   // Video progress tracking
   const { progress: videoProgress, saveProgress } = useVideoProgress(lessonId);
@@ -90,10 +92,12 @@ const Lesson = () => {
     (a: any) => a.score > 0 && a.max_score > 0 && (a.score / a.max_score) >= 0.5
   ) ?? false;
 
-  // Handle resource download with tracking
-  const handleDownload = (resource: { id: string; file_url: string | null }) => {
+  // Handle resource download with tracking (private bucket -> signed URL)
+  const handleDownload = async (resource: { id: string; file_url: string | null }) => {
     incrementDownload.mutate(resource.id);
-    if (resource.file_url) window.open(resource.file_url, "_blank");
+    if (!resource.file_url) return;
+    const url = await resolveStorageUrl(resource.file_url);
+    if (url) window.open(url, "_blank");
   };
 
   // Helper to get file icon based on type
@@ -116,6 +120,21 @@ const Lesson = () => {
 
   // Current lesson - optimized hook provides detailed data
   const currentLesson = lesson;
+
+  useEffect(() => {
+    let cancelled = false;
+    const raw = currentLesson?.video_url ?? null;
+    if (!raw) {
+      setSignedVideoUrl(null);
+      return;
+    }
+    resolveStorageUrl(raw).then((url) => {
+      if (!cancelled) setSignedVideoUrl(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLesson?.video_url]);
 
   // Prev/next navigation from all course lessons
   const currentIndex = lessons?.findIndex((l) => l.id === lessonId) ?? -1;
@@ -370,7 +389,7 @@ const Lesson = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
             <div className="xl:col-span-2">
               <VideoPlayer
-                videoUrl={currentLesson.video_url}
+                videoUrl={signedVideoUrl}
                 title={currentLesson.title}
                 duration={currentLesson.duration_minutes || 0}
                 initialTime={videoProgress?.progress_seconds ? Number(videoProgress.progress_seconds) : 0}
