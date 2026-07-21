@@ -2,12 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { queryKeys } from "@/lib/queryKeys";
+import type { AssessmentQuiz, Lesson } from "@/components/course/EnrolledCourseDashboard/helpers";
+
+interface LessonProgressSummary {
+  lesson_id: string;
+  completed: boolean;
+  completed_at: string | null;
+}
 
 export interface CourseDetailResponse {
   course: Array<{ [key: string]: any }>;
-  lessons: Array<{ [key: string]: any }>;
-  progress: Array<{ [key: string]: any }> | null;
-  quizzes: Array<{ [key: string]: any }>;
+  lessons: Lesson[];
+  progress: LessonProgressSummary[] | null;
+  quizzes: AssessmentQuiz[];
 }
 
 export const useCourseDetailOptimized = (courseId: string) => {
@@ -32,7 +39,7 @@ export const useCourseDetailOptimized = (courseId: string) => {
 
       const lessons = lessonsRes.data || [];
 
-      let progress: Array<{ [key: string]: any }> | null = null;
+      let progress: LessonProgressSummary[] | null = null;
       if (user?.id && lessons.length > 0) {
         const lessonIds = lessons.map((l: any) => l.id);
         const { data, error } = await supabase

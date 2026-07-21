@@ -102,21 +102,21 @@ const CourseDetail = () => {
       let { data, error } = await supabase
         .from("courses")
         .select("*")
-        .eq("slug", courseId)
+        .eq("slug", courseId!)
         .maybeSingle();
 
       if (!data) {
         const result = await supabase
           .from("courses")
           .select("*")
-          .eq("id", courseId)
+          .eq("id", courseId!)
           .maybeSingle();
         data = result.data;
         error = result.error;
       }
 
       if (error) throw error;
-      return data;
+      return (data || []).filter((attempt) => attempt.quiz_id !== null);
     },
     enabled: !!courseId,
   });

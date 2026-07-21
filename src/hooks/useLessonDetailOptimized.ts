@@ -3,11 +3,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { queryKeys } from "@/lib/queryKeys";
 
+interface LessonResource {
+  id: string;
+  title: string;
+  description: string | null;
+  file_url: string;
+  file_type: string;
+  file_size: number | null;
+  download_count: number | null;
+}
+
 export interface LessonDetailResponse {
   lesson: Array<{ [key: string]: any }>;
   course: Array<{ [key: string]: any }>;
   progress: Array<{ [key: string]: any }> | null;
-  resources: Array<{ [key: string]: any }>;
+  resources: LessonResource[];
   quizzes: Array<{ [key: string]: any }>;
 }
 
