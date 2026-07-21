@@ -305,14 +305,14 @@ const Pricing = () => {
                     </div>
                   )}
 
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-muted-foreground mb-4">{plan.description}</p>
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
                     <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-5xl font-bold text-foreground">
+                      <span className="text-4xl font-bold text-foreground">
                         £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
                       </span>
-                      <span className="text-muted-foreground">/{plan.period}</span>
+                      <span className="text-sm text-muted-foreground">/{plan.period}</span>
                     </div>
                     {plan.originalPrice && (
                       <p className="mt-2 text-sm text-muted-foreground">
