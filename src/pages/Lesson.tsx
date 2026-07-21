@@ -374,7 +374,7 @@ const Lesson = () => {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
             <div className="xl:col-span-2">
               <VideoPlayer
-                videoUrl={currentLesson.video_url}
+                videoUrl={signedVideoUrl}
                 title={currentLesson.title}
                 duration={currentLesson.duration_minutes || 0}
                 initialTime={videoProgress?.progress_seconds ? Number(videoProgress.progress_seconds) : 0}
