@@ -4,6 +4,8 @@ import {
   Lightformer,
   MeshTransmissionMaterial,
   MeshDistortMaterial,
+  PerformanceMonitor,
+  AdaptiveDpr,
 } from "@react-three/drei";
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -137,7 +139,15 @@ const Blob = ({ data }: { data: BlobData }) => {
   );
 };
 
-const Scene = ({ blobs, includeGlass }: { blobs: BlobData[]; includeGlass: boolean }) => {
+const Scene = ({
+  blobs,
+  includeGlass,
+  degraded,
+}: {
+  blobs: BlobData[];
+  includeGlass: boolean;
+  degraded: boolean;
+}) => {
   const groupRef = useRef<THREE.Group>(null);
   const scrollRef = useRef(0);
   const smooth = useRef(0);
@@ -177,10 +187,13 @@ const Scene = ({ blobs, includeGlass }: { blobs: BlobData[]; includeGlass: boole
     camera.lookAt(0, s * 2, 0);
   });
 
+  // On weak hardware: render half the blobs and drop the transmissive centrepiece
+  const activeBlobs = degraded ? blobs.slice(0, Math.ceil(blobs.length / 2)) : blobs;
+
   return (
     <>
       {/* Warm studio environment — drives every reflection/refraction on-brand */}
-      <Environment resolution={256} frames={1}>
+      <Environment resolution={degraded ? 128 : 256} frames={1}>
         <color attach="background" args={["#0a0a0a"]} />
         <Lightformer intensity={3} color="#F16001" position={[-5, 3, 2]} scale={[6, 6, 1]} />
         <Lightformer intensity={2.2} color="#FFB07A" position={[5, -2, 1]} scale={[5, 5, 1]} />
@@ -192,12 +205,12 @@ const Scene = ({ blobs, includeGlass }: { blobs: BlobData[]; includeGlass: boole
       <directionalLight position={[5, 6, 4]} intensity={1.2} color="#ffd9bd" />
 
       <group ref={groupRef}>
-        {blobs.map((b, i) => (
+        {activeBlobs.map((b, i) => (
           <Blob key={i} data={b} />
         ))}
       </group>
 
-      {includeGlass && <GlassHex scrollRef={smooth} />}
+      {includeGlass && !degraded && <GlassHex scrollRef={smooth} />}
     </>
   );
 };
@@ -205,6 +218,9 @@ const Scene = ({ blobs, includeGlass }: { blobs: BlobData[]; includeGlass: boole
 const HexField3D = () => {
   const [ready, setReady] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  // Sticky: once we drop to lite mode we stay there, to avoid the glass
+  // centrepiece popping in and out as FPS hovers around the threshold.
+  const [degraded, setDegraded] = useState(false);
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   useEffect(() => {
@@ -236,7 +252,18 @@ const HexField3D = () => {
         camera={{ position: [0, 0, 14], fov: 50 }}
         gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       >
-        <Scene blobs={blobs} includeGlass={!isMobile} />
+        {/* Watches the frame rate: a sustained decline flips to lite mode,
+            and after too many flip-flops onFallback locks it there. */}
+        <PerformanceMonitor
+          bounds={() => [45, 60]}
+          flipflops={3}
+          onDecline={() => setDegraded(true)}
+          onFallback={() => setDegraded(true)}
+        >
+          <Scene blobs={blobs} includeGlass={!isMobile} degraded={degraded} />
+        </PerformanceMonitor>
+        {/* Auto-scales render resolution down under load, back up when idle */}
+        <AdaptiveDpr pixelated />
       </Canvas>
       {/* Film grain — the premium texture layer over the glass */}
       <div
