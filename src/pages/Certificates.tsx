@@ -165,8 +165,8 @@ const Certificates = () => {
     <Layout>
       <div className="container max-w-4xl pt-24 pb-12">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            My Certificates
+          <h1 className="text-3xl font-bold text-foreground mb-2 uppercase">
+            My <span className="text-gradient-brand">Certificates</span>
           </h1>
           <p className="text-muted-foreground">
             View, download and share your earned certificates

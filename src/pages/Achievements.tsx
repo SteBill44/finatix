@@ -68,7 +68,7 @@ const Achievements = () => {
       <div className="container mx-auto px-4 py-24 overflow-hidden">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-3">Achievements</h1>
+          <h1 className="text-4xl font-bold mb-3 uppercase"><span className="text-gradient-brand">Achievements</span></h1>
           <p className="text-muted-foreground text-lg">Track your progress and compete with fellow students</p>
         </div>
 

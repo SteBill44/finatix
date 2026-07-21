@@ -85,7 +85,7 @@ const Brand = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Brand Assets</h1>
+          <h1 className="text-3xl font-bold mb-2 uppercase">Brand <span className="text-gradient-brand">Assets</span></h1>
           <p className="text-muted-foreground">
             Download official Finatix logos in various sizes for use across platforms.
           </p>

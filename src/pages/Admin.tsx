@@ -108,7 +108,7 @@ const Admin = () => {
     <Layout>
       <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground uppercase">Admin <span className="text-gradient-brand">Dashboard</span></h1>
           <p className="text-muted-foreground mt-2">Manage courses, lessons, users, and site settings</p>
         </div>
 

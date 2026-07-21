@@ -35,7 +35,7 @@ export default function Notifications() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Bell className="w-6 h-6 text-primary" />
-              <h1 className="text-2xl font-bold">Notifications</h1>
+              <h1 className="text-2xl font-bold uppercase"><span className="text-gradient-brand">Notifications</span></h1>
               {unread.length > 0 && (
                 <Badge variant="default" className="text-xs">
                   {unread.length} unread

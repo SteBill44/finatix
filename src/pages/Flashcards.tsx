@@ -52,9 +52,9 @@ export default function Flashcards() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
+              <h1 className="text-2xl font-bold flex items-center gap-2 uppercase">
                 <Layers className="w-6 h-6 text-primary" />
-                Flashcards
+                <span className="text-gradient-brand">Flashcards</span>
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
                 Spaced repetition study system — review cards at the optimal time

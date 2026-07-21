@@ -135,8 +135,8 @@ const Discussions = () => {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Discussion Forums
+              <h1 className="text-3xl font-bold text-foreground mb-2 uppercase">
+                Discussion <span className="text-gradient-brand">Forums</span>
               </h1>
               <p className="text-muted-foreground">
                 Ask questions, share insights, and learn together

@@ -42,9 +42,9 @@ export default function LearningPaths() {
       <div className="pt-24 lg:pt-28 pb-12">
         <div className="container mx-auto px-4">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold flex items-center gap-2 mb-2">
+            <h1 className="text-3xl font-bold flex items-center gap-2 mb-2 uppercase">
               <Map className="w-7 h-7 text-primary" />
-              Learning Paths
+              Learning <span className="text-gradient-brand">Paths</span>
             </h1>
             <p className="text-muted-foreground">
               Structured study pathways designed to guide you through your CIMA journey
