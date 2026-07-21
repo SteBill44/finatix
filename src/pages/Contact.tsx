@@ -129,10 +129,10 @@ const Contact = () => {
               { value: "GMT", label: "Support hours" },
             ].map((item) => (
               <div key={item.label} className="border-l-2 border-primary pl-5">
-                <p className="font-mono text-2xl font-bold leading-none text-foreground md:text-3xl">
+                <p className="text-2xl font-bold leading-none text-foreground md:text-3xl">
                   {item.value}
                 </p>
-                <p className="mt-3 font-mono text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   {item.label}
                 </p>
               </div>
