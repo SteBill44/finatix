@@ -53,7 +53,7 @@ const Footer = ({ className }: FooterProps) => {
             <div className="mb-4">
               <FinatixLogo size="sm" lightFin />
             </div>
-            <p className="text-white/60 text-sm mb-6">
+            <p className="text-white/80 text-sm mb-6">
               Smarter CIMA study. Modern tools. Real insights.
             </p>
             <div className="flex gap-3">
@@ -78,7 +78,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/80 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -95,7 +95,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/80 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -112,7 +112,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/80 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
@@ -129,7 +129,7 @@ const Footer = ({ className }: FooterProps) => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-white/60 hover:text-primary transition-colors duration-200"
+                    className="text-sm text-white/80 hover:text-primary transition-colors duration-200"
                   >
                     {link.name}
                   </Link>
