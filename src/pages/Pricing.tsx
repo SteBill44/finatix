@@ -289,13 +289,13 @@ const Pricing = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-6xl mx-auto">
             {plans.map((plan, index) => (
               <AnimatedCard key={plan.name} index={index}>
                 <div
                   className={`relative bg-card rounded-2xl border ${
                     plan.popular ? "border-primary shadow-glow" : "border-border"
-                  } p-8 hover-lift h-full flex flex-col`}
+                  } p-5 lg:p-6 hover-lift h-full flex flex-col`}
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -305,14 +305,14 @@ const Pricing = () => {
                     </div>
                   )}
 
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-muted-foreground mb-4">{plan.description}</p>
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
                     <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-5xl font-bold text-foreground">
+                      <span className="text-4xl font-bold text-foreground">
                         £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
                       </span>
-                      <span className="text-muted-foreground">/{plan.period}</span>
+                      <span className="text-sm text-muted-foreground">/{plan.period}</span>
                     </div>
                     {plan.originalPrice && (
                       <p className="mt-2 text-sm text-muted-foreground">
@@ -327,15 +327,15 @@ const Pricing = () => {
                     )}
                   </div>
 
-                  <ul className="space-y-4 mb-8 flex-1">
+                  <ul className="space-y-2.5 mb-6 flex-1">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-3">
+                      <li key={featureIndex} className="flex items-start gap-2.5">
                         {feature.included ? (
-                          <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                         ) : (
-                          <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                          <X className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                         )}
-                        <span className={feature.included ? "text-foreground" : "text-muted-foreground"}>
+                        <span className={`text-sm ${feature.included ? "text-foreground" : "text-muted-foreground"}`}>
                           {feature.text}
                         </span>
                       </li>
