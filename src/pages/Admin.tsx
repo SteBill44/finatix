@@ -148,6 +148,9 @@ const Admin = () => {
                 <DropdownMenuItem onClick={() => setActiveTab("announcements")}>
                   <Bell className="h-4 w-4 mr-2" /> Announcements
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("notifications")}>
+                  <Bell className="h-4 w-4 mr-2" /> Notifications
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
