@@ -147,9 +147,6 @@ const Admin = () => {
                 <DropdownMenuItem onClick={() => setActiveTab("announcements")}>
                   <Bell className="h-4 w-4 mr-2" /> Announcements
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setActiveTab("learning-paths")}>
-                  <Map className="h-4 w-4 mr-2" /> Learning Paths
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
