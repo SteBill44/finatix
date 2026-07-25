@@ -68,7 +68,7 @@ const Admin = () => {
     return null;
   }
 
-  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements", "learning-paths"];
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements"];
   const usersTabs = ["users", "enrollments", "interest", "corporate"];
   const systemTabs = ["performance", "costs", "audit"];
 
