@@ -279,10 +279,6 @@ const Admin = () => {
             <AnnouncementsManagement />
           </TabsContent>
 
-          {/* Learning Paths Tab */}
-          <TabsContent value="learning-paths">
-            <LearningPathsManagement />
-          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">
