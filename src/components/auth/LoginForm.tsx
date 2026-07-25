@@ -48,7 +48,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
 
     setLoading(true);
     try {
-      const { error } = await signIn(email, password, rememberMe);
+      const { error, isFirstSignIn } = await signIn(email, password, rememberMe);
       if (error) {
         toast({
           title: "Login failed",
@@ -65,8 +65,11 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           return;
         }
 
-        toast({ title: "Welcome back!", description: "You have successfully logged in." });
-        navigate("/dashboard");
+        toast({
+          title: isFirstSignIn ? "Welcome to Finatix!" : "Welcome back!",
+          description: "You have successfully logged in.",
+        });
+        navigate("/dashboard", { state: isFirstSignIn ? { firstSignIn: true } : undefined });
       }
     } catch {
       toast({ title: "Error", description: "Something went wrong. Please try again.", variant: "destructive" });
