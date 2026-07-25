@@ -28,6 +28,7 @@ import UserManagement from "@/components/admin/UserManagement";
 import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
 import QuestionGenerator from "@/components/admin/QuestionGenerator";
 import AnnouncementsManagement from "@/components/admin/AnnouncementsManagement";
+import NotificationsBroadcast from "@/components/admin/NotificationsBroadcast";
 
 
 const Admin = () => {
