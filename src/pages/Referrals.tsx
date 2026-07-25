@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useReferralCode, useReferralStats, useMyReferrals, useApplyReferralCode } from '@/hooks/useReferrals';
 import { Navigate, Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
+import Layout from '@/components/layout/Layout';
 import { format } from 'date-fns';
 import { CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT } from '@/hooks/useReferrals';
 
