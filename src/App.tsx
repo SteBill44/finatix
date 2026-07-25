@@ -155,6 +155,26 @@ const AnimatedRoutes = () => {
   );
 };
 
+// Redirect newly signed-in users to the dashboard when they land on public entry pages.
+const PostSignInRedirect = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (
+        event === "SIGNED_IN" &&
+        (location.pathname === "/" || location.pathname === "/auth")
+      ) {
+        navigate("/dashboard", { replace: true });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate, location.pathname]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <ErrorBoundary>
