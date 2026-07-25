@@ -213,7 +213,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         sessionStorage.setItem("finatix_session_only", "1");
       }
 
-      return { error: null };
+      // Determine whether this is the user's first sign-in
+      const { data: { session } } = await supabase.auth.getSession();
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("first_sign_in_at")
+        .eq("user_id", session?.user?.id ?? "")
+        .maybeSingle();
+
+      return { error: null, isFirstSignIn: !profile?.first_sign_in_at };
     } catch (err) {
       const parsed = parseError(err);
       setAuthError({ message: parsed.message, type: "unknown" });
