@@ -120,7 +120,7 @@ export default function Referrals() {
             <h1 className="text-4xl font-bold uppercase">Invite Friends, <span className="text-gradient-brand">Earn Discounts</span></h1>
             <p className="text-muted-foreground max-w-xl mx-auto">
               Share your unique referral code with friends. When they sign up and complete their first lesson, 
-              you both earn credits worth {CREDITS_TO_DISCOUNT_RATE}% off courses each-up to {MAX_DISCOUNT_PERCENT}% total!
+              you both earn credits worth {CREDITS_TO_DISCOUNT_RATE}% off courses each - up to {MAX_DISCOUNT_PERCENT}% total!
             </p>
           </motion.div>
 
