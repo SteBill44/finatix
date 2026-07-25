@@ -53,7 +53,7 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Flashcards = lazy(() => import("./pages/Flashcards"));
 const FlashcardStudy = lazy(() => import("./pages/FlashcardStudy"));
 
-const LearningPaths = lazy(() => import("./pages/LearningPaths"));
+
 const Checkout = lazy(() => import("./pages/Checkout"));
 
 // Configure QueryClient with global error handling
