@@ -32,6 +32,17 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const checkIsFirstSignIn = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("first_sign_in_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    return !profile?.first_sign_in_at;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
