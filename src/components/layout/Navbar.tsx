@@ -326,12 +326,6 @@ const Navbar = () => {
                         Flashcards
                       </Button>
                     </Link>
-                    <Link to="/learning-paths" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <Map className="w-4 h-4" />
-                        Learning Paths
-                      </Button>
-                    </Link>
                     <Link to="/account" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Settings className="w-4 h-4" />
