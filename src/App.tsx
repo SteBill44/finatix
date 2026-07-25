@@ -53,6 +53,7 @@ const Brand = lazy(() => import("./pages/Brand"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Flashcards = lazy(() => import("./pages/Flashcards"));
 const FlashcardStudy = lazy(() => import("./pages/FlashcardStudy"));
+const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 
 
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -144,6 +145,7 @@ const AnimatedRoutes = () => {
           <Route path="/notifications" element={<Protected feature="Notifications"><Notifications /></Protected>} />
           <Route path="/flashcards" element={<Protected feature="Flashcards"><Flashcards /></Protected>} />
           <Route path="/flashcards/:deckId" element={<Protected feature="Flashcard Study"><FlashcardStudy /></Protected>} />
+          <Route path="/complete-profile" element={<Protected feature="Complete Profile"><CompleteProfile /></Protected>} />
           
           
           <Route path="/checkout" element={<Public feature="Checkout"><Checkout /></Public>} />
@@ -161,11 +163,25 @@ const PostSignInRedirect = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (
         event === "SIGNED_IN" &&
         (location.pathname === "/" || location.pathname === "/auth")
       ) {
+        const userId = session?.user?.id;
+        if (userId) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("first_name, last_name, cima_id")
+            .eq("user_id", userId)
+            .maybeSingle();
+          const needsProfile =
+            !profile?.first_name || !profile?.last_name || !profile?.cima_id;
+          if (needsProfile) {
+            navigate("/complete-profile", { replace: true });
+            return;
+          }
+        }
         navigate("/dashboard", { replace: true });
       }
     });
