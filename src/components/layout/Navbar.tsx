@@ -296,12 +296,6 @@ const Navbar = () => {
                         Dashboard
                       </Button>
                     </Link>
-                    <Link to="/certificates" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <Award className="w-4 h-4" />
-                        My Certificates
-                      </Button>
-                    </Link>
                     <Link to="/achievements" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Trophy className="w-4 h-4" />
@@ -324,6 +318,12 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Layers className="w-4 h-4" />
                         Flashcards
+                      </Button>
+                    </Link>
+                    <Link to="/certificates" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Award className="w-4 h-4" />
+                        My Certificates
                       </Button>
                     </Link>
                     <Link to="/account" onClick={() => setIsOpen(false)}>
