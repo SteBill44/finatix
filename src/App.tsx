@@ -188,6 +188,7 @@ const App = () => {
                   <Sonner />
                   <BrowserRouter>
                     <PerformanceProvider>
+                      <PostSignInRedirect />
                       <SmoothScroll />
                       <ScrollToTop />
                       <AnimatedRoutes />
