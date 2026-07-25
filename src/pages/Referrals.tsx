@@ -482,6 +482,6 @@ export default function Referrals() {
           </motion.div>
         </div>
       </div>
-    </>
+    </Layout>
   );
 }
