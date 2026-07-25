@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { User, CreditCard, Loader2 } from "lucide-react";
+import { User, CreditCard, Loader2, Mail } from "lucide-react";
 
 const CompleteProfile = () => {
   const { user, loading: authLoading } = useAuth();
