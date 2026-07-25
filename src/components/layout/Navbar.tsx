@@ -159,15 +159,15 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/discussions" className="cursor-pointer flex items-center">
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        Discussions
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <Link to="/flashcards" className="cursor-pointer flex items-center">
                         <Layers className="w-4 h-4 mr-2" />
                         Flashcards
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/discussions" className="cursor-pointer flex items-center">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Discussions
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -302,16 +302,16 @@ const Navbar = () => {
                         Achievements
                       </Button>
                     </Link>
-                    <Link to="/discussions" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4" />
-                        Discussions
-                      </Button>
-                    </Link>
                     <Link to="/flashcards" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Layers className="w-4 h-4" />
                         Flashcards
+                      </Button>
+                    </Link>
+                    <Link to="/discussions" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        Discussions
                       </Button>
                     </Link>
                     <Link to="/referrals" onClick={() => setIsOpen(false)}>
