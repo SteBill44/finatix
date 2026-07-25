@@ -165,15 +165,15 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/referrals" className="cursor-pointer flex items-center">
-                        <Gift className="w-4 h-4 mr-2" />
-                        Referrals
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <Link to="/flashcards" className="cursor-pointer flex items-center">
                         <Layers className="w-4 h-4 mr-2" />
                         Flashcards
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/referrals" className="cursor-pointer flex items-center">
+                        <Gift className="w-4 h-4 mr-2" />
+                        Referrals
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -308,16 +308,16 @@ const Navbar = () => {
                         Discussions
                       </Button>
                     </Link>
-                    <Link to="/referrals" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <Gift className="w-4 h-4" />
-                        Referrals
-                      </Button>
-                    </Link>
                     <Link to="/flashcards" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Layers className="w-4 h-4" />
                         Flashcards
+                      </Button>
+                    </Link>
+                    <Link to="/referrals" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full flex items-center gap-2">
+                        <Gift className="w-4 h-4" />
+                        Referrals
                       </Button>
                     </Link>
                     <Link to="/certificates" onClick={() => setIsOpen(false)}>
