@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useReferralCode, useReferralStats, useMyReferrals, useApplyReferralCode } from '@/hooks/useReferrals';
 import { Navigate, Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
+import Layout from '@/components/layout/Layout';
 import { format } from 'date-fns';
 import { CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT } from '@/hooks/useReferrals';
 
@@ -100,7 +101,7 @@ export default function Referrals() {
   const isLoading = codeLoading || statsLoading;
 
   return (
-    <>
+    <Layout>
       <SEOHead
         title="Referrals | Finatix"
         description="Invite friends to Finatix and earn rewards. Share your unique referral code and track your referral progress."
@@ -481,6 +482,6 @@ export default function Referrals() {
           </motion.div>
         </div>
       </div>
-    </>
+    </Layout>
   );
 }
