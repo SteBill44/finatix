@@ -83,7 +83,7 @@ const StepBlock = ({
         </motion.div>
       </motion.div>
 
-      {/* Image — parallax */}
+      {/* Image - parallax */}
       <motion.div style={{ y: imageY }} className="flex-1 w-full">
         <motion.div
           initial={{ opacity: 0, x: step.imagePosition === "left" ? -40 : 40, scale: 0.95 }}

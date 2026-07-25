@@ -1,5 +1,5 @@
 /**
- * Pure helpers for EnrolledCourseDashboard. No React, no I/O — easy to unit test.
+ * Pure helpers for EnrolledCourseDashboard. No React, no I/O - easy to unit test.
  */
 
 export interface SyllabusArea {

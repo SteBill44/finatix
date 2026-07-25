@@ -27,7 +27,7 @@ const LIGHT = {
   BLOOM:        "#FFB07A",
 };
 
-// Abstract geometric shape types — replaces literal currency symbols
+// Abstract geometric shape types - replaces literal currency symbols
 type ShapeKind = "dot" | "dash" | "square" | "ring" | "tick";
 const SHAPE_KINDS: ShapeKind[] = ["dot", "dash", "square", "ring", "tick"];
 
@@ -177,7 +177,7 @@ const FinanceCanvas = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Resolve palette per render — re-runs when isDark changes
+    // Resolve palette per render - re-runs when isDark changes
     const P = isDark ? DARK : LIGHT;
     const GRADIENT_STOPS = isDark
       ? [P.BG_TOP, P.ORANGE_DARK, P.ORANGE, P.ORANGE_LIGHT]
@@ -212,7 +212,7 @@ const FinanceCanvas = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Draw a smooth bezier path with a single horizontal gradient — supports parallax offset and glow trail
+    // Draw a smooth bezier path with a single horizontal gradient - supports parallax offset and glow trail
     const drawGradientLine = (
       points: { x: number; y: number }[],
       progress: number,
@@ -224,7 +224,7 @@ const FinanceCanvas = () => {
     ) => {
       if (points.length < 2 || progress <= 0) return;
 
-      // Fractional index — gives sub-segment precision so the line tip moves smoothly
+      // Fractional index - gives sub-segment precision so the line tip moves smoothly
       // between points instead of jumping one whole segment at a time.
       const exact = (points.length - 1) * Math.min(1, progress);
       const fullCount = Math.floor(exact);
@@ -272,7 +272,7 @@ const FinanceCanvas = () => {
         }
       };
 
-      // Outer glow trail — soft halo along the entire stroke
+      // Outer glow trail - soft halo along the entire stroke
       if (withGlowTrail) {
         buildPath();
         ctx.strokeStyle = hexToRgba(P.ORANGE, alpha * 0.18);
@@ -444,7 +444,7 @@ const FinanceCanvas = () => {
       const line2Progress = Math.max(0, Math.min(1, (s.graphProgress - trailDelay) / (1 - trailDelay)));
       drawGradientLine(morphed2, line2Progress, 2.2, 0.55, graphParX * 1.2, graphParY * 1.2, false);
 
-      // Area fill — uses fractional progress for sub-segment precision (matches the line tip)
+      // Area fill - uses fractional progress for sub-segment precision (matches the line tip)
       if (s.graphProgress > 0 && morphed1.length >= 2) {
         const exact = (morphed1.length - 1) * s.graphProgress;
         const fullCount = Math.floor(exact);
@@ -489,7 +489,7 @@ const FinanceCanvas = () => {
         ctx.fill();
       }
 
-      // Particles — FOREGROUND parallax layer (strongest mouse/scroll response)
+      // Particles - FOREGROUND parallax layer (strongest mouse/scroll response)
       // First pass: compute final on-screen positions so we can draw constellation lines underneath.
       const particlePositions: { x: number; y: number; pulse: number; p: typeof s.particles[number] }[] = [];
       s.particles.forEach((p) => {
@@ -501,7 +501,7 @@ const FinanceCanvas = () => {
         particlePositions.push({ x: px, y: py, pulse, p });
       });
 
-      // Constellation lines — connect particles within MAX_DIST, fading by distance
+      // Constellation lines - connect particles within MAX_DIST, fading by distance
       const MAX_DIST = 140;
       const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
       const LINE_BASE_ALPHA = isDark ? 0.18 : 0.22;
@@ -545,12 +545,12 @@ const FinanceCanvas = () => {
         ctx.fill();
       });
 
-      // Continuous morph replaces the previous abrupt reseed — no jarring jumps.
+      // Continuous morph replaces the previous abrupt reseed - no jarring jumps.
 
       animFrameRef.current = requestAnimationFrame(draw);
     };
 
-    // Set parallax targets to 0 — no mouse following
+    // Set parallax targets to 0 - no mouse following
     stateRef.current.targetParallaxX = 0;
     stateRef.current.targetParallaxY = 0;
 

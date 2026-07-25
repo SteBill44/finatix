@@ -9,7 +9,7 @@ const tiers = [
     badgeTone: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
     title: "Start with the Fundamentals",
     description:
-      "Begin with the CIMA Certificate level — our free entry point covering the essentials of business accounting. No prerequisites, no credit card, no time limits.",
+      "Begin with the CIMA Certificate level - our free entry point covering the essentials of business accounting. No prerequisites, no credit card, no time limits.",
     features: [
       "BA1–BA4 foundation papers",
       "Practice exams and feedback",
@@ -54,7 +54,7 @@ const tiers = [
     badgeTone: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
     title: "Lead at the Top",
     description:
-      "Stop running the numbers — start setting the direction. Apply long-term financial strategy, risk management, and value-creation frameworks at board level.",
+      "Stop running the numbers - start setting the direction. Apply long-term financial strategy, risk management, and value-creation frameworks at board level.",
     features: [
       "E3 · Strategic Management",
       "P3 · Risk Management",

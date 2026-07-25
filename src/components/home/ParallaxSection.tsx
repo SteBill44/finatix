@@ -9,7 +9,7 @@ interface ParallaxSectionProps {
 }
 
 /**
- * Lusion-inspired parallax wrapper — content moves at different scroll speeds.
+ * Lusion-inspired parallax wrapper - content moves at different scroll speeds.
  */
 const ParallaxSection = ({
   children,

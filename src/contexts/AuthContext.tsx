@@ -74,13 +74,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // THEN check for existing session.
     // If the user didn't choose "stay logged in", their session is only valid
-    // for the current browser tab — sign them out when the tab/browser closes.
+    // for the current browser tab - sign them out when the tab/browser closes.
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       const sessionOnlyMarker = sessionStorage.getItem("finatix_session_only");
       const hasStoredSession = !!session;
 
       if (hasStoredSession && !sessionOnlyMarker) {
-        // Check if this session was created without rememberMe — the marker
+        // Check if this session was created without rememberMe - the marker
         // should be in sessionStorage if the browser is still open.
         // If it's absent (browser was closed and reopened) AND the session
         // was stored without rememberMe, sign out.

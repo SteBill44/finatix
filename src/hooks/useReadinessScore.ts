@@ -131,7 +131,7 @@ export const useReadinessScore = (courseId: string) => {
         .eq("user_id", user.id).eq("course_id", courseId)
         .order("attempted_at", { ascending: false });
 
-      // [2] Most-recent attempt per quiz — no double-weighting
+      // [2] Most-recent attempt per quiz - no double-weighting
       const latestAttemptByQuiz = new Map<string, { score: number; max_score: number; attempted_at: string }>();
       [...(quizAttempts || [])].forEach((a) => {
         if (a.quiz_id && !latestAttemptByQuiz.has(a.quiz_id)) {
@@ -139,7 +139,7 @@ export const useReadinessScore = (courseId: string) => {
         }
       });
 
-      // [3] Raw percentage only — no recency decay on scores
+      // [3] Raw percentage only - no recency decay on scores
       const quizScores = new Map<string, { score: number; title: string }>();
       regularQuizIds.forEach((id) => {
         const attempt = latestAttemptByQuiz.get(id);

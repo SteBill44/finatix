@@ -102,7 +102,7 @@ const CTA = () => {
       <motion.div style={{ scale: bgScale }} className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
 
-          {/* Left — CTA copy */}
+          {/* Left - CTA copy */}
           <div>
             <SplitTextReveal
               as="h2"
@@ -117,7 +117,7 @@ const CTA = () => {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-lg text-muted-foreground mb-8"
             >
-              Everything you need to pass CIMA — in one place. No credit card required.
+              Everything you need to pass CIMA - in one place. No credit card required.
             </motion.p>
 
             {/* Perks list */}
@@ -210,7 +210,7 @@ const CTA = () => {
             </div>
           </div>
 
-          {/* Right — Dashboard screenshot */}
+          {/* Right - Dashboard screenshot */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}

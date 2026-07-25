@@ -101,7 +101,7 @@ const About = () => {
               </p>
               <p className="text-muted-foreground mb-6">
               We're passionate about helping every student succeed. That's why we've built a platform 
-              that doesn't just teach — it adapts, analyzes, and guides you every step of the way 
+              that doesn't just teach - it adapts, analyzes, and guides you every step of the way 
               towards your CIMA qualification.
               </p>
             </div>

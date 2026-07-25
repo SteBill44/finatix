@@ -135,7 +135,7 @@ const Dashboard = () => {
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 {enrolledCount > 0
-                  ? `Enrolled in ${enrolledCount} course${enrolledCount !== 1 ? "s" : ""} — keep it up.`
+                  ? `Enrolled in ${enrolledCount} course${enrolledCount !== 1 ? "s" : ""} - keep it up.`
                   : "Get started by enrolling in your first course."}
               </p>
             </div>
@@ -197,7 +197,7 @@ const Dashboard = () => {
                   ? "text-yellow-500"
                   : "text-foreground"
               }`}>
-                {averageScore > 0 ? `${averageScore}%` : "—"}
+                {averageScore > 0 ? `${averageScore}%` : "-"}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 {totalQuizzes > 0 ? `${totalQuizzes} quizzes taken` : "no quizzes yet"}
@@ -273,7 +273,7 @@ const Dashboard = () => {
                 {completedCourses.length > 0 && (
                   <div>
                     <h2 className="text-sm font-semibold text-muted-foreground mb-3">
-                      Completed — {completedCourses.length}
+                      Completed - {completedCourses.length}
                     </h2>
                     <div className="divide-y divide-border/60 border-y border-border">
                       {completedCourses.map((e) => (

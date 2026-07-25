@@ -44,7 +44,7 @@ const HowToBegin = () => {
             How to Begin Your CIMA Journey
           </SplitTextReveal>
           <p className="text-lg text-muted-foreground">
-            A straightforward pathway from registration to certification — designed to fit
+            A straightforward pathway from registration to certification - designed to fit
             around your schedule and your career.
           </p>
         </div>

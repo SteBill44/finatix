@@ -188,7 +188,7 @@ function CourseCard({
         to={`/courses/${course.slug}`}
         className={`group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all flex flex-col ring-0 hover:ring-2 ${cfg.ring}`}
       >
-        {/* Header — image or gradient */}
+        {/* Header - image or gradient */}
         <div className="relative h-36 overflow-hidden flex-shrink-0">
           {course.image_url ? (
             <OptimizedImage
@@ -363,7 +363,7 @@ const Courses = () => {
     <Layout>
       <SEOHead
         title="CIMA Courses"
-        description="Browse Finatix CIMA courses from Certificate (BA1–BA4) through Operational, Management and Strategic levels — with practice exams and AI tools."
+        description="Browse Finatix CIMA courses from Certificate (BA1–BA4) through Operational, Management and Strategic levels - with practice exams and AI tools."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
         canonicalUrl="/courses"
       />
@@ -396,7 +396,7 @@ const Courses = () => {
               EXPLORE <span className="text-gradient-brand">CIMA COURSES</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
-              From Certificate in Business Accounting to Strategic Case Study — comprehensive prep for every CIMA exam.
+              From Certificate in Business Accounting to Strategic Case Study - comprehensive prep for every CIMA exam.
             </p>
           </div>
         </div>

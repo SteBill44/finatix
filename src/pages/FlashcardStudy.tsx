@@ -97,7 +97,7 @@ export default function FlashcardStudy() {
 
   return (
     <Layout>
-      <SEOHead title={deck ? `${deck.title} — Study` : "Flashcard Study"} noIndex />
+      <SEOHead title={deck ? `${deck.title} - Study` : "Flashcard Study"} noIndex />
       <div className="pt-24 lg:pt-28 pb-12">
         <div className="container mx-auto px-4 max-w-2xl">
           {/* Header */}
@@ -247,7 +247,7 @@ export default function FlashcardStudy() {
                 </div>
               </div>
 
-              {/* Rating buttons — only show after flip */}
+              {/* Rating buttons - only show after flip */}
               {flipped && (
                 <div className="mt-6">
                   <p className="text-center text-sm text-muted-foreground mb-3">How well did you know this?</p>

@@ -8,7 +8,7 @@ interface MagneticButtonProps {
 }
 
 /**
- * Static wrapper — previously applied a magnetic cursor-follow effect.
+ * Static wrapper - previously applied a magnetic cursor-follow effect.
  * Now simply renders children in place so buttons stay anchored.
  */
 const MagneticButton = ({ children, className = "" }: MagneticButtonProps) => {

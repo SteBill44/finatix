@@ -69,7 +69,7 @@ export default function LearningPaths() {
                 <div className="text-center py-20 text-muted-foreground">
                   <Map className="w-12 h-12 mx-auto mb-4 opacity-30" />
                   <p>No learning paths published yet</p>
-                  <p className="text-sm mt-1 opacity-70">Check back soon — paths are being added regularly</p>
+                  <p className="text-sm mt-1 opacity-70">Check back soon - paths are being added regularly</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
