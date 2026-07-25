@@ -66,12 +66,15 @@ const getCimaIndex = (title: string) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { data: lessonProgress } = useLessonProgress();
   const { data: quizAttempts } = useQuizAttempts();
   const { data: lastLesson } = useLastAccessedLesson();
   const { showOnboarding, completeOnboarding } = useOnboarding();
+  const { isFirstSignIn, isLoading: firstSignInLoading } = useFirstSignIn();
+  const forceFirst = (location.state as { firstSignIn?: boolean } | null)?.firstSignIn === true;
 
   const enrolledCount = enrollments?.length || 0;
   const completedLessonsCount = useMemo(
