@@ -135,7 +135,8 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="!text-2xl md:!text-3xl lg:!text-3xl font-bold text-foreground uppercase">
-                Welcome back, <span className="text-gradient-brand">{userName}</span>
+                {isFirstSignIn || forceFirst ? "Welcome" : "Welcome back"},{" "}
+                <span className="text-gradient-brand">{userName}</span>
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 {enrolledCount > 0
