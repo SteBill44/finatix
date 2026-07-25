@@ -1816,6 +1816,18 @@ export type Database = {
         }
         Returns: number
       }
+      broadcast_notification_targeted: {
+        Args: {
+          p_audience?: string
+          p_course_ids?: string[]
+          p_data?: Json
+          p_message: string
+          p_role?: Database["public"]["Enums"]["app_role"]
+          p_title: string
+          p_type?: string
+        }
+        Returns: number
+      }
       check_rate_limit: {
         Args: {
           p_action_type: string
