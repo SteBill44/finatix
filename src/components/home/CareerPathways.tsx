@@ -18,7 +18,7 @@ const roles = [
     icon: TrendingUp,
     title: "Finance Business Partner",
     description:
-      "Sit alongside the business — not behind it. Bring financial insight to commercial decisions, evaluate investments, and challenge assumptions.",
+      "Sit alongside the business, not behind it. Bring financial insight to commercial decisions, evaluate investments, and challenge assumptions.",
     bullets: [
       "Partner with commercial leadership",
       "Evaluate investment and pricing decisions",

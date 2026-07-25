@@ -35,7 +35,7 @@ const WhatIsCIMA = () => {
               The Chartered Institute of Management Accountants (CIMA) is the world's
               leading professional body for management accountants. As both a qualification
               and a designation, it certifies expertise in financial management, strategic
-              decision-making, and business performance — skills that drive organisations
+              decision-making, and business performance. Skills that drive organisations
               forward, not just balance the books.
             </motion.p>
             <motion.p
@@ -46,7 +46,7 @@ const WhatIsCIMA = () => {
             >
               CIMA-qualified professionals translate financial data into business strategy.
               They forecast performance, evaluate investments, optimise costs, and partner
-              with leadership to make the calls that shape the future of an organisation —
+              with leadership to make the calls that shape the future of an organisation,
               from FTSE 100 boards to high-growth startups.
             </motion.p>
             <motion.p
