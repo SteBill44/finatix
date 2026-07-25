@@ -15,7 +15,7 @@ const PAGE_NAMES: Record<string, string> = {
   "/achievements": "Achievements",
   "/discussions": "Discussions",
   "/dashboard": "your Dashboard",
-  "/learning-paths": "Learning Paths",
+  
   "/ai-tutor": "the AI Tutor",
   "/certificates": "your Certificates",
   "/referrals": "Referrals",
