@@ -129,9 +129,9 @@ const Navbar = () => {
               </Link>
             )}
             {user ? (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25 hover:bg-primary/90 transition-colors">
+                  <button type="button" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25 hover:bg-primary/90 transition-colors">
                     <Avatar className="w-7 h-7">
                       <AvatarImage src={avatarUrl || undefined} alt="Profile" />
                       <AvatarFallback className="bg-primary-foreground text-primary text-xs font-bold">
@@ -143,7 +143,7 @@ const Navbar = () => {
                     </span>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 max-h-[70vh] overflow-y-auto bg-popover border border-border">
+                <DropdownMenuContent align="start" sideOffset={4} className="w-48 bg-popover border border-border">
                   <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Navigation</DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
