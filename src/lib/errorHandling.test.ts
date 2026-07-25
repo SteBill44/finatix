@@ -5,7 +5,7 @@ import type { ErrorType } from "./errorHandling";
 // ---------------------------------------------------------------------------
 // parseError
 // ---------------------------------------------------------------------------
-describe("parseError — null / undefined / non-object", () => {
+describe("parseError - null / undefined / non-object", () => {
   it("returns unknown type for null", () => {
     const err = parseError(null);
     expect(err.type).toBe("unknown");
@@ -25,7 +25,7 @@ describe("parseError — null / undefined / non-object", () => {
   });
 });
 
-describe("parseError — network errors", () => {
+describe("parseError - network errors", () => {
   it("detects 'Failed to fetch'", () => {
     const err = parseError({ message: "Failed to fetch" });
     expect(err.type).toBe("network");
@@ -43,7 +43,7 @@ describe("parseError — network errors", () => {
   });
 });
 
-describe("parseError — auth errors", () => {
+describe("parseError - auth errors", () => {
   it("detects invalid_credentials code", () => {
     const err = parseError({ code: "invalid_credentials" });
     expect(err.type).toBe("auth");
@@ -94,7 +94,7 @@ describe("parseError — auth errors", () => {
   });
 });
 
-describe("parseError — permission errors", () => {
+describe("parseError - permission errors", () => {
   it("detects Postgres RLS code 42501", () => {
     const err = parseError({ code: "42501" });
     expect(err.type).toBe("permission");
@@ -112,7 +112,7 @@ describe("parseError — permission errors", () => {
   });
 });
 
-describe("parseError — not found errors", () => {
+describe("parseError - not found errors", () => {
   it("detects HTTP 404 status", () => {
     const err = parseError({ status: 404 });
     expect(err.type).toBe("not_found");
@@ -125,7 +125,7 @@ describe("parseError — not found errors", () => {
   });
 });
 
-describe("parseError — rate limit errors", () => {
+describe("parseError - rate limit errors", () => {
   it("detects HTTP 429 status", () => {
     const err = parseError({ status: 429 });
     expect(err.type).toBe("rate_limit");
@@ -138,7 +138,7 @@ describe("parseError — rate limit errors", () => {
   });
 });
 
-describe("parseError — server errors", () => {
+describe("parseError - server errors", () => {
   it("detects HTTP 500 status", () => {
     const err = parseError({ status: 500 });
     expect(err.type).toBe("server");
@@ -151,7 +151,7 @@ describe("parseError — server errors", () => {
   });
 });
 
-describe("parseError — validation / DB constraint errors", () => {
+describe("parseError - validation / DB constraint errors", () => {
   it("detects Postgres unique violation code 23505", () => {
     const err = parseError({ code: "23505" });
     expect(err.type).toBe("validation");
@@ -175,7 +175,7 @@ describe("parseError — validation / DB constraint errors", () => {
   });
 });
 
-describe("parseError — generic object with message", () => {
+describe("parseError - generic object with message", () => {
   it("uses the message field for unrecognised errors", () => {
     const err = parseError({ message: "Something unexpected" });
     expect(err.message).toBe("Something unexpected");

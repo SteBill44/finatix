@@ -404,7 +404,7 @@ export default function LearningPathsManagement() {
       <Dialog open={coursesDialogOpen} onOpenChange={setCoursesDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Manage Courses — {currentManagingPath?.title}</DialogTitle>
+            <DialogTitle>Manage Courses - {currentManagingPath?.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {/* Existing courses */}

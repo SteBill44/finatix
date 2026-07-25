@@ -4,7 +4,7 @@ import { useRef } from "react";
 interface SplitTextRevealProps {
   children: string;
   className?: string;
-  /** Applied to each animated word — needed for effects like background-clip
+  /** Applied to each animated word - needed for effects like background-clip
    *  gradients, which don't survive being applied to a transformed child's parent. */
   wordClassName?: string;
   as?: "h1" | "h2" | "h3" | "p" | "span";
@@ -14,7 +14,7 @@ interface SplitTextRevealProps {
 }
 
 /**
- * Lusion-inspired split text reveal — each word clips in from below with stagger.
+ * Lusion-inspired split text reveal - each word clips in from below with stagger.
  */
 const SplitTextReveal = ({
   children,

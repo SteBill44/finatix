@@ -96,7 +96,7 @@ const Brand = () => {
           <CardHeader>
             <CardTitle>Full Logo</CardTitle>
             <CardDescription>
-              Complete logo with icon and wordmark — ideal for headers, documents, and presentations
+              Complete logo with icon and wordmark - ideal for headers, documents, and presentations
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

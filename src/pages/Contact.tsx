@@ -45,7 +45,7 @@ const Contact = () => {
     },
     {
       question: "Can I study on mobile devices?",
-      answer: "Yes! Our platform is fully responsive and optimized for mobile learning. You can study on any device — phone, tablet, or computer. All your progress syncs automatically across devices."
+      answer: "Yes! Our platform is fully responsive and optimized for mobile learning. You can study on any device - phone, tablet, or computer. All your progress syncs automatically across devices."
     },
     {
       question: "What's included in the mock exams?",

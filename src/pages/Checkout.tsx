@@ -83,7 +83,7 @@ export default function Checkout() {
 
     setLoading(true);
     try {
-      // Record interest — payments backend coming soon
+      // Record interest - payments backend coming soon
       const { error } = await supabase.from("interest_registrations").insert({
         email: email.trim(),
         full_name: fullName.trim(),
@@ -143,7 +143,7 @@ export default function Checkout() {
             </Link>
             <h1 className="text-2xl font-bold">Choose Your Plan</h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Payment processing is coming soon — register your interest and we'll notify you first.
+              Payment processing is coming soon - register your interest and we'll notify you first.
             </p>
           </div>
 
@@ -279,7 +279,7 @@ export default function Checkout() {
                   <Separator />
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Shield className="w-3.5 h-3.5 text-primary" />
-                    Secure checkout with Stripe — coming soon
+                    Secure checkout with Stripe - coming soon
                   </div>
                 </CardContent>
               </Card>

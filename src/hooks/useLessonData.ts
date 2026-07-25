@@ -209,7 +209,7 @@ export const useMarkLessonComplete = () => {
       if (error) throw error;
 
       if (isFirstLesson) {
-        // Referral completion is optional — failure is non-fatal
+        // Referral completion is optional - failure is non-fatal
         try {
           await supabase.rpc("complete_referral", { p_referred_id: user.id });
         } catch {

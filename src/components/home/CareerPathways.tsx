@@ -64,7 +64,7 @@ const CareerPathways = () => {
             What CIMA Professionals Actually Do
           </SplitTextReveal>
           <p className="text-lg text-muted-foreground">
-            CIMA-qualified accountants lead across every level of an organisation — from
+            CIMA-qualified accountants lead across every level of an organisation - from
             frontline analysis to the boardroom.
           </p>
         </div>

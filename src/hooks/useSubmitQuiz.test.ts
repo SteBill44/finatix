@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createElement } from "react";
 
 // ---------------------------------------------------------------------------
-// Mocks — factories must be self-contained (vi.mock is hoisted)
+// Mocks - factories must be self-contained (vi.mock is hoisted)
 // ---------------------------------------------------------------------------
 
 vi.mock("@/integrations/supabase/client", () => ({

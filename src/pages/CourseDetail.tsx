@@ -691,7 +691,7 @@ const CourseDetail = () => {
         </div>
       </section>
 
-      {/* Course Content — Mobile: Tabs, Desktop: Side nav + scroll */}
+      {/* Course Content - Mobile: Tabs, Desktop: Side nav + scroll */}
       {navSections.length > 1 && (
         <section className="py-8 lg:py-16">
           <div className="container mx-auto px-4">

@@ -221,7 +221,7 @@ const Pricing = () => {
       price: 999,
       period: "one-time payment",
       originalPrice: 1940,
-      subtitle: "Lifetime access — best value",
+      subtitle: "Lifetime access - best value",
       features: [
         { text: "All CIMA modules", included: true },
         { text: "500+ hours of video content", included: true },

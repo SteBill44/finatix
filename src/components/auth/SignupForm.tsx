@@ -76,7 +76,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
             });
           }
         } catch {
-          // Referral is optional — silently ignore failures
+          // Referral is optional - silently ignore failures
         }
       }
 

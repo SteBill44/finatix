@@ -64,7 +64,7 @@ export const StatsStrip = ({
         </div>
         <div className="flex items-end gap-2">
           <span className={`text-3xl font-bold ${readiness.quizzesTaken > 0 ? getScoreColor(readiness.averageQuizScore) : "text-muted-foreground"}`}>
-            {readiness.quizzesTaken > 0 ? `${readiness.averageQuizScore}%` : "—"}
+            {readiness.quizzesTaken > 0 ? `${readiness.averageQuizScore}%` : "-"}
           </span>
           {scoreTrend !== null && (
             <span className={`flex items-center gap-0.5 text-xs font-medium mb-1 ${
@@ -89,7 +89,7 @@ export const StatsStrip = ({
           Mock Exam Avg
         </div>
         <p className={`text-3xl font-bold ${readiness.mockExamsTaken > 0 ? getScoreColor(readiness.averageMockScore) : "text-muted-foreground"}`}>
-          {readiness.mockExamsTaken > 0 ? `${readiness.averageMockScore}%` : "—"}
+          {readiness.mockExamsTaken > 0 ? `${readiness.averageMockScore}%` : "-"}
         </p>
         <p className="text-xs text-muted-foreground mt-1">
           {readiness.mockExamsTaken > 0

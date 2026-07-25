@@ -57,7 +57,7 @@ export default function Flashcards() {
                 <span className="text-gradient-brand">Flashcards</span>
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                Spaced repetition study system — review cards at the optimal time
+                Spaced repetition study system - review cards at the optimal time
               </p>
             </div>
             <Dialog open={open} onOpenChange={setOpen}>

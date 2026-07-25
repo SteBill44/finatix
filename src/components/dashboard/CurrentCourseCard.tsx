@@ -120,7 +120,7 @@ const CurrentCourseCard = ({
           </h2>
           <p className="text-sm text-muted-foreground mt-0.5 truncate">
             {allComplete ? (
-              <span className="text-accent">Course complete — review or revisit lessons</span>
+              <span className="text-accent">Course complete - review or revisit lessons</span>
             ) : (
               <>
                 <span className="text-muted-foreground/70">Up next: </span>
@@ -167,7 +167,7 @@ const CurrentCourseCard = ({
             Quiz Avg
           </div>
           <p className={`text-xl font-bold ${quizAvg !== null ? getScoreColor(quizAvg) : "text-foreground"}`}>
-            {quizAvg !== null ? `${quizAvg}%` : "—"}
+            {quizAvg !== null ? `${quizAvg}%` : "-"}
           </p>
           <p className="text-[10px] text-muted-foreground mt-0.5">
             {regularAttempts.length > 0
@@ -182,7 +182,7 @@ const CurrentCourseCard = ({
             Mock Avg
           </div>
           <p className={`text-xl font-bold ${mockAvg !== null ? getScoreColor(mockAvg) : "text-foreground"}`}>
-            {mockAvg !== null ? `${mockAvg}%` : "—"}
+            {mockAvg !== null ? `${mockAvg}%` : "-"}
           </p>
           <p className="text-[10px] text-muted-foreground mt-0.5">
             {mockAttempts.length > 0

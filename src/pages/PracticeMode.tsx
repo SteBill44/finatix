@@ -377,7 +377,7 @@ const PracticeMode = () => {
     );
   }
 
-  // Active practice session — full-screen focus mode
+  // Active practice session - full-screen focus mode
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SEOHead

@@ -19,7 +19,7 @@ export const NextLessonCard = ({ courseId, nextLesson, nextLessonIndex, totalLes
       <Card className="p-5 border-primary/20 bg-primary/[0.03]">
         <div className="flex items-center gap-2 text-xs text-primary font-medium mb-3">
           <Zap className="w-3.5 h-3.5" />
-          UP NEXT — Chapter {nextLessonIndex}
+          UP NEXT - Chapter {nextLessonIndex}
         </div>
         <h4 className="font-semibold text-foreground mb-1 leading-snug">{nextLesson.title}</h4>
         {nextLesson.duration_minutes && (

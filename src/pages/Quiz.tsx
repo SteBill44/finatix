@@ -248,7 +248,7 @@ const Quiz = () => {
         }
       />
 
-      {/* Question area — maximized */}
+      {/* Question area - maximized */}
       <main className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
           <div key={currentQuestion} className="animate-fade-in">

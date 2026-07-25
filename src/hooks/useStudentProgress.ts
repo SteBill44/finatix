@@ -1,4 +1,4 @@
-// Barrel re-export — kept for backward compatibility.
+// Barrel re-export - kept for backward compatibility.
 // Import directly from the source files for new code:
 //   useEnrollments.ts      → enrollment queries & mutations
 //   useLessonData.ts       → lesson queries, progress, & mark-complete mutation
@@ -33,7 +33,7 @@ export {
   useEndStudySession,
 } from "./useStudySessions";
 
-// useCourses lives here — it's a simple catalog query not tied to student data
+// useCourses lives here - it's a simple catalog query not tied to student data
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 

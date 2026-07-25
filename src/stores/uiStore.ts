@@ -30,7 +30,7 @@ export const useUIStore = create<UIState>()(
       sidebarCollapsed: false,
       toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
 
-      // Quiz state (intentionally not persisted — see partialize below)
+      // Quiz state (intentionally not persisted - see partialize below)
       activeQuizId: null,
       quizAnswers: {},
       flaggedQuestions: [],

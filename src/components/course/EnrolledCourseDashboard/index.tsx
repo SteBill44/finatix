@@ -76,7 +76,7 @@ const EnrolledCourseDashboard = ({
     [quizAttempts]
   );
 
-  // Radar data — no demo/fake scores
+  // Radar data - no demo/fake scores
   const radarData = useMemo(() => {
     if (!syllabusAreas.length) return [];
     return syllabusAreas.map((area, index) => {
@@ -139,7 +139,7 @@ const EnrolledCourseDashboard = ({
     lastActivityDays: null, dataPoints: 0,
   };
 
-  // Radar fill/stroke colour tracks readiness — green when exam-ready, amber when building
+  // Radar fill/stroke colour tracks readiness - green when exam-ready, amber when building
   const radarColor =
     readiness.overall >= 75
       ? "hsl(var(--accent))"
