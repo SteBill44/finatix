@@ -69,7 +69,7 @@ const Admin = () => {
     return null;
   }
 
-  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements"];
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements", "notifications"];
   const usersTabs = ["users", "enrollments", "interest", "corporate"];
   const systemTabs = ["performance", "costs", "audit"];
 
@@ -81,7 +81,7 @@ const Admin = () => {
       questions: "Questions",
       resources: "Resources",
       announcements: "Announcements",
-      
+      notifications: "Notifications",
     };
     return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
   };
