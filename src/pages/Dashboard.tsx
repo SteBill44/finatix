@@ -24,6 +24,7 @@ import StreakWidget from "@/components/dashboard/StreakWidget";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useFirstSignIn } from "@/hooks/useFirstSignIn";
 import {
   BookOpen,
   GraduationCap,
