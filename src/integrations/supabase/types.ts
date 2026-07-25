@@ -957,6 +957,7 @@ export type Database = {
           cima_start_date: string | null
           created_at: string
           first_name: string | null
+          first_sign_in_at: string | null
           full_name: string | null
           id: string
           last_name: string | null
@@ -972,6 +973,7 @@ export type Database = {
           cima_start_date?: string | null
           created_at?: string
           first_name?: string | null
+          first_sign_in_at?: string | null
           full_name?: string | null
           id?: string
           last_name?: string | null
@@ -987,6 +989,7 @@ export type Database = {
           cima_start_date?: string | null
           created_at?: string
           first_name?: string | null
+          first_sign_in_at?: string | null
           full_name?: string | null
           id?: string
           last_name?: string | null
