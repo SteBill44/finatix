@@ -108,7 +108,7 @@ const Dashboard = () => {
 
   const recentQuizAttempts = useMemo(() => quizAttempts?.slice(0, 3) ?? [], [quizAttempts]);
 
-  if (enrollmentsLoading) {
+  if (enrollmentsLoading || firstSignInLoading) {
     return (
       <Layout>
         <SEOHead title="Dashboard" noIndex />
