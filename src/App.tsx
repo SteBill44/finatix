@@ -144,7 +144,7 @@ const AnimatedRoutes = () => {
           <Route path="/flashcards" element={<Protected feature="Flashcards"><Flashcards /></Protected>} />
           <Route path="/flashcards/:deckId" element={<Protected feature="Flashcard Study"><FlashcardStudy /></Protected>} />
           
-          <Route path="/learning-paths" element={<Public feature="Learning Paths"><LearningPaths /></Public>} />
+          
           <Route path="/checkout" element={<Public feature="Checkout"><Checkout /></Public>} />
 
           <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
