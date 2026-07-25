@@ -42,12 +42,37 @@ const CompleteProfile = () => {
         return;
       }
 
-      // Pre-fill from any existing profile / OAuth metadata
+      // Pre-fill from any existing profile / OAuth metadata (Google, Apple, etc.)
       const meta = (user.user_metadata ?? {}) as Record<string, string | undefined>;
-      const fullName = meta.full_name || meta.name || "";
+      const identityData = (user.identities?.[0]?.identity_data ?? {}) as Record<string, string | undefined>;
+
+      const fullName =
+        meta.full_name ||
+        meta.name ||
+        identityData.full_name ||
+        identityData.name ||
+        [identityData.given_name, identityData.family_name].filter(Boolean).join(" ") ||
+        "";
       const [metaFirst, ...metaRest] = fullName.split(" ");
-      setFirstName(profile?.first_name || meta.first_name || metaFirst || "");
-      setLastName(profile?.last_name || meta.last_name || metaRest.join(" ") || "");
+
+      setFirstName(
+        profile?.first_name ||
+          meta.first_name ||
+          meta.given_name ||
+          identityData.given_name ||
+          identityData.first_name ||
+          metaFirst ||
+          ""
+      );
+      setLastName(
+        profile?.last_name ||
+          meta.last_name ||
+          meta.family_name ||
+          identityData.family_name ||
+          identityData.last_name ||
+          metaRest.join(" ") ||
+          ""
+      );
       setCimaId(profile?.cima_id || "");
       setChecking(false);
     })();
