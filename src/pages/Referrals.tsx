@@ -101,7 +101,7 @@ export default function Referrals() {
   const isLoading = codeLoading || statsLoading;
 
   return (
-    <>
+    <Layout>
       <SEOHead
         title="Referrals | Finatix"
         description="Invite friends to Finatix and earn rewards. Share your unique referral code and track your referral progress."
