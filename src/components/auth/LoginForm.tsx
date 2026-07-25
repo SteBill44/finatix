@@ -105,8 +105,12 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
       return;
     }
 
-    toast({ title: "Welcome back!", description: "You have successfully logged in." });
-    navigate("/dashboard");
+    const isFirstSignIn = await checkIsFirstSignIn();
+    toast({
+      title: isFirstSignIn ? "Welcome to Finatix!" : "Welcome back!",
+      description: "You have successfully logged in.",
+    });
+    navigate("/dashboard", { state: isFirstSignIn ? { firstSignIn: true } : undefined });
   };
 
   const handleGoogleSignIn = async () => {
