@@ -148,6 +148,16 @@ const CompleteProfile = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {user?.email && (
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                      <Input id="email" type="email" value={user.email} readOnly disabled className="pl-10" />
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-2">
                   <Label htmlFor="cimaId">CIMA ID *</Label>
                   <div className="relative">
