@@ -1,8 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -11,6 +11,7 @@ import { AdminViewProvider } from "@/contexts/AdminViewContext";
 import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
+import { supabase } from "@/integrations/supabase/client";
 
 import PageTransition from "@/components/PageTransition";
 import CookieConsent from "@/components/CookieConsent";
@@ -154,6 +155,26 @@ const AnimatedRoutes = () => {
   );
 };
 
+// Redirect newly signed-in users to the dashboard when they land on public entry pages.
+const PostSignInRedirect = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (
+        event === "SIGNED_IN" &&
+        (location.pathname === "/" || location.pathname === "/auth")
+      ) {
+        navigate("/dashboard", { replace: true });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate, location.pathname]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <ErrorBoundary>
@@ -167,6 +188,7 @@ const App = () => {
                   <Sonner />
                   <BrowserRouter>
                     <PerformanceProvider>
+                      <PostSignInRedirect />
                       <SmoothScroll />
                       <ScrollToTop />
                       <AnimatedRoutes />

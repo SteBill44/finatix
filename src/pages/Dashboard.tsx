@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Card } from "@/components/ui/card";
@@ -24,6 +24,7 @@ import StreakWidget from "@/components/dashboard/StreakWidget";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { useFirstSignIn } from "@/hooks/useFirstSignIn";
 import {
   BookOpen,
   GraduationCap,
@@ -65,12 +66,15 @@ const getCimaIndex = (title: string) => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuth();
   const { data: enrollments, isLoading: enrollmentsLoading } = useEnrollments();
   const { data: lessonProgress } = useLessonProgress();
   const { data: quizAttempts } = useQuizAttempts();
   const { data: lastLesson } = useLastAccessedLesson();
   const { showOnboarding, completeOnboarding } = useOnboarding();
+  const { isFirstSignIn, isLoading: firstSignInLoading } = useFirstSignIn();
+  const forceFirst = (location.state as { firstSignIn?: boolean } | null)?.firstSignIn === true;
 
   const enrolledCount = enrollments?.length || 0;
   const completedLessonsCount = useMemo(
@@ -104,7 +108,7 @@ const Dashboard = () => {
 
   const recentQuizAttempts = useMemo(() => quizAttempts?.slice(0, 3) ?? [], [quizAttempts]);
 
-  if (enrollmentsLoading) {
+  if (enrollmentsLoading || firstSignInLoading) {
     return (
       <Layout>
         <SEOHead title="Dashboard" noIndex />
@@ -131,7 +135,8 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="!text-2xl md:!text-3xl lg:!text-3xl font-bold text-foreground uppercase">
-                Welcome back, <span className="text-gradient-brand">{userName}</span>
+                {isFirstSignIn || forceFirst ? "Welcome" : "Welcome back"},{" "}
+                <span className="text-gradient-brand">{userName}</span>
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 {enrolledCount > 0
