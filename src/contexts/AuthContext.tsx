@@ -20,7 +20,7 @@ interface AuthContextType {
   loading: boolean;
   authError: AuthError | null;
   signUp: (email: string, password: string, fullName: string, cimaData?: CIMAData) => Promise<{ error: Error | null }>;
-  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string, rememberMe?: boolean) => Promise<{ error: Error | null; isFirstSignIn?: boolean }>;
   signOut: () => Promise<void>;
   clearAuthError: () => void;
 }
