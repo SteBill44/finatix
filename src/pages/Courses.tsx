@@ -30,6 +30,7 @@ import { useAdminView } from "@/contexts/AdminViewContext";
 import { useQueryClient } from "@tanstack/react-query";
 import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
 import { OptimizedImage } from "@/components/OptimizedImage";
+import CourseCover from "@/components/course/CourseCover";
 import { useEnrollments, useLessonProgress } from "@/hooks/useStudentProgress";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -198,9 +199,11 @@ function CourseCard({
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className={`w-full h-full bg-gradient-to-br ${cfg.gradient} flex items-center justify-center`}>
-              <span className="text-white font-black text-5xl opacity-80 tracking-tight">{code}</span>
-            </div>
+            <CourseCover
+              level={course.level}
+              code={code}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           )}
           {/* Overlay badges */}
           <div className="absolute top-2.5 left-2.5 flex gap-1.5 flex-wrap">
