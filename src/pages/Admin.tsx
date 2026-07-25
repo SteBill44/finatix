@@ -28,6 +28,7 @@ import UserManagement from "@/components/admin/UserManagement";
 import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
 import QuestionGenerator from "@/components/admin/QuestionGenerator";
 import AnnouncementsManagement from "@/components/admin/AnnouncementsManagement";
+import NotificationsBroadcast from "@/components/admin/NotificationsBroadcast";
 
 
 const Admin = () => {
@@ -68,7 +69,7 @@ const Admin = () => {
     return null;
   }
 
-  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements"];
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements", "notifications"];
   const usersTabs = ["users", "enrollments", "interest", "corporate"];
   const systemTabs = ["performance", "costs", "audit"];
 
@@ -80,7 +81,7 @@ const Admin = () => {
       questions: "Questions",
       resources: "Resources",
       announcements: "Announcements",
-      
+      notifications: "Notifications",
     };
     return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
   };
@@ -146,6 +147,9 @@ const Admin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveTab("announcements")}>
                   <Bell className="h-4 w-4 mr-2" /> Announcements
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setActiveTab("notifications")}>
+                  <Bell className="h-4 w-4 mr-2" /> Notifications
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -278,6 +282,12 @@ const Admin = () => {
           <TabsContent value="announcements">
             <AnnouncementsManagement />
           </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <NotificationsBroadcast />
+          </TabsContent>
+
 
 
           {/* Users Tab */}
