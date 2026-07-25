@@ -182,12 +182,6 @@ const Navbar = () => {
                         Flashcards
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/learning-paths" className="cursor-pointer flex items-center">
-                        <Map className="w-4 h-4 mr-2" />
-                        Learning Paths
-                      </Link>
-                    </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Account</DropdownMenuLabel>
@@ -330,12 +324,6 @@ const Navbar = () => {
                       <Button variant="outline" className="w-full flex items-center gap-2">
                         <Layers className="w-4 h-4" />
                         Flashcards
-                      </Button>
-                    </Link>
-                    <Link to="/learning-paths" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
-                        <Map className="w-4 h-4" />
-                        Learning Paths
                       </Button>
                     </Link>
                     <Link to="/account" onClick={() => setIsOpen(false)}>

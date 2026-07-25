@@ -28,7 +28,7 @@ import UserManagement from "@/components/admin/UserManagement";
 import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
 import QuestionGenerator from "@/components/admin/QuestionGenerator";
 import AnnouncementsManagement from "@/components/admin/AnnouncementsManagement";
-import LearningPathsManagement from "@/components/admin/LearningPathsManagement";
+
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ const Admin = () => {
     return null;
   }
 
-  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements", "learning-paths"];
+  const contentTabs = ["courses", "content-status", "syllabus", "questions", "resources", "announcements"];
   const usersTabs = ["users", "enrollments", "interest", "corporate"];
   const systemTabs = ["performance", "costs", "audit"];
 
@@ -80,7 +80,7 @@ const Admin = () => {
       questions: "Questions",
       resources: "Resources",
       announcements: "Announcements",
-      "learning-paths": "Learning Paths",
+      
     };
     return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
   };
@@ -146,9 +146,6 @@ const Admin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setActiveTab("announcements")}>
                   <Bell className="h-4 w-4 mr-2" /> Announcements
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setActiveTab("learning-paths")}>
-                  <Map className="h-4 w-4 mr-2" /> Learning Paths
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -282,10 +279,6 @@ const Admin = () => {
             <AnnouncementsManagement />
           </TabsContent>
 
-          {/* Learning Paths Tab */}
-          <TabsContent value="learning-paths">
-            <LearningPathsManagement />
-          </TabsContent>
 
           {/* Users Tab */}
           <TabsContent value="users">

@@ -43,7 +43,7 @@ import {
 
 const STUDY_TOOLS = [
   { label: "Flashcards", icon: Layers, to: "/flashcards", color: "text-purple-500" },
-  { label: "Learning Paths", icon: Map, to: "/learning-paths", color: "text-green-500" },
+  
   { label: "Achievements", icon: Trophy, to: "/achievements", color: "text-yellow-500" },
   { label: "Discussions", icon: MessageSquare, to: "/discussions", color: "text-blue-500" },
 ];
