@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { User, CreditCard, Loader2 } from "lucide-react";
+import { User, CreditCard, Loader2, Mail } from "lucide-react";
 
 const CompleteProfile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -42,12 +42,37 @@ const CompleteProfile = () => {
         return;
       }
 
-      // Pre-fill from any existing profile / OAuth metadata
+      // Pre-fill from any existing profile / OAuth metadata (Google, Apple, etc.)
       const meta = (user.user_metadata ?? {}) as Record<string, string | undefined>;
-      const fullName = meta.full_name || meta.name || "";
+      const identityData = (user.identities?.[0]?.identity_data ?? {}) as Record<string, string | undefined>;
+
+      const fullName =
+        meta.full_name ||
+        meta.name ||
+        identityData.full_name ||
+        identityData.name ||
+        [identityData.given_name, identityData.family_name].filter(Boolean).join(" ") ||
+        "";
       const [metaFirst, ...metaRest] = fullName.split(" ");
-      setFirstName(profile?.first_name || meta.first_name || metaFirst || "");
-      setLastName(profile?.last_name || meta.last_name || metaRest.join(" ") || "");
+
+      setFirstName(
+        profile?.first_name ||
+          meta.first_name ||
+          meta.given_name ||
+          identityData.given_name ||
+          identityData.first_name ||
+          metaFirst ||
+          ""
+      );
+      setLastName(
+        profile?.last_name ||
+          meta.last_name ||
+          meta.family_name ||
+          identityData.family_name ||
+          identityData.last_name ||
+          metaRest.join(" ") ||
+          ""
+      );
       setCimaId(profile?.cima_id || "");
       setChecking(false);
     })();
@@ -123,6 +148,16 @@ const CompleteProfile = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {user?.email && (
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                      <Input id="email" type="email" value={user.email} readOnly disabled className="pl-10" />
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-2">
                   <Label htmlFor="cimaId">CIMA ID *</Label>
                   <div className="relative">
