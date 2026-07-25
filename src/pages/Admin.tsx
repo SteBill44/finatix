@@ -283,6 +283,12 @@ const Admin = () => {
             <AnnouncementsManagement />
           </TabsContent>
 
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <NotificationsBroadcast />
+          </TabsContent>
+
+
 
           {/* Users Tab */}
           <TabsContent value="users">
