@@ -153,12 +153,6 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/certificates" className="cursor-pointer flex items-center">
-                        <Award className="w-4 h-4 mr-2" />
-                        My Certificates
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <Link to="/achievements" className="cursor-pointer flex items-center">
                         <Trophy className="w-4 h-4 mr-2" />
                         Achievements
@@ -180,6 +174,12 @@ const Navbar = () => {
                       <Link to="/flashcards" className="cursor-pointer flex items-center">
                         <Layers className="w-4 h-4 mr-2" />
                         Flashcards
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/certificates" className="cursor-pointer flex items-center">
+                        <Award className="w-4 h-4 mr-2" />
+                        My Certificates
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
