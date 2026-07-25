@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, Bell } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Send, Bell, Users } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -20,11 +21,29 @@ interface RecentNotification {
   created_at: string;
 }
 
+type Audience = "all" | "enrolled" | "completed" | "not_enrolled" | "role";
+type Role = "admin" | "master_admin" | "user";
+
 export default function NotificationsBroadcast() {
   const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [type, setType] = useState("info");
+  const [audience, setAudience] = useState<Audience>("all");
+  const [selectedCourseIds, setSelectedCourseIds] = useState<string[]>([]);
+  const [role, setRole] = useState<Role>("user");
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ["admin_courses_for_broadcast"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, title")
+        .order("title");
+      if (error) return [];
+      return data as { id: string; title: string }[];
+    },
+  });
 
   const { data: recent = [], isLoading } = useQuery({
     queryKey: ["admin_recent_notifications"],
@@ -35,7 +54,6 @@ export default function NotificationsBroadcast() {
         .order("created_at", { ascending: false })
         .limit(20);
       if (error) return [] as RecentNotification[];
-      // Deduplicate by title+message+minute so broadcasts collapse to one row
       const seen = new Set<string>();
       const unique: RecentNotification[] = [];
       for (const n of (data || []) as RecentNotification[]) {
@@ -49,13 +67,28 @@ export default function NotificationsBroadcast() {
     },
   });
 
+  const needsCourses = audience === "enrolled" || audience === "completed" || audience === "not_enrolled";
+
+  const audienceLabel = useMemo(() => {
+    switch (audience) {
+      case "all": return "Everyone";
+      case "enrolled": return "Enrolled in selected course(s)";
+      case "completed": return "Completed selected course(s)";
+      case "not_enrolled": return "NOT enrolled in selected course(s)";
+      case "role": return `Users with role: ${role}`;
+    }
+  }, [audience, role]);
+
   const broadcast = useMutation({
     mutationFn: async () => {
-      const { data, error } = await (supabase as any).rpc("broadcast_notification", {
+      const { data, error } = await (supabase as any).rpc("broadcast_notification_targeted", {
         p_title: title.trim(),
         p_message: message.trim(),
         p_type: type,
         p_data: null,
+        p_audience: audience,
+        p_course_ids: needsCourses && selectedCourseIds.length > 0 ? selectedCourseIds : null,
+        p_role: audience === "role" ? role : null,
       });
       if (error) throw error;
       return data as number;
@@ -77,7 +110,17 @@ export default function NotificationsBroadcast() {
       toast.error("Title and message are required");
       return;
     }
+    if (needsCourses && selectedCourseIds.length === 0) {
+      toast.error("Select at least one course");
+      return;
+    }
     broadcast.mutate();
+  };
+
+  const toggleCourse = (id: string) => {
+    setSelectedCourseIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -86,10 +129,10 @@ export default function NotificationsBroadcast() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Send className="h-5 w-5" />
-            Send Notification to All Users
+            Send Notification
           </CardTitle>
           <CardDescription>
-            Delivers an inbox notification (bell icon) to every registered user immediately.
+            Delivers an inbox notification (bell icon) to the audience you choose.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -112,24 +155,83 @@ export default function NotificationsBroadcast() {
               maxLength={1000}
             />
           </div>
-          <div className="space-y-1.5 max-w-xs">
-            <Label>Type</Label>
-            <Select value={type} onValueChange={setType}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="info">Info</SelectItem>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="warning">Warning</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-              </SelectContent>
-            </Select>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label>Type</Label>
+              <Select value={type} onValueChange={setType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="info">Info</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                  <SelectItem value="warning">Warning</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-2"><Users className="h-4 w-4" /> Audience</Label>
+              <Select value={audience} onValueChange={(v) => setAudience(v as Audience)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All users</SelectItem>
+                  <SelectItem value="enrolled">Enrolled in course(s)</SelectItem>
+                  <SelectItem value="completed">Completed course(s)</SelectItem>
+                  <SelectItem value="not_enrolled">Not enrolled in course(s)</SelectItem>
+                  <SelectItem value="role">Users with a specific role</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+
+          {audience === "role" && (
+            <div className="space-y-1.5 max-w-xs">
+              <Label>Role</Label>
+              <Select value={role} onValueChange={(v) => setRole(v as Role)}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="master_admin">Master admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {needsCourses && (
+            <div className="space-y-2">
+              <Label>Courses</Label>
+              <div className="border border-border rounded-md p-3 max-h-64 overflow-auto space-y-2">
+                {courses.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No courses available.</p>
+                ) : (
+                  courses.map((c) => (
+                    <label key={c.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                      <Checkbox
+                        checked={selectedCourseIds.includes(c.id)}
+                        onCheckedChange={() => toggleCourse(c.id)}
+                      />
+                      <span>{c.title}</span>
+                    </label>
+                  ))
+                )}
+              </div>
+              {selectedCourseIds.length > 0 && (
+                <p className="text-xs text-muted-foreground">{selectedCourseIds.length} selected</p>
+              )}
+            </div>
+          )}
+
+          <div className="rounded-md bg-muted/40 border border-border p-3 text-sm">
+            <span className="text-muted-foreground">Will be sent to:</span>{" "}
+            <span className="font-medium">{audienceLabel}</span>
+          </div>
+
           <div className="pt-2">
             <Button onClick={handleSend} disabled={broadcast.isPending}>
               <Send className="h-4 w-4 mr-2" />
-              {broadcast.isPending ? "Sending..." : "Send to All Users"}
+              {broadcast.isPending ? "Sending..." : "Send Notification"}
             </Button>
           </div>
         </CardContent>
