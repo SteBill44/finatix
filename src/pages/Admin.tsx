@@ -80,7 +80,7 @@ const Admin = () => {
       questions: "Questions",
       resources: "Resources",
       announcements: "Announcements",
-      "learning-paths": "Learning Paths",
+      
     };
     return contentTabs.includes(activeTab) ? labels[activeTab] : "Content";
   };
