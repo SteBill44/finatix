@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   getReadinessLevel,
-  getRecencyWeight,
+  coverageAdjustedScore,
+  applyReadinessGates,
   calculateConfidence,
   getDaysSince,
 } from "./useReadinessScore";
@@ -36,32 +37,65 @@ describe("getReadinessLevel", () => {
 });
 
 // ---------------------------------------------------------------------------
-// getRecencyWeight
+// coverageAdjustedScore
 // ---------------------------------------------------------------------------
-describe("getRecencyWeight", () => {
-  it("returns 1.0 for activity within the last 7 days", () => {
-    expect(getRecencyWeight(0)).toBe(1.0);
-    expect(getRecencyWeight(7)).toBe(1.0);
+describe("coverageAdjustedScore", () => {
+  it("divides the sum of taken percentages by the total available", () => {
+    // 1 of 8 quizzes taken at 100% → 100 / 8 = 12.5
+    expect(coverageAdjustedScore(100, 8)).toBe(12.5);
   });
 
-  it("returns 0.9 for activity 8–14 days ago", () => {
-    expect(getRecencyWeight(8)).toBe(0.9);
-    expect(getRecencyWeight(14)).toBe(0.9);
+  it("returns the full average when everything is taken", () => {
+    // 4 quizzes taken totalling 320% (avg 80) over 4 available → 80
+    expect(coverageAdjustedScore(320, 4)).toBe(80);
   });
 
-  it("returns 0.75 for activity 15–30 days ago", () => {
-    expect(getRecencyWeight(15)).toBe(0.75);
-    expect(getRecencyWeight(30)).toBe(0.75);
+  it("returns 0 when there are no assessments available", () => {
+    expect(coverageAdjustedScore(0, 0)).toBe(0);
+    expect(coverageAdjustedScore(250, 0)).toBe(0);
   });
 
-  it("returns 0.5 for activity 31–60 days ago", () => {
-    expect(getRecencyWeight(31)).toBe(0.5);
-    expect(getRecencyWeight(60)).toBe(0.5);
+  it("scales linearly with coverage", () => {
+    // Half the quizzes taken at 100% → half credit
+    expect(coverageAdjustedScore(400, 8)).toBe(50);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// applyReadinessGates
+// ---------------------------------------------------------------------------
+describe("applyReadinessGates", () => {
+  const pass = {
+    mocksExist: true,
+    mockExamsTaken: 2,
+    lastActivityDays: 3,
+    coverageRatio: 0.9,
+  };
+
+  it("leaves a fully-evidenced 'ready' as 'ready'", () => {
+    expect(applyReadinessGates("ready", pass)).toBe("ready");
   });
 
-  it("returns 0.25 for activity older than 60 days", () => {
-    expect(getRecencyWeight(61)).toBe(0.25);
-    expect(getRecencyWeight(365)).toBe(0.25);
+  it("never upgrades a lower level", () => {
+    expect(applyReadinessGates("developing", pass)).toBe("developing");
+    expect(applyReadinessGates("proficient", pass)).toBe("proficient");
+    expect(applyReadinessGates("not-started", pass)).toBe("not-started");
+  });
+
+  it("caps 'ready' to 'proficient' when the course has mocks but none were taken", () => {
+    expect(applyReadinessGates("ready", { ...pass, mockExamsTaken: 0 })).toBe("proficient");
+  });
+
+  it("does not require a mock when the course has none", () => {
+    expect(applyReadinessGates("ready", { ...pass, mocksExist: false, mockExamsTaken: 0 })).toBe("ready");
+  });
+
+  it("caps 'ready' when the last activity is stale (>30 days)", () => {
+    expect(applyReadinessGates("ready", { ...pass, lastActivityDays: 45 })).toBe("proficient");
+  });
+
+  it("caps 'ready' when coverage is thin (<60%)", () => {
+    expect(applyReadinessGates("ready", { ...pass, coverageRatio: 0.4 })).toBe("proficient");
   });
 });
 

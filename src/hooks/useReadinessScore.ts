@@ -39,12 +39,44 @@ export const getReadinessLevel = (score: number): ReadinessScore["level"] => {
   return "ready";
 };
 
-export const getRecencyWeight = (daysAgo: number): number => {
-  if (daysAgo <= 7) return 1.0;
-  if (daysAgo <= 14) return 0.9;
-  if (daysAgo <= 30) return 0.75;
-  if (daysAgo <= 60) return 0.5;
-  return 0.25;
+/**
+ * Coverage-adjusted dimension score. Sums the achieved percentages across the
+ * assessments the learner has ATTEMPTED, then divides by the TOTAL number
+ * available in the course — so untaken assessments count as 0. This makes the
+ * dimension reflect how much of the material has actually been proven, not just
+ * the average of a handful of attempts.
+ *
+ * Example: 1 of 8 quizzes taken at 100% → 100 / 8 = 12.5 (not 100).
+ */
+export const coverageAdjustedScore = (
+  sumOfTakenPercents: number,
+  totalAvailable: number
+): number => (totalAvailable > 0 ? sumOfTakenPercents / totalAvailable : 0);
+
+export interface ReadinessGateInput {
+  mocksExist: boolean;
+  mockExamsTaken: number;
+  lastActivityDays: number | null;
+  coverageRatio: number;
+}
+
+/**
+ * Guards the top "ready" claim so it only stands on trustworthy evidence.
+ * A course that would otherwise score as exam-ready is held at "proficient"
+ * until the learner has: (a) sat at least one mock exam (when the course has
+ * any), (b) been active recently (≤30 days), and (c) covered enough of the
+ * material (≥60%). Lower levels are returned unchanged — this only ever caps
+ * an over-optimistic "ready".
+ */
+export const applyReadinessGates = (
+  level: ReadinessScore["level"],
+  { mocksExist, mockExamsTaken, lastActivityDays, coverageRatio }: ReadinessGateInput
+): ReadinessScore["level"] => {
+  if (level !== "ready") return level;
+  const noMockEvidence = mocksExist && mockExamsTaken === 0;
+  const stale = lastActivityDays !== null && lastActivityDays > 30;
+  const thinCoverage = coverageRatio < 0.6;
+  return noMockEvidence || stale || thinCoverage ? "proficient" : level;
 };
 
 export const calculateConfidence = (
@@ -153,10 +185,11 @@ export const useReadinessScore = (courseId: string) => {
       });
 
       const quizzesTaken = quizScores.size;
-      const averageQuizScore =
-        quizzesTaken > 0
-          ? Array.from(quizScores.values()).reduce((sum, q) => sum + q.score, 0) / quizzesTaken
-          : 0;
+      const takenQuizSum = Array.from(quizScores.values()).reduce((sum, q) => sum + q.score, 0);
+      // Quality of attempts (average of quizzes actually taken)
+      const averageQuizScore = quizzesTaken > 0 ? takenQuizSum / quizzesTaken : 0;
+      // Coverage-adjusted (untaken quizzes count as 0) — this feeds the overall score
+      const effectiveQuizScore = coverageAdjustedScore(takenQuizSum, regularQuizzes.length);
 
       const mockScores = new Map<string, { score: number; title: string }>();
       mockExamIds.forEach((id) => {
@@ -171,10 +204,9 @@ export const useReadinessScore = (courseId: string) => {
       });
 
       const mockExamsTaken = mockScores.size;
-      const averageMockScore =
-        mockExamsTaken > 0
-          ? Array.from(mockScores.values()).reduce((sum, m) => sum + m.score, 0) / mockExamsTaken
-          : 0;
+      const takenMockSum = Array.from(mockScores.values()).reduce((sum, m) => sum + m.score, 0);
+      const averageMockScore = mockExamsTaken > 0 ? takenMockSum / mockExamsTaken : 0;
+      const effectiveMockScore = coverageAdjustedScore(takenMockSum, mockExams.length);
 
       let lastActivityDays: number | null = null;
       const allAttemptDates = quizAttempts?.map((a) => getDaysSince(a.attempted_at)) || [];
@@ -185,6 +217,7 @@ export const useReadinessScore = (courseId: string) => {
 
       const dataPoints = completedLessons + quizzesTaken + mockExamsTaken;
       const totalPossiblePoints = totalLessons + regularQuizzes.length + mockExams.length;
+      const coverageRatio = totalPossiblePoints > 0 ? dataPoints / totalPossiblePoints : 0;
 
       const lessonProgressScore = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
@@ -198,11 +231,22 @@ export const useReadinessScore = (courseId: string) => {
         lessonWeight = 0.3; quizWeight = 0.7; mockWeight = 0;
       }
 
+      // Overall uses coverage-adjusted quiz/mock scores so untaken assessments
+      // drag the score down — you can't look "ready" off a couple of attempts.
       const overallScore = Math.round(
         lessonProgressScore * lessonWeight +
-        averageQuizScore * quizWeight +
-        averageMockScore * mockWeight
+        effectiveQuizScore * quizWeight +
+        effectiveMockScore * mockWeight
       );
+
+      // Gate the top "ready" claim: it must be backed by a mock attempt (when
+      // the course has mocks), recent activity, and broad coverage.
+      const readinessLevel = applyReadinessGates(getReadinessLevel(overallScore), {
+        mocksExist: mockExams.length > 0,
+        mockExamsTaken,
+        lastActivityDays,
+        coverageRatio,
+      });
 
       const { confidence, level: confidenceLevel } = calculateConfidence(lastActivityDays, dataPoints, totalPossiblePoints);
 
@@ -271,11 +315,13 @@ export const useReadinessScore = (courseId: string) => {
       return {
         overall: overallScore,
         lessonProgress: Math.round(lessonProgressScore),
-        quizPerformance: Math.round(averageQuizScore),
-        mockExamPerformance: Math.round(averageMockScore),
+        // Coverage-adjusted dimensions — consistent with how `overall` is built
+        quizPerformance: Math.round(effectiveQuizScore),
+        mockExamPerformance: Math.round(effectiveMockScore),
         lessonsCompleted: completedLessons, totalLessons, quizzesTaken,
+        // Average of assessments actually taken (quality of attempts)
         averageQuizScore: Math.round(averageQuizScore), mockExamsTaken,
-        averageMockScore: Math.round(averageMockScore), level: getReadinessLevel(overallScore),
+        averageMockScore: Math.round(averageMockScore), level: readinessLevel,
         weakAreas: weakAreas.slice(0, 5), confidence, confidenceLevel, lastActivityDays, dataPoints,
       };
     },
