@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock, User, CreditCard, Gift, AlertCircle } from "lucide-react";
 import { signupSchema } from "@/lib/validation";
+import { funnel } from "@/lib/analytics";
 import PasswordRequirements from "./PasswordRequirements";
 
 interface Props {
