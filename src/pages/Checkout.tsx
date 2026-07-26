@@ -92,7 +92,7 @@ export default function Checkout() {
       });
 
       if (error && error.code !== "23505") throw error;
-      funnel.enroll({ item_name: plan.name, value: plan.price, currency: "GBP" });
+      funnel.enroll({ item_name: plan.name, value: plan.price ?? undefined, currency: "GBP" });
       setSubmitted(true);
     } catch {
       toast.error("Something went wrong. Please try again.");
