@@ -10,6 +10,7 @@ import { lovable } from "@/integrations/lovable";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { loginSchema } from "@/lib/validation";
+import { funnel } from "@/lib/analytics";
 
 interface Props {
   onForgotPassword: () => void;
