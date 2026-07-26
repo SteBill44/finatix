@@ -25,6 +25,7 @@ import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
 import { useCourseDetailOptimized } from "@/hooks/useCourseDetailOptimized";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { funnel } from "@/lib/analytics";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { 
@@ -123,6 +124,18 @@ const CourseDetail = () => {
 
   // Fetch course details with optimized hook (lessons, progress, quizzes in one call)
   const { data: courseDetail, isLoading: detailLoading } = useCourseDetailOptimized(course?.id || "");
+
+  // Fire analytics: course viewed
+  useEffect(() => {
+    if (course?.id) {
+      funnel.courseViewed({
+        course_id: course.id,
+        course_title: (course as { title?: string }).title,
+        level: (course as { level?: string }).level,
+      });
+    }
+  }, [course?.id]);
+
 
   // Extract data from optimized response
   const lessons = courseDetail?.lessons || [];
