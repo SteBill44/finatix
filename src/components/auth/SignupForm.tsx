@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Eye, EyeOff, Mail, Lock, User, CreditCard, Gift, AlertCircle } from "lucide-react";
 import { signupSchema } from "@/lib/validation";
+import { funnel } from "@/lib/analytics";
 import PasswordRequirements from "./PasswordRequirements";
 
 interface Props {
@@ -35,6 +36,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    funnel.signupStarted("email");
     setErrors({});
     setEmailExistsError(false);
 
@@ -80,6 +82,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
         }
       }
 
+      funnel.signupCompleted("email");
       toast({ title: "Account created!", description: "Welcome to Finatix. You can now access your dashboard." });
       navigate("/dashboard");
     } catch {

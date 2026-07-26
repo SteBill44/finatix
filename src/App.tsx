@@ -14,6 +14,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { supabase } from "@/integrations/supabase/client";
 
 import PageTransition from "@/components/PageTransition";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 import CookieConsent from "@/components/CookieConsent";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -205,6 +206,7 @@ const App = () => {
                   <BrowserRouter>
                     <PerformanceProvider>
                       <PostSignInRedirect />
+                      <AnalyticsProvider />
                       <SmoothScroll />
                       <ScrollToTop />
                       <AnimatedRoutes />

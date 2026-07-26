@@ -12,6 +12,7 @@ import { Check, CreditCard, Shield, ArrowLeft, Zap, Star, Building } from "lucid
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { funnel } from "@/lib/analytics";
 
 const PLANS = [
   {
@@ -91,6 +92,7 @@ export default function Checkout() {
       });
 
       if (error && error.code !== "23505") throw error;
+      funnel.enroll({ item_name: plan.name, value: plan.price ?? undefined, currency: "GBP" });
       setSubmitted(true);
     } catch {
       toast.error("Something went wrong. Please try again.");
