@@ -115,6 +115,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+    funnel.signupStarted("google");
     try {
       const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
       if (error) toast({ title: "Google Sign-In failed", description: error.message, variant: "destructive" });
@@ -127,6 +128,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
 
   const handleAppleSignIn = async () => {
     setAppleLoading(true);
+    funnel.signupStarted("apple");
     try {
       const { error } = await lovable.auth.signInWithOAuth("apple", { redirect_uri: window.location.origin });
       if (error) toast({ title: "Apple Sign-In failed", description: error.message, variant: "destructive" });
