@@ -36,6 +36,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    funnel.signupStarted("email");
     setErrors({});
     setEmailExistsError(false);
 
@@ -81,6 +82,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
         }
       }
 
+      funnel.signupCompleted("email");
       toast({ title: "Account created!", description: "Welcome to Finatix. You can now access your dashboard." });
       navigate("/dashboard");
     } catch {
