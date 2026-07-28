@@ -225,7 +225,27 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
+
+  /* Homepage: each section fits exactly one viewport with scroll-snap */
+  html:has(.home-snap) {
+    scroll-snap-type: y mandatory;
+  }
+  .home-snap > section {
+    height: 100vh;
+    min-height: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .home-snap > section > * {
+    max-height: 100%;
+    overflow: hidden;
+  }
 }
+
 
 @layer components {
   /* Gradient background for hero sections */
