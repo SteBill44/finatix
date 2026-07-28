@@ -68,25 +68,25 @@ const tiers = [
 
 const LearningPathway = () => {
   return (
-    <section className="py-16 lg:py-24 bg-card">
+    <section className="py-10 lg:py-14 bg-card">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-4">
+        <div className="text-center max-w-3xl mx-auto mb-8">
+          <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">
             Learning Pathway
           </span>
           <SplitTextReveal
             as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-[1.15]"
+            className="text-2xl md:text-3xl lg:text-4xl font-bold text-charcoal mb-3 leading-[1.15]"
           >
             From Foundations to Chartered
           </SplitTextReveal>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             A structured pathway designed by CIMA-qualified practitioners to take you from
             complete beginner to fully-chartered management accountant.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
           {tiers.map((tier, i) => (
             <motion.div
               key={tier.badge}
@@ -94,25 +94,25 @@ const LearningPathway = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col p-7 rounded-2xl bg-background border border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group"
+              className="flex flex-col p-5 rounded-2xl bg-background border border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group"
             >
               <span
-                className={`inline-block self-start px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${tier.badgeTone} mb-5`}
+                className={`inline-block self-start px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${tier.badgeTone} mb-3`}
               >
                 {tier.badge}
               </span>
 
-              <h3 className="text-xl md:text-2xl font-bold text-charcoal mb-3">
+              <h3 className="text-base md:text-lg font-bold text-charcoal mb-2">
                 {tier.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                 {tier.description}
               </p>
 
-              <ul className="space-y-3 mb-8 flex-1">
+              <ul className="space-y-1.5 mb-4 flex-1">
                 {tier.features.map((feat) => (
-                  <li key={feat} className="flex items-start gap-2.5 text-sm">
-                    <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                  <li key={feat} className="flex items-start gap-2 text-xs">
+                    <Check className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" />
                     <span className="text-foreground/85">{feat}</span>
                   </li>
                 ))}
@@ -120,7 +120,7 @@ const LearningPathway = () => {
 
               <Link
                 to={tier.ctaLink}
-                className="inline-flex items-center justify-center text-sm font-semibold text-primary group-hover:gap-2 gap-1.5 transition-all border-t border-border/50 pt-5"
+                className="inline-flex items-center justify-center text-xs font-semibold text-primary group-hover:gap-2 gap-1.5 transition-all border-t border-border/50 pt-3"
               >
                 {tier.cta} →
               </Link>
