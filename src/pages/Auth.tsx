@@ -31,7 +31,7 @@ const modeFromParams = (params: URLSearchParams): AuthMode => {
 };
 
 const HEADERS: Record<AuthMode, { title: string; subtitle: string }> = {
-  login: { title: "Welcome Back", subtitle: "Sign in to access your courses and track progress" },
+  login: { title: "Sign in to Finatix", subtitle: "Sign in to access your courses and track progress" },
   signup: { title: "Create Account", subtitle: "Start your CIMA journey today" },
   forgot: { title: "Reset Password", subtitle: "Enter your email to receive a password reset link" },
   reset: { title: "Set New Password", subtitle: "Enter your new password below" },
