@@ -232,17 +232,18 @@
   }
   .home-snap > section {
     height: 100vh;
-    min-height: 0;
+    min-height: 0 !important;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
-  .home-snap > section > * {
-    max-height: 100%;
-    overflow: hidden;
+  /* Trim generous vertical padding so content fits within 100vh */
+  .home-snap > section [class*="py-12"],
+  .home-snap > section [class*="py-16"],
+  .home-snap > section [class*="py-20"],
+  .home-snap > section [class*="py-24"] {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 }
 
