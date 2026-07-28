@@ -78,18 +78,17 @@ const Index = () => {
         canonicalUrl={BASE_URL}
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
-      <div className="home-snap">
-        <Hero />
-        <WhatIsCIMA />
-        <Features />
-        <LearningPathway />
-        <CareerPathways />
-        <HowToBegin />
-        <FAQ />
-        <CTA />
-      </div>
+      <Hero />
+      <WhatIsCIMA />
+      
+      <Features />
+      <LearningPathway />
+      <CareerPathways />
+      
+      <HowToBegin />
+      <FAQ />
+      <CTA />
     </Layout>
-
   );
 };
 
