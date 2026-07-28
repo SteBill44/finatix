@@ -31,7 +31,7 @@ const modeFromParams = (params: URLSearchParams): AuthMode => {
 };
 
 const HEADERS: Record<AuthMode, { title: string; subtitle: string }> = {
-  login: { title: "Sign in to Finatix", subtitle: "Sign in to access your courses and track progress" },
+  login: { title: "Sign in to Finatix", subtitle: "" },
   signup: { title: "Create Account", subtitle: "Start your CIMA journey today" },
   forgot: { title: "Reset Password", subtitle: "Enter your email to receive a password reset link" },
   reset: { title: "Set New Password", subtitle: "Enter your new password below" },
@@ -95,7 +95,7 @@ const Auth = () => {
                   <FinatixLogo size="md" showText={false} linkTo={null} animated={false} />
                 </div>
                 <h1 className="text-xl font-bold text-foreground mb-1">{title}</h1>
-                <p className="text-sm text-muted-foreground">{subtitle}</p>
+                {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
               </div>
 
 
