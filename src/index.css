@@ -225,7 +225,28 @@
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
+
+  /* Homepage: each section fits exactly one viewport with scroll-snap */
+  html:has(.home-snap) {
+    scroll-snap-type: y mandatory;
+  }
+  .home-snap > section {
+    height: 100vh;
+    min-height: 0 !important;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    overflow: hidden;
+  }
+  /* Trim generous vertical padding so content fits within 100vh */
+  .home-snap > section [class*="py-12"],
+  .home-snap > section [class*="py-16"],
+  .home-snap > section [class*="py-20"],
+  .home-snap > section [class*="py-24"] {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
 }
+
 
 @layer components {
   /* Gradient background for hero sections */
