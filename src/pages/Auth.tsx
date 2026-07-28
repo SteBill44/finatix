@@ -95,7 +95,7 @@ const Auth = () => {
                   <FinatixLogo size="md" showText={false} linkTo={null} animated={false} />
                 </div>
                 <h1 className="text-xl font-bold text-foreground mb-1">{title}</h1>
-                <p className="text-sm text-muted-foreground">{subtitle}</p>
+                {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
               </div>
 
 
