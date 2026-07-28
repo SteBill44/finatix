@@ -167,8 +167,8 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           </Button>
         </form>
       ) : (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -178,13 +178,13 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-9"
             />
           </div>
           {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
             <button
@@ -203,7 +203,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 pr-10"
+              className="pl-10 pr-10 h-9"
             />
             <button
               type="button"
@@ -227,13 +227,13 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           </Label>
         </div>
 
-        <Button type="submit" className="w-full" disabled={busy}>
+        <Button type="submit" className="w-full h-9" disabled={busy}>
           {loading ? "Please wait..." : "Sign In"}
         </Button>
       </form>
       )}
 
-      {!mfaFactorId && <><div className="relative my-6">
+      {!mfaFactorId && <><div className="relative my-4">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-border" />
         </div>
@@ -242,8 +242,8 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={busy}>
+      <div className="flex flex-col gap-2">
+        <Button type="button" variant="outline" className="w-full h-9" onClick={handleGoogleSignIn} disabled={busy}>
           {googleLoading ? "Connecting..." : (
             <>
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -257,7 +257,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
           )}
         </Button>
 
-        <Button type="button" variant="outline" className="w-full" onClick={handleAppleSignIn} disabled={busy}>
+        <Button type="button" variant="outline" className="w-full h-9" onClick={handleAppleSignIn} disabled={busy}>
           {appleLoading ? "Connecting..." : (
             <>
               <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
@@ -269,7 +269,7 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
         </Button>
       </div>
 
-      <div className="mt-6 text-center">
+      <div className="mt-4 text-center">
         <p className="text-sm text-muted-foreground">
           Don't have an account?{" "}
           <button type="button" onClick={onSignup} className="text-primary font-medium hover:underline">
