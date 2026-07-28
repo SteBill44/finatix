@@ -94,7 +94,7 @@ const Auth = () => {
                 <div className="flex justify-center mb-3">
                   <FinatixLogo size="md" showText={false} linkTo={null} animated={false} />
                 </div>
-                <h1 className="text-xl font-bold text-foreground mb-1">{title}</h1>
+                <h1 className="auth-title text-[9px] md:text-[12px] lg:text-[15px] font-bold text-foreground mb-1">{title}</h1>
                 <p className="text-sm text-muted-foreground">{subtitle}</p>
               </div>
 
