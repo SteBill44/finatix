@@ -68,15 +68,15 @@ const Auth = () => {
         }
         noIndex
       />
-      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-20">
+      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-6">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
-            <div className="bg-card rounded-xl border border-border p-8 shadow-lg">
+            <div className="bg-card rounded-xl border border-border p-6 shadow-lg">
               {(mode === "forgot" || mode === "reset") && (
                 <button
                   type="button"
                   onClick={() => setMode("login")}
-                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3 transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   Back to sign in
@@ -84,19 +84,20 @@ const Auth = () => {
               )}
 
               {redirectedFromName && mode === "login" && (
-                <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 border border-primary/20 rounded-lg px-4 py-2.5 mb-6">
+                <div className="flex items-center gap-2 text-sm text-primary bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 mb-4">
                   <LogIn className="w-4 h-4 flex-shrink-0" />
                   <span>Sign in to access {redirectedFromName}</span>
                 </div>
               )}
 
-              <div className="text-center mb-8">
-                <div className="flex justify-center mb-6">
-                  <FinatixLogo size="lg" showText={false} linkTo={null} animated={false} />
+              <div className="text-center mb-5">
+                <div className="flex justify-center mb-3">
+                  <FinatixLogo size="md" showText={false} linkTo={null} animated={false} />
                 </div>
-                <h1 className="text-2xl font-bold text-foreground mb-2">{title}</h1>
-                <p className="text-muted-foreground">{subtitle}</p>
+                <h1 className="text-xl font-bold text-foreground mb-1">{title}</h1>
+                <p className="text-sm text-muted-foreground">{subtitle}</p>
               </div>
+
 
               {mode === "forgot" && (
                 <ForgotPasswordForm onBack={() => setMode("login")} />
