@@ -32,6 +32,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://finatix.lovable.app/verify</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://finatix.lovable.app/brand</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
 
   <!-- Certificate Level (CBA) -->
   <url>
@@ -119,13 +129,6 @@
     <loc>https://finatix.lovable.app/courses/scs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-
-  <!-- Auth -->
-  <url>
-    <loc>https://finatix.lovable.app/auth</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
   </url>
 
   <!-- Legal & support -->
