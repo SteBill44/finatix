@@ -23,6 +23,7 @@ const BASE_URL = `http://localhost:${PORT}`;
 const BUILD_FLAG = process.argv.includes('--build');
 
 // All public routes that should be indexed by search engines
+// Keep in sync with public/sitemap.xml
 const ROUTES = [
   '/',
   '/why-cima',
@@ -46,12 +47,12 @@ const ROUTES = [
   '/pricing',
   '/about',
   '/contact',
+  '/verify',
+  '/brand',
   '/privacy',
   '/cookies',
   '/help',
   '/terms',
-  '/learning-paths',
-  '/verify',
 ];
 
 // Phrases that indicate a page failed to load its data — don't save these
