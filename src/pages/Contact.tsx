@@ -87,7 +87,7 @@ const Contact = () => {
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "Finatix",
-          url: "https://finatix.lovable.app/contact",
+          url: "https://finatix.io/contact",
           email: "hello@finatix.com",
           telephone: "+44 20 1234 5678",
           address: {

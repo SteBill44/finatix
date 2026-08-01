@@ -10,7 +10,7 @@ interface SEOHeadProps {
   noIndex?: boolean;
 }
 
-const SITE_URL = "https://finatix.lovable.app";
+const SITE_URL = "https://finatix.io";
 const DEFAULT_TITLE = "Finatix | CIMA Training & Exam Prep";
 const DEFAULT_DESCRIPTION =
   "CIMA training from Certificate to Strategic level - courses, mock exams, AI study tools, and competency analytics to help you pass faster.";
