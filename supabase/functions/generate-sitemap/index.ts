@@ -7,7 +7,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const DOMAIN = 'https://finatix.lovable.app'
+const DOMAIN = 'https://finatix.io'
 
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
