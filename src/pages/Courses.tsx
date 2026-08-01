@@ -376,13 +376,13 @@ const Courses = () => {
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "CIMA Courses",
-          url: "https://finatix.lovable.app/courses",
+          url: "https://finatix.io/courses",
           mainEntity: {
             "@type": "ItemList",
             itemListElement: courses.map((c, i) => ({
               "@type": "ListItem",
               position: i + 1,
-              url: `https://finatix.lovable.app/courses/${c.slug}`,
+              url: `https://finatix.io/courses/${c.slug}`,
               name: c.title,
             })),
           },
