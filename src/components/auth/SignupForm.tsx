@@ -102,6 +102,29 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
     }
   };
 
+  if (awaitingConfirmation) {
+    return (
+      <div className="text-center space-y-4 py-4">
+        <div className="flex justify-center">
+          <div className="rounded-full bg-primary/10 p-4">
+            <Mail className="w-8 h-8 text-primary" />
+          </div>
+        </div>
+        <h2 className="text-lg font-semibold text-foreground">Check your inbox</h2>
+        <p className="text-sm text-muted-foreground">
+          We've sent a confirmation link to <span className="font-medium text-foreground">{email}</span>.
+          Click the link in the email to activate your account, then sign in.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Can't find it? Check your spam or junk folder.
+        </p>
+        <Button variant="outline" className="w-full" onClick={onLogin}>
+          Back to sign in
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
