@@ -1,0 +1,41 @@
+ID,Category,Action,Details,Location,Type,Priority,Effort,Owner,Status
+1,Domain,Standardise on a single domain (finatix.io),"Code uses THREE domains: finatix.lovable.app (BASE_URL), finatix.com (emails/OG/sitemap), finatix.io (banners). Pick one and replace everywhere.",src/pages/Index.tsx; index.html; public/sitemap.xml; legal pages; Contact.tsx,Config,Critical,S,Claude,Not started
+2,Domain,Register finatix.io + configure DNS,"Confirm ownership of finatix.io and point DNS to the host before publishing banners that advertise it.",External,Config,Critical,S,You,Not started
+3,Domain,Fix canonical/BASE_URL,"Index.tsx BASE_URL is https://finatix.lovable.app — used for schema.org + canonical. Update to production domain.",src/pages/Index.tsx,Config,Critical,S,Claude,Not started
+4,Contact,Replace placeholder phone number,"Contact page shows +44 (0) 20 1234 5678 (fake). Add real number or remove the phone block.",src/pages/Contact.tsx,Content,High,S,You,Not started
+5,Contact,Set up + wire real email inboxes,"hello@ support@ privacy@ legal@ — currently @finatix.com; create mailboxes on the real domain and update links.",Contact.tsx; legal pages,Config,High,M,You,Not started
+6,Contact,Verify contact form delivery,"Confirm form submissions actually reach an inbox/DB (not a no-op).",src/pages/Contact.tsx,Dev,High,S,Claude,Not started
+7,Social,Create/secure social accounts,"LinkedIn company, X/Twitter, YouTube, Facebook, Instagram. Footer links assume handles that may not exist.",External,Marketing,High,M,You,Not started
+8,Social,Upload generated profile + banner assets,"Use the kit in public/social/ for each platform's avatar/cover.",public/social/,Marketing,High,S,You,Not started
+9,Social,Confirm footer social handles,"Footer links to linkedin.com/company/finatix, twitter.com/finatix, youtube.com/@finatix — verify or correct.",src/components/layout/Footer.tsx,Content,Medium,S,You,Not started
+10,Social,Update twitter:site handle,"index.html has @Finatix — confirm it matches the real handle.",index.html,Config,Low,S,Claude,Not started
+11,SEO,Fix sitemap.xml domain + coverage,"All <loc> use finatix.com; update domain, add every public route, add <lastmod>.",public/sitemap.xml,Config,High,S,Claude,Not started
+12,SEO,Verify robots.txt,"Ensure Sitemap: line points to the correct domain and public routes are allowed.",public/robots.txt,Config,Medium,S,Claude,Not started
+13,SEO,Regenerate OG share image + fix URL,"og:image points to finatix.com/og-image.png; regenerate on-brand and correct the absolute URL.",index.html; public/og-image.png,Content,High,S,Claude,Not started
+14,SEO,Per-page meta titles/descriptions audit,"Ensure each public page has unique SEOHead title/description/keywords (several may be generic).",src/pages/*; SEOHead,Content,Medium,M,Claude,Not started
+15,SEO,Set up Google Search Console + submit sitemap,"Verify ownership, submit sitemap, monitor indexing.",External,Marketing,High,S,You,Not started
+16,SEO,Build blog / resources section,"No blog exists — highest-ROI organic lever. Add route + CMS/markdown and publish CIMA study articles.",src/pages/ (new),Dev+Content,High,L,Claude+You,Not started
+17,Content,Author full CIMA course catalogue,"Only ~1 course seeded. Need all 16 papers (BA1-4, E1/P1/F1, E2/P2/F2, E3/P3/F3, OCS/MCS/SCS): title, description, price, duration, level.",Supabase (courses),Content,Critical,L,You,Not started
+18,Content,Author lessons for every course,"~1 lesson seeded; Lesson page shows 'Lesson Content Coming Soon'. Write/record lessons (video + text) per paper.",Supabase (lessons),Content,Critical,XL,You,Not started
+19,Content,Author quiz questions per lesson/course,"Only ~8 quiz_questions seeded. Build question banks across all papers with explanations.",Supabase (quiz_questions),Content,Critical,XL,You,Not started
+20,Content,Author mock/final exams per paper,"Mock exam mode exists but needs real exam-length question sets per paper.",Supabase (quizzes/quiz_questions),Content,High,L,You,Not started
+21,Content,Author flashcard decks,"0 flashcards seeded; feature is live but empty.",Supabase (flashcards),Content,Medium,L,You,Not started
+22,Content,Add course syllabus data,"CourseDetail shows 'Course objectives and syllabus information coming soon.' Populate course_syllabuses per paper.",Supabase (course_syllabuses),Content,High,M,You,Not started
+23,Content,Add lesson resources/downloads,"Resource download UI exists; attach real PDFs/worksheets per lesson.",Supabase (lesson_resources),Content,Medium,L,You,Not started
+24,Commerce,Integrate Stripe checkout,"Checkout is 'coming soon' — captures interest only. Wire real payments + entitlements.",src/pages/Checkout.tsx; Supabase functions,Dev,High,L,Claude+You,Not started
+25,Commerce,Finalise pricing,"Confirm hardcoded plans: £149 bundle, £30/month, £999 all-access. Validate against strategy.",src/pages/Pricing.tsx,Content,High,S,You,Not started
+26,Commerce,Review competitor comparison table,"Pricing page compares against 'Kaplan' with specific claims — verify accuracy to avoid legal/advertising risk.",src/pages/Pricing.tsx,Legal,Medium,S,You,Not started
+27,Trust,Replace fabricated testimonials,"Testimonials.tsx has invented quotes/names presented as real. Replace with genuine ones (with consent) or hide until available.",src/components/home/Testimonials.tsx,Content,High,M,You,Not started
+28,Trust,Substantiate or soften bold claims,"Hero/testimonials claim 'trusted by leading professionals worldwide' pre-launch — reword or back with evidence.",src/components/home/Hero.tsx; Testimonials.tsx,Content,Medium,S,You,Not started
+29,Legal,Professional review of Terms/Privacy/Cookies,"Legal pages exist but need solicitor review for UK/GDPR compliance and accuracy.",src/pages/TermsOfService.tsx; PrivacyPolicy.tsx; CookiePolicy.tsx,Legal,High,M,Legal,Not started
+30,Legal,Add company registration + registered address,"Add legal entity name, company number, and registered address (required for UK e-commerce).",Footer / legal pages,Legal,High,S,You,Not started
+31,Legal,CIMA trademark / accreditation disclaimer,"Clarify relationship to CIMA; add disclaimer that Finatix is independent unless officially accredited.",Footer / legal / WhyCIMA,Legal,High,S,You,Not started
+32,Brand,Finalise About page content,"Confirm mission/story/values are the real narrative; add founding date and specifics.",src/pages/About.tsx,Content,Medium,M,You,Not started
+33,Brand,Add team/instructor bios + photos,"Credibility booster — introduce the people/experts behind the courses.",src/pages/About.tsx (or new),Content,Medium,M,You,Not started
+34,Ops,Add product analytics,"Add GA4 or Plausible (cookie consent banner already present) to measure signups/conversion.",index.html / app,Dev,Medium,S,Claude,Not started
+35,Ops,Brand transactional emails,"Style Supabase auth emails (welcome, password reset, email confirm) with Finatix branding.",Supabase Auth settings,Config,Medium,M,You,Not started
+36,Ops,Upgrade Supabase to Pro,"Free tier pauses on inactivity — upgrade before launch to avoid downtime.",Supabase dashboard,Config,High,S,You,Not started
+37,Ops,Apply pending DB migrations to production,"RLS quiz security + course-detail RPC migrations must be run in the Supabase SQL editor.",supabase/migrations/,Config,Critical,S,You,Not started
+38,Ops,Configure production build to prerender,"Ensure deploy uses 'npm run build:seo' so public routes are prerendered for SEO.",CI/CD / host settings,Config,Medium,S,You,Not started
+39,SEO,Add structured data to course pages,"Add Course schema.org JSON-LD per course for rich results.",src/pages/CourseDetail.tsx,Dev,Low,M,Claude,Not started
+40,Content,Replace remaining 'coming soon' placeholders,"Audit and remove/populate all 'coming soon' copy once content lands.",Checkout/Lesson/CourseDetail,Content,Medium,S,Claude,Not started
