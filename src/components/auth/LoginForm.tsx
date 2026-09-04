@@ -62,13 +62,19 @@ const LoginForm = ({ onForgotPassword, onSignup }: Props) => {
     try {
       const { error, isFirstSignIn } = await signIn(email, password, rememberMe);
       if (error) {
-        toast({
-          title: "Login failed",
-          description: error.message.includes("Invalid login credentials")
-            ? "Invalid email or password. Please try again."
-            : error.message,
-          variant: "destructive",
-        });
+        if (error.message.includes("Invalid login credentials")) {
+          toast({
+            title: "No account found",
+            description: "We couldn't find an account with those details. Create one to get started.",
+          });
+          onSignup();
+        } else {
+          toast({
+            title: "Login failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       } else {
         const { data } = await supabase.auth.mfa.listFactors();
         const verifiedTotp = data?.totp.find((factor) => factor.status === "verified");
