@@ -1,19 +1,19 @@
 ID,Category,Action,Details,Location,Type,Priority,Effort,Owner,Status
-1,Domain,Standardise on a single domain (finatix.io),"Code uses THREE domains: finatix.lovable.app (BASE_URL), finatix.com (emails/OG/sitemap), finatix.io (banners). Pick one and replace everywhere.",src/pages/Index.tsx; index.html; public/sitemap.xml; legal pages; Contact.tsx,Config,Critical,S,Claude,Not started
+1,Domain,Standardise on a single domain (finatix.io),"DONE: canonical, OG url, sitemap and BASE_URL now all finatix.io. Only email addresses still say @finatix.com (see item 5).",src/pages/Index.tsx; index.html; public/sitemap.xml,Config,Critical,S,Lovable,Done
 2,Domain,Register finatix.io + configure DNS,"Confirm ownership of finatix.io and point DNS to the host before publishing banners that advertise it.",External,Config,Critical,S,You,Not started
-3,Domain,Fix canonical/BASE_URL,"Index.tsx BASE_URL is https://finatix.lovable.app — used for schema.org + canonical. Update to production domain.",src/pages/Index.tsx,Config,Critical,S,Claude,Not started
+3,Domain,Fix canonical/BASE_URL,"DONE: BASE_URL + canonical link now https://finatix.io (canonical host also enforced).",src/pages/Index.tsx; index.html,Config,Critical,S,Lovable,Done
 4,Contact,Replace placeholder phone number,"Contact page shows +44 (0) 20 1234 5678 (fake). Add real number or remove the phone block.",src/pages/Contact.tsx,Content,High,S,You,Not started
-5,Contact,Set up + wire real email inboxes,"hello@ support@ privacy@ legal@ — currently @finatix.com; create mailboxes on the real domain and update links.",Contact.tsx; legal pages,Config,High,M,You,Not started
+5,Contact,Fix email domain + set up inboxes,"Emails still say @finatix.com but the site is finatix.io — mismatch. Create hello@/support@/privacy@/legal@finatix.io and update all references.",Contact.tsx; legal pages,Config,High,M,You,Not started
 6,Contact,Verify contact form delivery,"Confirm form submissions actually reach an inbox/DB (not a no-op).",src/pages/Contact.tsx,Dev,High,S,Claude,Not started
 7,Social,Create/secure social accounts,"LinkedIn company, X/Twitter, YouTube, Facebook, Instagram. Footer links assume handles that may not exist.",External,Marketing,High,M,You,Not started
 8,Social,Upload generated profile + banner assets,"Use the kit in public/social/ for each platform's avatar/cover.",public/social/,Marketing,High,S,You,Not started
 9,Social,Confirm footer social handles,"Footer links to linkedin.com/company/finatix, twitter.com/finatix, youtube.com/@finatix — verify or correct.",src/components/layout/Footer.tsx,Content,Medium,S,You,Not started
 10,Social,Update twitter:site handle,"index.html has @Finatix — confirm it matches the real handle.",index.html,Config,Low,S,Claude,Not started
-11,SEO,Fix sitemap.xml domain + coverage,"All <loc> use finatix.com; update domain, add every public route, add <lastmod>.",public/sitemap.xml,Config,High,S,Claude,Not started
+11,SEO,Fix sitemap.xml domain + coverage,"DONE: <loc> entries now use finatix.io across public routes. Optional: add <lastmod> timestamps.",public/sitemap.xml,Config,High,S,Lovable,Done
 12,SEO,Verify robots.txt,"Ensure Sitemap: line points to the correct domain and public routes are allowed.",public/robots.txt,Config,Medium,S,Claude,Not started
-13,SEO,Regenerate OG share image + fix URL,"og:image points to finatix.com/og-image.png; regenerate on-brand and correct the absolute URL.",index.html; public/og-image.png,Content,High,S,Claude,Not started
+13,SEO,Regenerate OG share image (URL fixed),"URL now finatix.io/og-image.png. Still regenerate the image itself on the current charcoal+orange brand.",index.html; public/og-image.png,Content,Medium,S,Claude,In progress
 14,SEO,Per-page meta titles/descriptions audit,"Ensure each public page has unique SEOHead title/description/keywords (several may be generic).",src/pages/*; SEOHead,Content,Medium,M,Claude,Not started
-15,SEO,Set up Google Search Console + submit sitemap,"Verify ownership, submit sitemap, monitor indexing.",External,Marketing,High,S,You,Not started
+15,SEO,Set up Google Search Console + submit sitemap,"DONE: Search Console connected. Confirm sitemap submitted + monitor indexing.",External,Marketing,High,S,You,Done
 16,SEO,Build blog / resources section,"No blog exists — highest-ROI organic lever. Add route + CMS/markdown and publish CIMA study articles.",src/pages/ (new),Dev+Content,High,L,Claude+You,Not started
 17,Content,Author full CIMA course catalogue,"Only ~1 course seeded. Need all 16 papers (BA1-4, E1/P1/F1, E2/P2/F2, E3/P3/F3, OCS/MCS/SCS): title, description, price, duration, level.",Supabase (courses),Content,Critical,L,You,Not started
 18,Content,Author lessons for every course,"~1 lesson seeded; Lesson page shows 'Lesson Content Coming Soon'. Write/record lessons (video + text) per paper.",Supabase (lessons),Content,Critical,XL,You,Not started
@@ -32,7 +32,7 @@ ID,Category,Action,Details,Location,Type,Priority,Effort,Owner,Status
 31,Legal,CIMA trademark / accreditation disclaimer,"Clarify relationship to CIMA; add disclaimer that Finatix is independent unless officially accredited.",Footer / legal / WhyCIMA,Legal,High,S,You,Not started
 32,Brand,Finalise About page content,"Confirm mission/story/values are the real narrative; add founding date and specifics.",src/pages/About.tsx,Content,Medium,M,You,Not started
 33,Brand,Add team/instructor bios + photos,"Credibility booster — introduce the people/experts behind the courses.",src/pages/About.tsx (or new),Content,Medium,M,You,Not started
-34,Ops,Add product analytics,"Add GA4 or Plausible (cookie consent banner already present) to measure signups/conversion.",index.html / app,Dev,Medium,S,Claude,Not started
+34,Ops,Add product analytics,"DONE: GA4 wired via gtag (consent-gated in src/lib/analytics.ts). Verify events firing + goals.",src/lib/analytics.ts,Dev,Medium,S,Lovable,Done
 35,Ops,Brand transactional emails,"Style Supabase auth emails (welcome, password reset, email confirm) with Finatix branding.",Supabase Auth settings,Config,Medium,M,You,Not started
 36,Ops,Upgrade Supabase to Pro,"Free tier pauses on inactivity — upgrade before launch to avoid downtime.",Supabase dashboard,Config,High,S,You,Not started
 37,Ops,Apply pending DB migrations to production,"RLS quiz security + course-detail RPC migrations must be run in the Supabase SQL editor.",supabase/migrations/,Config,Critical,S,You,Not started
