@@ -7,9 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   Mail, 
-  Phone, 
   MapPin, 
-  MessageSquare,
   Send
 } from "lucide-react";
 import {
@@ -89,7 +87,6 @@ const Contact = () => {
           name: "Finatix",
           url: "https://finatix.io/contact",
           email: "hello@finatix.com",
-          telephone: "+44 20 1234 5678",
           address: {
             "@type": "PostalAddress",
             streetAddress: "123 Learning Street",
@@ -249,17 +246,6 @@ const Contact = () => {
                 </div>
 
                 <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+44 (0) 20 1234 5678</p>
-                    <p className="text-sm text-muted-foreground">Mon-Fri, 9am-6pm GMT</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
                   <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-6 h-6 text-teal" />
                   </div>
@@ -267,19 +253,6 @@ const Contact = () => {
                     <h3 className="font-semibold text-foreground mb-1">Office</h3>
                     <p className="text-muted-foreground">123 Learning Street</p>
                     <p className="text-muted-foreground">London, EC1A 1BB, UK</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MessageSquare className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-1">Live Chat</h3>
-                    <p className="text-muted-foreground">Chat with our support team</p>
-                    <Button variant="outline" size="sm" className="mt-2">
-                      Start Chat
-                    </Button>
                   </div>
                 </div>
               </div>
