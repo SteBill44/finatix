@@ -29,6 +29,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [emailExistsError, setEmailExistsError] = useState(false);
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
   const { signUp } = useAuth();
   const { toast } = useToast();
@@ -65,6 +66,15 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
         } else {
           toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
         }
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        // Email confirmation is required - ask the user to verify their inbox
+        funnel.signupCompleted("email");
+        setAwaitingConfirmation(true);
         return;
       }
 
