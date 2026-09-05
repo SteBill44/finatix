@@ -319,6 +319,56 @@ export type Database = {
         }
         Relationships: []
       }
+      course_purchases: {
+        Row: {
+          amount_total: number | null
+          course_id: string | null
+          created_at: string
+          currency: string | null
+          environment: string
+          id: string
+          price_id: string | null
+          status: string
+          stripe_customer_id: string | null
+          stripe_session_id: string
+          user_id: string | null
+        }
+        Insert: {
+          amount_total?: number | null
+          course_id?: string | null
+          created_at?: string
+          currency?: string | null
+          environment?: string
+          id?: string
+          price_id?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_session_id: string
+          user_id?: string | null
+        }
+        Update: {
+          amount_total?: number | null
+          course_id?: string | null
+          created_at?: string
+          currency?: string | null
+          environment?: string
+          id?: string
+          price_id?: string | null
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_session_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_purchases_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_reviews: {
         Row: {
           content: string | null
