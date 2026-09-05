@@ -754,7 +754,9 @@ const CourseDetail = () => {
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
                       Secure payment. Taxes shown at checkout.
+                      {!user && " No account needed - you can set one up right after paying."}
                     </p>
+
                     <p className="text-xs text-muted-foreground text-center mt-2">
                       Or{" "}
                       <Link to="/checkout" className="text-primary underline">
