@@ -51,7 +51,12 @@ import {
   History,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
-import InterestRegistrationForm from "@/components/InterestRegistrationForm";
+import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
+import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
+import { getCoursePriceId } from "@/lib/coursePricing";
+import { isPaymentsConfigured } from "@/lib/stripe";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 import MockExamHistory from "@/components/course/MockExamHistory";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
 import StudyRecommendations from "@/components/course/StudyRecommendations";
@@ -90,7 +95,9 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
+
 
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -182,6 +189,13 @@ const CourseDetail = () => {
     [enrollments, course?.id]
   );
 
+  const coursePriceId = getCoursePriceId(course?.slug);
+  const coursePrice = Number(course?.price ?? 0);
+  const isPaidCourse = coursePrice > 0 && !!coursePriceId;
+  const paymentsReady = isPaymentsConfigured();
+
+
+
   const { completedLessons, totalLessons, progressPercentage } = useMemo(() => {
     const total = lessons?.length ?? 0;
     const completed = lessonProgress?.filter((p) => p.completed).length ?? 0;
@@ -236,10 +250,21 @@ const CourseDetail = () => {
 
   const performEnrollment = async () => {
     if (!course) return;
+    setPendingEnrollment(false);
+
+    // Paid courses go through checkout; free courses enrol instantly
+    if (isPaidCourse) {
+      if (!paymentsReady) {
+        toast.error("Payments aren't available right now. Please try again later.");
+        return;
+      }
+      setShowCheckout(true);
+      return;
+    }
+
     try {
       await enrollMutation.mutateAsync(course.id);
       toast.success(`Successfully enrolled in ${course.title}!`);
-      setPendingEnrollment(false);
     } catch (error: any) {
       if (error.message?.includes("duplicate")) {
         toast.info("You're already enrolled in this course");
@@ -248,6 +273,7 @@ const CourseDetail = () => {
       }
     }
   };
+
 
   const handleCIMAModalSuccess = () => {
     if (pendingEnrollment) performEnrollment();
@@ -674,13 +700,42 @@ const CourseDetail = () => {
             {/* Pricing Card */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                <div className="flex items-center justify-center mb-6">
-                  <span className="px-4 py-2 rounded-full bg-accent/20 text-accent font-semibold text-lg">Coming Soon</span>
+                <div className="text-center mb-6">
+                  {isPaidCourse ? (
+                    <>
+                      <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
+                      <p className="text-sm text-muted-foreground mt-1">One-off payment - lifetime access</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-4xl font-bold text-foreground">Free</div>
+                      <p className="text-sm text-muted-foreground mt-1">Join instantly, no payment needed</p>
+                    </>
+                  )}
                 </div>
 
-                <h3 className="text-lg font-semibold text-foreground mb-2 text-center">Be the first to know</h3>
-                <p className="text-sm text-muted-foreground mb-6 text-center">Register your interest and we'll notify you when this course launches.</p>
-                <InterestRegistrationForm courseId={course.id} courseName={course.title} />
+                {isEnrolled ? (
+                  <Button size="lg" className="w-full gap-2" onClick={handleStartLearning}>
+                    <Play className="w-4 h-4" />
+                    Continue learning
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="w-full gap-2"
+                    onClick={handleEnroll}
+                    disabled={enrollMutation.isPending}
+                  >
+                    {isPaidCourse ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
+                    {isPaidCourse ? "Buy this course" : "Enrol for free"}
+                  </Button>
+                )}
+                {isPaidCourse && (
+                  <p className="text-xs text-muted-foreground text-center mt-3">
+                    Secure payment. Taxes shown at checkout.
+                  </p>
+                )}
+
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
@@ -777,6 +832,27 @@ const CourseDetail = () => {
         }}
         onSuccess={handleCIMAModalSuccess}
       />
+
+      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>Buy {course.title}</DialogTitle>
+          </DialogHeader>
+          <PaymentTestModeBanner />
+          <div className="p-4">
+            {showCheckout && coursePriceId && (
+              <StripeEmbeddedCheckout
+                priceId={coursePriceId}
+                courseId={course.id}
+                userId={user?.id}
+                customerEmail={user?.email ?? undefined}
+                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </Layout>
   );
 };
