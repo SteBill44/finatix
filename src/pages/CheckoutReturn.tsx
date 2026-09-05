@@ -6,17 +6,32 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, HelpCircle } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 const CheckoutReturn = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const courseSlug = searchParams.get("course");
   const queryClient = useQueryClient();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    // Refresh enrolments so the new course appears straight away
-    queryClient.invalidateQueries({ queryKey: ["enrollments"] });
-  }, [queryClient]);
+    if (!user) return;
+    let cancelled = false;
+    // Link any purchase made before signing in, then refresh the course list
+    (async () => {
+      await supabase.rpc("claim_guest_purchases");
+      if (cancelled) return;
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["subscription"] });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, queryClient]);
+
+  const signedOut = !loading && !user;
 
   return (
     <Layout>
@@ -34,20 +49,39 @@ const CheckoutReturn = () => {
                   <CheckCircle className="w-8 h-8 text-accent" />
                 </div>
                 <h1 className="text-2xl font-bold text-foreground mb-2">Payment received</h1>
-                <p className="text-muted-foreground mb-6">
-                  Thanks for your order. Your course is being unlocked now - it can take a few
-                  seconds to appear on your dashboard.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button asChild size="lg">
-                    <Link to={courseSlug ? `/courses/${courseSlug}` : "/dashboard"}>
-                      Start learning
-                    </Link>
-                  </Button>
-                  <Button asChild size="lg" variant="outline">
-                    <Link to="/dashboard">Go to dashboard</Link>
-                  </Button>
-                </div>
+                {signedOut ? (
+                  <>
+                    <p className="text-muted-foreground mb-6">
+                      Thanks for your order. Create your account now using the same email address
+                      you paid with and your course will be waiting for you.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button asChild size="lg">
+                        <Link to="/auth?mode=signup">Create your account</Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline">
+                        <Link to="/auth">I already have an account</Link>
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-muted-foreground mb-6">
+                      Thanks for your order. Your course is being unlocked now - it can take a few
+                      seconds to appear on your dashboard.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button asChild size="lg">
+                        <Link to={courseSlug ? `/courses/${courseSlug}` : "/dashboard"}>
+                          Start learning
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline">
+                        <Link to="/dashboard">Go to dashboard</Link>
+                      </Button>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <>
