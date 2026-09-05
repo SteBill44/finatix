@@ -55,6 +55,7 @@ import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { getCoursePriceId } from "@/lib/coursePricing";
 import { isPaymentsConfigured } from "@/lib/stripe";
+import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import MockExamHistory from "@/components/course/MockExamHistory";
@@ -193,6 +194,9 @@ const CourseDetail = () => {
   const coursePrice = Number(course?.price ?? 0);
   const isPaidCourse = coursePrice > 0 && !!coursePriceId;
   const paymentsReady = isPaymentsConfigured();
+  // An active all-access membership unlocks every paid course
+  const { isActive: hasMembership } = useSubscription();
+  const requiresPayment = isPaidCourse && !hasMembership;
 
 
 
@@ -252,8 +256,8 @@ const CourseDetail = () => {
     if (!course) return;
     setPendingEnrollment(false);
 
-    // Paid courses go through checkout; free courses enrol instantly
-    if (isPaidCourse) {
+    // Paid courses go through checkout; free courses and members enrol instantly
+    if (requiresPayment) {
       if (!paymentsReady) {
         toast.error("Payments aren't available right now. Please try again later.");
         return;
@@ -701,10 +705,15 @@ const CourseDetail = () => {
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
                 <div className="text-center mb-6">
-                  {isPaidCourse ? (
+                  {requiresPayment ? (
                     <>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
                       <p className="text-sm text-muted-foreground mt-1">One-off payment - lifetime access</p>
+                    </>
+                  ) : isPaidCourse && hasMembership ? (
+                    <>
+                      <div className="text-4xl font-bold text-foreground">Included</div>
+                      <p className="text-sm text-muted-foreground mt-1">Covered by your membership</p>
                     </>
                   ) : (
                     <>
@@ -726,14 +735,23 @@ const CourseDetail = () => {
                     onClick={handleEnroll}
                     disabled={enrollMutation.isPending}
                   >
-                    {isPaidCourse ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
-                    {isPaidCourse ? "Buy this course" : "Enrol for free"}
+                    {requiresPayment ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
+                    {requiresPayment ? "Buy this course" : "Start this course"}
                   </Button>
                 )}
-                {isPaidCourse && (
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    Secure payment. Taxes shown at checkout.
-                  </p>
+                {requiresPayment && (
+                  <>
+                    <p className="text-xs text-muted-foreground text-center mt-3">
+                      Secure payment. Taxes shown at checkout.
+                    </p>
+                    <p className="text-xs text-muted-foreground text-center mt-2">
+                      Or{" "}
+                      <Link to="/checkout" className="text-primary underline">
+                        join our membership
+                      </Link>{" "}
+                      for access to every course.
+                    </p>
+                  </>
                 )}
 
 

@@ -7,16 +7,17 @@
     <!-- Content Security Policy: restricts what resources the browser will load -->
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
-      script-src 'self' 'wasm-unsafe-eval' https://www.googletagmanager.com;
+      script-src 'self' 'wasm-unsafe-eval' https://www.googletagmanager.com https://js.stripe.com;
       style-src 'self' 'unsafe-inline';
       img-src 'self' https: data: blob:;
       font-src 'self' https: data:;
-      connect-src 'self' https://itsbzlmixdigsbzuzpbi.supabase.co wss://itsbzlmixdigsbzuzpbi.supabase.co https://ai.gateway.lovable.dev https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net;
+      connect-src 'self' https://itsbzlmixdigsbzuzpbi.supabase.co wss://itsbzlmixdigsbzuzpbi.supabase.co https://ai.gateway.lovable.dev https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://api.stripe.com https://js.stripe.com https://merchant-ui-api.stripe.com;
       media-src 'self' https: blob:;
       worker-src 'self' blob:;
+      frame-src 'self' https://js.stripe.com https://checkout.stripe.com https://hooks.stripe.com;
       frame-ancestors 'none';
       base-uri 'self';
-      form-action 'self';
+      form-action 'self' https://checkout.stripe.com https://hooks.stripe.com;
     " />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.png" type="image/png" />
