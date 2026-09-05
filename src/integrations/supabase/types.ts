@@ -325,6 +325,7 @@ export type Database = {
           course_id: string | null
           created_at: string
           currency: string | null
+          customer_email: string | null
           environment: string
           id: string
           price_id: string | null
@@ -338,6 +339,7 @@ export type Database = {
           course_id?: string | null
           created_at?: string
           currency?: string | null
+          customer_email?: string | null
           environment?: string
           id?: string
           price_id?: string | null
@@ -351,6 +353,7 @@ export type Database = {
           course_id?: string | null
           created_at?: string
           currency?: string | null
+          customer_email?: string | null
           environment?: string
           id?: string
           price_id?: string | null
@@ -1935,8 +1938,10 @@ export type Database = {
         }
         Returns: Json
       }
+      claim_guest_purchases: { Args: never; Returns: number }
       cleanup_rate_limits: { Args: never; Returns: undefined }
       complete_referral: { Args: { p_referred_id: string }; Returns: Json }
+      find_user_id_by_email: { Args: { p_email: string }; Returns: string }
       generate_referral_code: { Args: never; Returns: string }
       get_adaptive_practice_questions: {
         Args: { p_count?: number; p_course_id: string }

@@ -238,12 +238,22 @@ const CourseDetail = () => {
   };
 
   const handleEnroll = async () => {
+    if (!course) return;
+
+    // Guests can buy a paid course straight away and create their account afterwards
     if (!user) {
-      toast.error("Please sign in to enroll");
+      if (requiresPayment) {
+        if (!paymentsReady) {
+          toast.error("Payments aren't available right now. Please try again later.");
+          return;
+        }
+        setShowCheckout(true);
+        return;
+      }
+      toast.error("Please sign in to start this course");
       navigate("/auth");
       return;
     }
-    if (!course) return;
     if (!hasCompleteProfile && !isLoadingProfile) {
       setPendingEnrollment(true);
       setShowCIMAModal(true);
@@ -251,6 +261,7 @@ const CourseDetail = () => {
     }
     await performEnrollment();
   };
+
 
   const performEnrollment = async () => {
     if (!course) return;
@@ -743,7 +754,9 @@ const CourseDetail = () => {
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
                       Secure payment. Taxes shown at checkout.
+                      {!user && " No account needed - you can set one up right after paying."}
                     </p>
+
                     <p className="text-xs text-muted-foreground text-center mt-2">
                       Or{" "}
                       <Link to="/checkout" className="text-primary underline">

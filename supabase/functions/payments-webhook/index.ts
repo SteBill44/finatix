@@ -13,19 +13,32 @@ function getSupabase() {
 }
 
 async function grantCourseAccess(session: any, env: StripeEnv) {
-  const userId = session.metadata?.userId;
   const courseId = session.metadata?.courseId;
-  if (!userId || !courseId) {
-    console.log("Session without userId/courseId metadata - nothing to grant");
+  const email = session.customer_details?.email ?? session.customer_email ?? null;
+  let userId: string | null = session.metadata?.userId ?? null;
+
+  if (!courseId) {
+    console.log("Session without courseId metadata - nothing to grant");
     return;
   }
 
   const supabase = getSupabase();
 
+  // Guest checkout: try to match an existing account by email
+  if (!userId && email) {
+    const { data: matchedId, error: lookupError } = await supabase.rpc(
+      "find_user_id_by_email",
+      { p_email: email },
+    );
+    if (lookupError) console.error("Email lookup failed:", lookupError);
+    if (matchedId) userId = matchedId as string;
+  }
+
   // Record the purchase (idempotent on the Stripe session id)
   const { error: purchaseError } = await supabase.from("course_purchases").upsert({
     user_id: userId,
     course_id: courseId,
+    customer_email: email,
     stripe_session_id: session.id,
     stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
     price_id: session.metadata?.priceId ?? null,
@@ -36,6 +49,11 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
   }, { onConflict: "stripe_session_id" });
 
   if (purchaseError) console.error("Failed to record purchase:", purchaseError);
+
+  if (!userId) {
+    console.log("Guest purchase recorded - will be claimed when the account is created");
+    return;
+  }
 
   // Enrol the student (ignore duplicates)
   const { data: existing } = await supabase
@@ -73,6 +91,7 @@ async function markPaymentFailed(session: any, env: StripeEnv) {
   await supabase.from("course_purchases").upsert({
     user_id: session.metadata?.userId ?? null,
     course_id: session.metadata?.courseId ?? null,
+    customer_email: session.customer_details?.email ?? session.customer_email ?? null,
     stripe_session_id: session.id,
     price_id: session.metadata?.priceId ?? null,
     amount_total: session.amount_total ?? null,
