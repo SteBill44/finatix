@@ -436,7 +436,7 @@ const Lesson = () => {
               <Card className="p-8 text-center bg-secondary/30">
                 <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Lesson Content Coming Soon
+                  Lesson content is being prepared
                 </h3>
                 <p className="text-muted-foreground">
                   The full lesson content including notes, resources, and exercises will be available here.
