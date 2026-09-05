@@ -700,13 +700,42 @@ const CourseDetail = () => {
             {/* Pricing Card */}
             <div className="lg:justify-self-end w-full max-w-md">
               <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                <div className="flex items-center justify-center mb-6">
-                  <span className="px-4 py-2 rounded-full bg-accent/20 text-accent font-semibold text-lg">Coming Soon</span>
+                <div className="text-center mb-6">
+                  {isPaidCourse ? (
+                    <>
+                      <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
+                      <p className="text-sm text-muted-foreground mt-1">One-off payment - lifetime access</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-4xl font-bold text-foreground">Free</div>
+                      <p className="text-sm text-muted-foreground mt-1">Join instantly, no payment needed</p>
+                    </>
+                  )}
                 </div>
 
-                <h3 className="text-lg font-semibold text-foreground mb-2 text-center">Be the first to know</h3>
-                <p className="text-sm text-muted-foreground mb-6 text-center">Register your interest and we'll notify you when this course launches.</p>
-                <InterestRegistrationForm courseId={course.id} courseName={course.title} />
+                {isEnrolled ? (
+                  <Button size="lg" className="w-full gap-2" onClick={handleStartLearning}>
+                    <Play className="w-4 h-4" />
+                    Continue learning
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="w-full gap-2"
+                    onClick={handleEnroll}
+                    disabled={enrollMutation.isPending}
+                  >
+                    {isPaidCourse ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
+                    {isPaidCourse ? "Buy this course" : "Enrol for free"}
+                  </Button>
+                )}
+                {isPaidCourse && (
+                  <p className="text-xs text-muted-foreground text-center mt-3">
+                    Secure payment. Taxes shown at checkout.
+                  </p>
+                )}
+
 
                 <div className="mt-6 pt-6 border-t border-border">
                   <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
