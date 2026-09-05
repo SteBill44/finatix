@@ -23,7 +23,7 @@ const CheckoutReturn = () => {
       <SEOHead
         title="Order confirmed | Finatix"
         description="Your Finatix course purchase is confirmed."
-        noindex
+        noIndex
       />
       <section className="py-20">
         <div className="container mx-auto px-4 max-w-xl">

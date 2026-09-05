@@ -14,3 +14,9 @@ verify_jwt = false
 
 [functions.generate-course-questions]
 verify_jwt = true
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.payments-webhook]
+verify_jwt = false
