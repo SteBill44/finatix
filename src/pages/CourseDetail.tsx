@@ -832,6 +832,27 @@ const CourseDetail = () => {
         }}
         onSuccess={handleCIMAModalSuccess}
       />
+
+      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle>Buy {course.title}</DialogTitle>
+          </DialogHeader>
+          <PaymentTestModeBanner />
+          <div className="p-4">
+            {showCheckout && coursePriceId && (
+              <StripeEmbeddedCheckout
+                priceId={coursePriceId}
+                courseId={course.id}
+                userId={user?.id}
+                customerEmail={user?.email ?? undefined}
+                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </Layout>
   );
 };
