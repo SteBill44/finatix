@@ -189,6 +189,13 @@ const CourseDetail = () => {
     [enrollments, course?.id]
   );
 
+  const coursePriceId = getCoursePriceId(course?.slug);
+  const coursePrice = Number(course?.price ?? 0);
+  const isPaidCourse = coursePrice > 0 && !!coursePriceId;
+  const paymentsReady = isPaymentsConfigured();
+
+
+
   const { completedLessons, totalLessons, progressPercentage } = useMemo(() => {
     const total = lessons?.length ?? 0;
     const completed = lessonProgress?.filter((p) => p.completed).length ?? 0;
