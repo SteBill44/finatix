@@ -255,7 +255,7 @@ export default function Checkout() {
                   <Separator />
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Shield className="w-3.5 h-3.5 text-primary" />
-                    Secure checkout. The price shown is the final price - all taxes included.
+                    Secure checkout. The price shown is the final price.
                   </div>
                 </CardContent>
               </Card>
