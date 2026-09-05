@@ -193,6 +193,9 @@ const CourseDetail = () => {
   const coursePrice = Number(course?.price ?? 0);
   const isPaidCourse = coursePrice > 0 && !!coursePriceId;
   const paymentsReady = isPaymentsConfigured();
+  // An active all-access membership unlocks every paid course
+  const { isActive: hasMembership } = useSubscription();
+  const requiresPayment = isPaidCourse && !hasMembership;
 
 
 
