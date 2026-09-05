@@ -51,7 +51,12 @@ import {
   History,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
-import InterestRegistrationForm from "@/components/InterestRegistrationForm";
+import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
+import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
+import { getCoursePriceId } from "@/lib/coursePricing";
+import { isPaymentsConfigured } from "@/lib/stripe";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 import MockExamHistory from "@/components/course/MockExamHistory";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
 import StudyRecommendations from "@/components/course/StudyRecommendations";
@@ -90,7 +95,9 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
+
 
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -236,10 +243,21 @@ const CourseDetail = () => {
 
   const performEnrollment = async () => {
     if (!course) return;
+    setPendingEnrollment(false);
+
+    // Paid courses go through checkout; free courses enrol instantly
+    if (isPaidCourse) {
+      if (!paymentsReady) {
+        toast.error("Payments aren't available right now. Please try again later.");
+        return;
+      }
+      setShowCheckout(true);
+      return;
+    }
+
     try {
       await enrollMutation.mutateAsync(course.id);
       toast.success(`Successfully enrolled in ${course.title}!`);
-      setPendingEnrollment(false);
     } catch (error: any) {
       if (error.message?.includes("duplicate")) {
         toast.info("You're already enrolled in this course");
@@ -248,6 +266,7 @@ const CourseDetail = () => {
       }
     }
   };
+
 
   const handleCIMAModalSuccess = () => {
     if (pendingEnrollment) performEnrollment();
