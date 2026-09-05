@@ -285,7 +285,7 @@ const Pricing = () => {
               Bundle Plans
             </h2>
             <p className="text-lg text-muted-foreground">
-              Save more with our comprehensive bundle plans.
+              Save more with our comprehensive bundle plans. The price you see is the price you pay - all taxes included.
             </p>
           </div>
 
