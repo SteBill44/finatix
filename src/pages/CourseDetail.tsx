@@ -870,9 +870,12 @@ const CourseDetail = () => {
       />
 
       <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
-          <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Buy {course.title}</DialogTitle>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-t-4 border-t-primary">
+          <DialogHeader className="px-6 pt-6 pb-2 bg-secondary/40 border-b border-border">
+            <DialogTitle className="text-xl">Buy {course.title}</DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              £{coursePrice.toFixed(0)} - one-time purchase, lifetime access. The price shown is the price you pay.
+            </p>
           </DialogHeader>
           <PaymentTestModeBanner />
           <div className="p-4">
