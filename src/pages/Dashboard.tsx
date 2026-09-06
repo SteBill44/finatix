@@ -21,6 +21,7 @@ import CourseProgressCard from "@/components/dashboard/CourseProgressCard";
 import CourseProgressRow from "@/components/dashboard/CourseProgressRow";
 import CurrentCourseCard from "@/components/dashboard/CurrentCourseCard";
 import StreakWidget from "@/components/dashboard/StreakWidget";
+import { EmptyState } from "@/components/EmptyState";
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";

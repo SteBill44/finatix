@@ -19,6 +19,7 @@ import {
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { EmptyState } from "@/components/EmptyState";
 import {
   Play,
   GraduationCap,

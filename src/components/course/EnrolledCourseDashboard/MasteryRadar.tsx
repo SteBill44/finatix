@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { AlertTriangle, CheckCircle, Brain } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { EmptyState } from "@/components/EmptyState";
 import { getScoreColor, wrapSubtitle, type SyllabusArea } from "./helpers";
 
 interface RadarDatum {

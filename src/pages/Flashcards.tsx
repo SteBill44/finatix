@@ -19,6 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Plus, Layers, PlayCircle, Clock } from "lucide-react";
 import { useFlashcardDecks, useSystemFlashcardDecks, useCreateFlashcardDeck } from "@/hooks/useFlashcards";
+import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 
 export default function Flashcards() {

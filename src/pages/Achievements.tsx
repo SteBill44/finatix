@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Flame, Trophy, Award, Target, Lock, Crown, Medal, Star } from "lucide-react";
 import { useEffect } from "react";
 import BadgeIcon from "@/components/achievements/BadgeIcon";
+import { EmptyState } from "@/components/EmptyState";
 
 const Achievements = () => {
   const navigate = useNavigate();
