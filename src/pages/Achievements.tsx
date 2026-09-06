@@ -186,7 +186,12 @@ const Achievements = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {leaderboard?.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-6">No data yet</p>
+                  <EmptyState
+                    icon={Trophy}
+                    title="No leaderboard data yet"
+                    description="Complete quizzes and keep your streak going to climb the ranks."
+                    className="py-8"
+                  />
                 ) : (
                   leaderboard?.map((entry, index) => {
                     const profile = entry.profile;

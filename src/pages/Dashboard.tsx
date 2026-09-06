@@ -213,15 +213,13 @@ const Dashboard = () => {
 
           {/* Empty state */}
           {enrolledCount === 0 ? (
-            <Card className="p-12 text-center">
-              <GraduationCap className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-              <h2 className="text-2xl font-bold text-foreground mb-2">No Courses Yet</h2>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Start your learning journey by enrolling in a course.
-              </p>
-              <Button size="lg" onClick={() => navigate("/courses")}>
-                Browse Courses
-              </Button>
+            <Card>
+              <EmptyState
+                icon={GraduationCap}
+                title="No courses yet"
+                description="Start your learning journey by enrolling in your first CIMA course."
+                action={{ label: "Browse Courses", onClick: () => navigate("/courses") }}
+              />
             </Card>
           ) : (
             <div className="grid lg:grid-cols-3 gap-6">

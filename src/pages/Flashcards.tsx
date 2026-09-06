@@ -114,7 +114,12 @@ export default function Flashcards() {
               {myLoading ? (
                 <DeckGrid count={3} loading />
               ) : myDecks.length === 0 ? (
-                <EmptyState onNew={() => setOpen(true)} />
+                <EmptyState
+                  icon={Layers}
+                  title="No decks yet"
+                  description="Create your first flashcard deck to start studying with spaced repetition."
+                  action={{ label: "Create First Deck", onClick: () => setOpen(true) }}
+                />
               ) : (
                 <DeckGrid decks={myDecks} onStudy={(id) => navigate(`/flashcards/${id}`)} />
               )}
@@ -124,9 +129,11 @@ export default function Flashcards() {
               {systemLoading ? (
                 <DeckGrid count={3} loading />
               ) : systemDecks.length === 0 ? (
-                <div className="text-center py-16 text-muted-foreground text-sm">
-                  No course decks available yet
-                </div>
+                <EmptyState
+                  icon={BookOpen}
+                  title="No course decks yet"
+                  description="Course-aligned flashcard decks will appear here as you study."
+                />
               ) : (
                 <DeckGrid decks={systemDecks} onStudy={(id) => navigate(`/flashcards/${id}`)} />
               )}
@@ -197,18 +204,3 @@ function DeckGrid({
   );
 }
 
-function EmptyState({ onNew }: { onNew: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4">
-      <Layers className="w-14 h-14 text-muted-foreground/30" />
-      <p className="font-medium text-muted-foreground">No decks yet</p>
-      <p className="text-sm text-muted-foreground/70 text-center max-w-xs">
-        Create your first flashcard deck to start studying with spaced repetition
-      </p>
-      <Button onClick={onNew}>
-        <Plus className="w-4 h-4 mr-1.5" />
-        Create First Deck
-      </Button>
-    </div>
-  );
-}

@@ -278,20 +278,13 @@ export const MasteryRadar = ({
         </>
       ) : (
         /* Empty state - no quiz data yet */
-        <div className="flex flex-col items-center justify-center py-14 text-center">
-          <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
-            <Brain className="w-8 h-8 text-muted-foreground/40" />
-          </div>
-          <p className="text-sm font-medium text-foreground mb-1">Your mastery map is empty</p>
-          <p className="text-xs text-muted-foreground max-w-xs">
-            Complete practice quizzes on any exam topic and your syllabus coverage will appear here.
-          </p>
-          {totalAreas > 0 && (
-            <p className="text-xs text-muted-foreground/60 mt-3">
-              {totalAreas} exam area{totalAreas !== 1 ? "s" : ""} to cover
-            </p>
-          )}
-        </div>
+        <EmptyState
+          icon={Brain}
+          title="Your mastery map is empty"
+          description={`Complete practice quizzes on any exam topic and your syllabus coverage will appear here.${
+            totalAreas > 0 ? ` ${totalAreas} exam area${totalAreas !== 1 ? "s" : ""} to cover.` : ""
+          }`}
+        />
       )}
     </Card>
   );

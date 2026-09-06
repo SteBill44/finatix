@@ -428,11 +428,11 @@ export default function Referrals() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No referrals yet</p>
-                    <p className="text-sm">Share your code to start earning rewards!</p>
-                  </div>
+                  <EmptyState
+                    icon={Users}
+                    title="No referrals yet"
+                    description="Share your code to start earning rewards."
+                  />
                 )}
               </CardContent>
             </Card>
