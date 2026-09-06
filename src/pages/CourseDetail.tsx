@@ -49,6 +49,7 @@ import {
   BarChart3,
   UserMinus,
   History,
+  Sparkles,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
