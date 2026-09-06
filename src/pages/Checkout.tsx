@@ -196,15 +196,6 @@ export default function Checkout() {
                     <Button asChild className="w-full">
                       <Link to="/contact">Contact us about Corporate</Link>
                     </Button>
-                  ) : !user ? (
-                    <div className="space-y-3">
-                      <p className="text-sm text-muted-foreground">
-                        Please sign in first so we can link your membership to your account.
-                      </p>
-                      <Button asChild className="w-full">
-                        <Link to="/auth">Sign in to continue</Link>
-                      </Button>
-                    </div>
                   ) : !paymentsReady ? (
                     <p className="text-sm text-muted-foreground">
                       Payments aren't available right now. Please try again later.
