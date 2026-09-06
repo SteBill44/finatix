@@ -207,15 +207,42 @@ export default function Checkout() {
                       <PaymentTestModeBanner />
                       <StripeEmbeddedCheckout
                         priceId={plan.priceId}
-                        userId={user.id}
-                        customerEmail={user.email ?? undefined}
+                        userId={user?.id}
+                        customerEmail={user?.email ?? guestEmail.trim()}
                         returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
                       />
                     </div>
                   ) : (
-                    <Button className="w-full" onClick={startCheckout}>
-                      Continue to payment
-                    </Button>
+                    <div className="space-y-3">
+                      {!user && (
+                        <>
+                          <div className="space-y-1.5">
+                            <label htmlFor="guest-email" className="text-sm font-medium">
+                              Email address
+                            </label>
+                            <input
+                              id="guest-email"
+                              type="email"
+                              required
+                              value={guestEmail}
+                              onChange={(e) => setGuestEmail(e.target.value)}
+                              placeholder="you@example.com"
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            No account needed - you can set one up right after paying.
+                          </p>
+                        </>
+                      )}
+                      <Button
+                        className="w-full"
+                        onClick={startCheckout}
+                        disabled={!user && !guestEmailValid}
+                      >
+                        Continue to payment
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
