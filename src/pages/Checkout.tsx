@@ -78,10 +78,12 @@ export default function Checkout() {
 
   const [selectedPlan, setSelectedPlan] = useState(defaultPlan);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
   const { isActive, openBillingPortal, isOpeningPortal } = useSubscription();
 
   const plan = PLANS.find((p) => p.id === selectedPlan) || PLANS[1];
   const paymentsReady = isPaymentsConfigured();
+  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
 
   const startCheckout = () => {
     funnel.enroll({ item_name: plan.name, value: plan.price ?? undefined, currency: "GBP" });
