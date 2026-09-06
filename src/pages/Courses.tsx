@@ -298,7 +298,11 @@ function CourseCard({
 // ── Page ──────────────────────────────────────────────────────────
 const Courses = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const [caseStudyOnly, setCaseStudyOnly] = useState(false);
+  const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">("all");
+  const [sortBy, setSortBy] = useState<"default" | "title" | "price-asc" | "price-desc">("default");
   const [view, setView] = useState<"grid" | "list">("grid");
   const { user } = useAuth();
   const { isAdmin } = useIsAdmin();
