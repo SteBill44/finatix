@@ -83,6 +83,26 @@ async function createCheckoutSession(options: {
     mode: isRecurring ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
+    // Match the site's theme: white card, charcoal text, orange accents.
+    appearance: {
+      theme: "stripe",
+      variables: {
+        colorPrimary: "#E84F02",
+        colorBackground: "#FFFFFF",
+        colorText: "#1A1A1A",
+        colorDanger: "#DC2626",
+        borderRadius: "10px",
+        spacingUnit: "4px",
+      },
+      rules: {
+        ".Input": { border: "1px solid #E3DEDA" },
+        ".Input:focus": {
+          border: "1px solid #E84F02",
+          boxShadow: "0 0 0 3px rgba(232, 79, 2, 0.15)",
+        },
+        ".Label": { fontWeight: "600", color: "#1A1A1A" },
+      },
+    },
     ...(customerId && { customer: customerId }),
     ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
     managed_payments: { enabled: true },
