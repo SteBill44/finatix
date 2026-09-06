@@ -363,17 +363,26 @@ const Courses = () => {
   const filteredCourses = useMemo(
     () =>
       [...courses]
-        .sort((a, b) => getCourseOrder(a.slug) - getCourseOrder(b.slug))
         .filter((course) => {
-          const q = searchTerm.toLowerCase();
+          const q = debouncedSearchTerm.toLowerCase();
           const matchesSearch =
             course.title.toLowerCase().includes(q) ||
             course.slug.toLowerCase().includes(q) ||
             (course.description || "").toLowerCase().includes(q);
           const matchesLevel = selectedLevel === "all" || course.level === selectedLevel;
-          return matchesSearch && matchesLevel;
+          const matchesCaseStudy = !caseStudyOnly || isCaseStudy(course.slug);
+          const matchesPrice =
+            priceFilter === "all" ||
+            (priceFilter === "free" ? course.price === 0 : course.price > 0);
+          return matchesSearch && matchesLevel && matchesCaseStudy && matchesPrice;
+        })
+        .sort((a, b) => {
+          if (sortBy === "title") return a.title.localeCompare(b.title);
+          if (sortBy === "price-asc") return a.price - b.price;
+          if (sortBy === "price-desc") return b.price - a.price;
+          return getCourseOrder(a.slug) - getCourseOrder(b.slug);
         }),
-    [courses, searchTerm, selectedLevel]
+    [courses, debouncedSearchTerm, selectedLevel, caseStudyOnly, priceFilter, sortBy]
   );
 
   const groupedCourses = useMemo(
