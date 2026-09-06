@@ -481,8 +481,8 @@ const Courses = () => {
       <section className="py-8 lg:py-10">
         <div className="container mx-auto px-4">
           {/* Filter bar */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-10 items-start sm:items-center">
-            <div className="relative flex-1 max-w-md">
+          <div className="flex flex-col lg:flex-row gap-3 mb-6 items-start lg:items-center">
+            <div className="relative flex-1 max-w-md w-full lg:w-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search courses (BA1, E2, Case Study…)"
@@ -491,23 +491,86 @@ const Courses = () => {
                 className="pl-9 h-10 rounded-full"
               />
             </div>
-            {/* View toggle */}
-            <div className="flex items-center gap-1 p-1 bg-secondary rounded-lg flex-shrink-0">
+
+            <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+              {/* Case Study toggle */}
               <button
-                onClick={() => setView("grid")}
-                className={`p-1.5 rounded-md transition-colors ${view === "grid" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                aria-label="Grid view"
+                onClick={() => setCaseStudyOnly((v) => !v)}
+                className={`px-3 py-2 h-10 rounded-full text-xs font-medium border transition-colors ${
+                  caseStudyOnly
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-background text-foreground border-border hover:border-primary/50"
+                }`}
+                aria-pressed={caseStudyOnly}
               >
-                <LayoutGrid className="w-4 h-4" />
+                Case Study only
               </button>
-              <button
-                onClick={() => setView("list")}
-                className={`p-1.5 rounded-md transition-colors ${view === "list" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                aria-label="List view"
-              >
-                <List className="w-4 h-4" />
-              </button>
+
+              {/* Price filter */}
+              <Select value={priceFilter} onValueChange={(v) => setPriceFilter(v as typeof priceFilter)}>
+                <SelectTrigger className="h-10 w-[110px] rounded-full text-xs">
+                  <SelectValue placeholder="Price" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All prices</SelectItem>
+                  <SelectItem value="free">Free</SelectItem>
+                  <SelectItem value="paid">Paid</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Sort */}
+              <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
+                <SelectTrigger className="h-10 w-[130px] rounded-full text-xs">
+                  <SlidersHorizontal className="w-3.5 h-3.5 mr-1.5" />
+                  <SelectValue placeholder="Sort" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="default">Default</SelectItem>
+                  <SelectItem value="title">Title A-Z</SelectItem>
+                  <SelectItem value="price-asc">Price: low-high</SelectItem>
+                  <SelectItem value="price-desc">Price: high-low</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Clear filters */}
+              {(debouncedSearchTerm || selectedLevel !== "all" || caseStudyOnly || priceFilter !== "all" || sortBy !== "default") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setDebouncedSearchTerm("");
+                    setSelectedLevel("all");
+                    setCaseStudyOnly(false);
+                    setPriceFilter("all");
+                    setSortBy("default");
+                  }}
+                  className="h-10 px-3 text-xs"
+                >
+                  <X className="w-3.5 h-3.5 mr-1.5" />
+                  Clear
+                </Button>
+              )}
+
+              {/* View toggle */}
+              <div className="flex items-center gap-1 p-1 bg-secondary rounded-lg flex-shrink-0">
+                <button
+                  onClick={() => setView("grid")}
+                  className={`p-1.5 rounded-md transition-colors ${view === "grid" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                  aria-label="Grid view"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setView("list")}
+                  className={`p-1.5 rounded-md transition-colors ${view === "list" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                  aria-label="List view"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
             </div>
+
             {/* Enrolled info chip */}
             {user && enrollments.length > 0 && (
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary px-3 py-1.5 rounded-full flex-shrink-0">
