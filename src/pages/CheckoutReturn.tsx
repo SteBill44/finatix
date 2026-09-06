@@ -22,6 +22,7 @@ const CheckoutReturn = () => {
     // Link any purchase made before signing in, then refresh the course list
     (async () => {
       await supabase.rpc("claim_guest_purchases");
+      await (supabase.rpc as any)("claim_guest_membership");
       if (cancelled) return;
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
       queryClient.invalidateQueries({ queryKey: ["subscription"] });
