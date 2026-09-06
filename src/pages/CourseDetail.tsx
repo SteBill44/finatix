@@ -758,7 +758,7 @@ const CourseDetail = () => {
                 {requiresPayment && (
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
-                      Secure payment. Taxes shown at checkout.
+                      Secure payment. VAT included - the price shown is the price you pay.
                       {!user && " No account needed - you can set one up right after paying."}
                     </p>
 
