@@ -1,11 +1,15 @@
-# Roadmap
+# Quick Wins Roadmap
 
-## Payments / registrations
-- [x] Enable built-in Stripe payments (UK seller, full compliance handling)
-- [ ] Create course products + one-time GBP prices in the payment provider
-- [ ] Checkout edge function (`create-checkout`) + shared stripe util
-- [ ] Webhook (`payments-webhook`) grants enrolment on successful payment
-- [ ] Replace "Register interest" on course pages with Enrol / Buy course
-- [ ] Free (£0 Certificate-level) courses enrol instantly, no payment
-- [ ] Test-mode banner + checkout return page
-- [ ] Confirm purchase business logic with user (access rules, refunds)
+1. **Polish empty states**
+   - Create shared `EmptyState` component
+   - Apply to Dashboard, Certificates, Notifications, Flashcards, Referrals, Achievements, MasteryRadar, DashboardRedesigned
+
+2. **Improve course discovery**
+   - Add Case Study toggle, Free/Paid filter, Sort dropdown to Courses page
+   - Add debounce to search input
+   - Keep all filtering client-side (small catalog)
+
+3. **Speed up purchase flow**
+   - Add sticky mobile buy bar on CourseDetail
+   - Add clearer value props above price
+   - Keep existing desktop pricing card
