@@ -366,7 +366,7 @@ const Courses = () => {
     <Layout>
       <SEOHead
         title="CIMA Courses"
-        description="Browse Finatix CIMA courses from Certificate (BA1–BA4) through Operational, Management and Strategic levels - with practice exams and AI tools."
+        description="Browse Finatix CIMA courses from Certificate (BA1-BA4) through Operational, Management and Strategic levels - with practice exams and AI tools."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
         canonicalUrl="/courses"
       />
