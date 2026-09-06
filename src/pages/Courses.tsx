@@ -354,6 +354,12 @@ const Courses = () => {
     queryClient.invalidateQueries({ queryKey: ["courses"] });
   };
 
+  // Debounce search input so typing doesn't re-filter on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearchTerm(searchTerm), 250);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   const filteredCourses = useMemo(
     () =>
       [...courses]
