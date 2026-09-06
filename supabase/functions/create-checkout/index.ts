@@ -86,6 +86,8 @@ async function createCheckoutSession(options: {
     ...(customerId && { customer: customerId }),
     ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
     managed_payments: { enabled: true },
+    // Always present the price in GBP - no automatic local-currency conversion.
+    adaptive_pricing: { enabled: false },
     metadata: {
       ...(options.userId && { userId: options.userId }),
       ...(options.courseId && { courseId: options.courseId }),
