@@ -14,7 +14,7 @@ const SITE_URL = "https://finatix.io";
 const DEFAULT_TITLE = "Finatix | CIMA Training & Exam Prep";
 const DEFAULT_DESCRIPTION =
   "CIMA training from Certificate to Strategic level - courses, mock exams, AI study tools, and competency analytics to help you pass faster.";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png?v=2`;
 
 const toAbsolute = (url: string) => {
   if (!url) return url;
@@ -71,6 +71,9 @@ const SEOHead = ({
     updateMeta("og:description", description, true);
     updateMeta("og:type", ogType, true);
     updateMeta("og:image", absoluteOgImage, true);
+    updateMeta("og:image:width", "1200", true);
+    updateMeta("og:image:height", "630", true);
+    updateMeta("og:image:alt", fullTitle, true);
     updateMeta("og:url", resolvedCanonical, true);
     updateMeta("og:site_name", "Finatix", true);
 
@@ -79,6 +82,8 @@ const SEOHead = ({
     updateMeta("twitter:title", fullTitle);
     updateMeta("twitter:description", description);
     updateMeta("twitter:image", absoluteOgImage);
+    updateMeta("twitter:image:alt", fullTitle);
+    updateMeta("twitter:site", "@Finatix");
 
     // Canonical (self-referencing by default)
     updateLink("canonical", resolvedCanonical);
