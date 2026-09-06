@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
+import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/stripe.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -114,11 +114,36 @@ function isoFromUnix(seconds: number | null | undefined): string | null {
 }
 
 async function upsertSubscription(subscription: any, env: StripeEnv) {
-  const userId = subscription.metadata?.userId;
-  if (!userId) {
-    console.error("No userId in subscription metadata");
-    return;
+  let userId: string | null = subscription.metadata?.userId ?? null;
+  let email: string | null = null;
+
+  // Guest checkout: no userId metadata - resolve the customer email and try
+  // to match an existing account, otherwise store the email so the
+  // membership can be claimed when the account is created.
+  const customerId = typeof subscription.customer === "string"
+    ? subscription.customer
+    : subscription.customer?.id;
+  if (customerId) {
+    try {
+      const stripe = createStripeClient(env);
+      const customer = await stripe.customers.retrieve(customerId);
+      if (customer && !(customer as any).deleted) {
+        email = (customer as any).email ?? null;
+      }
+    } catch (e) {
+      console.error("Failed to retrieve customer:", e);
+    }
   }
+
+  if (!userId && email) {
+    const { data: matchedId, error: lookupError } = await getSupabase().rpc(
+      "find_user_id_by_email",
+      { p_email: email },
+    );
+    if (lookupError) console.error("Email lookup failed:", lookupError);
+    if (matchedId) userId = matchedId as string;
+  }
+
   const item = subscription.items?.data?.[0];
   const { priceId, productId } = priceFromItem(item);
   const periodStart = item?.current_period_start ?? subscription.current_period_start;
@@ -126,6 +151,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
 
   const { error } = await getSupabase().from("subscriptions").upsert({
     user_id: userId,
+    customer_email: email,
     stripe_subscription_id: subscription.id,
     stripe_customer_id: typeof subscription.customer === "string"
       ? subscription.customer

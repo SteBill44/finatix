@@ -78,10 +78,12 @@ export default function Checkout() {
 
   const [selectedPlan, setSelectedPlan] = useState(defaultPlan);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
   const { isActive, openBillingPortal, isOpeningPortal } = useSubscription();
 
   const plan = PLANS.find((p) => p.id === selectedPlan) || PLANS[1];
   const paymentsReady = isPaymentsConfigured();
+  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
 
   const startCheckout = () => {
     funnel.enroll({ item_name: plan.name, value: plan.price ?? undefined, currency: "GBP" });
@@ -196,15 +198,6 @@ export default function Checkout() {
                     <Button asChild className="w-full">
                       <Link to="/contact">Contact us about Corporate</Link>
                     </Button>
-                  ) : !user ? (
-                    <div className="space-y-3">
-                      <p className="text-sm text-muted-foreground">
-                        Please sign in first so we can link your membership to your account.
-                      </p>
-                      <Button asChild className="w-full">
-                        <Link to="/auth">Sign in to continue</Link>
-                      </Button>
-                    </div>
                   ) : !paymentsReady ? (
                     <p className="text-sm text-muted-foreground">
                       Payments aren't available right now. Please try again later.
@@ -214,15 +207,42 @@ export default function Checkout() {
                       <PaymentTestModeBanner />
                       <StripeEmbeddedCheckout
                         priceId={plan.priceId}
-                        userId={user.id}
-                        customerEmail={user.email ?? undefined}
+                        userId={user?.id}
+                        customerEmail={user?.email ?? guestEmail.trim()}
                         returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
                       />
                     </div>
                   ) : (
-                    <Button className="w-full" onClick={startCheckout}>
-                      Continue to payment
-                    </Button>
+                    <div className="space-y-3">
+                      {!user && (
+                        <>
+                          <div className="space-y-1.5">
+                            <label htmlFor="guest-email" className="text-sm font-medium">
+                              Email address
+                            </label>
+                            <input
+                              id="guest-email"
+                              type="email"
+                              required
+                              value={guestEmail}
+                              onChange={(e) => setGuestEmail(e.target.value)}
+                              placeholder="you@example.com"
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            No account needed - you can set one up right after paying.
+                          </p>
+                        </>
+                      )}
+                      <Button
+                        className="w-full"
+                        onClick={startCheckout}
+                        disabled={!user && !guestEmailValid}
+                      >
+                        Continue to payment
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>

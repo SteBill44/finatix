@@ -175,6 +175,7 @@ const PostSignInRedirect = () => {
         if (userId) {
           // Link any course bought before this account existed
           void supabase.rpc("claim_guest_purchases").then(() => {}, () => {});
+          void (supabase.rpc as any)("claim_guest_membership").then(() => {}, () => {});
           const { data: profile } = await supabase
             .from("profiles")
             .select("first_name, last_name, cima_id")
