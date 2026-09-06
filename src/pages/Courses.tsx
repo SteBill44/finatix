@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { queries } from "@/lib/api";
 import { CourseGridSkeleton } from "@/components/skeletons/ContentSkeletons";
@@ -24,6 +31,8 @@ import {
   List,
   GraduationCap,
   FileText,
+  SlidersHorizontal,
+  X,
 } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
