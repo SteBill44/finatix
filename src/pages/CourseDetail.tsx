@@ -49,6 +49,7 @@ import {
   BarChart3,
   UserMinus,
   History,
+  Sparkles,
 } from "lucide-react";
 import CourseReviews from "@/components/CourseReviews";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
@@ -718,8 +719,12 @@ const CourseDetail = () => {
                 <div className="text-center mb-6">
                   {requiresPayment ? (
                     <>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        One-time purchase - lifetime access
+                      </span>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
-                      <p className="text-sm text-muted-foreground mt-1">One-off payment - lifetime access</p>
+                      <p className="text-sm text-muted-foreground mt-1">No subscription needed - pay once, keep forever</p>
                     </>
                   ) : isPaidCourse && hasMembership ? (
                     <>
@@ -883,6 +888,27 @@ const CourseDetail = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Sticky mobile CTA bar - keeps the buy button in reach on phones/tablets */}
+      {!isEnrolled && requiresPayment && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-border bg-card/95 backdrop-blur-md p-3 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <div className="container mx-auto px-4 flex items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-lg font-bold text-foreground leading-none">£{coursePrice.toFixed(0)}</p>
+              <p className="text-xs text-muted-foreground truncate">One-time purchase - lifetime access</p>
+            </div>
+            <Button
+              size="lg"
+              className="gap-2 flex-shrink-0"
+              onClick={handleEnroll}
+              disabled={enrollMutation.isPending}
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Buy this course
+            </Button>
+          </div>
+        </div>
+      )}
 
     </Layout>
   );

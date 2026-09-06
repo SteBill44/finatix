@@ -13,6 +13,7 @@ import { useReferralCode, useReferralStats, useMyReferrals, useApplyReferralCode
 import { Navigate, Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import Layout from '@/components/layout/Layout';
+import { EmptyState } from "@/components/EmptyState";
 import { format } from 'date-fns';
 import { CREDITS_TO_DISCOUNT_RATE, MAX_DISCOUNT_PERCENT } from '@/hooks/useReferrals';
 
@@ -427,11 +428,11 @@ export default function Referrals() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No referrals yet</p>
-                    <p className="text-sm">Share your code to start earning rewards!</p>
-                  </div>
+                  <EmptyState
+                    icon={Users}
+                    title="No referrals yet"
+                    description="Share your code to start earning rewards."
+                  />
                 )}
               </CardContent>
             </Card>

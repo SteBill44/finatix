@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import CertificateTemplate from "@/components/certificate/CertificateTemplate";
 import CertificateDownloadButton from "@/components/certificate/CertificateDownloadButton";
 import { useCertificatePDF } from "@/hooks/useCertificatePDF";
+import { EmptyState } from "@/components/EmptyState";
 
 interface Certificate {
   id: string;
@@ -257,21 +258,21 @@ const Certificates = () => {
           </div>
         ) : (
           <Card>
-            <CardContent className="py-16 text-center">
-              <FileX className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
-                {searchQuery ? "No certificates found" : "No certificates yet"}
-              </h3>
-              <p className="text-muted-foreground mb-6">
-                {searchQuery
-                  ? "Try adjusting your search query"
-                  : "Complete a course to earn your first certificate"}
-              </p>
-              {!searchQuery && (
-                <Button onClick={() => navigate("/courses")}>
-                  Browse Courses
-                </Button>
-              )}
+            <CardContent className="p-0">
+              <EmptyState
+                icon={FileX}
+                title={searchQuery ? "No certificates found" : "No certificates yet"}
+                description={
+                  searchQuery
+                    ? "Try adjusting your search query."
+                    : "Complete a course to earn your first certificate."
+                }
+                action={
+                  !searchQuery
+                    ? { label: "Browse Courses", onClick: () => navigate("/courses") }
+                    : undefined
+                }
+              />
             </CardContent>
           </Card>
         )}

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { Bell, CheckCheck, Info, Trophy, BookOpen, MessageSquare, Zap } from "lucide-react";
 import {
   useNotificationsInbox,
@@ -63,12 +64,12 @@ export default function Notifications() {
             </div>
           ) : notifications.length === 0 ? (
             <Card>
-              <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-                <Bell className="w-12 h-12 text-muted-foreground/30" />
-                <p className="text-muted-foreground text-sm">No notifications yet</p>
-                <p className="text-xs text-muted-foreground/60 text-center max-w-xs">
-                  You'll receive notifications about your enrollments, quiz results, achievements, and announcements here.
-                </p>
+              <CardContent className="p-0">
+                <EmptyState
+                  icon={Bell}
+                  title="No notifications yet"
+                  description="You'll receive notifications about your enrollments, quiz results, achievements, and announcements here."
+                />
               </CardContent>
             </Card>
           ) : (

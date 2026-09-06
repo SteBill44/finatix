@@ -19,6 +19,7 @@ import {
 import { DashboardCardSkeleton } from "@/components/skeletons/ContentSkeletons";
 import OnboardingModal from "@/components/onboarding/OnboardingModal";
 import { useOnboarding } from "@/hooks/useOnboarding";
+import { EmptyState } from "@/components/EmptyState";
 import {
   Play,
   GraduationCap,
@@ -240,11 +241,14 @@ const DashboardRedesigned = () => {
               <ContentCard
                 title="Quiz History"
                 items={recentQuizzes}
-                emptyState={
-                  <p className="text-muted-foreground text-center py-8">
-                    No quizzes taken yet
-                  </p>
-                }
+              emptyState={
+                <EmptyState
+                  icon={BookOpen}
+                  title="No quizzes taken yet"
+                  description="Take a quiz to see your recent results here."
+                  className="py-8"
+                />
+              }
               />
             </div>
           )}
