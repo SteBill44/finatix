@@ -719,8 +719,12 @@ const CourseDetail = () => {
                 <div className="text-center mb-6">
                   {requiresPayment ? (
                     <>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        One-time purchase - lifetime access
+                      </span>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
-                      <p className="text-sm text-muted-foreground mt-1">One-off payment - lifetime access</p>
+                      <p className="text-sm text-muted-foreground mt-1">No subscription needed - pay once, keep forever</p>
                     </>
                   ) : isPaidCourse && hasMembership ? (
                     <>
