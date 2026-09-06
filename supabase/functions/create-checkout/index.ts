@@ -3,6 +3,16 @@ import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
 const ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
+// Checkout is intentionally available to signed-out visitors. Reflect the
+// caller's origin here so Lovable preview URLs and the published domains can
+// all complete the browser preflight without weakening authenticated APIs.
+function getCheckoutCorsHeaders(req: Request): Record<string, string> {
+  return {
+    ...getCorsHeaders(req),
+    "Access-Control-Allow-Origin": req.headers.get("Origin") || "*",
+  };
+}
+
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
   options: { email?: string; userId?: string },
@@ -91,7 +101,7 @@ async function createCheckoutSession(options: {
 }
 
 Deno.serve(async (req) => {
-  const cors = getCorsHeaders(req);
+  const cors = getCheckoutCorsHeaders(req);
 
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 204, headers: cors });
