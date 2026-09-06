@@ -664,10 +664,17 @@ const Courses = () => {
           {filteredCourses.length === 0 && !isLoading && (
             <div className="text-center py-20">
               <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
-              <p className="text-muted-foreground text-lg">No courses match your search.</p>
+              <p className="text-muted-foreground text-lg">No courses match your filters.</p>
               <Button
                 variant="outline"
-                onClick={() => { setSearchTerm(""); setSelectedLevel("all"); }}
+                onClick={() => {
+                  setSearchTerm("");
+                  setDebouncedSearchTerm("");
+                  setSelectedLevel("all");
+                  setCaseStudyOnly(false);
+                  setPriceFilter("all");
+                  setSortBy("default");
+                }}
                 className="mt-4"
               >
                 Clear Filters
