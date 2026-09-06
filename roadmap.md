@@ -13,3 +13,5 @@
    - Add sticky mobile buy bar on CourseDetail
    - Add clearer value props above price
    - Keep existing desktop pricing card
+4. **Theme embedded checkout** to match site (orange/charcoal)
+5. **VAT inclusive pricing** - shown price is the final price, VAT inside
