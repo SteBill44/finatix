@@ -1608,6 +1608,7 @@ export type Database = {
           created_at: string
           current_period_end: string | null
           current_period_start: string | null
+          customer_email: string | null
           environment: string
           id: string
           price_id: string | null
@@ -1616,13 +1617,14 @@ export type Database = {
           stripe_customer_id: string
           stripe_subscription_id: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           cancel_at_period_end?: boolean
           created_at?: string
           current_period_end?: string | null
           current_period_start?: string | null
+          customer_email?: string | null
           environment?: string
           id?: string
           price_id?: string | null
@@ -1631,13 +1633,14 @@ export type Database = {
           stripe_customer_id: string
           stripe_subscription_id: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           cancel_at_period_end?: boolean
           created_at?: string
           current_period_end?: string | null
           current_period_start?: string | null
+          customer_email?: string | null
           environment?: string
           id?: string
           price_id?: string | null
@@ -1646,7 +1649,7 @@ export type Database = {
           stripe_customer_id?: string
           stripe_subscription_id?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1938,6 +1941,7 @@ export type Database = {
         }
         Returns: Json
       }
+      claim_guest_membership: { Args: never; Returns: number }
       claim_guest_purchases: { Args: never; Returns: number }
       cleanup_rate_limits: { Args: never; Returns: undefined }
       complete_referral: { Args: { p_referred_id: string }; Returns: Json }
