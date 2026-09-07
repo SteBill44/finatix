@@ -41,6 +41,7 @@ import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import CourseCover from "@/components/course/CourseCover";
 import { useEnrollments, useLessonProgress } from "@/hooks/useStudentProgress";
+import { useSubscription } from "@/hooks/useSubscription";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Course {
@@ -331,6 +332,7 @@ const Courses = () => {
 
   // Enrollment data
   const { data: enrollments = [] } = useEnrollments();
+  const { isActive: hasMembership } = useSubscription();
   const enrolledMap = useMemo(
     () => Object.fromEntries(enrollments.map((e) => [e.course_id, e])),
     [enrollments]
