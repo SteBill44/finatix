@@ -480,6 +480,17 @@ const Courses = () => {
       {/* ── Filters + Courses ── */}
       <section className="py-8 lg:py-10">
         <div className="container mx-auto px-4">
+          {hasMembership && (
+            <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 p-4">
+              <p className="text-sm font-semibold text-foreground">
+                Your membership includes every course
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                You still need to enrol in a course to start it. Pick the one you want to begin with -
+                you can enrol in the others any time.
+              </p>
+            </div>
+          )}
           {/* Filter bar */}
           <div className="flex flex-col lg:flex-row gap-3 mb-6 items-start lg:items-center">
             <div className="relative flex-1 max-w-md w-full lg:w-auto">
