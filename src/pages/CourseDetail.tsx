@@ -755,6 +755,12 @@ const CourseDetail = () => {
                     {requiresPayment ? "Buy this course" : "Start this course"}
                   </Button>
                 )}
+                {hasMembership && !isEnrolled && (
+                  <p className="text-xs text-muted-foreground text-center mt-3">
+                    Your membership covers every course. Enrol in the one you want to begin with -
+                    you can add the others whenever you're ready.
+                  </p>
+                )}
                 {requiresPayment && (
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
