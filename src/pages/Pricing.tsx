@@ -502,7 +502,7 @@ const Pricing = () => {
                                 disabled={enrollMutation.isPending}
                                 onClick={() => handleEnroll(course.id, course.title, course.slug, Number(course.price))}
                               >
-                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Enroll"}
+                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Buy"}
                               </Button>
                             </div>
                           </div>
