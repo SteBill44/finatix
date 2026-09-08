@@ -10,11 +10,9 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
-import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
-import { getBundlePriceId } from "@/lib/coursePricing";
+import PurchaseDialog from "@/components/PurchaseDialog";
+import { getBundlePriceId, getCoursePriceId } from "@/lib/coursePricing";
+import useSubscription from "@/hooks/useSubscription";
 
 const AnimatedCard = ({ 
   children, 
