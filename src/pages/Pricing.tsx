@@ -48,6 +48,7 @@ const Pricing = () => {
   const enrollMutation = useEnrollInCourse();
   const enrollMultipleMutation = useEnrollInMultipleCourses();
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
+  const { isActive: hasMembership } = useSubscription();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
   const [showPurchase, setShowPurchase] = useState(false);
