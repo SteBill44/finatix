@@ -21,3 +21,19 @@ export function getCoursePriceId(slug?: string | null): string | undefined {
   if (!slug) return undefined;
   return COURSE_PRICE_IDS[slug];
 }
+
+/**
+ * Maps a course level (and the all-courses bundle) to its bundle price ID.
+ * The certificate level is free, so it has no bundle price.
+ */
+export const BUNDLE_PRICE_IDS: Record<string, string> = {
+  operational: "bundle_operational_onetime",
+  management: "bundle_management_onetime",
+  strategic: "bundle_strategic_onetime",
+  all: "complete_cima_bundle_onetime",
+};
+
+export function getBundlePriceId(level?: string | null): string | undefined {
+  if (!level) return undefined;
+  return BUNDLE_PRICE_IDS[level.toLowerCase()];
+}

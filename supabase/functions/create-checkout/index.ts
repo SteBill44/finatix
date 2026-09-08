@@ -49,6 +49,8 @@ async function resolveOrCreateCustomer(
 async function createCheckoutSession(options: {
   priceId: string;
   courseId?: string;
+  courseIds?: string[];
+  bundleLabel?: string;
   customerEmail?: string;
   userId?: string;
   returnUrl: string;
