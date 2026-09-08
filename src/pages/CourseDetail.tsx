@@ -875,28 +875,15 @@ const CourseDetail = () => {
         onSuccess={handleCIMAModalSuccess}
       />
 
-      <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-t-4 border-t-primary">
-          <DialogHeader className="px-6 pt-6 pb-2 bg-secondary/40 border-b border-border">
-            <DialogTitle className="text-xl">Buy {course.title}</DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              £{coursePrice.toFixed(0)} - one-time purchase, lifetime access. The price shown is the price you pay.
-            </p>
-          </DialogHeader>
-          <PaymentTestModeBanner />
-          <div className="p-4">
-            {showCheckout && coursePriceId && (
-              <StripeEmbeddedCheckout
-                priceId={coursePriceId}
-                courseId={course.id}
-                userId={user?.id}
-                customerEmail={user?.email ?? undefined}
-                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PurchaseDialog
+        open={showCheckout}
+        onOpenChange={setShowCheckout}
+        priceId={coursePriceId ?? null}
+        courseId={course.id}
+        title={`Buy ${course.title}`}
+        price={coursePrice}
+        returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
+      />
 
       {/* Sticky mobile CTA bar - keeps the buy button in reach on phones/tablets */}
       {!isEnrolled && requiresPayment && (
