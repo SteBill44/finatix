@@ -1,7 +1,44 @@
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
 
 const ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
+
+// What a given price actually unlocks is decided here on the server, never by
+// the browser, so nobody can pay for one course and claim access to others.
+async function resolveCoursesForPrice(
+  priceId: string,
+): Promise<{ courseIds: string[]; isBundle: boolean }> {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+  const { data, error } = await supabase
+    .from("courses")
+    .select("id, slug, level, price");
+  if (error) throw new Error("Could not resolve course access");
+  const courses = data ?? [];
+
+  const bundleMatch = /^bundle_([a-z]+)_onetime$/.exec(priceId);
+  if (bundleMatch) {
+    const level = bundleMatch[1];
+    return {
+      courseIds: courses.filter((c: any) => c.level === level).map((c: any) => c.id),
+      isBundle: true,
+    };
+  }
+  if (priceId === "complete_cima_bundle_onetime") {
+    return { courseIds: courses.map((c: any) => c.id), isBundle: true };
+  }
+
+  const single = courses.find(
+    (c: any) => `course_${String(c.slug).replace(/-/g, "_")}_onetime` === priceId,
+  );
+  if (single) return { courseIds: [single.id], isBundle: false };
+
+  // Memberships and anything else grant no course-specific access here.
+  return { courseIds: [], isBundle: false };
+}
 
 // Checkout is intentionally available to signed-out visitors. Reflect the
 // caller's origin here so Lovable preview URLs and the published domains can
