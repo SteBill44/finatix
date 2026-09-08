@@ -25,11 +25,8 @@ export const useCourseDetailOptimized = (courseId: string) => {
     queryFn: async (): Promise<CourseDetailResponse> => {
       const [courseRes, lessonsRes, quizzesRes] = await Promise.all([
         supabase.from("courses").select("*").eq("id", courseId).maybeSingle(),
-        supabase
-          .from("lessons")
-          .select("*")
-          .eq("course_id", courseId)
-          .order("order_index", { ascending: true }),
+        // Curriculum preview only - lesson content stays locked until purchase
+        (supabase as any).rpc("get_course_curriculum", { p_course_id: courseId }),
         supabase.from("quizzes").select("*").eq("course_id", courseId),
       ]);
 
@@ -38,6 +35,7 @@ export const useCourseDetailOptimized = (courseId: string) => {
       if (quizzesRes.error) throw quizzesRes.error;
 
       const lessons = lessonsRes.data || [];
+
 
       let progress: LessonProgressSummary[] | null = null;
       if (user?.id && lessons.length > 0) {

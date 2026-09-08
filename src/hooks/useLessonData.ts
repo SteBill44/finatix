@@ -26,19 +26,25 @@ export const useLessons = (courseId?: string) => {
   return useQuery({
     queryKey: ["lessons", courseId],
     queryFn: async () => {
-      let query = supabase
+      // Curriculum listing: titles/durations only, safe to show before purchase
+      if (courseId) {
+        const { data, error } = await (supabase as any).rpc("get_course_curriculum", {
+          p_course_id: courseId,
+        });
+        if (error) throw error;
+        return (data || []) as any[];
+      }
+
+      const { data, error } = await supabase
         .from("lessons")
         .select("*")
         .order("order_index", { ascending: true });
-
-      if (courseId) query = query.eq("course_id", courseId);
-
-      const { data, error } = await query;
       if (error) throw error;
-      return data;
+      return data as any[];
     },
   });
 };
+
 
 export const useLessonProgress = (courseId?: string) => {
   const { user } = useAuth();

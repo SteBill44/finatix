@@ -1964,6 +1964,18 @@ export type Database = {
         }[]
       }
       get_admin_dashboard_stats: { Args: never; Returns: Json }
+      get_course_curriculum: {
+        Args: { p_course_id: string }
+        Returns: {
+          course_id: string
+          description: string
+          duration_minutes: number
+          has_video: boolean
+          id: string
+          order_index: number
+          title: string
+        }[]
+      }
       get_course_detail_with_progress: {
         Args: { p_course_id: string; p_user_id?: string }
         Returns: Json
@@ -2013,6 +2025,10 @@ export type Database = {
       }
       has_attempted_quiz: {
         Args: { _quiz_id: string; _user_id: string }
+        Returns: boolean
+      }
+      has_course_access: {
+        Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
       has_role: {
