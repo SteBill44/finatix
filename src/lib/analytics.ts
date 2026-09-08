@@ -94,15 +94,6 @@ export const funnel = {
 
   purchase: (params: { transaction_id?: string; value: number; currency?: string; items?: unknown[] }) =>
     trackEvent("purchase", { currency: "GBP", ...params }),
-
-  demoStarted: () => trackEvent("demo_start"),
-
-  demoStep: (index: number, name: string) =>
-    trackEvent("demo_step_view", { step_index: index, step_name: name }),
-
-  demoCompleted: () => trackEvent("demo_complete"),
-
-  demoCta: (cta: "start_free" | "view_pricing") => trackEvent("demo_cta_click", { cta }),
 };
 
 // Extract UTM params from the current URL. Returns only present keys.

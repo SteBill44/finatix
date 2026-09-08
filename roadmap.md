@@ -1,21 +1,17 @@
-# Finatix growth roadmap
+# Quick Wins Roadmap
 
-## Done
-- Empty states, course discovery filters, faster purchase flow
-- Themed checkout, VAT-inclusive pricing
-- Priority 1: homepage repositioning ("The smarter way to pass CIMA", Start free / See a demo / Explore CIMA courses, product showcase, Know where you stand, Why Finatix)
-- Priority 2: interactive 5-step demo at /demo, no account needed, with analytics events (demo_start, demo_step_view, demo_complete, demo_cta_click)
+1. **Polish empty states**
+   - Create shared `EmptyState` component
+   - Apply to Dashboard, Certificates, Notifications, Flashcards, Referrals, Achievements, MasteryRadar, DashboardRedesigned
 
-## Open
-3. Free account experience - make free Certificate content prominent, reduce signup friction
-4. Course landing pages for every exam (BA1-BA4, E/P/F 1-3, OCS, MCS, SCS) with syllabus, content, FAQs, CTAs
-5. Trust and social proof - admin placeholders for student numbers, reviews, pass data (never fabricate)
-6. Student success stories section (genuine students only)
-7. Pricing page tightening - Pro £49/mo, Lifetime £999, Start free primary CTA
-8. SEO: per-exam keyword targeting, CIMA Resource Hub (study guides, formula sheets, exam tips, CIMA vs ACCA)
-9. Blog / content system with SEO fields and course CTAs
-10. FAQ sections plus FAQ schema on major pages
-11. Admin analytics view and business metrics (MRR, churn, free-to-paid)
-12. Referral programme infrastructure
-13. For Employers foundations
-14. Course availability labelling (Available now vs Coming soon, register interest)
+2. **Improve course discovery**
+   - Add Case Study toggle, Free/Paid filter, Sort dropdown to Courses page
+   - Add debounce to search input
+   - Keep all filtering client-side (small catalog)
+
+3. **Speed up purchase flow**
+   - Add sticky mobile buy bar on CourseDetail
+   - Add clearer value props above price
+   - Keep existing desktop pricing card
+4. **Theme embedded checkout** to match site (orange/charcoal)
+5. **VAT inclusive pricing** - shown price is the final price, VAT inside
