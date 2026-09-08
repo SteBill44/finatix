@@ -5,10 +5,15 @@ import JsonLd from "@/components/JsonLd";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Mail, 
-  MapPin, 
-  Send
+import {
+  Mail,
+  MapPin,
+  Send,
+  PlayCircle,
+  CheckCircle2,
+  BarChart3,
+  BookOpen,
+  CircleHelp,
 } from "lucide-react";
 import {
   Accordion,
