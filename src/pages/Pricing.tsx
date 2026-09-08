@@ -85,63 +85,40 @@ const Pricing = () => {
     });
   };
 
-  const handleBuyLevelBundle = async (level: string, levelCourses: typeof courses) => {
-    if (!user) {
-      toast.error("Please sign in to purchase");
-      navigate("/auth");
+  const openBundleCheckout = (
+    level: string,
+    label: string,
+    bundleCourses: typeof courses,
+    price: number,
+  ) => {
+    const priceId = getBundlePriceId(level);
+    if (!priceId) {
+      toast.error("This bundle isn't available to buy yet");
       return;
     }
-
-    if (!levelCourses || levelCourses.length === 0) {
-      toast.error("No courses found for this level");
+    if (!bundleCourses || bundleCourses.length === 0) {
+      toast.error("No courses found for this bundle");
       return;
     }
-
-    await checkCIMAAndExecute(async () => {
-      const courseIds = levelCourses.map(c => c.id);
-      try {
-        const result = await enrollMultipleMutation.mutateAsync(courseIds);
-        if (result.enrolled > 0) {
-          toast.success(`Successfully enrolled in ${result.enrolled} ${level} level courses!`);
-          navigate("/dashboard");
-        } else {
-          toast.info("You're already enrolled in all courses for this level");
-          navigate("/dashboard");
-        }
-      } catch (error: any) {
-        toast.error(error.message || "Failed to enroll in bundle");
-      }
+    setBundle({
+      priceId,
+      label,
+      price,
+      courseIds: bundleCourses.map((c) => c.id),
+      courseCount: bundleCourses.length,
     });
+    setGuestEmail("");
+    setShowBundleCheckout(true);
   };
 
-  const handleBuyAllCourses = async () => {
-    if (!user) {
-      toast.error("Please sign in to purchase");
-      navigate("/auth");
-      return;
-    }
-
-    if (!courses || courses.length === 0) {
-      toast.error("No courses available");
-      return;
-    }
-
-    await checkCIMAAndExecute(async () => {
-      const courseIds = courses.map(c => c.id);
-      try {
-        const result = await enrollMultipleMutation.mutateAsync(courseIds);
-        if (result.enrolled > 0) {
-          toast.success(`Successfully enrolled in ${result.enrolled} courses!`);
-          navigate("/dashboard");
-        } else {
-          toast.info("You're already enrolled in all courses");
-          navigate("/dashboard");
-        }
-      } catch (error: any) {
-        toast.error(error.message || "Failed to enroll in all courses");
-      }
-    });
+  const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
+    openBundleCheckout(level, `${levelNames[level] ?? level} Bundle`, levelCourses, levelBundlePrice);
   };
+
+  const handleBuyAllCourses = () => {
+    openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
+  };
+
 
   const handleCIMAModalSuccess = () => {
     if (pendingAction) {
