@@ -163,17 +163,14 @@ Deno.serve(async (req) => {
     if (typeof body?.priceId !== "string") throw new Error("Missing priceId");
     if (typeof body?.returnUrl !== "string") throw new Error("Missing returnUrl");
 
-    const UUID = /^[0-9a-fA-F-]{36}$/;
-    const courseIds = Array.isArray(body?.courseIds)
-      ? (body.courseIds as unknown[])
-        .filter((id): id is string => typeof id === "string" && UUID.test(id))
-        .slice(0, 30)
-      : undefined;
+    // Access is derived from the price on the server; client-sent course IDs
+    // are ignored on purpose.
+    const resolved = await resolveCoursesForPrice(body.priceId);
 
     const clientSecret = await createCheckoutSession({
       priceId: body.priceId,
-      courseId: typeof body.courseId === "string" ? body.courseId : undefined,
-      courseIds: courseIds?.length ? courseIds : undefined,
+      courseId: !resolved.isBundle ? resolved.courseIds[0] : undefined,
+      courseIds: resolved.isBundle ? resolved.courseIds : undefined,
       bundleLabel: typeof body.bundleLabel === "string" ? body.bundleLabel.slice(0, 60) : undefined,
       customerEmail: typeof body.customerEmail === "string" ? body.customerEmail : undefined,
       userId: typeof body.userId === "string" ? body.userId : undefined,
