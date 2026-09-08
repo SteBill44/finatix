@@ -97,7 +97,6 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
-  const [showCheckout, setShowCheckout] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
 
 
@@ -247,7 +246,14 @@ const CourseDetail = () => {
         toast.error("Payments aren't available right now. Please try again later.");
         return;
       }
-      setShowCheckout(true);
+      const q = new URLSearchParams({
+        priceId: coursePriceId ?? "",
+        title: `Buy ${course.title}`,
+        price: String(coursePrice),
+        courseId: course.id,
+        slug: course.slug ?? "",
+      });
+      navigate(`/checkout/pay?${q.toString()}`);
       return;
     }
 
