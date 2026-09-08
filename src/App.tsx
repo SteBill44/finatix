@@ -59,6 +59,7 @@ const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 
 const Checkout = lazy(() => import("./pages/Checkout"));
 const CheckoutReturn = lazy(() => import("./pages/CheckoutReturn"));
+const CheckoutPay = lazy(() => import("./pages/CheckoutPay"));
 
 // Configure QueryClient with global error handling
 const queryClient = new QueryClient({
