@@ -179,7 +179,7 @@ const Pricing = () => {
     {
       name: "Single Module",
       description: "Perfect for focusing on one exam at a time",
-      price: 149,
+      price: 199,
       period: "per module",
       features: [
         { text: "One module of your choice", included: true },
