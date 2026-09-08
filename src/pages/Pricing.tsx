@@ -10,11 +10,9 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
-import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
-import { getBundlePriceId } from "@/lib/coursePricing";
+import PurchaseDialog from "@/components/PurchaseDialog";
+import { getBundlePriceId, getCoursePriceId } from "@/lib/coursePricing";
+import useSubscription from "@/hooks/useSubscription";
 
 const AnimatedCard = ({ 
   children, 
@@ -50,20 +48,19 @@ const Pricing = () => {
   const enrollMutation = useEnrollInCourse();
   const enrollMultipleMutation = useEnrollInMultipleCourses();
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
+  const { isActive: hasMembership } = useSubscription();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
-  const [showBundleCheckout, setShowBundleCheckout] = useState(false);
-  const [guestEmail, setGuestEmail] = useState("");
-  const [bundle, setBundle] = useState<{
+  const [showPurchase, setShowPurchase] = useState(false);
+  const [purchase, setPurchase] = useState<{
     priceId: string;
-    label: string;
+    title: string;
     price: number;
-    courseIds: string[];
-    courseCount: number;
+    courseId?: string;
+    courseIds?: string[];
+    bundleLabel?: string;
+    courseCount?: number;
   } | null>(null);
-
-  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
-  const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
@@ -78,16 +75,34 @@ const Pricing = () => {
     await action();
   };
 
-  const handleEnroll = async (courseId: string, courseName: string) => {
-    if (!user) {
-      toast.error("Please sign in to enroll");
-      navigate("/auth");
+  const handleEnroll = async (
+    courseId: string,
+    courseName: string,
+    courseSlug?: string,
+    coursePrice?: number,
+  ) => {
+    if (user && isEnrolled(courseId)) {
+      toast.info("You're already enrolled in this course");
+      navigate("/dashboard");
       return;
     }
 
-    if (isEnrolled(courseId)) {
-      toast.info("You're already enrolled in this course");
-      navigate("/dashboard");
+    // Paid courses go straight to payment - no sign-in needed
+    const priceId = getCoursePriceId(courseSlug);
+    if (priceId && (coursePrice ?? 0) > 0 && !hasMembership) {
+      setPurchase({
+        priceId,
+        title: `Buy ${courseName}`,
+        price: coursePrice ?? 0,
+        courseId,
+      });
+      setShowPurchase(true);
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please sign in to start this course");
+      navigate("/auth");
       return;
     }
 
@@ -117,15 +132,15 @@ const Pricing = () => {
       toast.error("No courses found for this bundle");
       return;
     }
-    setBundle({
+    setPurchase({
       priceId,
-      label,
+      title: `Buy ${label}`,
+      bundleLabel: label,
       price,
       courseIds: bundleCourses.map((c) => c.id),
       courseCount: bundleCourses.length,
     });
-    setGuestEmail("");
-    setShowBundleCheckout(true);
+    setShowPurchase(true);
   };
 
   const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
@@ -135,6 +150,7 @@ const Pricing = () => {
   const handleBuyAllCourses = () => {
     openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
   };
+
 
 
   const handleCIMAModalSuccess = () => {
@@ -484,9 +500,9 @@ const Pricing = () => {
                                 size="sm"
                                 variant={enrolled ? "outline" : isFree ? "default" : "secondary"}
                                 disabled={enrollMutation.isPending}
-                                onClick={() => handleEnroll(course.id, course.title)}
+                                onClick={() => handleEnroll(course.id, course.title, course.slug, Number(course.price))}
                               >
-                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Enroll"}
+                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Buy"}
                               </Button>
                             </div>
                           </div>
@@ -589,48 +605,17 @@ const Pricing = () => {
         onSuccess={handleCIMAModalSuccess}
       />
 
-      <Dialog open={showBundleCheckout} onOpenChange={setShowBundleCheckout}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-t-4 border-t-primary">
-          <DialogHeader className="px-6 pt-6 pb-2 bg-secondary/40 border-b border-border">
-            <DialogTitle className="text-xl">Buy {bundle?.label}</DialogTitle>
-            <p className="text-sm text-muted-foreground">
-              £{bundle?.price.toLocaleString()} - one-time purchase, lifetime access to all{" "}
-              {bundle?.courseCount} courses. The price shown is the price you pay.
-            </p>
-          </DialogHeader>
-          <PaymentTestModeBanner />
-          <div className="p-4 space-y-4">
-            {!user && (
-              <div className="space-y-2">
-                <label htmlFor="bundle-guest-email" className="text-sm font-medium">
-                  Your email address
-                </label>
-                <Input
-                  id="bundle-guest-email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground">
-                  No account needed to buy. If this email already has an account, your courses are
-                  added to it - otherwise you'll be invited to create one straight after payment.
-                </p>
-              </div>
-            )}
-            {showBundleCheckout && bundle && (user || guestEmailValid) && (
-              <StripeEmbeddedCheckout
-                priceId={bundle.priceId}
-                courseIds={bundle.courseIds}
-                bundleLabel={bundle.label}
-                userId={user?.id}
-                customerEmail={checkoutEmail}
-                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <PurchaseDialog
+        open={showPurchase}
+        onOpenChange={setShowPurchase}
+        priceId={purchase?.priceId ?? null}
+        courseId={purchase?.courseId}
+        courseIds={purchase?.courseIds}
+        bundleLabel={purchase?.bundleLabel}
+        title={purchase?.title ?? "Complete your purchase"}
+        price={purchase?.price}
+        courseCount={purchase?.courseCount}
+      />
 
     </Layout>
   );
