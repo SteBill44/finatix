@@ -76,8 +76,8 @@ const Index = () => {
   return (
     <Layout>
       <SEOHead
-        description="Master your CIMA qualification with Finatix. Comprehensive courses from Certificate to Strategic level, practice exams, and AI-powered study tools."
-        keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep"
+        description="The smarter way to pass CIMA. AI-powered learning that adapts to what you know, finds your weak areas and tells you exactly what to study next. Start free."
+        keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep, CIMA revision, CIMA practice questions"
         canonicalUrl={BASE_URL}
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
