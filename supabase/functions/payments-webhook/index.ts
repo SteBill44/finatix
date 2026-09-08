@@ -13,12 +13,18 @@ function getSupabase() {
 }
 
 async function grantCourseAccess(session: any, env: StripeEnv) {
-  const courseId = session.metadata?.courseId;
+  const bundleIds: string[] = (session.metadata?.courseIds ?? "")
+    .split(",")
+    .map((id: string) => id.trim())
+    .filter(Boolean);
+  const singleId = session.metadata?.courseId;
+  const courseIds: string[] = bundleIds.length ? bundleIds : (singleId ? [singleId] : []);
+  const isBundle = bundleIds.length > 0;
   const email = session.customer_details?.email ?? session.customer_email ?? null;
   let userId: string | null = session.metadata?.userId ?? null;
 
-  if (!courseId) {
-    console.log("Session without courseId metadata - nothing to grant");
+  if (!courseIds.length) {
+    console.log("Session without course metadata - nothing to grant");
     return;
   }
 
@@ -34,56 +40,73 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
     if (matchedId) userId = matchedId as string;
   }
 
-  // Record the purchase (idempotent on the Stripe session id)
-  const { error: purchaseError } = await supabase.from("course_purchases").upsert({
-    user_id: userId,
-    course_id: courseId,
-    customer_email: email,
-    stripe_session_id: session.id,
-    stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
-    price_id: session.metadata?.priceId ?? null,
-    amount_total: session.amount_total ?? null,
-    currency: session.currency ?? null,
-    status: "paid",
-    environment: env,
-  }, { onConflict: "stripe_session_id" });
+  // Record a purchase row per course (idempotent on the stripe session key)
+  for (const courseId of courseIds) {
+    const sessionKey = isBundle ? `${session.id}#${courseId}` : session.id;
+    const { error: purchaseError } = await supabase.from("course_purchases").upsert({
+      user_id: userId,
+      course_id: courseId,
+      customer_email: email,
+      stripe_session_id: sessionKey,
+      stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
+      price_id: session.metadata?.priceId ?? null,
+      amount_total: isBundle ? null : (session.amount_total ?? null),
+      currency: session.currency ?? null,
+      status: "paid",
+      environment: env,
+    }, { onConflict: "stripe_session_id" });
 
-  if (purchaseError) console.error("Failed to record purchase:", purchaseError);
+    if (purchaseError) console.error("Failed to record purchase:", purchaseError);
+  }
 
   if (!userId) {
     console.log("Guest purchase recorded - will be claimed when the account is created");
     return;
   }
 
-  // Enrol the student (ignore duplicates)
-  const { data: existing } = await supabase
-    .from("enrollments")
-    .select("id")
-    .eq("user_id", userId)
-    .eq("course_id", courseId)
-    .maybeSingle();
-
-  if (!existing) {
-    const { error: enrollError } = await supabase
+  // Enrol the student in every purchased course (ignore duplicates)
+  for (const courseId of courseIds) {
+    const { data: existing } = await supabase
       .from("enrollments")
-      .insert({ user_id: userId, course_id: courseId });
-    if (enrollError) console.error("Failed to enrol user:", enrollError);
+      .select("id")
+      .eq("user_id", userId)
+      .eq("course_id", courseId)
+      .maybeSingle();
+
+    if (!existing) {
+      const { error: enrollError } = await supabase
+        .from("enrollments")
+        .insert({ user_id: userId, course_id: courseId });
+      if (enrollError) console.error("Failed to enrol user:", enrollError);
+    }
   }
 
   // Let the student know
-  const { data: course } = await supabase
-    .from("courses")
-    .select("title")
-    .eq("id", courseId)
-    .maybeSingle();
+  if (isBundle) {
+    const label = session.metadata?.bundleLabel ?? "Your bundle";
+    await supabase.from("notifications").insert({
+      user_id: userId,
+      type: "success",
+      title: "Your bundle is unlocked",
+      message:
+        `Your payment was received and ${label} is now unlocked (${courseIds.length} courses). Pick the course you want to start with.`,
+      data: { course_ids: courseIds },
+    });
+  } else {
+    const { data: course } = await supabase
+      .from("courses")
+      .select("title")
+      .eq("id", courseIds[0])
+      .maybeSingle();
 
-  await supabase.from("notifications").insert({
-    user_id: userId,
-    type: "success",
-    title: "You're enrolled",
-    message: `Your payment was received and ${course?.title ?? "your course"} is now unlocked. Happy studying!`,
-    data: { course_id: courseId },
-  });
+    await supabase.from("notifications").insert({
+      user_id: userId,
+      type: "success",
+      title: "You're enrolled",
+      message: `Your payment was received and ${course?.title ?? "your course"} is now unlocked. Happy studying!`,
+      data: { course_id: courseIds[0] },
+    });
+  }
 }
 
 async function markPaymentFailed(session: any, env: StripeEnv) {

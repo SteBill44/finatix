@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 interface StripeEmbeddedCheckoutProps {
   priceId: string;
   courseId?: string;
+  courseIds?: string[];
+  bundleLabel?: string;
   customerEmail?: string;
   userId?: string;
   returnUrl?: string;
@@ -15,6 +17,8 @@ interface StripeEmbeddedCheckoutProps {
 export function StripeEmbeddedCheckout({
   priceId,
   courseId,
+  courseIds,
+  bundleLabel,
   customerEmail,
   userId,
   returnUrl,
@@ -23,6 +27,7 @@ export function StripeEmbeddedCheckout({
   // Bumping this forces a brand new payment session (stale sessions expire
   // and make Stripe render "Something went wrong").
   const [attempt, setAttempt] = useState(0);
+  const courseIdsKey = courseIds?.join(",");
 
   const fetchClientSecret = useCallback(async (): Promise<string> => {
     setFailed(false);
@@ -30,6 +35,8 @@ export function StripeEmbeddedCheckout({
       body: {
         priceId,
         courseId,
+        courseIds,
+        bundleLabel,
         customerEmail,
         userId,
         returnUrl: returnUrl ??
@@ -42,7 +49,8 @@ export function StripeEmbeddedCheckout({
       throw new Error(error?.message || data?.error || "Failed to start checkout");
     }
     return data.clientSecret;
-  }, [priceId, courseId, customerEmail, userId, returnUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [priceId, courseId, courseIdsKey, bundleLabel, customerEmail, userId, returnUrl]);
 
   const options = useMemo(() => ({ fetchClientSecret }), [fetchClientSecret]);
 

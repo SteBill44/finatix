@@ -49,6 +49,8 @@ async function resolveOrCreateCustomer(
 async function createCheckoutSession(options: {
   priceId: string;
   courseId?: string;
+  courseIds?: string[];
+  bundleLabel?: string;
   customerEmail?: string;
   userId?: string;
   returnUrl: string;
@@ -89,6 +91,8 @@ async function createCheckoutSession(options: {
     metadata: {
       ...(options.userId && { userId: options.userId }),
       ...(options.courseId && { courseId: options.courseId }),
+      ...(options.courseIds?.length && { courseIds: options.courseIds.join(",") }),
+      ...(options.bundleLabel && { bundleLabel: options.bundleLabel }),
       priceId: options.priceId,
       managed_payments: "true",
     },
@@ -122,9 +126,18 @@ Deno.serve(async (req) => {
     if (typeof body?.priceId !== "string") throw new Error("Missing priceId");
     if (typeof body?.returnUrl !== "string") throw new Error("Missing returnUrl");
 
+    const UUID = /^[0-9a-fA-F-]{36}$/;
+    const courseIds = Array.isArray(body?.courseIds)
+      ? (body.courseIds as unknown[])
+        .filter((id): id is string => typeof id === "string" && UUID.test(id))
+        .slice(0, 30)
+      : undefined;
+
     const clientSecret = await createCheckoutSession({
       priceId: body.priceId,
       courseId: typeof body.courseId === "string" ? body.courseId : undefined,
+      courseIds: courseIds?.length ? courseIds : undefined,
+      bundleLabel: typeof body.bundleLabel === "string" ? body.bundleLabel.slice(0, 60) : undefined,
       customerEmail: typeof body.customerEmail === "string" ? body.customerEmail : undefined,
       userId: typeof body.userId === "string" ? body.userId : undefined,
       returnUrl: body.returnUrl,

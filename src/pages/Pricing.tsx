@@ -10,6 +10,11 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
+import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
+import { getBundlePriceId } from "@/lib/coursePricing";
 
 const AnimatedCard = ({ 
   children, 
@@ -47,6 +52,18 @@ const Pricing = () => {
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
+  const [showBundleCheckout, setShowBundleCheckout] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
+  const [bundle, setBundle] = useState<{
+    priceId: string;
+    label: string;
+    price: number;
+    courseIds: string[];
+    courseCount: number;
+  } | null>(null);
+
+  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
+  const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
@@ -85,63 +102,40 @@ const Pricing = () => {
     });
   };
 
-  const handleBuyLevelBundle = async (level: string, levelCourses: typeof courses) => {
-    if (!user) {
-      toast.error("Please sign in to purchase");
-      navigate("/auth");
+  const openBundleCheckout = (
+    level: string,
+    label: string,
+    bundleCourses: typeof courses,
+    price: number,
+  ) => {
+    const priceId = getBundlePriceId(level);
+    if (!priceId) {
+      toast.error("This bundle isn't available to buy yet");
       return;
     }
-
-    if (!levelCourses || levelCourses.length === 0) {
-      toast.error("No courses found for this level");
+    if (!bundleCourses || bundleCourses.length === 0) {
+      toast.error("No courses found for this bundle");
       return;
     }
-
-    await checkCIMAAndExecute(async () => {
-      const courseIds = levelCourses.map(c => c.id);
-      try {
-        const result = await enrollMultipleMutation.mutateAsync(courseIds);
-        if (result.enrolled > 0) {
-          toast.success(`Successfully enrolled in ${result.enrolled} ${level} level courses!`);
-          navigate("/dashboard");
-        } else {
-          toast.info("You're already enrolled in all courses for this level");
-          navigate("/dashboard");
-        }
-      } catch (error: any) {
-        toast.error(error.message || "Failed to enroll in bundle");
-      }
+    setBundle({
+      priceId,
+      label,
+      price,
+      courseIds: bundleCourses.map((c) => c.id),
+      courseCount: bundleCourses.length,
     });
+    setGuestEmail("");
+    setShowBundleCheckout(true);
   };
 
-  const handleBuyAllCourses = async () => {
-    if (!user) {
-      toast.error("Please sign in to purchase");
-      navigate("/auth");
-      return;
-    }
-
-    if (!courses || courses.length === 0) {
-      toast.error("No courses available");
-      return;
-    }
-
-    await checkCIMAAndExecute(async () => {
-      const courseIds = courses.map(c => c.id);
-      try {
-        const result = await enrollMultipleMutation.mutateAsync(courseIds);
-        if (result.enrolled > 0) {
-          toast.success(`Successfully enrolled in ${result.enrolled} courses!`);
-          navigate("/dashboard");
-        } else {
-          toast.info("You're already enrolled in all courses");
-          navigate("/dashboard");
-        }
-      } catch (error: any) {
-        toast.error(error.message || "Failed to enroll in all courses");
-      }
-    });
+  const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
+    openBundleCheckout(level, `${levelNames[level] ?? level} Bundle`, levelCourses, levelBundlePrice);
   };
+
+  const handleBuyAllCourses = () => {
+    openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
+  };
+
 
   const handleCIMAModalSuccess = () => {
     if (pendingAction) {
@@ -395,10 +389,9 @@ const Pricing = () => {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
-                  disabled={enrollMultipleMutation.isPending}
                   onClick={handleBuyAllCourses}
                 >
-                  {enrollMultipleMutation.isPending ? "Enrolling..." : `Buy All ${allCoursesCount} Courses`}
+                  {`Buy All ${allCoursesCount} Courses`}
                 </Button>
               </div>
             )}
@@ -453,10 +446,9 @@ const Pricing = () => {
                                 level === 'management' ? 'bg-purple hover:bg-purple/90' : 
                                 'bg-red hover:bg-red/90'
                               } text-white`}
-                              disabled={enrollMultipleMutation.isPending}
                               onClick={() => handleBuyLevelBundle(level, levelCourses)}
                             >
-                              {enrollMultipleMutation.isPending ? "Enrolling..." : "Buy Level Bundle"}
+                              Buy Level Bundle
                             </Button>
                           </div>
                         )}
@@ -596,6 +588,50 @@ const Pricing = () => {
         }}
         onSuccess={handleCIMAModalSuccess}
       />
+
+      <Dialog open={showBundleCheckout} onOpenChange={setShowBundleCheckout}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-t-4 border-t-primary">
+          <DialogHeader className="px-6 pt-6 pb-2 bg-secondary/40 border-b border-border">
+            <DialogTitle className="text-xl">Buy {bundle?.label}</DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              £{bundle?.price.toLocaleString()} - one-time purchase, lifetime access to all{" "}
+              {bundle?.courseCount} courses. The price shown is the price you pay.
+            </p>
+          </DialogHeader>
+          <PaymentTestModeBanner />
+          <div className="p-4 space-y-4">
+            {!user && (
+              <div className="space-y-2">
+                <label htmlFor="bundle-guest-email" className="text-sm font-medium">
+                  Your email address
+                </label>
+                <Input
+                  id="bundle-guest-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  No account needed to buy. If this email already has an account, your courses are
+                  added to it - otherwise you'll be invited to create one straight after payment.
+                </p>
+              </div>
+            )}
+            {showBundleCheckout && bundle && (user || guestEmailValid) && (
+              <StripeEmbeddedCheckout
+                priceId={bundle.priceId}
+                courseIds={bundle.courseIds}
+                bundleLabel={bundle.label}
+                userId={user?.id}
+                customerEmail={checkoutEmail}
+                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </Layout>
   );
 };
