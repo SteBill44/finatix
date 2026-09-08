@@ -82,8 +82,11 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
+      <ProductShowcase />
+      <KnowWhereYouStand />
+      <WhyFinatix />
       <WhatIsCIMA />
-      
+
       <Features />
       <LearningPathway />
       <CareerPathways />
