@@ -126,8 +126,6 @@ Deno.serve(async (req) => {
     if (typeof body?.priceId !== "string") throw new Error("Missing priceId");
     if (typeof body?.returnUrl !== "string") throw new Error("Missing returnUrl");
 
-    const clientSecret = await createCheckoutSession({
-      priceId: body.priceId,
     const UUID = /^[0-9a-fA-F-]{36}$/;
     const courseIds = Array.isArray(body?.courseIds)
       ? (body.courseIds as unknown[])
