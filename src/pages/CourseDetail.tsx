@@ -58,7 +58,6 @@ import { getCoursePriceId } from "@/lib/coursePricing";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import PurchaseDialog from "@/components/PurchaseDialog";
 
 import MockExamHistory from "@/components/course/MockExamHistory";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
@@ -881,16 +880,6 @@ const CourseDetail = () => {
           setPendingEnrollment(false);
         }}
         onSuccess={handleCIMAModalSuccess}
-      />
-
-      <PurchaseDialog
-        open={showCheckout}
-        onOpenChange={setShowCheckout}
-        priceId={coursePriceId ?? null}
-        courseId={course.id}
-        title={`Buy ${course.title}`}
-        price={coursePrice}
-        returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
       />
 
       {/* Sticky mobile CTA bar - keeps the buy button in reach on phones/tablets */}
