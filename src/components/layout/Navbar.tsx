@@ -72,10 +72,10 @@ const Navbar = () => {
   }, [user]);
 
   const navLinks = [
-    { name: "COURSES", path: "/courses" },
+    { name: "HOME", path: "/" },
     { name: "WHY CIMA?", path: "/why-cima" },
+    { name: "EXPLORE COURSES", path: "/courses" },
     { name: "PRICING", path: "/pricing" },
-    { name: "SEE A DEMO", path: "/demo" },
     { name: "ABOUT", path: "/about" },
     { name: "CONTACT", path: "/contact" },
     ...(user ? [{ name: "DASHBOARD", path: "/dashboard" }] : []),
@@ -217,7 +217,7 @@ const Navbar = () => {
                   SIGN IN
                 </Link>
                 <Link to="/auth?mode=signup">
-                  <Button size="sm">Start Free</Button>
+                  <Button size="sm">Get Started</Button>
                 </Link>
               </>
             )}
@@ -357,7 +357,7 @@ const Navbar = () => {
                       </Button>
                     </Link>
                     <Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full">Start Free</Button>
+                      <Button className="w-full">Get Started</Button>
                     </Link>
                   </>
                 )}
