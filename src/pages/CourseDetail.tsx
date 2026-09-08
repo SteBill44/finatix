@@ -58,6 +58,7 @@ import { getCoursePriceId } from "@/lib/coursePricing";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import PurchaseDialog from "@/components/PurchaseDialog";
 
 import MockExamHistory from "@/components/course/MockExamHistory";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
