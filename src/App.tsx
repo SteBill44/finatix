@@ -25,6 +25,7 @@ import { Loader2 } from "lucide-react";
 // Lazy load all page components
 const Index = lazy(() => import("./pages/Index"));
 const WhyCIMA = lazy(() => import("./pages/WhyCIMA"));
+const Demo = lazy(() => import("./pages/Demo"));
 const Courses = lazy(() => import("./pages/Courses"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const Lesson = lazy(() => import("./pages/Lesson"));
