@@ -160,7 +160,7 @@ const Pricing = () => {
 
   // Calculate total price of all courses dynamically
   const totalAllCoursesPrice = courses?.reduce((sum, c) => sum + Number(c.price || 0), 0) || 0;
-  const allCoursesBundlePrice = 999;
+  const allCoursesBundlePrice = 499;
   const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
   const allCoursesCount = courses?.length || 0;
 
@@ -179,7 +179,7 @@ const Pricing = () => {
     {
       name: "Single Module",
       description: "Perfect for focusing on one exam at a time",
-      price: 149,
+      price: 199,
       period: "per module",
       features: [
         { text: "One module of your choice", included: true },
@@ -218,9 +218,9 @@ const Pricing = () => {
     {
       name: "Unlimited Bundle",
       description: "Everything you need to become CIMA qualified",
-      price: 999,
+      price: 499,
       period: "one-time payment",
-      originalPrice: 1940,
+      originalPrice: totalAllCoursesPrice || 2388,
       subtitle: "Lifetime access - best value",
       features: [
         { text: "All CIMA modules", included: true },
