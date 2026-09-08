@@ -117,6 +117,7 @@ const AnimatedRoutes = () => {
           {/* Public routes */}
           <Route path="/" element={<Public feature="Home"><Index /></Public>} />
           <Route path="/why-cima" element={<Public feature="Why CIMA"><WhyCIMA /></Public>} />
+          <Route path="/demo" element={<Public feature="Demo"><Demo /></Public>} />
           <Route path="/courses" element={<Public feature="Courses"><Courses /></Public>} />
           <Route path="/courses/:courseId" element={<Public feature="Course Detail"><CourseDetail /></Public>} />
           <Route path="/pricing" element={<Public feature="Pricing"><Pricing /></Public>} />
