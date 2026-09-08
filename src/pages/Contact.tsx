@@ -265,6 +265,103 @@ const Contact = () => {
           </div>
         </div>
       </section>
+
+      {/* Course Demo Section */}
+      <section className="py-12 lg:py-16 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              Sneak Peek
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              See What a Finatix Course Looks Like
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              A quick look inside the learning experience before you join
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Video lesson mock */}
+            <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
+              <div className="relative aspect-video bg-gradient-to-br from-primary/80 to-teal/70 flex items-center justify-center">
+                <PlayCircle className="w-14 h-14 text-white/90" />
+                <span className="absolute bottom-3 left-3 text-xs font-medium text-white/90 bg-black/30 rounded px-2 py-0.5">
+                  Lesson 4 · Variance Analysis · 12:36
+                </span>
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <h3 className="font-semibold text-foreground">Bite-sized video lessons</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Every topic is broken into short, focused videos with downloadable notes and worked examples.
+                </p>
+              </div>
+            </div>
+
+            {/* Quiz mock */}
+            <div className="bg-card rounded-2xl border border-border p-5 shadow-sm flex flex-col">
+              <div className="flex items-center gap-2 mb-3">
+                <CircleHelp className="w-4 h-4 text-primary" />
+                <h3 className="font-semibold text-foreground">Exam-style practice</h3>
+              </div>
+              <p className="text-sm font-medium text-foreground mb-3">
+                A company budgeted 10,000 units but produced 9,200. What is this called?
+              </p>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-muted-foreground">
+                  <span className="w-4 h-4 rounded-full border border-border" /> Sales variance
+                </div>
+                <div className="flex items-center gap-2 rounded-lg border border-primary/50 bg-primary/5 px-3 py-2 text-foreground">
+                  <CheckCircle2 className="w-4 h-4 text-primary" /> Volume variance
+                </div>
+                <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-muted-foreground">
+                  <span className="w-4 h-4 rounded-full border border-border" /> Price variance
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Instant feedback with a full explanation for every answer.
+              </p>
+            </div>
+
+            {/* Analytics mock */}
+            <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="w-4 h-4 text-primary" />
+                <h3 className="font-semibold text-foreground">Competency analytics</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { label: "Cost accounting", pct: 86 },
+                  { label: "Budgeting", pct: 64 },
+                  { label: "Financial reporting", pct: 42 },
+                ].map((row) => (
+                  <div key={row.label}>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-foreground font-medium">{row.label}</span>
+                      <span className="text-muted-foreground">{row.pct}%</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-muted overflow-hidden">
+                      <div className="h-full rounded-full bg-primary" style={{ width: `${row.pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Your dashboard highlights weak areas so you know exactly what to revise next.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
+            <Button asChild size="lg">
+              <a href="/courses">Browse the Courses</a>
+            </Button>
+          </div>
+        </div>
+      </section>
     </Layout>
   );
 };
