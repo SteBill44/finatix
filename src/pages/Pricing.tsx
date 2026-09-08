@@ -160,7 +160,7 @@ const Pricing = () => {
 
   // Calculate total price of all courses dynamically
   const totalAllCoursesPrice = courses?.reduce((sum, c) => sum + Number(c.price || 0), 0) || 0;
-  const allCoursesBundlePrice = 999;
+  const allCoursesBundlePrice = 499;
   const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
   const allCoursesCount = courses?.length || 0;
 
