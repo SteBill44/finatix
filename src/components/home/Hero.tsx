@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, GraduationCap } from "lucide-react";
+import { ArrowRight, PlayCircle, BookOpen } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
 
+const proofPoints = [
+  "Adaptive practice",
+  "Exam readiness score",
+  "AI study assistant",
+  "Personalised study plans",
+];
 
 const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -23,30 +29,27 @@ const Hero = () => {
       ref={sectionRef}
       className="relative min-h-screen flex flex-col justify-center pt-24 pb-12 overflow-hidden -mt-16 bg-secondary/[0.38]"
     >
-
-
-
       <motion.div
         style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
         className="container mx-auto px-4 py-20 relative z-10"
       >
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="inline-block text-xs font-semibold uppercase tracking-[0.18em] text-primary mb-5"
+          >
+            AI-powered CIMA learning platform
+          </motion.span>
+
           {/* Heading */}
-          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 tracking-tight">
-            <SplitTextReveal
-              as="span"
-              delay={0.2}
-              className="block text-charcoal dark:text-white"
-            >
-              LAUNCH YOUR CAREER IN
+          <div className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-5 tracking-tight">
+            <SplitTextReveal as="span" delay={0.2} className="block text-charcoal dark:text-white">
+              The smarter way
             </SplitTextReveal>
-            <SplitTextReveal
-              as="span"
-              delay={0.5}
-              className="block"
-              wordClassName="text-gradient-brand"
-            >
-              MANAGEMENT ACCOUNTING
+            <SplitTextReveal as="span" delay={0.45} className="block" wordClassName="text-gradient-brand">
+              to pass CIMA
             </SplitTextReveal>
           </div>
 
@@ -55,16 +58,17 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-10"
+            className="text-lg md:text-xl text-charcoal/75 dark:text-white/70 max-w-2xl mb-8"
           >
-            Build exam-ready confidence with structured CIMA lessons, adaptive practice, mock exams, progress insights, and focused revision tools for every qualification level.
+            AI-powered CIMA learning that adapts to what you know, identifies what you don't, and
+            tells you exactly what to study next.
           </motion.p>
 
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col sm:flex-row items-start gap-4"
           >
             <MagneticButton strength={0.08}>
@@ -73,8 +77,20 @@ const Hero = () => {
                   size="xl"
                   className="shadow-lg shadow-primary/20 group transition-all duration-300 hover:shadow-xl hover:shadow-primary/30"
                 >
-                  Start for free
+                  Start free
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </MagneticButton>
+            <MagneticButton strength={0.08}>
+              <Link to="/demo">
+                <Button
+                  size="xl"
+                  variant="outline"
+                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
+                >
+                  <PlayCircle className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
+                  See a demo
                 </Button>
               </Link>
             </MagneticButton>
@@ -86,23 +102,26 @@ const Hero = () => {
                   className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
                 >
                   <BookOpen className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-                  Explore courses
-                </Button>
-              </Link>
-            </MagneticButton>
-            <MagneticButton strength={0.08}>
-              <Link to="/why-cima">
-                <Button
-                  size="xl"
-                  variant="outline"
-                  className="shadow-md bg-white/70 border-charcoal/30 text-charcoal hover:bg-white/90 hover:border-charcoal/50 dark:bg-black/50 dark:border-white/40 dark:text-white dark:hover:bg-black/70 dark:hover:border-white/60 backdrop-blur-md group transition-all duration-300 hover:shadow-lg"
-                >
-                  <GraduationCap className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-                  Why CIMA?
+                  Explore CIMA courses
                 </Button>
               </Link>
             </MagneticButton>
           </motion.div>
+
+          {/* Proof points */}
+          <motion.ul
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.05 }}
+            className="flex flex-wrap gap-x-6 gap-y-2 mt-10 text-sm text-charcoal/70 dark:text-white/60"
+          >
+            {proofPoints.map((p) => (
+              <li key={p} className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                {p}
+              </li>
+            ))}
+          </motion.ul>
         </div>
       </motion.div>
 
@@ -111,7 +130,7 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden sm:flex flex-col items-center gap-2"
       >
         <span className="text-xs text-charcoal dark:text-white/80 uppercase tracking-[0.2em] font-semibold">
           Scroll to explore
