@@ -160,12 +160,12 @@ const Pricing = () => {
 
   // Calculate total price of all courses dynamically
   const totalAllCoursesPrice = courses?.reduce((sum, c) => sum + Number(c.price || 0), 0) || 0;
-  const allCoursesBundlePrice = 499;
+  const allCoursesBundlePrice = 999;
   const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
   const allCoursesCount = courses?.length || 0;
 
   // Level bundle price
-  const levelBundlePrice = 449;
+  const levelBundlePrice = 499;
 
   const levelOrder = ['certificate', 'operational', 'management', 'strategic'];
   const levelNames: Record<string, string> = {
@@ -218,7 +218,7 @@ const Pricing = () => {
     {
       name: "Unlimited Bundle",
       description: "Everything you need to become CIMA qualified",
-      price: 499,
+      price: 999,
       period: "one-time payment",
       originalPrice: totalAllCoursesPrice || 2388,
       subtitle: "Lifetime access - best value",
