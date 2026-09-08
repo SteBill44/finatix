@@ -218,9 +218,9 @@ const Pricing = () => {
     {
       name: "Unlimited Bundle",
       description: "Everything you need to become CIMA qualified",
-      price: 999,
+      price: 499,
       period: "one-time payment",
-      originalPrice: 1940,
+      originalPrice: totalAllCoursesPrice || 2388,
       subtitle: "Lifetime access - best value",
       features: [
         { text: "All CIMA modules", included: true },
