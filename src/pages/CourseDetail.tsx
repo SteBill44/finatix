@@ -241,20 +241,22 @@ const CourseDetail = () => {
   const handleEnroll = async () => {
     if (!course) return;
 
-    // Guests can buy a paid course straight away and create their account afterwards
-    if (!user) {
-      if (requiresPayment) {
-        if (!paymentsReady) {
-          toast.error("Payments aren't available right now. Please try again later.");
-          return;
-        }
-        setShowCheckout(true);
+    // Paying is never gated: anyone can buy and sort out their account after
+    if (requiresPayment) {
+      if (!paymentsReady) {
+        toast.error("Payments aren't available right now. Please try again later.");
         return;
       }
+      setShowCheckout(true);
+      return;
+    }
+
+    if (!user) {
       toast.error("Please sign in to start this course");
       navigate("/auth");
       return;
     }
+
     if (!hasCompleteProfile && !isLoadingProfile) {
       setPendingEnrollment(true);
       setShowCIMAModal(true);
@@ -267,16 +269,6 @@ const CourseDetail = () => {
   const performEnrollment = async () => {
     if (!course) return;
     setPendingEnrollment(false);
-
-    // Paid courses go through checkout; free courses and members enrol instantly
-    if (requiresPayment) {
-      if (!paymentsReady) {
-        toast.error("Payments aren't available right now. Please try again later.");
-        return;
-      }
-      setShowCheckout(true);
-      return;
-    }
 
     try {
       await enrollMutation.mutateAsync(course.id);
@@ -292,16 +284,31 @@ const CourseDetail = () => {
 
 
   const handleCIMAModalSuccess = () => {
-    if (pendingEnrollment) performEnrollment();
+    if (pendingEnrollment) {
+      performEnrollment();
+      return;
+    }
+    goToFirstLesson();
   };
 
-  const handleStartLearning = () => {
+  const goToFirstLesson = () => {
     if (lessons && lessons.length > 0) {
       const firstIncomplete = lessons.find((l) => !isLessonCompleted(l.id));
       const targetLesson = firstIncomplete || lessons[0];
       navigate(`/courses/${course?.id}/lesson/${targetLesson.id}`);
     }
   };
+
+  const handleStartLearning = () => {
+    // Collect CIMA details once, at the point of actually starting to study
+    if (user && !hasCompleteProfile && !isLoadingProfile) {
+      setPendingEnrollment(false);
+      setShowCIMAModal(true);
+      return;
+    }
+    goToFirstLesson();
+  };
+
 
   const handleUnenroll = async () => {
     if (!course) return;
