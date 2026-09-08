@@ -217,7 +217,7 @@ const Navbar = () => {
                   SIGN IN
                 </Link>
                 <Link to="/auth?mode=signup">
-                  <Button size="sm">Get Started</Button>
+                  <Button size="sm">Start Free</Button>
                 </Link>
               </>
             )}
