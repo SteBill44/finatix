@@ -188,20 +188,31 @@ const Lesson = () => {
   }
 
   if (!currentLesson) {
+    // Lesson content is only returned for people who own the course
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Lesson not found</h2>
-            <p className="text-muted-foreground mb-4">This lesson doesn't exist or has been removed.</p>
-            <Button onClick={() => navigate(`/courses/${courseId}`)}>
-              Back to Course
-            </Button>
+        <div className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center max-w-md">
+            <h2 className="text-2xl font-bold text-foreground mb-2">This lesson is locked</h2>
+            <p className="text-muted-foreground mb-4">
+              {user
+                ? "You need to buy this course (or a membership) before you can open its lessons."
+                : "Sign in with the account you bought this course on, or buy it to unlock the lessons."}
+            </p>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={() => navigate(`/courses/${courseId}`)}>View course</Button>
+              {!user && (
+                <Button variant="outline" onClick={() => navigate("/auth")}>
+                  Sign in
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </Layout>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-background flex">
