@@ -588,6 +588,50 @@ const Pricing = () => {
         }}
         onSuccess={handleCIMAModalSuccess}
       />
+
+      <Dialog open={showBundleCheckout} onOpenChange={setShowBundleCheckout}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-t-4 border-t-primary">
+          <DialogHeader className="px-6 pt-6 pb-2 bg-secondary/40 border-b border-border">
+            <DialogTitle className="text-xl">Buy {bundle?.label}</DialogTitle>
+            <p className="text-sm text-muted-foreground">
+              £{bundle?.price.toLocaleString()} - one-time purchase, lifetime access to all{" "}
+              {bundle?.courseCount} courses. The price shown is the price you pay.
+            </p>
+          </DialogHeader>
+          <PaymentTestModeBanner />
+          <div className="p-4 space-y-4">
+            {!user && (
+              <div className="space-y-2">
+                <label htmlFor="bundle-guest-email" className="text-sm font-medium">
+                  Your email address
+                </label>
+                <Input
+                  id="bundle-guest-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  No account needed to buy. If this email already has an account, your courses are
+                  added to it - otherwise you'll be invited to create one straight after payment.
+                </p>
+              </div>
+            )}
+            {showBundleCheckout && bundle && (user || guestEmailValid) && (
+              <StripeEmbeddedCheckout
+                priceId={bundle.priceId}
+                courseIds={bundle.courseIds}
+                bundleLabel={bundle.label}
+                userId={user?.id}
+                customerEmail={checkoutEmail}
+                returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
     </Layout>
   );
 };
