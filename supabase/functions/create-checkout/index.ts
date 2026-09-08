@@ -91,6 +91,8 @@ async function createCheckoutSession(options: {
     metadata: {
       ...(options.userId && { userId: options.userId }),
       ...(options.courseId && { courseId: options.courseId }),
+      ...(options.courseIds?.length && { courseIds: options.courseIds.join(",") }),
+      ...(options.bundleLabel && { bundleLabel: options.bundleLabel }),
       priceId: options.priceId,
       managed_payments: "true",
     },
