@@ -51,6 +51,7 @@ const Certificates = lazy(() => import("./pages/Certificates"));
 const Referrals = lazy(() => import("./pages/Referrals"));
 const PracticeMode = lazy(() => import("./pages/PracticeMode"));
 const Brand = lazy(() => import("./pages/Brand"));
+const Demo = lazy(() => import("./pages/Demo"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Flashcards = lazy(() => import("./pages/Flashcards"));
 const FlashcardStudy = lazy(() => import("./pages/FlashcardStudy"));
@@ -129,6 +130,7 @@ const AnimatedRoutes = () => {
           <Route path="/terms" element={<Public feature="Terms of Service"><TermsOfService /></Public>} />
           <Route path="/verify" element={<Public feature="Certificate Verification"><CertificateVerify /></Public>} />
           <Route path="/brand" element={<Public feature="Brand"><Brand /></Public>} />
+          <Route path="/demo" element={<Public feature="Demo"><Demo /></Public>} />
 
           {/* Protected routes - require authentication */}
           <Route path="/courses/:courseId/lesson/:lessonId" element={<Protected feature="Lesson"><Lesson /></Protected>} />
