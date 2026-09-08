@@ -389,10 +389,9 @@ const Pricing = () => {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
-                  disabled={enrollMultipleMutation.isPending}
                   onClick={handleBuyAllCourses}
                 >
-                  {enrollMultipleMutation.isPending ? "Enrolling..." : `Buy All ${allCoursesCount} Courses`}
+                  {`Buy All ${allCoursesCount} Courses`}
                 </Button>
               </div>
             )}
@@ -447,10 +446,9 @@ const Pricing = () => {
                                 level === 'management' ? 'bg-purple hover:bg-purple/90' : 
                                 'bg-red hover:bg-red/90'
                               } text-white`}
-                              disabled={enrollMultipleMutation.isPending}
                               onClick={() => handleBuyLevelBundle(level, levelCourses)}
                             >
-                              {enrollMultipleMutation.isPending ? "Enrolling..." : "Buy Level Bundle"}
+                              Buy Level Bundle
                             </Button>
                           </div>
                         )}
