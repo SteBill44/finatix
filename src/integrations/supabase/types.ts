@@ -1976,14 +1976,6 @@ export type Database = {
           title: string
         }[]
       }
-      get_course_detail_with_progress: {
-        Args: { p_course_id: string; p_user_id?: string }
-        Returns: Json
-      }
-      get_lesson_detail_with_context: {
-        Args: { p_lesson_id: string; p_user_id?: string }
-        Returns: Json
-      }
       get_or_create_referral_code: {
         Args: { p_user_id: string }
         Returns: string
@@ -2001,10 +1993,6 @@ export type Database = {
           question: string
           quiz_id: string
         }[]
-      }
-      get_quiz_with_questions: {
-        Args: { p_quiz_id: string; p_user_id?: string }
-        Returns: Json
       }
       get_referral_stats: { Args: { p_user_id: string }; Returns: Json }
       get_user_profile_with_audit: {
