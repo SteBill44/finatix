@@ -2,6 +2,9 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
+import ProductShowcase from "@/components/home/ProductShowcase";
+import KnowWhereYouStand from "@/components/home/KnowWhereYouStand";
+import WhyFinatix from "@/components/home/WhyFinatix";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 
 import Features from "@/components/home/Features";
@@ -73,14 +76,17 @@ const Index = () => {
   return (
     <Layout>
       <SEOHead
-        description="Master your CIMA qualification with Finatix. Comprehensive courses from Certificate to Strategic level, practice exams, and AI-powered study tools."
-        keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep"
+        description="The smarter way to pass CIMA. AI-powered learning that adapts to what you know, finds your weak areas and tells you exactly what to study next. Start free."
+        keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep, CIMA revision, CIMA practice questions"
         canonicalUrl={BASE_URL}
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
+      <ProductShowcase />
+      <KnowWhereYouStand />
+      <WhyFinatix />
       <WhatIsCIMA />
-      
+
       <Features />
       <LearningPathway />
       <CareerPathways />
