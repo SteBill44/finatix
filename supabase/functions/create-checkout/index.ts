@@ -128,7 +128,18 @@ Deno.serve(async (req) => {
 
     const clientSecret = await createCheckoutSession({
       priceId: body.priceId,
+    const UUID = /^[0-9a-fA-F-]{36}$/;
+    const courseIds = Array.isArray(body?.courseIds)
+      ? (body.courseIds as unknown[])
+        .filter((id): id is string => typeof id === "string" && UUID.test(id))
+        .slice(0, 30)
+      : undefined;
+
+    const clientSecret = await createCheckoutSession({
+      priceId: body.priceId,
       courseId: typeof body.courseId === "string" ? body.courseId : undefined,
+      courseIds: courseIds?.length ? courseIds : undefined,
+      bundleLabel: typeof body.bundleLabel === "string" ? body.bundleLabel.slice(0, 60) : undefined,
       customerEmail: typeof body.customerEmail === "string" ? body.customerEmail : undefined,
       userId: typeof body.userId === "string" ? body.userId : undefined,
       returnUrl: body.returnUrl,
