@@ -8,38 +8,11 @@ import { motion } from "framer-motion";
 import SplitTextReveal from "./SplitTextReveal";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
+import { HOMEPAGE_FAQS } from "@/content/faqs";
 
 const FAQ = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(headerRef, { once: true, amount: 0.3 });
-
-  const faqs = [
-    {
-      question: "How long do I have to complete my training course?",
-      answer:
-        "You will have lifetime access to your course. You can work through your course at a pace that suits you. Once you have completed your course you will retain your access and be able to jump back in any time you want to refresh your memory.",
-    },
-    {
-      question: "When will my training course start?",
-      answer:
-        "Our courses are delivered on-demand. This means you can start and stop learning whenever you like. There is no time limit and no restriction on how many times you can access course content.",
-    },
-    {
-      question: "Does my course purchase include a CIMA exam voucher?",
-      answer:
-        "No. CIMA exam vouchers need to be purchased separately through CIMA. You can find further information about this on our CIMA Accreditation page.",
-    },
-    {
-      question: "Can I add my certification to my resume?",
-      answer:
-        "Absolutely! Demonstrating your dedication to professional development in management accounting is always a great idea. Our certifications are already recognised by leading professionals who value our training and certifications.",
-    },
-    {
-      question: "Can I buy training courses for people in my company?",
-      answer:
-        "Yes! You can create an account for an individual and purchase a course for them through our online payment portal for instant access. Alternatively, for multiple employees please get in contact with us using our contact form.",
-    },
-  ];
 
   return (
     <section className="py-12 lg:py-20 bg-card">
@@ -59,22 +32,21 @@ const FAQ = () => {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-muted-foreground"
             >
-              Before you move on, take a look at our FAQs in case we have
-              already answered any question you may have.
+              Everything students usually ask before creating an account.
             </motion.p>
           </div>
 
           {/* FAQ Accordion */}
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
+            {HOMEPAGE_FAQS.map((faq, index) => (
               <motion.div
-                key={index}
+                key={faq.question}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
                   duration: 0.6,
-                  delay: index * 0.06,
+                  delay: index * 0.04,
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
