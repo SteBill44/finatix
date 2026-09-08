@@ -10,6 +10,11 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
+import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
+import { getBundlePriceId } from "@/lib/coursePricing";
 
 const AnimatedCard = ({ 
   children, 
@@ -47,6 +52,18 @@ const Pricing = () => {
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
+  const [showBundleCheckout, setShowBundleCheckout] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
+  const [bundle, setBundle] = useState<{
+    priceId: string;
+    label: string;
+    price: number;
+    courseIds: string[];
+    courseCount: number;
+  } | null>(null);
+
+  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
+  const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
