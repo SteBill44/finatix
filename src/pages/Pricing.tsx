@@ -10,7 +10,6 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import PurchaseDialog from "@/components/PurchaseDialog";
 import { getBundlePriceId, getCoursePriceId } from "@/lib/coursePricing";
 import useSubscription from "@/hooks/useSubscription";
 
@@ -51,16 +50,22 @@ const Pricing = () => {
   const { isActive: hasMembership } = useSubscription();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
-  const [showPurchase, setShowPurchase] = useState(false);
-  const [purchase, setPurchase] = useState<{
+
+  // Everything paid goes through the dedicated checkout page
+  const goToCheckout = (item: {
     priceId: string;
     title: string;
     price: number;
     courseId?: string;
     courseIds?: string[];
     bundleLabel?: string;
-    courseCount?: number;
-  } | null>(null);
+  }) => {
+    const q = new URLSearchParams({ priceId: item.priceId, title: item.title, price: String(item.price) });
+    if (item.courseId) q.set("courseId", item.courseId);
+    if (item.courseIds?.length) q.set("courses", item.courseIds.join(","));
+    if (item.bundleLabel) q.set("bundle", item.bundleLabel);
+    navigate(`/checkout/pay?${q.toString()}`);
+  };
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
@@ -90,13 +95,12 @@ const Pricing = () => {
     // Paid courses go straight to payment - no sign-in needed
     const priceId = getCoursePriceId(courseSlug);
     if (priceId && (coursePrice ?? 0) > 0 && !hasMembership) {
-      setPurchase({
+      goToCheckout({
         priceId,
         title: `Buy ${courseName}`,
         price: coursePrice ?? 0,
         courseId,
       });
-      setShowPurchase(true);
       return;
     }
 
@@ -132,15 +136,13 @@ const Pricing = () => {
       toast.error("No courses found for this bundle");
       return;
     }
-    setPurchase({
+    goToCheckout({
       priceId,
       title: `Buy ${label}`,
       bundleLabel: label,
       price,
       courseIds: bundleCourses.map((c) => c.id),
-      courseCount: bundleCourses.length,
     });
-    setShowPurchase(true);
   };
 
   const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
@@ -603,18 +605,6 @@ const Pricing = () => {
           setPendingAction(null);
         }}
         onSuccess={handleCIMAModalSuccess}
-      />
-
-      <PurchaseDialog
-        open={showPurchase}
-        onOpenChange={setShowPurchase}
-        priceId={purchase?.priceId ?? null}
-        courseId={purchase?.courseId}
-        courseIds={purchase?.courseIds}
-        bundleLabel={purchase?.bundleLabel}
-        title={purchase?.title ?? "Complete your purchase"}
-        price={purchase?.price}
-        courseCount={purchase?.courseCount}
       />
 
     </Layout>

@@ -58,7 +58,6 @@ import { getCoursePriceId } from "@/lib/coursePricing";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import PurchaseDialog from "@/components/PurchaseDialog";
 
 import MockExamHistory from "@/components/course/MockExamHistory";
 import ReadinessScoreCard from "@/components/course/ReadinessScoreCard";
@@ -98,7 +97,6 @@ const CourseDetail = () => {
   const [pendingEnrollment, setPendingEnrollment] = useState(false);
   const [autoEnrolled, setAutoEnrolled] = useState(false);
   const [showUnenrollDialog, setShowUnenrollDialog] = useState(false);
-  const [showCheckout, setShowCheckout] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
 
 
@@ -248,7 +246,14 @@ const CourseDetail = () => {
         toast.error("Payments aren't available right now. Please try again later.");
         return;
       }
-      setShowCheckout(true);
+      const q = new URLSearchParams({
+        priceId: coursePriceId ?? "",
+        title: `Buy ${course.title}`,
+        price: String(coursePrice),
+        courseId: course.id,
+        slug: course.slug ?? "",
+      });
+      navigate(`/checkout/pay?${q.toString()}`);
       return;
     }
 
@@ -881,16 +886,6 @@ const CourseDetail = () => {
           setPendingEnrollment(false);
         }}
         onSuccess={handleCIMAModalSuccess}
-      />
-
-      <PurchaseDialog
-        open={showCheckout}
-        onOpenChange={setShowCheckout}
-        priceId={coursePriceId ?? null}
-        courseId={course.id}
-        title={`Buy ${course.title}`}
-        price={coursePrice}
-        returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}&course=${course.slug}`}
       />
 
       {/* Sticky mobile CTA bar - keeps the buy button in reach on phones/tablets */}

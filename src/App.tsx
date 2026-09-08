@@ -59,6 +59,7 @@ const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 
 const Checkout = lazy(() => import("./pages/Checkout"));
 const CheckoutReturn = lazy(() => import("./pages/CheckoutReturn"));
+const CheckoutPay = lazy(() => import("./pages/CheckoutPay"));
 
 // Configure QueryClient with global error handling
 const queryClient = new QueryClient({
@@ -151,6 +152,7 @@ const AnimatedRoutes = () => {
           
           
           <Route path="/checkout" element={<Public feature="Checkout"><Checkout /></Public>} />
+          <Route path="/checkout/pay" element={<Public feature="Checkout Payment"><CheckoutPay /></Public>} />
           <Route path="/checkout/return" element={<Public feature="Checkout Return"><CheckoutReturn /></Public>} />
 
           <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
