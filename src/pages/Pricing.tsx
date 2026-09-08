@@ -52,18 +52,16 @@ const Pricing = () => {
   const { hasCompleteProfile, isLoading: isLoadingProfile } = useHasCIMAProfile();
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
-  const [showBundleCheckout, setShowBundleCheckout] = useState(false);
-  const [guestEmail, setGuestEmail] = useState("");
-  const [bundle, setBundle] = useState<{
+  const [showPurchase, setShowPurchase] = useState(false);
+  const [purchase, setPurchase] = useState<{
     priceId: string;
-    label: string;
+    title: string;
     price: number;
-    courseIds: string[];
-    courseCount: number;
+    courseId?: string;
+    courseIds?: string[];
+    bundleLabel?: string;
+    courseCount?: number;
   } | null>(null);
-
-  const guestEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
-  const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
 
   const isEnrolled = (courseId: string) => {
     return enrollments?.some((e) => e.course_id === courseId);
@@ -78,16 +76,34 @@ const Pricing = () => {
     await action();
   };
 
-  const handleEnroll = async (courseId: string, courseName: string) => {
-    if (!user) {
-      toast.error("Please sign in to enroll");
-      navigate("/auth");
+  const handleEnroll = async (
+    courseId: string,
+    courseName: string,
+    courseSlug?: string,
+    coursePrice?: number,
+  ) => {
+    if (user && isEnrolled(courseId)) {
+      toast.info("You're already enrolled in this course");
+      navigate("/dashboard");
       return;
     }
 
-    if (isEnrolled(courseId)) {
-      toast.info("You're already enrolled in this course");
-      navigate("/dashboard");
+    // Paid courses go straight to payment - no sign-in needed
+    const priceId = getCoursePriceId(courseSlug);
+    if (priceId && (coursePrice ?? 0) > 0 && !hasMembership) {
+      setPurchase({
+        priceId,
+        title: `Buy ${courseName}`,
+        price: coursePrice ?? 0,
+        courseId,
+      });
+      setShowPurchase(true);
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please sign in to start this course");
+      navigate("/auth");
       return;
     }
 
@@ -117,15 +133,15 @@ const Pricing = () => {
       toast.error("No courses found for this bundle");
       return;
     }
-    setBundle({
+    setPurchase({
       priceId,
-      label,
+      title: `Buy ${label}`,
+      bundleLabel: label,
       price,
       courseIds: bundleCourses.map((c) => c.id),
       courseCount: bundleCourses.length,
     });
-    setGuestEmail("");
-    setShowBundleCheckout(true);
+    setShowPurchase(true);
   };
 
   const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
@@ -135,6 +151,7 @@ const Pricing = () => {
   const handleBuyAllCourses = () => {
     openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
   };
+
 
 
   const handleCIMAModalSuccess = () => {
