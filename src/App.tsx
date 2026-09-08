@@ -152,6 +152,7 @@ const AnimatedRoutes = () => {
           
           
           <Route path="/checkout" element={<Public feature="Checkout"><Checkout /></Public>} />
+          <Route path="/checkout/pay" element={<Public feature="Checkout Payment"><CheckoutPay /></Public>} />
           <Route path="/checkout/return" element={<Public feature="Checkout Return"><CheckoutReturn /></Public>} />
 
           <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
