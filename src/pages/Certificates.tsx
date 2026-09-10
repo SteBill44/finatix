@@ -170,7 +170,10 @@ const Certificates = () => {
             My <span className="text-gradient-brand">Certificates</span>
           </h1>
           <p className="text-muted-foreground">
-            View, download and share your earned certificates
+            View, download and share your Finatix course completion certificates
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-xs text-muted-foreground">
+            {CERTIFICATE_MEANING.summary} {CERTIFICATE_MEANING.notWhat}
           </p>
         </div>
 
