@@ -27,12 +27,17 @@ const FAQ = () => {
     {
       question: "Does my course purchase include a CIMA exam voucher?",
       answer:
-        "No. CIMA exam vouchers need to be purchased separately through CIMA. You can find further information about this on our CIMA Accreditation page.",
+        "No. Your Finatix price covers Finatix study material only. CIMA registration, the annual student subscription and every exam fee are set and charged by AICPA & CIMA and paid directly to them. Current fees are listed on the AICPA & CIMA fees page.",
     },
     {
-      question: "Can I add my certification to my resume?",
+      question: "Is Finatix accredited by CIMA?",
       answer:
-        "Absolutely! Demonstrating your dedication to professional development in management accounting is always a great idea. Our certifications are already recognised by leading professionals who value our training and certifications.",
+        "No. Finatix is an independent study provider. We are not accredited by, approved by, affiliated with or endorsed by CIMA or AICPA & CIMA. Our courses are written to the published CIMA syllabus areas, and CIMA remains the only body that sets the exams and awards the qualification.",
+    },
+    {
+      question: "Can I put my Finatix certificate on my CV?",
+      answer:
+        "Yes, as evidence of the study you have completed. Be clear about what it is: a Finatix certificate of completion showing you finished a Finatix course and passed its final assessment. It is not a CIMA qualification, a CIMA exam result, CIMA membership or a professional designation, and it gives no exemption from any CIMA exam.",
     },
     {
       question: "Can I buy training courses for people in my company?",
