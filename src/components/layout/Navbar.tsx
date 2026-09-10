@@ -74,6 +74,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "HOME", path: "/" },
     { name: "WHY CIMA?", path: "/why-cima" },
+    { name: "START HERE", path: "/start" },
     { name: "EXPLORE COURSES", path: "/courses" },
     { name: "PRICING", path: "/pricing" },
     { name: "ABOUT", path: "/about" },

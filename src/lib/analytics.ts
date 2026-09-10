@@ -110,3 +110,26 @@ export function getUtmParams(): Record<string, string> {
   }
   return out;
 }
+
+// Entry-journey events ------------------------------------------------------
+// These carry only journey / course identifiers. Never emails, answers,
+// names or any other personal or assessment content.
+
+export const journeyAnalytics = {
+  selected: (params: { journey: string; level?: string; paper_code?: string }) =>
+    trackEvent("journey_selected", params),
+
+  skipped: (params: { from?: string } = {}) => trackEvent("journey_skipped", params),
+
+  contextSet: (params: { journey: string; level?: string; paper_code?: string; sitting?: string }) =>
+    trackEvent("journey_context_set", params),
+
+  sampleStart: (params: { paper_code?: string; course_slug?: string; kind: "lesson" | "question" }) =>
+    trackEvent("sample_start", params),
+
+  sampleComplete: (params: { paper_code?: string; course_slug?: string; kind: "lesson" | "question" }) =>
+    trackEvent("sample_complete", params),
+
+  firstLearningActivity: (params: { course_slug?: string; paper_code?: string; activity: string }) =>
+    trackEvent("first_learning_activity", params),
+};

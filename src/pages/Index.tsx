@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
+import JourneyPicker from "@/components/home/JourneyPicker";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 
 import Features from "@/components/home/Features";
@@ -82,6 +83,7 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
+      <JourneyPicker />
       <LearningPathway />
       <Features />
       <InstructorProfiles intro="Every tutor listed here teaches on the platform, and their qualifications are shown in full so you can check them." />

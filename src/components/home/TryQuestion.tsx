@@ -62,19 +62,40 @@ const QUESTIONS: DemoQuestion[] = [
   },
 ];
 
-const TryQuestion = () => {
+interface TryQuestionProps {
+  /** Fired the first time the visitor answers. No answer content is passed. */
+  onStart?: () => void;
+  /** Fired when they have answered every question in the sample. */
+  onComplete?: () => void;
+}
+
+const TryQuestion = ({ onStart, onComplete }: TryQuestionProps = {}) => {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  const [started, setStarted] = useState(false);
+  const [answeredCount, setAnsweredCount] = useState(0);
 
   const question = QUESTIONS[index];
   const answered = selected !== null;
   const isCorrect = selected === question.correctIndex;
   const isLast = index === QUESTIONS.length - 1;
 
+  const answer = (i: number) => {
+    setSelected(i);
+    if (!started) {
+      setStarted(true);
+      onStart?.();
+    }
+    const count = answeredCount + 1;
+    setAnsweredCount(count);
+    if (count === QUESTIONS.length) onComplete?.();
+  };
+
   const next = () => {
     setSelected(null);
     setIndex((i) => (i + 1) % QUESTIONS.length);
   };
+
 
   return (
     <div className="rounded-2xl border border-border bg-card shadow-xl shadow-primary/5 overflow-hidden">
@@ -107,7 +128,7 @@ const TryQuestion = () => {
                 <button
                   key={option}
                   type="button"
-                  onClick={() => !answered && setSelected(i)}
+                  onClick={() => !answered && answer(i)}
                   disabled={answered}
                   aria-pressed={chosen}
                   className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-colors disabled:cursor-default ${
