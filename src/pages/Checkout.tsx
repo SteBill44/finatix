@@ -246,11 +246,18 @@ export default function Checkout() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">{plan.name} Plan</span>
                     {plan.price ? (
-                      <span className="font-semibold">£{plan.price}/{plan.period}</span>
+                      <span className="font-semibold">{formatPrice(plan.price)}/{plan.period}</span>
                     ) : (
                       <span className="text-sm text-muted-foreground">Custom pricing</span>
                     )}
                   </div>
+                  {plan.price && (
+                    <p className="text-xs text-muted-foreground">
+                      This is a membership. {formatPrice(plan.price)} is taken today and then
+                      automatically every {plan.period} until you cancel. Cancel any time and keep
+                      access until the end of the period you've paid for. {POLICY.refundText}.
+                    </p>
+                  )}
                   <Separator />
                   <div className="space-y-2">
                     {plan.features.slice(0, 4).map((f, i) => (
