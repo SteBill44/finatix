@@ -1915,6 +1915,10 @@ export type Database = {
         Args: { p_code: string; p_referred_id: string }
         Returns: Json
       }
+      award_course_completion: {
+        Args: { p_course_id: string }
+        Returns: string
+      }
       broadcast_notification: {
         Args: {
           p_data?: Json

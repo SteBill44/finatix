@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useQuizWithQuestions } from "@/hooks/useQuizzes";
-import { useRecordQuizAttempt } from "@/hooks/useStudentProgress";
+import { useSubmitQuiz } from "@/hooks/useSubmitQuiz";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ExamCalculator from "@/components/quiz/ExamCalculator";
@@ -74,7 +74,7 @@ const MockExam = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { quiz, questions, isLoading, refetchQuestions } = useQuizWithQuestions(quizId || "");
-  const recordAttempt = useRecordQuizAttempt();
+  const submitQuiz = useSubmitQuiz();
 
   // Exam setup state
   const [examType, setExamType] = useState<ExamType>(null);
@@ -305,12 +305,11 @@ const MockExam = () => {
     setShowSubmitDialog(false);
 
     try {
-      await recordAttempt.mutateAsync({
-        courseId: quiz.course_id,
+      await submitQuiz.mutateAsync({
         quizId: quiz.id,
-        score,
-        maxScore: questions.length,
+        answers: selectedAnswers,
         timeTakenSeconds: timeTakenSeconds || undefined,
+        focusViolations,
       });
       await refetchQuestions();
       toast.success("Mock exam completed! Your score has been saved.");

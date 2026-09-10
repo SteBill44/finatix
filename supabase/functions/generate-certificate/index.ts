@@ -16,13 +16,21 @@ serve(async (req) => {
       throw new Error("No authorization header");
     }
 
-    const supabase = createClient(
+    const userClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? "",
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Certificates are issued with elevated privileges only after
+    // completion has been re-verified server-side.
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
+
+    const { data: { user }, error: userError } = await userClient.auth.getUser();
     if (userError || !user) {
       throw new Error("Unauthorized");
     }
@@ -45,6 +53,24 @@ serve(async (req) => {
     }
 
     if (!enrollment.completed_at) {
+      throw new Error("Course not completed yet");
+    }
+
+    // Re-verify completion against lesson progress — never trust the stored flag alone.
+    const [{ data: lessons }, { data: progress }] = await Promise.all([
+      supabase.from("lessons").select("id").eq("course_id", courseId),
+      supabase
+        .from("lesson_progress")
+        .select("lesson_id")
+        .eq("user_id", user.id)
+        .eq("completed", true),
+    ]);
+
+    const lessonIds = (lessons ?? []).map((l: { id: string }) => l.id);
+    const completedIds = new Set((progress ?? []).map((p: { lesson_id: string }) => p.lesson_id));
+    const allComplete = lessonIds.length > 0 && lessonIds.every((id: string) => completedIds.has(id));
+
+    if (!allComplete) {
       throw new Error("Course not completed yet");
     }
 

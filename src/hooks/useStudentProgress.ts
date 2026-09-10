@@ -23,7 +23,7 @@ export {
 } from "./useLessonData";
 
 export type { QuizAttempt } from "./useQuizAttempts";
-export { useQuizAttempts, useRecordQuizAttempt } from "./useQuizAttempts";
+export { useQuizAttempts } from "./useQuizAttempts";
 
 export type { StudySession } from "./useStudySessions";
 export {
