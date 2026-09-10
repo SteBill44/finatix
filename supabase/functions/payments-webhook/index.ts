@@ -12,6 +12,20 @@ function getSupabase() {
   return _supabase;
 }
 
+// Any database failure below must bubble up so the handler can answer with a
+// retryable status instead of silently swallowing a paid-but-unfulfilled order.
+function must<T>(result: { data: T; error: any }, context: string): T {
+  if (result.error) {
+    throw new Error(`${context}: ${result.error.message ?? result.error}`);
+  }
+  return result.data;
+}
+
+function stringId(value: any): string | null {
+  if (!value) return null;
+  return typeof value === "string" ? value : (value.id ?? null);
+}
+
 async function grantCourseAccess(session: any, env: StripeEnv) {
   const bundleIds: string[] = (session.metadata?.courseIds ?? "")
     .split(",")
@@ -19,7 +33,6 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
     .filter(Boolean);
   const singleId = session.metadata?.courseId;
   const courseIds: string[] = bundleIds.length ? bundleIds : (singleId ? [singleId] : []);
-  const isBundle = bundleIds.length > 0;
   const email = session.customer_details?.email ?? session.customer_email ?? null;
   let userId: string | null = session.metadata?.userId ?? null;
 
@@ -32,103 +45,92 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
 
   // Guest checkout: try to match an existing account by email
   if (!userId && email) {
-    const { data: matchedId, error: lookupError } = await supabase.rpc(
-      "find_user_id_by_email",
-      { p_email: email },
+    const matchedId = must(
+      await supabase.rpc("find_user_id_by_email", { p_email: email }),
+      "Email lookup failed",
     );
-    if (lookupError) console.error("Email lookup failed:", lookupError);
     if (matchedId) userId = matchedId as string;
-  }
-
-  // Record a purchase row per course (idempotent on the stripe session key)
-  for (const courseId of courseIds) {
-    const sessionKey = isBundle ? `${session.id}#${courseId}` : session.id;
-    const { error: purchaseError } = await supabase.from("course_purchases").upsert({
-      user_id: userId,
-      course_id: courseId,
-      customer_email: email,
-      stripe_session_id: sessionKey,
-      stripe_customer_id: typeof session.customer === "string" ? session.customer : null,
-      price_id: session.metadata?.priceId ?? null,
-      amount_total: isBundle ? null : (session.amount_total ?? null),
-      currency: session.currency ?? null,
-      status: "paid",
-      environment: env,
-    }, { onConflict: "stripe_session_id" });
-
-    if (purchaseError) console.error("Failed to record purchase:", purchaseError);
-  }
-
-  if (!userId) {
-    console.log("Guest purchase recorded - will be claimed when the account is created");
-    return;
   }
 
   // Test-mode transactions are recorded for reference but never turned into
   // real access once the site is running live payments.
-  if (env !== getActiveStripeEnv()) {
-    console.log(`Purchase in ${env} mode ignored for access - site runs ${getActiveStripeEnv()}`);
-    return;
-  }
+  const sameEnv = env === getActiveStripeEnv();
+  const grantAccess = Boolean(userId) && sameEnv;
 
-  // Enrol the student in every purchased course (ignore duplicates)
-  for (const courseId of courseIds) {
-    const { data: existing } = await supabase
-      .from("enrollments")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("course_id", courseId)
-      .maybeSingle();
+  // One transactional call: purchase rows (with the order total and each
+  // course's share of it), enrolments and the notification succeed together.
+  must(
+    await supabase.rpc("fulfill_course_purchase", {
+      p_session_id: session.id,
+      p_environment: env,
+      p_user_id: userId,
+      p_email: email,
+      p_customer_id: stringId(session.customer),
+      p_price_id: session.metadata?.priceId ?? null,
+      p_course_ids: courseIds,
+      p_order_total: session.amount_total ?? null,
+      p_currency: session.currency ?? null,
+      p_bundle_label: bundleIds.length ? (session.metadata?.bundleLabel ?? null) : null,
+      p_payment_intent_id: stringId(session.payment_intent),
+      p_grant_access: grantAccess,
+    }),
+    "Fulfilment failed",
+  );
 
-    if (!existing) {
-      const { error: enrollError } = await supabase
-        .from("enrollments")
-        .insert({ user_id: userId, course_id: courseId });
-      if (enrollError) console.error("Failed to enrol user:", enrollError);
-    }
-  }
-
-  // Let the student know
-  if (isBundle) {
-    const label = session.metadata?.bundleLabel ?? "Your bundle";
-    await supabase.from("notifications").insert({
-      user_id: userId,
-      type: "success",
-      title: "Your bundle is unlocked",
-      message:
-        `Your payment was received and ${label} is now unlocked (${courseIds.length} courses). Pick the course you want to start with.`,
-      data: { course_ids: courseIds },
-    });
-  } else {
-    const { data: course } = await supabase
-      .from("courses")
-      .select("title")
-      .eq("id", courseIds[0])
-      .maybeSingle();
-
-    await supabase.from("notifications").insert({
-      user_id: userId,
-      type: "success",
-      title: "You're enrolled",
-      message: `Your payment was received and ${course?.title ?? "your course"} is now unlocked. Happy studying!`,
-      data: { course_id: courseIds[0] },
-    });
+  if (!userId) {
+    console.log("Guest purchase recorded - will be claimed when the account is created");
+  } else if (!sameEnv) {
+    console.log(`Purchase in ${env} mode recorded but not granted - site runs ${getActiveStripeEnv()}`);
   }
 }
 
 async function markPaymentFailed(session: any, env: StripeEnv) {
-  const supabase = getSupabase();
-  await supabase.from("course_purchases").upsert({
-    user_id: session.metadata?.userId ?? null,
-    course_id: session.metadata?.courseId ?? null,
-    customer_email: session.customer_details?.email ?? session.customer_email ?? null,
-    stripe_session_id: session.id,
-    price_id: session.metadata?.priceId ?? null,
-    amount_total: session.amount_total ?? null,
-    currency: session.currency ?? null,
-    status: "failed",
-    environment: env,
-  }, { onConflict: "stripe_session_id" });
+  must(
+    await getSupabase().from("course_purchases").upsert({
+      user_id: session.metadata?.userId ?? null,
+      course_id: session.metadata?.courseId ?? null,
+      customer_email: session.customer_details?.email ?? session.customer_email ?? null,
+      stripe_session_id: session.id,
+      price_id: session.metadata?.priceId ?? null,
+      amount_total: session.amount_total ?? null,
+      order_total: session.amount_total ?? null,
+      currency: session.currency ?? null,
+      status: "failed",
+      environment: env,
+      payment_intent_id: stringId(session.payment_intent),
+    }, { onConflict: "stripe_session_id" }),
+    "Failed to record failed payment",
+  );
+}
+
+async function revokeAccess(env: StripeEnv, status: "refunded" | "disputed", paymentIntentId: string | null) {
+  if (!paymentIntentId) {
+    console.log("No payment intent on event - nothing to revoke");
+    return;
+  }
+  const affected = must(
+    await getSupabase().rpc("revoke_purchase_access", {
+      p_environment: env,
+      p_new_status: status,
+      p_session_id: null,
+      p_payment_intent_id: paymentIntentId,
+    }),
+    `Failed to mark purchase ${status}`,
+  );
+  console.log(`${status}: updated ${affected} purchase row(s)`);
+}
+
+async function restoreAccess(env: StripeEnv, paymentIntentId: string | null) {
+  if (!paymentIntentId) return;
+  const affected = must(
+    await getSupabase().rpc("restore_purchase_access", {
+      p_environment: env,
+      p_session_id: null,
+      p_payment_intent_id: paymentIntentId,
+    }),
+    "Failed to restore purchase access",
+  );
+  console.log(`dispute won: restored ${affected} purchase row(s)`);
 }
 
 function priceFromItem(item: any): { priceId: string | null; productId: string | null } {
@@ -150,9 +152,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
   // Guest checkout: no userId metadata - resolve the customer email and try
   // to match an existing account, otherwise store the email so the
   // membership can be claimed when the account is created.
-  const customerId = typeof subscription.customer === "string"
-    ? subscription.customer
-    : subscription.customer?.id;
+  const customerId = stringId(subscription.customer);
   if (customerId) {
     try {
       const stripe = createStripeClient(env);
@@ -166,11 +166,10 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
   }
 
   if (!userId && email) {
-    const { data: matchedId, error: lookupError } = await getSupabase().rpc(
-      "find_user_id_by_email",
-      { p_email: email },
+    const matchedId = must(
+      await getSupabase().rpc("find_user_id_by_email", { p_email: email }),
+      "Email lookup failed",
     );
-    if (lookupError) console.error("Email lookup failed:", lookupError);
     if (matchedId) userId = matchedId as string;
   }
 
@@ -179,54 +178,56 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
   const periodStart = item?.current_period_start ?? subscription.current_period_start;
   const periodEnd = item?.current_period_end ?? subscription.current_period_end;
 
-  const { error } = await getSupabase().from("subscriptions").upsert({
-    user_id: userId,
-    customer_email: email,
-    stripe_subscription_id: subscription.id,
-    stripe_customer_id: typeof subscription.customer === "string"
-      ? subscription.customer
-      : subscription.customer?.id,
-    product_id: productId,
-    price_id: priceId,
-    status: subscription.status,
-    current_period_start: isoFromUnix(periodStart),
-    current_period_end: isoFromUnix(periodEnd),
-    cancel_at_period_end: subscription.cancel_at_period_end ?? false,
-    environment: env,
-    updated_at: new Date().toISOString(),
-  }, { onConflict: "stripe_subscription_id" });
-
-  if (error) console.error("Failed to save subscription:", error);
+  must(
+    await getSupabase().from("subscriptions").upsert({
+      user_id: userId,
+      customer_email: email,
+      stripe_subscription_id: subscription.id,
+      stripe_customer_id: customerId,
+      product_id: productId,
+      price_id: priceId,
+      status: subscription.status,
+      current_period_start: isoFromUnix(periodStart),
+      current_period_end: isoFromUnix(periodEnd),
+      cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+      environment: env,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "stripe_subscription_id" }),
+    "Failed to save subscription",
+  );
 }
 
 async function markSubscriptionCanceled(subscription: any, env: StripeEnv) {
   // Access continues until current_period_end (checked in the app)
   const item = subscription.items?.data?.[0];
   const periodEnd = item?.current_period_end ?? subscription.current_period_end;
-  await getSupabase()
-    .from("subscriptions")
-    .update({
-      status: "canceled",
-      current_period_end: isoFromUnix(periodEnd),
-      updated_at: new Date().toISOString(),
-    })
-    .eq("stripe_subscription_id", subscription.id)
-    .eq("environment", env);
+  must(
+    await getSupabase()
+      .from("subscriptions")
+      .update({
+        status: "canceled",
+        current_period_end: isoFromUnix(periodEnd),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("stripe_subscription_id", subscription.id)
+      .eq("environment", env),
+    "Failed to cancel subscription",
+  );
 }
 
 // Keep the database in step with the server's payment mode so access checks
 // there only count entitlements from the same mode.
 async function syncActiveEnvironment() {
-  const { error } = await getSupabase().from("site_settings").upsert(
-    { key: "payments_environment", value: getActiveStripeEnv() },
-    { onConflict: "key" },
+  must(
+    await getSupabase().from("site_settings").upsert(
+      { key: "payments_environment", value: getActiveStripeEnv() },
+      { onConflict: "key" },
+    ),
+    "Failed to sync payments environment",
   );
-  if (error) console.error("Failed to sync payments environment:", error);
 }
 
-async function handleWebhook(req: Request, env: StripeEnv) {
-  const event = await verifyWebhook(req, env);
-
+async function processEvent(event: { type: string; data: { object: any } }, env: StripeEnv) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
@@ -241,6 +242,28 @@ async function handleWebhook(req: Request, env: StripeEnv) {
     case "checkout.session.async_payment_failed":
       await markPaymentFailed(event.data.object, env);
       break;
+    case "charge.refunded": {
+      const charge = event.data.object;
+      // Partial refunds keep access; a full refund removes it.
+      if (charge.refunded || charge.amount_refunded >= charge.amount) {
+        await revokeAccess(env, "refunded", stringId(charge.payment_intent));
+      } else {
+        console.log("Partial refund - access kept");
+      }
+      break;
+    }
+    case "charge.dispute.created":
+      await revokeAccess(env, "disputed", stringId(event.data.object.payment_intent));
+      break;
+    case "charge.dispute.closed": {
+      const dispute = event.data.object;
+      if (dispute.status === "won") {
+        await restoreAccess(env, stringId(dispute.payment_intent));
+      } else {
+        await revokeAccess(env, "refunded", stringId(dispute.payment_intent));
+      }
+      break;
+    }
     case "customer.subscription.created":
     case "customer.subscription.updated":
       // Covers new memberships plus upgrades/downgrades (price change)
@@ -266,15 +289,61 @@ Deno.serve(async (req) => {
       headers: { "Content-Type": "application/json" },
     });
   }
+  const env: StripeEnv = rawEnv;
+
+  let event: { id: string; type: string; data: { object: any } };
+  try {
+    event = await verifyWebhook(req, env);
+  } catch (e) {
+    console.error("Signature verification failed:", e);
+    return new Response("Invalid signature", { status: 400 });
+  }
+
   try {
     await syncActiveEnvironment();
-    await handleWebhook(req, rawEnv);
+
+    // Persist the event and skip anything already fulfilled (Stripe retries
+    // and can deliver the same event more than once).
+    const shouldProcess = must(
+      await getSupabase().rpc("claim_payment_event", {
+        p_event_id: event.id,
+        p_event_type: event.type,
+        p_environment: env,
+        p_payload: event as unknown as Record<string, unknown>,
+      }),
+      "Failed to record payment event",
+    );
+
+    if (!shouldProcess) {
+      return new Response(JSON.stringify({ received: true, duplicate: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    await processEvent(event, env);
+
+    must(
+      await getSupabase().rpc("complete_payment_event", { p_event_id: event.id }),
+      "Failed to close payment event",
+    );
+
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (e) {
-    console.error("Webhook error:", e);
-    return new Response("Webhook error", { status: 400 });
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("Webhook processing failed:", message);
+    try {
+      await getSupabase().rpc("fail_payment_event", { p_event_id: event.id, p_error: message });
+    } catch (logError) {
+      console.error("Could not record the failure:", logError);
+    }
+    // 500 tells Stripe to retry delivery so a paid order is never left unfulfilled.
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 });

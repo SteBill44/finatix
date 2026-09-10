@@ -322,13 +322,19 @@ export type Database = {
       course_purchases: {
         Row: {
           amount_total: number | null
+          bundle_label: string | null
+          charge_id: string | null
           course_id: string | null
           created_at: string
           currency: string | null
           customer_email: string | null
+          disputed_at: string | null
           environment: string
           id: string
+          order_total: number | null
+          payment_intent_id: string | null
           price_id: string | null
+          refunded_at: string | null
           status: string
           stripe_customer_id: string | null
           stripe_session_id: string
@@ -336,13 +342,19 @@ export type Database = {
         }
         Insert: {
           amount_total?: number | null
+          bundle_label?: string | null
+          charge_id?: string | null
           course_id?: string | null
           created_at?: string
           currency?: string | null
           customer_email?: string | null
+          disputed_at?: string | null
           environment?: string
           id?: string
+          order_total?: number | null
+          payment_intent_id?: string | null
           price_id?: string | null
+          refunded_at?: string | null
           status?: string
           stripe_customer_id?: string | null
           stripe_session_id: string
@@ -350,13 +362,19 @@ export type Database = {
         }
         Update: {
           amount_total?: number | null
+          bundle_label?: string | null
+          charge_id?: string | null
           course_id?: string | null
           created_at?: string
           currency?: string | null
           customer_email?: string | null
+          disputed_at?: string | null
           environment?: string
           id?: string
+          order_total?: number | null
+          payment_intent_id?: string | null
           price_id?: string | null
+          refunded_at?: string | null
           status?: string
           stripe_customer_id?: string | null
           stripe_session_id?: string
@@ -1031,6 +1049,45 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      payment_events: {
+        Row: {
+          attempts: number
+          created_at: string
+          environment: string
+          event_type: string
+          id: string
+          last_error: string | null
+          payload: Json | null
+          processed_at: string | null
+          status: string
+          stripe_event_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          environment: string
+          event_type: string
+          id?: string
+          last_error?: string | null
+          payload?: Json | null
+          processed_at?: string | null
+          status?: string
+          stripe_event_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          environment?: string
+          event_type?: string
+          id?: string
+          last_error?: string | null
+          payload?: Json | null
+          processed_at?: string | null
+          status?: string
+          stripe_event_id?: string
         }
         Relationships: []
       }
@@ -1951,9 +2008,43 @@ export type Database = {
       }
       claim_guest_membership: { Args: never; Returns: number }
       claim_guest_purchases: { Args: never; Returns: number }
+      claim_payment_event: {
+        Args: {
+          p_environment: string
+          p_event_id: string
+          p_event_type: string
+          p_payload?: Json
+        }
+        Returns: boolean
+      }
       cleanup_rate_limits: { Args: never; Returns: undefined }
+      complete_payment_event: {
+        Args: { p_event_id: string }
+        Returns: undefined
+      }
       complete_referral: { Args: { p_referred_id: string }; Returns: Json }
+      fail_payment_event: {
+        Args: { p_error: string; p_event_id: string }
+        Returns: undefined
+      }
       find_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      fulfill_course_purchase: {
+        Args: {
+          p_bundle_label: string
+          p_course_ids: string[]
+          p_currency: string
+          p_customer_id: string
+          p_email: string
+          p_environment: string
+          p_grant_access: boolean
+          p_order_total: number
+          p_payment_intent_id: string
+          p_price_id: string
+          p_session_id: string
+          p_user_id: string
+        }
+        Returns: number
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_adaptive_practice_questions: {
         Args: { p_count?: number; p_course_id: string }
@@ -2043,6 +2134,23 @@ export type Database = {
       log_profile_access: {
         Args: { p_access_type?: string; p_profile_user_id: string }
         Returns: undefined
+      }
+      restore_purchase_access: {
+        Args: {
+          p_environment: string
+          p_payment_intent_id?: string
+          p_session_id?: string
+        }
+        Returns: number
+      }
+      revoke_purchase_access: {
+        Args: {
+          p_environment: string
+          p_new_status: string
+          p_payment_intent_id?: string
+          p_session_id?: string
+        }
+        Returns: number
       }
       update_syllabus_mastery: {
         Args: {
