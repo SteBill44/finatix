@@ -173,7 +173,7 @@ const Certificates = () => {
             View, download and share your Finatix course completion certificates
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-xs text-muted-foreground">
-            {CERTIFICATE_MEANING.summary} {CERTIFICATE_MEANING.notWhat}
+            {CERTIFICATE_MEANING.is} {CERTIFICATE_MEANING.isNot}
           </p>
         </div>
 
