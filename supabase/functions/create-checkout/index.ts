@@ -174,7 +174,7 @@ Deno.serve(async (req) => {
     const clientSecret = await createCheckoutSession({
       priceId: body.priceId,
       courseId: !resolved.isBundle ? resolved.courseIds[0] : undefined,
-      courseIds: resolved.isBundle ? resolved.courseIds : undefined,
+      bundleKey: resolved.isBundle ? resolved.bundleKey : undefined,
       bundleLabel: typeof body.bundleLabel === "string" ? body.bundleLabel.slice(0, 60) : undefined,
       userId: verifiedUser?.id,
       userEmail: verifiedUser?.email,
