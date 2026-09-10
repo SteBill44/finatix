@@ -288,14 +288,14 @@ const Pricing = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <AnimatedCard key={plan.name} index={index}>
+            {plans.map(({ product, cta, popular, subtitle, periodLabel, originalPrice }, index) => (
+              <AnimatedCard key={product.id} index={index}>
                 <div
                   className={`relative bg-card rounded-2xl border ${
-                    plan.popular ? "border-primary shadow-glow" : "border-border"
+                    popular ? "border-primary shadow-glow" : "border-border"
                   } p-5 lg:p-6 hover-lift h-full flex flex-col`}
                 >
-                  {plan.popular && (
+                  {popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                       <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
                         Most Popular
@@ -304,29 +304,30 @@ const Pricing = () => {
                   )}
 
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-2">{product.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{product.description}</p>
                     <div className="flex items-baseline justify-center gap-2">
                       <span className="text-4xl font-bold text-foreground">
-                        £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
+                        {product.price != null ? formatPrice(product.price) : "-"}
                       </span>
-                      <span className="text-sm text-muted-foreground">/{plan.period}</span>
+                      <span className="text-sm text-muted-foreground">/{periodLabel}</span>
                     </div>
-                    {plan.originalPrice && (
+                    {originalPrice && product.price != null && (
                       <p className="mt-2 text-sm text-muted-foreground">
-                        <span className="line-through">£{plan.originalPrice}</span>
+                        <span className="line-through">{formatPrice(originalPrice)}</span>
                         <span className="ml-2 text-primary font-medium">
-                          Save £{plan.originalPrice - plan.price}
+                          Save {formatPrice(originalPrice - product.price)}
                         </span>
                       </p>
                     )}
-                    {'subtitle' in plan && plan.subtitle && (
-                      <p className="mt-2 text-sm font-medium text-primary">{plan.subtitle}</p>
+                    {subtitle && (
+                      <p className="mt-2 text-sm font-medium text-primary">{subtitle}</p>
                     )}
+                    <p className="mt-1 text-xs text-muted-foreground">{billingSummary(product)}</p>
                   </div>
 
                   <ul className="space-y-2.5 mb-6 flex-1">
-                    {plan.features.map((feature, featureIndex) => (
+                    {product.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-2.5">
                         {feature.included ? (
                           <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
@@ -340,15 +341,14 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Link to={`/checkout?plan=${plan.name === "Single Module" ? "monthly" : plan.name === "Monthly Access" ? "monthly" : "annual"}`} className="mt-auto">
-                    <Button
-                      variant={plan.popular ? "default" : "outline"}
-                      size="lg"
-                      className="w-full"
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
+                  <Button
+                    variant={popular ? "default" : "outline"}
+                    size="lg"
+                    className="w-full mt-auto"
+                    onClick={() => handlePlanCta(product)}
+                  >
+                    {cta}
+                  </Button>
                 </div>
               </AnimatedCard>
             ))}
@@ -358,7 +358,7 @@ const Pricing = () => {
           <div className="text-center mt-12">
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
               <Shield className="w-5 h-5 text-primary" />
-              <span className="text-foreground font-medium">30-day money-back guarantee on all plans</span>
+              <span className="text-foreground font-medium">{POLICY.refundText}</span>
             </div>
           </div>
         </div>
