@@ -1910,6 +1910,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      active_payments_environment: { Args: never; Returns: string }
       apply_referral_code: {
         Args: { p_code: string; p_referred_id: string }
         Returns: Json
