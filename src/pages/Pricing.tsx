@@ -13,6 +13,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import useSubscription from "@/hooks/useSubscription";
 import {
   PLAN_PRODUCTS,
+  COMPLETE_BUNDLE,
   POLICY,
   LEVEL_BUNDLE_PRICE,
   LEVEL_NAMES,
@@ -166,10 +167,10 @@ const Pricing = () => {
 
   const handleBuyAllCourses = () => {
     openBundleCheckout(
-      completeBundle.priceId ?? undefined,
-      completeBundle.name,
+      COMPLETE_BUNDLE.priceId ?? undefined,
+      COMPLETE_BUNDLE.name,
       courses,
-      completeBundle.price ?? allCoursesBundlePrice,
+      COMPLETE_BUNDLE.price ?? allCoursesBundlePrice,
     );
   };
 
@@ -365,6 +366,7 @@ const Pricing = () => {
       </section>
 
       {/* Individual Courses by Level */}
+      <div id="individual-courses" />
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
         <section className="py-8 lg:py-10 bg-secondary/30">
           <div className="container mx-auto px-4 overflow-hidden">
@@ -420,7 +422,7 @@ const Pricing = () => {
                     } border-b border-border`}>
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                          <h3 className="text-xl font-bold text-foreground">{levelNames[level]}</h3>
+                          <h3 className="text-xl font-bold text-foreground">{LEVEL_NAMES[level]}</h3>
                           <p className="text-sm text-muted-foreground">
                             {levelCourses.length} {levelCourses.length === 1 ? 'exam' : 'exams'}
                           </p>
@@ -436,10 +438,10 @@ const Pricing = () => {
                                 level === 'management' ? 'text-purple' : 
                                 'text-red'
                               }`}>
-                                £{levelBundlePrice} as bundle
+                                {formatPrice(LEVEL_BUNDLE_PRICE)} as bundle
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                Save £{levelTotal - levelBundlePrice}
+                                Save {formatPrice(levelTotal - LEVEL_BUNDLE_PRICE)}
                               </div>
                             </div>
                             <Button
