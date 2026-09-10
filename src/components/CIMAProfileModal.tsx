@@ -91,7 +91,9 @@ const CIMAProfileModal = ({
             CIMA Student Information
           </DialogTitle>
           <DialogDescription>
-            Please provide your CIMA details. This information is required for course accreditation and will be shared with CIMA for verification purposes.
+            Add your CIMA student details so we can match your studies to the right papers and
+            sitting. We store this on your Finatix account only - we do not send it to CIMA and we
+            cannot verify it with them.
           </DialogDescription>
         </DialogHeader>
 
@@ -175,7 +177,7 @@ const CIMAProfileModal = ({
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            * Required fields. Your data will be shared with CIMA for accreditation purposes.
+            * Required fields. Your details stay on your Finatix account and are not shared with CIMA.
           </p>
         </form>
       </DialogContent>
