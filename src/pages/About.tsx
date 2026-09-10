@@ -6,6 +6,8 @@ import InstructorProfiles from "@/components/credibility/InstructorProfiles";
 import PassRateEvidenceCard from "@/components/credibility/PassRateEvidence";
 import BusinessIdentity from "@/components/credibility/BusinessIdentity";
 import { PLATFORM_FACTS } from "@/lib/company";
+import { CIMA_RELATIONSHIP } from "@/lib/claims";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
 import { 
   Target, 
   Award, 
@@ -70,7 +72,7 @@ const About = () => {
               Finatix grew from a simple idea: CIMA students deserve a polished, capable learning experience that feels built around their journey.
             </p>
             <p className="animate-fade-up-delay-1 mb-6 text-sm text-muted-foreground">
-              {CIMA_RELATIONSHIP.statement}
+              {CIMA_RELATIONSHIP.shortStatement}
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
               <Link to="/courses">
