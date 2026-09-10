@@ -10,8 +10,19 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { getBundlePriceId, getCoursePriceId } from "@/lib/coursePricing";
 import useSubscription from "@/hooks/useSubscription";
+import {
+  PLAN_PRODUCTS,
+  POLICY,
+  LEVEL_BUNDLE_PRICE,
+  LEVEL_NAMES,
+  SINGLE_MODULE_PRICE,
+  getCoursePriceId,
+  getLevelBundlePriceId,
+  billingSummary,
+  formatPrice,
+  type CatalogueProduct,
+} from "@/lib/catalogue";
 
 const AnimatedCard = ({ 
   children, 
