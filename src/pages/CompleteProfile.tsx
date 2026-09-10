@@ -108,7 +108,7 @@ const CompleteProfile = () => {
       }
 
       toast({ title: "Welcome to Finatix!", description: "Your profile is all set." });
-      navigate("/dashboard", { replace: true });
+      navigate(learningContextDestination(loadLearningContext()), { replace: true });
     } catch (err) {
       toast({
         title: "Error",
