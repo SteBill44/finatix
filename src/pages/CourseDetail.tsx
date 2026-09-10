@@ -826,6 +826,31 @@ const CourseDetail = () => {
         </div>
       </section>
 
+      {/* Everything a visitor needs to judge the teaching before paying */}
+      {!isEnrolled && (
+        <section className="py-8 lg:py-14">
+          <div className="container mx-auto max-w-4xl px-4">
+            <CoursePreview
+              courseSlug={course.slug}
+              courseId={course.id}
+              courseTitle={course.title}
+              isCaseStudy={isCaseStudyCourse}
+              facts={courseFacts}
+              syllabusObjective={syllabusData?.objective}
+              syllabusAreas={parsedSyllabusAreas}
+              lessons={lessons as Array<{ id: string; title: string; description?: string | null; duration_minutes?: number | null }>}
+              price={isPaidCourse ? coursePrice : null}
+              isFree={!isPaidCourse}
+              coveredByMembership={isPaidCourse && hasMembership}
+              isAdmin={isEffectiveAdmin}
+              onBuy={handleEnroll}
+            />
+          </div>
+        </section>
+      )}
+
+
+
       {/* Course Content - Mobile: Tabs, Desktop: Side nav + scroll */}
       {navSections.length > 1 && (
         <section className="py-8 lg:py-16">
