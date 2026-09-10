@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import QualificationTimeline from "@/components/cima/QualificationTimeline";
+import { SourceLink } from "@/components/credibility/SourceLink";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
+import { CIMA_CLAIMS } from "@/lib/claims";
 import { 
   GraduationCap, 
   Globe, 
@@ -125,10 +128,15 @@ const WhyCIMA = () => {
             <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
               WHY CHOOSE <span className="text-gradient-brand">CIMA?</span>
             </h1>
-            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-4">
-              CIMA is the world's largest and leading professional body of management accountants,
-              offering a globally recognised qualification that opens doors to exciting career opportunities.
+            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-2">
+              CIMA describes itself as the world's largest professional body of management
+              accountants. Its CGMA qualification is built around management accounting and
+              business decision-making, and is taken by students in 188 countries and territories.
             </p>
+            <p className="animate-fade-up-delay-1 mb-4">
+              <SourceLink source={CIMA_CLAIMS.bodySize.source} />
+            </p>
+
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
               <Link to="/auth?mode=signup">
                 <Button size="lg" className="gap-2">
@@ -146,22 +154,31 @@ const WhyCIMA = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - every figure has a dated source in src/lib/claims.ts */}
       <section className="py-12 bg-card border-y border-border">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {salaryStats.map((stat, index) => (
+            {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                   <stat.icon className="w-6 h-6" />
                 </div>
                 <p className="text-2xl md:text-3xl font-bold text-foreground">{stat.value}</p>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
+                {stat.source && <SourceLink source={stat.source} className="mt-1" />}
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* What Finatix provides vs what CIMA awards */}
+      <section className="py-10">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <QualificationDisclosure />
+        </div>
+      </section>
+
 
       {/* Benefits Section */}
       <section className="py-10 md:py-14">
