@@ -118,6 +118,16 @@ const CheckoutPay = () => {
                     <p className="text-sm text-muted-foreground">
                       Payments aren't available right now. Please try again shortly.
                     </p>
+                  ) : productUnavailable ? (
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        This option isn't on sale at the moment, so we can't take a payment for
+                        it. Nothing has been charged.
+                      </p>
+                      <Button asChild variant="outline">
+                        <Link to="/contact">Get in touch</Link>
+                      </Button>
+                    </div>
                   ) : showPayment && canContinue ? (
                     <StripeEmbeddedCheckout
                       priceId={priceId}
