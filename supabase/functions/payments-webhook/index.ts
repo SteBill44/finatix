@@ -89,7 +89,7 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
       p_course_ids: courseIds,
       p_order_total: session.amount_total ?? null,
       p_currency: session.currency ?? null,
-      p_bundle_label: bundleIds.length ? (session.metadata?.bundleLabel ?? null) : null,
+      p_bundle_label: isBundle ? (session.metadata?.bundleLabel ?? null) : null,
       p_payment_intent_id: stringId(session.payment_intent),
       p_grant_access: grantAccess,
     }),
