@@ -55,6 +55,9 @@ import CourseReviews from "@/components/CourseReviews";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { getCoursePriceId } from "@/lib/coursePricing";
+import { POLICY } from "@/lib/catalogue";
+import { deriveCourseFacts } from "@/lib/courseFacts";
+import CoursePreview from "@/components/course/CoursePreview";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -385,16 +388,25 @@ const CourseDetail = () => {
   const levelBgColor = getLevelBgColor(course?.level || "");
   const levelGradientClass = getLevelGradientClass(course?.level || "");
 
+  // Figures come from the content that actually exists in this course.
+  const courseFacts = deriveCourseFacts({
+    durationHours: course.duration_hours,
+    lessons: lessons as Array<{ duration_minutes?: number | null; has_video?: boolean | null }>,
+    quizzes: quizzes as Array<{ quiz_type?: string | null }>,
+  });
+  const isCaseStudyCourse = /case-study/.test(course.slug || "");
+
   const features = [
-    `${course.duration_hours || 40}+ hours of video content`,
-    "500+ practice questions",
-    "5 full mock exams",
-    "Competency-based progress tracking",
-    "Weak area identification",
-    "Mobile app access",
-    "24/7 community support",
-    "Certificate of completion"
-  ];
+    `${courseFacts.lessonCount} lessons`,
+    courseFacts.estimatedStudyHours
+      ? `About ${courseFacts.estimatedStudyHours} hours of study time`
+      : null,
+    courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
+    courseFacts.mockExamCount > 0 ? `${courseFacts.mockExamCount} timed mock exams` : null,
+    "Competency tracking and weak area analysis",
+    "Certificate of completion",
+    POLICY.refundText,
+  ].filter(Boolean) as string[];
 
   // Build navigation sections
   const navSections = [
@@ -667,7 +679,7 @@ const CourseDetail = () => {
 
               <div className="flex flex-wrap gap-6 mb-6">
                 <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <Clock className="w-5 h-5" /><span>{course.duration_hours || 40} hours</span>
+                  <Clock className="w-5 h-5" /><span>About {course.duration_hours || 40} hours of study</span>
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <BookOpen className="w-5 h-5" /><span>{totalLessons} lessons</span>
@@ -681,7 +693,7 @@ const CourseDetail = () => {
               </div>
 
               {/* Syllabus Accordion */}
-              <Accordion type="single" collapsible defaultValue="objectives" className="w-full">
+              <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                   <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4">
                     <div className="flex items-center gap-3">
@@ -813,6 +825,31 @@ const CourseDetail = () => {
           </svg>
         </div>
       </section>
+
+      {/* Everything a visitor needs to judge the teaching before paying */}
+      {!isEnrolled && (
+        <section className="py-8 lg:py-14">
+          <div className="container mx-auto max-w-4xl px-4">
+            <CoursePreview
+              courseSlug={course.slug}
+              courseId={course.id}
+              courseTitle={course.title}
+              isCaseStudy={isCaseStudyCourse}
+              facts={courseFacts}
+              syllabusObjective={syllabusData?.objective}
+              syllabusAreas={parsedSyllabusAreas}
+              lessons={lessons as Array<{ id: string; title: string; description?: string | null; duration_minutes?: number | null }>}
+              price={isPaidCourse ? coursePrice : null}
+              isFree={!isPaidCourse}
+              coveredByMembership={isPaidCourse && hasMembership}
+              isAdmin={isEffectiveAdmin}
+              onBuy={handleEnroll}
+            />
+          </div>
+        </section>
+      )}
+
+
 
       {/* Course Content - Mobile: Tabs, Desktop: Side nav + scroll */}
       {navSections.length > 1 && (

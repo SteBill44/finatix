@@ -140,9 +140,9 @@ export const SINGLE_MODULE_PLAN: CatalogueProduct = {
   includes: "One module of your choice",
   features: [
     { text: "One module of your choice", included: true },
-    { text: "50+ hours of video content", included: true },
-    { text: "500+ practice questions", included: true },
-    { text: "5 mock exams", included: true },
+    { text: "Every lesson in that module", included: true },
+    { text: "Practice quizzes and timed mock exams for that module", included: true },
+    { text: "Automatic marking with per-question explanations", included: true },
     { text: COMMON_FEATURES.analytics, included: true },
     { text: COMMON_FEATURES.mobile, included: true },
     { text: POLICY.standardSupport, included: true },
