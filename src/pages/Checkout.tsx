@@ -13,43 +13,32 @@ import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
+import { MEMBERSHIP_MONTHLY, MEMBERSHIP_ANNUAL, POLICY, formatPrice } from "@/lib/catalogue";
 
+// Membership plans come straight from the shared catalogue so this page can
+// never advertise a different price or billing period than the buyer is charged.
 const PLANS = [
   {
     id: "monthly",
-    name: "Monthly",
-    priceId: "all_access_monthly",
-    price: 49,
+    name: MEMBERSHIP_MONTHLY.name,
+    priceId: MEMBERSHIP_MONTHLY.priceId,
+    price: MEMBERSHIP_MONTHLY.price,
     period: "month",
     badge: null as string | null,
     pricePerMonth: null as number | null,
     savings: null as string | null,
-    features: [
-      "Access to all CIMA courses",
-      "Unlimited quiz attempts",
-      "AI Study Tutor",
-      "Flashcard system",
-      "Progress analytics",
-      "Community discussions",
-    ],
+    features: MEMBERSHIP_MONTHLY.features.filter((f) => f.included).map((f) => f.text),
   },
   {
     id: "annual",
-    name: "Annual",
-    priceId: "all_access_annual",
-    price: 399,
+    name: MEMBERSHIP_ANNUAL.name,
+    priceId: MEMBERSHIP_ANNUAL.priceId,
+    price: MEMBERSHIP_ANNUAL.price,
     period: "year",
     badge: "Best Value",
     pricePerMonth: 33,
     savings: "Save £189",
-    features: [
-      "Everything in Monthly",
-      "Priority support",
-      "Mock exam access",
-      "Downloadable resources",
-      "Certificate of completion",
-      "Early access to new content",
-    ],
+    features: MEMBERSHIP_ANNUAL.features.filter((f) => f.included).map((f) => f.text),
   },
   {
     id: "corporate",
@@ -257,11 +246,18 @@ export default function Checkout() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">{plan.name} Plan</span>
                     {plan.price ? (
-                      <span className="font-semibold">£{plan.price}/{plan.period}</span>
+                      <span className="font-semibold">{formatPrice(plan.price)}/{plan.period}</span>
                     ) : (
                       <span className="text-sm text-muted-foreground">Custom pricing</span>
                     )}
                   </div>
+                  {plan.price && (
+                    <p className="text-xs text-muted-foreground">
+                      This is a membership. {formatPrice(plan.price)} is taken today and then
+                      automatically every {plan.period} until you cancel. Cancel any time and keep
+                      access until the end of the period you've paid for. {POLICY.refundText}.
+                    </p>
+                  )}
                   <Separator />
                   <div className="space-y-2">
                     {plan.features.slice(0, 4).map((f, i) => (

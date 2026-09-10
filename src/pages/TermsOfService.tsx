@@ -88,7 +88,7 @@ const TermsOfService = () => {
             </p>
             <h3 className="text-xl font-medium mb-2">Refund Policy</h3>
             <p className="text-muted-foreground">
-              We offer a 14-day money-back guarantee from the date of purchase. To request a refund, contact our support team. Refunds are processed within 5-10 business days.
+              We offer a 30-day money-back guarantee from the date of purchase. To request a refund, contact our support team. Refunds are processed within 5-10 business days.
             </p>
           </section>
 

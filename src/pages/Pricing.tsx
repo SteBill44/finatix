@@ -10,8 +10,19 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { getBundlePriceId, getCoursePriceId } from "@/lib/coursePricing";
 import useSubscription from "@/hooks/useSubscription";
+import {
+  PLAN_PRODUCTS,
+  COMPLETE_BUNDLE,
+  POLICY,
+  LEVEL_BUNDLE_PRICE,
+  LEVEL_NAMES,
+  getCoursePriceId,
+  getLevelBundlePriceId,
+  billingSummary,
+  formatPrice,
+  type CatalogueProduct,
+} from "@/lib/catalogue";
 
 const AnimatedCard = ({ 
   children, 
@@ -122,14 +133,13 @@ const Pricing = () => {
   };
 
   const openBundleCheckout = (
-    level: string,
+    priceId: string | undefined,
     label: string,
     bundleCourses: typeof courses,
     price: number,
   ) => {
-    const priceId = getBundlePriceId(level);
     if (!priceId) {
-      toast.error("This bundle isn't available to buy yet");
+      toast.error("This bundle isn't on sale at the moment");
       return;
     }
     if (!bundleCourses || bundleCourses.length === 0) {
@@ -146,12 +156,46 @@ const Pricing = () => {
   };
 
   const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
-    openBundleCheckout(level, `${levelNames[level] ?? level} Bundle`, levelCourses, levelBundlePrice);
+    openBundleCheckout(
+      getLevelBundlePriceId(level),
+      `${LEVEL_NAMES[level] ?? level} Bundle`,
+      levelCourses,
+      LEVEL_BUNDLE_PRICE,
+    );
   };
 
   const handleBuyAllCourses = () => {
-    openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
+    openBundleCheckout(
+      COMPLETE_BUNDLE.priceId ?? undefined,
+      COMPLETE_BUNDLE.name,
+      courses,
+      COMPLETE_BUNDLE.price ?? allCoursesBundlePrice,
+    );
   };
+
+  // Each plan button must open exactly the product on its own card - never a
+  // different plan or billing period.
+  const handlePlanCta = (product: CatalogueProduct) => {
+    if (product.id === "single_module") {
+      document.getElementById("individual-courses")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    if (product.id === "complete_bundle") {
+      handleBuyAllCourses();
+      return;
+    }
+    if (!product.priceId || product.price == null) {
+      toast.error("This plan isn't on sale at the moment");
+      return;
+    }
+    goToCheckout({
+      priceId: product.priceId,
+      title: product.name,
+      price: product.price,
+    });
+  };
+
+
 
 
 
@@ -176,79 +220,21 @@ const Pricing = () => {
   const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
   const allCoursesCount = courses?.length || 0;
 
-  // Level bundle price
-  const levelBundlePrice = 499;
-
   const levelOrder = ['certificate', 'operational', 'management', 'strategic'];
-  const levelNames: Record<string, string> = {
-    certificate: 'Certificate Level (Entry Level)',
-    operational: 'Operational Level',
-    management: 'Management Level',
-    strategic: 'Strategic Level',
+
+  // Every plan card is built from the shared catalogue, so what a card says
+  // and what its button buys can never drift apart.
+  const planExtras: Record<string, { cta: string; popular?: boolean; subtitle?: string; periodLabel: string }> = {
+    single_module: { cta: "Choose your module", periodLabel: "per module" },
+    membership_monthly: { cta: "Start Monthly", popular: true, subtitle: "Cancel anytime", periodLabel: "per month" },
+    complete_bundle: { cta: "Get Lifetime Access", subtitle: "Lifetime access - best value", periodLabel: "one-time payment" },
   };
 
-  const plans = [
-    {
-      name: "Single Module",
-      description: "Perfect for focusing on one exam at a time",
-      price: 199,
-      period: "per module",
-      features: [
-        { text: "One module of your choice", included: true },
-        { text: "50+ hours of video content", included: true },
-        { text: "500+ practice questions", included: true },
-        { text: "5 mock exams", included: true },
-        { text: "Competency tracking", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "1-on-1 tutor sessions", included: false },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Get Started",
-      popular: false,
-    },
-    {
-      name: "Monthly Access",
-      description: "Flexible monthly access to all CIMA content",
-      price: 49,
-      period: "per month",
-      subtitle: "Cancel anytime",
-      features: [
-        { text: "All CIMA modules", included: true },
-        { text: "500+ hours of video content", included: true },
-        { text: "5000+ practice questions", included: true },
-        { text: "Unlimited mock exams", included: true },
-        { text: "Full analytics suite", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "1-on-1 tutor sessions", included: false },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Start Monthly",
-      popular: true,
-    },
-    {
-      name: "Unlimited Bundle",
-      description: "Everything you need to become CIMA qualified",
-      price: 999,
-      period: "one-time payment",
-      originalPrice: totalAllCoursesPrice || 2388,
-      subtitle: "Lifetime access - best value",
-      features: [
-        { text: "All CIMA modules", included: true },
-        { text: "500+ hours of video content", included: true },
-        { text: "5000+ practice questions", included: true },
-        { text: "Unlimited mock exams", included: true },
-        { text: "Full analytics suite", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "Unlimited tutor sessions", included: true },
-        { text: "Priority 24/7 support", included: true },
-      ],
-      cta: "Get Lifetime Access",
-      popular: false,
-    },
-  ];
+  const plans = PLAN_PRODUCTS.map((product) => ({
+    product,
+    ...planExtras[product.id],
+    originalPrice: product.id === "complete_bundle" ? (totalAllCoursesPrice || 2388) : undefined,
+  }));
 
   const comparison = [
     { feature: "Modern, intuitive UI", us: true, kaplan: false },
@@ -302,14 +288,14 @@ const Pricing = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <AnimatedCard key={plan.name} index={index}>
+            {plans.map(({ product, cta, popular, subtitle, periodLabel, originalPrice }, index) => (
+              <AnimatedCard key={product.id} index={index}>
                 <div
                   className={`relative bg-card rounded-2xl border ${
-                    plan.popular ? "border-primary shadow-glow" : "border-border"
+                    popular ? "border-primary shadow-glow" : "border-border"
                   } p-5 lg:p-6 hover-lift h-full flex flex-col`}
                 >
-                  {plan.popular && (
+                  {popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                       <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
                         Most Popular
@@ -318,29 +304,30 @@ const Pricing = () => {
                   )}
 
                   <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-2">{product.name}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{product.description}</p>
                     <div className="flex items-baseline justify-center gap-2">
                       <span className="text-4xl font-bold text-foreground">
-                        £{Number.isInteger(plan.price) ? plan.price : plan.price.toFixed(2)}
+                        {product.price != null ? formatPrice(product.price) : "-"}
                       </span>
-                      <span className="text-sm text-muted-foreground">/{plan.period}</span>
+                      <span className="text-sm text-muted-foreground">/{periodLabel}</span>
                     </div>
-                    {plan.originalPrice && (
+                    {originalPrice && product.price != null && (
                       <p className="mt-2 text-sm text-muted-foreground">
-                        <span className="line-through">£{plan.originalPrice}</span>
+                        <span className="line-through">{formatPrice(originalPrice)}</span>
                         <span className="ml-2 text-primary font-medium">
-                          Save £{plan.originalPrice - plan.price}
+                          Save {formatPrice(originalPrice - product.price)}
                         </span>
                       </p>
                     )}
-                    {'subtitle' in plan && plan.subtitle && (
-                      <p className="mt-2 text-sm font-medium text-primary">{plan.subtitle}</p>
+                    {subtitle && (
+                      <p className="mt-2 text-sm font-medium text-primary">{subtitle}</p>
                     )}
+                    <p className="mt-1 text-xs text-muted-foreground">{billingSummary(product)}</p>
                   </div>
 
                   <ul className="space-y-2.5 mb-6 flex-1">
-                    {plan.features.map((feature, featureIndex) => (
+                    {product.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-2.5">
                         {feature.included ? (
                           <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
@@ -354,15 +341,14 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Link to={`/checkout?plan=${plan.name === "Single Module" ? "monthly" : plan.name === "Monthly Access" ? "monthly" : "annual"}`} className="mt-auto">
-                    <Button
-                      variant={plan.popular ? "default" : "outline"}
-                      size="lg"
-                      className="w-full"
-                    >
-                      {plan.cta}
-                    </Button>
-                  </Link>
+                  <Button
+                    variant={popular ? "default" : "outline"}
+                    size="lg"
+                    className="w-full mt-auto"
+                    onClick={() => handlePlanCta(product)}
+                  >
+                    {cta}
+                  </Button>
                 </div>
               </AnimatedCard>
             ))}
@@ -372,13 +358,14 @@ const Pricing = () => {
           <div className="text-center mt-12">
             <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
               <Shield className="w-5 h-5 text-primary" />
-              <span className="text-foreground font-medium">30-day money-back guarantee on all plans</span>
+              <span className="text-foreground font-medium">{POLICY.refundText}</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Individual Courses by Level */}
+      <div id="individual-courses" />
       {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
         <section className="py-8 lg:py-10 bg-secondary/30">
           <div className="container mx-auto px-4 overflow-hidden">
@@ -434,7 +421,7 @@ const Pricing = () => {
                     } border-b border-border`}>
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
-                          <h3 className="text-xl font-bold text-foreground">{levelNames[level]}</h3>
+                          <h3 className="text-xl font-bold text-foreground">{LEVEL_NAMES[level]}</h3>
                           <p className="text-sm text-muted-foreground">
                             {levelCourses.length} {levelCourses.length === 1 ? 'exam' : 'exams'}
                           </p>
@@ -450,10 +437,10 @@ const Pricing = () => {
                                 level === 'management' ? 'text-purple' : 
                                 'text-red'
                               }`}>
-                                £{levelBundlePrice} as bundle
+                                {formatPrice(LEVEL_BUNDLE_PRICE)} as bundle
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                Save £{levelTotal - levelBundlePrice}
+                                Save {formatPrice(levelTotal - LEVEL_BUNDLE_PRICE)}
                               </div>
                             </div>
                             <Button
