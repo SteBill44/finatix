@@ -108,7 +108,6 @@ const CheckoutPay = () => {
                       courseId={courseId}
                       courseIds={courseIds}
                       bundleLabel={bundleLabel}
-                      userId={user?.id}
                       customerEmail={checkoutEmail}
                       returnUrl={returnUrl}
                     />
