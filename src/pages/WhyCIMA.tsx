@@ -110,7 +110,7 @@ const WhyCIMA = () => {
     <Layout>
       <SEOHead
         title="Why CIMA? | Benefits of CIMA Qualification"
-        description="Discover why CIMA is the world's largest professional body of management accountants. Learn about career benefits, salary premium, global recognition, and qualification pathway."
+        description="What the CIMA CGMA qualification involves: the exam pathway, the three-year practical experience requirement, official fees and how Finatix study courses fit alongside them."
         keywords="CIMA qualification, management accounting, CGMA, chartered accountant, finance career, CIMA benefits, CIMA salary"
         canonicalUrl="https://finatix.io/why-cima"
       />
@@ -201,6 +201,7 @@ const WhyCIMA = () => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">{benefit.title}</h3>
                   <p className="text-muted-foreground text-sm">{benefit.description}</p>
+                  {benefit.source && <SourceLink source={benefit.source} className="mt-2" />}
                 </CardContent>
               </Card>
             ))}
