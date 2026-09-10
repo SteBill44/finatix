@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import QualificationTimeline from "@/components/cima/QualificationTimeline";
+import { SourceLink } from "@/components/credibility/SourceLink";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
+import { CIMA_CLAIMS, type ClaimSource } from "@/lib/claims";
 import { 
   GraduationCap, 
   Globe, 
@@ -20,44 +23,76 @@ import {
 } from "lucide-react";
 
 const WhyCIMA = () => {
-  const benefits = [
+  // Every externally verifiable statement below is recorded in src/lib/claims.ts
+  // with its source and the date it was last checked.
+  const benefits: Array<{ icon: React.ElementType; title: string; description: string; source?: ClaimSource }> = [
     {
       icon: Globe,
       title: "Global Recognition",
-      description: "CIMA is recognised in over 188 countries worldwide, opening doors to international career opportunities."
+      description:
+        "AICPA & CIMA members, candidates and registrants are based in 188 countries and territories.",
+      source: CIMA_CLAIMS.countries.source
     },
     {
       icon: TrendingUp,
-      title: "Career Advancement",
-      description: "CIMA-qualified professionals often command higher salaries and access senior management positions faster."
+      title: "Career Progression",
+      description:
+        "AICPA & CIMA publish salary data for CGMA designation holders and candidates, so you can check current earnings for your role and region yourself.",
+      source: CIMA_CLAIMS.salary.source
     },
     {
       icon: Briefcase,
       title: "Business Focus",
-      description: "Unlike traditional accounting qualifications, CIMA focuses on strategic business management and decision-making."
+      description:
+        "CIMA's syllabus centres on management accounting and business decision-making rather than audit and practice work."
     },
     {
       icon: Users,
-      title: "Professional Network",
-      description: "Join a community of over 150,000 members and 100,000+ students globally, with exclusive networking opportunities."
+      title: "Professional Community",
+      description:
+        "AICPA & CIMA report a combined community of 597,000 members, candidates and registrants worldwide.",
+      source: CIMA_CLAIMS.community.source
     },
     {
       icon: Award,
       title: "CGMA Designation",
-      description: "Earn the prestigious Chartered Global Management Accountant designation, recognised by top employers worldwide."
+      description:
+        "Passing the exams is one part. The CGMA designation also requires a minimum of three years' verified relevant practical experience.",
+      source: CIMA_CLAIMS.practicalExperience.source
     },
     {
       icon: Building2,
-      title: "Industry Demand",
-      description: "CIMA skills are in high demand across sectors including finance, consulting, technology, and manufacturing."
+      title: "Where It's Used",
+      description:
+        "Management accounting roles sit across industry, the public sector, consulting and financial services."
     }
   ];
 
-  const salaryStats = [
-    { label: "Average UK Salary", value: "£65,000+", icon: DollarSign },
-    { label: "Salary Premium", value: "Up to 25%", icon: TrendingUp },
-    { label: "Global Members", value: "150,000+", icon: Users },
-    { label: "Countries", value: "188+", icon: Globe }
+  const stats: Array<{ label: string; value: string; icon: React.ElementType; source?: ClaimSource }> = [
+    {
+      label: "Members, candidates and registrants (AICPA & CIMA combined)",
+      value: "597,000",
+      icon: Users,
+      source: CIMA_CLAIMS.community.source
+    },
+    {
+      label: "Countries and territories",
+      value: "188",
+      icon: Globe,
+      source: CIMA_CLAIMS.countries.source
+    },
+    {
+      label: "Years of verified practical experience for CGMA",
+      value: "3 min.",
+      icon: Briefcase,
+      source: CIMA_CLAIMS.practicalExperience.source
+    },
+    {
+      label: "Official fees are set and charged by AICPA & CIMA",
+      value: "Separate",
+      icon: DollarSign,
+      source: CIMA_CLAIMS.fees.source
+    }
   ];
 
   const careerPaths = [
@@ -75,7 +110,7 @@ const WhyCIMA = () => {
     <Layout>
       <SEOHead
         title="Why CIMA? | Benefits of CIMA Qualification"
-        description="Discover why CIMA is the world's largest professional body of management accountants. Learn about career benefits, salary premium, global recognition, and qualification pathway."
+        description="What the CIMA CGMA qualification involves: the exam pathway, the three-year practical experience requirement, official fees and how Finatix study courses fit alongside them."
         keywords="CIMA qualification, management accounting, CGMA, chartered accountant, finance career, CIMA benefits, CIMA salary"
         canonicalUrl="https://finatix.io/why-cima"
       />
@@ -93,10 +128,15 @@ const WhyCIMA = () => {
             <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
               WHY CHOOSE <span className="text-gradient-brand">CIMA?</span>
             </h1>
-            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-4">
-              CIMA is the world's largest and leading professional body of management accountants,
-              offering a globally recognised qualification that opens doors to exciting career opportunities.
+            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-2">
+              CIMA describes itself as the world's largest professional body of management
+              accountants. Its CGMA qualification is built around management accounting and
+              business decision-making, and is taken by students in 188 countries and territories.
             </p>
+            <p className="animate-fade-up-delay-1 mb-4">
+              <SourceLink source={CIMA_CLAIMS.bodySize.source} />
+            </p>
+
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
               <Link to="/auth?mode=signup">
                 <Button size="lg" className="gap-2">
@@ -114,22 +154,31 @@ const WhyCIMA = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section - every figure has a dated source in src/lib/claims.ts */}
       <section className="py-12 bg-card border-y border-border">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {salaryStats.map((stat, index) => (
+            {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-3">
                   <stat.icon className="w-6 h-6" />
                 </div>
                 <p className="text-2xl md:text-3xl font-bold text-foreground">{stat.value}</p>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
+                {stat.source && <SourceLink source={stat.source} className="mt-1" />}
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* What Finatix provides vs what CIMA awards */}
+      <section className="py-10">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <QualificationDisclosure />
+        </div>
+      </section>
+
 
       {/* Benefits Section */}
       <section className="py-10 md:py-14">
@@ -152,6 +201,7 @@ const WhyCIMA = () => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">{benefit.title}</h3>
                   <p className="text-muted-foreground text-sm">{benefit.description}</p>
+                  {benefit.source && <SourceLink source={benefit.source} className="mt-2" />}
                 </CardContent>
               </Card>
             ))}

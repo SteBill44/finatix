@@ -6,33 +6,44 @@ import { ChevronDown, Award, TrendingUp, Globe, Briefcase, CheckCircle2 } from "
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
+import { SourceLink } from "@/components/credibility/SourceLink";
+import { CIMA_CLAIMS, CIMA_RELATIONSHIP, type ClaimSource } from "@/lib/claims";
 
+// Figures here are recorded with their sources in src/lib/claims.ts.
 const cimaPerks = [
   {
     icon: Award,
     title: "Globally Recognised",
     description:
-      "CIMA is the world's largest professional body of management accountants, with over 100,000 members in 176 countries.",
+      "AICPA & CIMA report a combined 597,000 members, candidates and registrants across 188 countries and territories.",
+    source: CIMA_CLAIMS.community.source,
   },
   {
     icon: TrendingUp,
-    title: "Higher Earning Potential",
+    title: "Check the Earnings Data",
     description:
-      "CIMA reports that its qualified members typically earn more than non-qualified peers - see CIMA's own salary survey for current figures.",
+      "AICPA & CIMA publish salary data for CGMA designation holders and candidates, so you can look up current figures for your role and region.",
+    source: CIMA_CLAIMS.salary.source,
   },
   {
     icon: Globe,
-    title: "International Opportunities",
+    title: "Exams Plus Experience",
     description:
-      "Your qualification is recognised worldwide, opening doors to global career opportunities in any industry.",
+      "The CGMA designation needs the exams and a minimum of three years' verified relevant practical experience.",
+    source: CIMA_CLAIMS.practicalExperience.source,
   },
   {
     icon: Briefcase,
     title: "Strategic Business Skills",
     description:
-      "Learn to drive business performance through strategic financial management, not just number crunching.",
+      "CIMA's syllabus focuses on management accounting and business decision-making, not audit and practice work.",
   },
-];
+] satisfies Array<{
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  source?: ClaimSource;
+}>;
 
 const signupPerks = [
   "Track progress across all CIMA levels",
@@ -199,6 +210,9 @@ const CTA = () => {
                             <div>
                               <h4 className="font-semibold text-foreground text-sm">{perk.title}</h4>
                               <p className="text-xs text-muted-foreground mt-0.5">{perk.description}</p>
+                              {"source" in perk && perk.source && (
+                                <SourceLink source={perk.source} className="mt-1" />
+                              )}
                             </div>
                           </motion.div>
                         ))}

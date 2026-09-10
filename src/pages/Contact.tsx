@@ -24,6 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { COMPANY, mailto } from "@/lib/company";
 import BusinessIdentity from "@/components/credibility/BusinessIdentity";
+import { POLICY } from "@/lib/catalogue";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -60,15 +61,15 @@ const Contact = () => {
     },
     {
       question: "What's included in the mock exams?",
-      answer: "Our mock exams mirror the real CIMA exam format and difficulty. Each mock includes detailed explanations for every question, performance analytics, and identifies your weak areas for targeted revision."
+      answer: "Mock exams are Finatix-written papers sat under timed conditions in the exam-style format. They are not past CIMA papers and are not set or approved by CIMA. Each mock includes an explanation for every question, performance analytics and weak-area identification."
     },
     {
-      question: "How is Finatix different from Kaplan?",
-      answer: "We offer modern competency-based analytics that identify your weak areas, adaptive learning paths, a more intuitive interface, and competitive pricing. Our platform is built for today's students who expect modern technology."
+      question: "What do I get with Finatix?",
+      answer: "Lessons written to the CIMA syllabus areas for each paper, automatically marked practice questions with explanations, timed mock exams, competency and weak-area tracking, flashcards, discussions, and a Finatix certificate of completion. Finatix is an independent study provider; CIMA registration, subscription and exam fees are paid directly to AICPA & CIMA."
     },
     {
       question: "Do you offer refunds?",
-      answer: "Yes, we offer a 30-day money-back guarantee on all plans. If you're not satisfied with your purchase, contact our support team within 30 days for a full refund, no questions asked."
+      answer: POLICY.refundText
     },
     {
       question: "Can I pause my subscription?",

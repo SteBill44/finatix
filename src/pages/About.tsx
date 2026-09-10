@@ -6,6 +6,8 @@ import InstructorProfiles from "@/components/credibility/InstructorProfiles";
 import PassRateEvidenceCard from "@/components/credibility/PassRateEvidence";
 import BusinessIdentity from "@/components/credibility/BusinessIdentity";
 import { PLATFORM_FACTS } from "@/lib/company";
+import { CIMA_RELATIONSHIP } from "@/lib/claims";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
 import { 
   Target, 
   Award, 
@@ -63,11 +65,14 @@ const About = () => {
               Helping CIMA Students <span className="text-gradient-brand">Learn Smarter</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
-              We believe that with the right tools and approach, anyone can achieve their CIMA qualification. 
-              Our mission is to make that journey as efficient and effective as possible.
+              We build study material for people working towards the CIMA qualification, so the
+              hours you put in are focused on the right syllabus areas.
             </p>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
               Finatix grew from a simple idea: CIMA students deserve a polished, capable learning experience that feels built around their journey.
+            </p>
+            <p className="animate-fade-up-delay-1 mb-6 text-sm text-muted-foreground">
+              {CIMA_RELATIONSHIP.shortStatement}
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
               <Link to="/courses">
@@ -209,6 +214,9 @@ const About = () => {
             Talk to a person before you buy
           </h2>
           <BusinessIdentity />
+          <div className="mt-8">
+            <QualificationDisclosure />
+          </div>
         </div>
       </section>
     </Layout>

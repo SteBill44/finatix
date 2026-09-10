@@ -145,7 +145,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             <div className={`flex flex-col items-center ${isEmbed ? "mt-0.5" : "mt-0.5 sm:mt-1 md:mt-2"}`}>
               <div className={`items-center gap-1 text-primary/60 font-medium tracking-[0.15em] uppercase ${isEmbed ? "hidden" : "hidden sm:flex text-[8px] sm:text-[10px] md:text-xs sm:tracking-[0.2em]"}`}>
                 <span className={`h-px bg-primary/40 ${isEmbed ? "w-3" : "w-3 sm:w-5 md:w-6"}`} />
-                Official Document
+                Course completion record
                 <span className={`h-px bg-primary/40 ${isEmbed ? "w-3" : "w-3 sm:w-5 md:w-6"}`} />
               </div>
               <h1
@@ -154,7 +154,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                 } font-light leading-tight tracking-wide mt-0.5 sm:mt-1`}
                 style={{ color: "hsl(174, 72%, 35%)" }}
               >
-                Certificate of Completion
+                Finatix Certificate of Completion
               </h1>
             </div>
           </div>
@@ -204,7 +204,14 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
             </h3>
 
             <p className={`text-gray-500 px-4 ${isEmbed ? "hidden" : "text-[8px] sm:text-[10px] md:text-xs mt-1 sm:mt-2 hidden sm:block"}`}>
-              and has demonstrated the knowledge and skills required for professional competency
+              and passed its final assessment on the Finatix platform
+            </p>
+
+            {/* Unambiguous: this is not a CIMA award. */}
+            <p className={`text-gray-500 px-4 ${isEmbed ? "hidden" : "text-[7px] sm:text-[9px] md:text-[10px] mt-1 sm:mt-2 hidden sm:block"}`}>
+              Finatix is an independent study provider. This certificate is not a CIMA
+              qualification, exam result, membership or professional designation, and carries no
+              exemption from any CIMA exam.
             </p>
           </div>
 
@@ -218,7 +225,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
                   isEmbed ? "text-[8px]" : "text-[8px] sm:text-[10px] md:text-xs"
                 } font-medium text-gray-600`}
               >
-                Professional Certification
+                Finatix course completion
               </span>
               <CheckCircle2 className={`text-green-500 ${isEmbed ? "w-2.5 h-2.5" : "w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4"}`} />
             </div>

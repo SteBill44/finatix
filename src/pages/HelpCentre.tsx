@@ -47,11 +47,11 @@ const helpCategories = [
       },
       {
         question: "How do quizzes and exams work?",
-        answer: "Quizzes are available at the end of each module. Mock exams simulate the real CIMA exam experience with timed conditions. Your results are saved and can be reviewed anytime."
+        answer: "Quizzes are available at the end of each module. Mock exams are Finatix-written papers sat under timed conditions to give you exam-style practice; they are not past CIMA papers and are not set or approved by CIMA. Your results are saved and can be reviewed anytime."
       },
       {
         question: "What happens when I complete a course?",
-        answer: "Upon completion, you'll receive a certificate of completion that you can download and share. Your achievement will also be displayed in your profile."
+        answer: "You'll receive a Finatix certificate of completion that you can download and share, and your achievement appears in your profile. It records the Finatix study you finished - it is not a CIMA qualification, exam result or membership."
       }
     ]
   },

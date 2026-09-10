@@ -21,6 +21,7 @@ import {
   Video,
 } from "lucide-react";
 import { POLICY, billingSummary, formatPrice } from "@/lib/catalogue";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
 import { formatMinutes, type CourseFacts } from "@/lib/courseFacts";
 import {
   getCourseAcademics,
@@ -420,6 +421,9 @@ const CoursePreview = ({
             />
             <MetaRow label="Refunds" value={POLICY.refundText} />
           </dl>
+          <div className="mt-5">
+            <QualificationDisclosure compact />
+          </div>
           {!isFree && (
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
               <Button onClick={onBuy} className="gap-2">

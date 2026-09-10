@@ -21,6 +21,7 @@ import CertificateTemplate from "@/components/certificate/CertificateTemplate";
 import CertificateDownloadButton from "@/components/certificate/CertificateDownloadButton";
 import { useCertificatePDF } from "@/hooks/useCertificatePDF";
 import { EmptyState } from "@/components/EmptyState";
+import { CERTIFICATE_MEANING } from "@/lib/claims";
 
 interface Certificate {
   id: string;
@@ -170,7 +171,10 @@ const Certificates = () => {
             My <span className="text-gradient-brand">Certificates</span>
           </h1>
           <p className="text-muted-foreground">
-            View, download and share your earned certificates
+            View, download and share your Finatix course completion certificates
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl text-xs text-muted-foreground">
+            {CERTIFICATE_MEANING.is} {CERTIFICATE_MEANING.isNot}
           </p>
         </div>
 

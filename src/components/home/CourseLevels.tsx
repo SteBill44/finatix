@@ -138,7 +138,7 @@ const CourseLevels = () => {
       description:
         "Pick the online training course that best suits your needs and begin learning.",
       features: [
-        "Globally accredited training courses",
+        "Courses written to the CIMA syllabus areas for each paper",
         "Created by industry experts",
         "Delivered through our bespoke learning platform",
       ],
