@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { isPaymentsConfigured } from "@/lib/stripe";
+import { useVerifiedPrice } from "@/hooks/useVerifiedPrice";
+import { POLICY, formatPrice } from "@/lib/catalogue";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
