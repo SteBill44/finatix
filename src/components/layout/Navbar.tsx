@@ -122,12 +122,10 @@ const Navbar = () => {
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
             {isAdmin && (
-              <Link to="/admin">
-                <Button size="sm" variant="destructive" className="flex items-center gap-1.5 shadow-sm">
+              <Button asChild size="sm" variant="destructive" className="flex items-center gap-1.5 shadow-sm"><Link to="/admin">
                   <Shield className="w-4 h-4" />
                   Admin
-                </Button>
-              </Link>
+                </Link></Button>
             )}
             {user ? (
               <DropdownMenu modal={false}>
@@ -217,9 +215,7 @@ const Navbar = () => {
                 <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   SIGN IN
                 </Link>
-                <Link to="/auth?mode=signup">
-                  <Button size="sm">Get Started</Button>
-                </Link>
+                <Button asChild size="sm"><Link to="/auth?mode=signup">Get Started</Link></Button>
               </>
             )}
 

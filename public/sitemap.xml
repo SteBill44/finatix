@@ -37,96 +37,91 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-  <url>
-    <loc>https://finatix.io/brand</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
 
   <!-- Certificate Level (CBA) -->
   <url>
-    <loc>https://finatix.io/courses/ba1</loc>
+    <loc>https://finatix.io/courses/ba1-business-economics</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/ba2</loc>
+    <loc>https://finatix.io/courses/ba2-management-accounting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/ba3</loc>
+    <loc>https://finatix.io/courses/ba3-financial-accounting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/ba4</loc>
+    <loc>https://finatix.io/courses/ba4-ethics-governance-law</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Operational Level -->
   <url>
-    <loc>https://finatix.io/courses/e1</loc>
+    <loc>https://finatix.io/courses/e1-managing-finance</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/p1</loc>
+    <loc>https://finatix.io/courses/p1-management-accounting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/f1</loc>
+    <loc>https://finatix.io/courses/f1-financial-reporting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/ocs</loc>
+    <loc>https://finatix.io/courses/ocs-operational-case-study</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Management Level -->
   <url>
-    <loc>https://finatix.io/courses/e2</loc>
+    <loc>https://finatix.io/courses/e2-managing-performance</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/p2</loc>
+    <loc>https://finatix.io/courses/p2-advanced-management-accounting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/f2</loc>
+    <loc>https://finatix.io/courses/f2-advanced-financial-reporting</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/mcs</loc>
+    <loc>https://finatix.io/courses/mcs-management-case-study</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Strategic Level -->
   <url>
-    <loc>https://finatix.io/courses/e3</loc>
+    <loc>https://finatix.io/courses/e3-strategic-management</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/p3</loc>
+    <loc>https://finatix.io/courses/p3-risk-management</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/f3</loc>
+    <loc>https://finatix.io/courses/f3-financial-strategy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://finatix.io/courses/scs</loc>
+    <loc>https://finatix.io/courses/scs-strategic-case-study</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -151,6 +146,111 @@
     <loc>https://finatix.io/help</loc>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+
+
+  <!-- Journey pages -->
+  <url>
+    <loc>https://finatix.io/start</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/start/new</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/start/paper</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/start/case-study</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Paper landing pages -->
+  <url>
+    <loc>https://finatix.io/papers/ba1</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/ba2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/ba3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/ba4</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/e1</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/p1</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/f1</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/ocs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/e2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/p2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/f2</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/mcs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/e3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/p3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/f3</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://finatix.io/papers/scs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
 </urlset>

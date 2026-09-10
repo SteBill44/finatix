@@ -9,7 +9,13 @@
  *   node scripts/prerender.mjs --build   # runs vite build first
  */
 
-import { chromium } from 'playwright';
+let chromium;
+try {
+  ({ chromium } = await import('playwright'));
+} catch {
+  console.warn('! Prerender skipped: playwright is not installed in this environment.');
+  process.exit(0);
+}
 import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
@@ -28,31 +34,50 @@ const ROUTES = [
   '/',
   '/why-cima',
   '/courses',
-  '/courses/ba1',
-  '/courses/ba2',
-  '/courses/ba3',
-  '/courses/ba4',
-  '/courses/e1',
-  '/courses/p1',
-  '/courses/f1',
-  '/courses/ocs',
-  '/courses/e2',
-  '/courses/p2',
-  '/courses/f2',
-  '/courses/mcs',
-  '/courses/e3',
-  '/courses/p3',
-  '/courses/f3',
-  '/courses/scs',
+  '/courses/ba1-business-economics',
+  '/courses/ba2-management-accounting',
+  '/courses/ba3-financial-accounting',
+  '/courses/ba4-ethics-governance-law',
+  '/courses/e1-managing-finance',
+  '/courses/p1-management-accounting',
+  '/courses/f1-financial-reporting',
+  '/courses/ocs-operational-case-study',
+  '/courses/e2-managing-performance',
+  '/courses/p2-advanced-management-accounting',
+  '/courses/f2-advanced-financial-reporting',
+  '/courses/mcs-management-case-study',
+  '/courses/e3-strategic-management',
+  '/courses/p3-risk-management',
+  '/courses/f3-financial-strategy',
+  '/courses/scs-strategic-case-study',
   '/pricing',
   '/about',
   '/contact',
   '/verify',
-  '/brand',
   '/privacy',
   '/cookies',
   '/help',
   '/terms',
+  '/start',
+  '/start/new',
+  '/start/paper',
+  '/start/case-study',
+  '/papers/ba1',
+  '/papers/ba2',
+  '/papers/ba3',
+  '/papers/ba4',
+  '/papers/e1',
+  '/papers/p1',
+  '/papers/f1',
+  '/papers/ocs',
+  '/papers/e2',
+  '/papers/p2',
+  '/papers/f2',
+  '/papers/mcs',
+  '/papers/e3',
+  '/papers/p3',
+  '/papers/f3',
+  '/papers/scs',
 ];
 
 // Phrases that indicate a page failed to load its data — don't save these
@@ -112,8 +137,9 @@ async function main() {
     await waitForServer(BASE_URL);
     console.log('→ Server ready.\n');
 
+    const explicitChromium = process.env.PRERENDER_CHROMIUM_PATH;
     browser = await chromium.launch({
-      executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+      ...(explicitChromium ? { executablePath: explicitChromium } : {}),
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
@@ -184,6 +210,9 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error(err);
-  process.exit(1);
+  // Prerendering is a progressive enhancement: if no headless browser is
+  // available in the build environment, ship the SPA build rather than
+  // failing the whole deployment.
+  console.warn('\n! Prerender skipped:', err?.message || err);
+  process.exit(0);
 });

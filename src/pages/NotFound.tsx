@@ -39,18 +39,14 @@ const NotFound = () => {
 
           {/* Navigation Links */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
-            <Link to="/">
-              <Button className="w-full sm:w-auto gap-2">
+            <Button asChild className="w-full sm:w-auto gap-2"><Link to="/">
                 <Home className="w-4 h-4" />
                 Back to Home
-              </Button>
-            </Link>
-            <Link to="/courses">
-              <Button variant="outline" className="w-full sm:w-auto gap-2">
+              </Link></Button>
+            <Button asChild variant="outline" className="w-full sm:w-auto gap-2"><Link to="/courses">
                 <BookOpen className="w-4 h-4" />
                 Explore Courses
-              </Button>
-            </Link>
+              </Link></Button>
           </div>
 
           {/* Additional Help */}

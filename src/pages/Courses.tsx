@@ -498,6 +498,7 @@ const Courses = () => {
             <div className="relative flex-1 max-w-md w-full lg:w-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
+                aria-label="Search courses"
                 placeholder="Search courses (BA1, E2, Case Study…)"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

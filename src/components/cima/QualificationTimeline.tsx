@@ -221,9 +221,18 @@ const QualificationTimeline = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
                   onClick={() => toggleLevel(level.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleLevel(level.id);
+                    }
+                  }}
                   className={cn(
-                    "relative ml-14 md:ml-20 cursor-pointer rounded-xl border transition-all duration-300",
+                    "relative ml-14 md:ml-20 cursor-pointer rounded-xl border transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     isExpanded 
                       ? `${level.bgColor} shadow-lg` 
                       : "bg-card border-border hover:border-primary/30 hover:shadow-md",

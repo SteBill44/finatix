@@ -138,17 +138,13 @@ const WhyCIMA = () => {
             </p>
 
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
-              <Link to="/auth?mode=signup">
-                <Button size="lg" className="gap-2">
+              <Button asChild size="lg" className="gap-2"><Link to="/auth?mode=signup">
                   Start Your Journey
                   <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/courses">
-                <Button size="lg" variant="outline">
+                </Link></Button>
+              <Button asChild size="lg" variant="outline"><Link to="/courses">
                   Explore Courses
-                </Button>
-              </Link>
+                </Link></Button>
             </div>
           </div>
         </div>
@@ -254,12 +250,10 @@ const WhyCIMA = () => {
                 <p className="text-muted-foreground mb-6">
                   CIMA is a globally recognised qualification for a career in management accounting.
                 </p>
-                <Link to="/courses">
-                  <Button size="lg" className="w-full sm:w-auto gap-2">
+                <Button asChild size="lg" className="w-full sm:w-auto gap-2"><Link to="/courses">
                     <BookOpen className="w-4 h-4" />
                     View Our Courses
-                  </Button>
-                </Link>
+                  </Link></Button>
               </div>
             </div>
           </div>
@@ -277,17 +271,13 @@ const WhyCIMA = () => {
             Finatix provides everything you need to succeed in your CIMA studies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth?mode=signup">
-              <Button size="lg" className="gap-2">
+            <Button asChild size="lg" className="gap-2"><Link to="/auth?mode=signup">
                 Start for free
                 <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button size="lg" variant="outline" className="border-primary-foreground/30 text-white hover:bg-primary-foreground/10">
+              </Link></Button>
+            <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-white hover:bg-primary-foreground/10"><Link to="/contact">
                 Contact Us
-              </Button>
-            </Link>
+              </Link></Button>
           </div>
         </div>
       </section>

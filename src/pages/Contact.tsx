@@ -199,8 +199,9 @@ const Contact = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+                    <label htmlFor="contact-name" className="block text-sm font-medium text-foreground mb-2">Name</label>
                     <Input
+                      id="contact-name"
                       placeholder="Your name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -208,8 +209,9 @@ const Contact = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">Email</label>
+                    <label htmlFor="contact-email" className="block text-sm font-medium text-foreground mb-2">Email</label>
                     <Input
+                      id="contact-email"
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
@@ -219,8 +221,9 @@ const Contact = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Subject</label>
+                  <label htmlFor="contact-subject" className="block text-sm font-medium text-foreground mb-2">Subject</label>
                   <Input
+                    id="contact-subject"
                     placeholder="How can we help?"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -228,8 +231,9 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Message</label>
+                  <label htmlFor="contact-message" className="block text-sm font-medium text-foreground mb-2">Message</label>
                   <Textarea
+                    id="contact-message"
                     placeholder="Tell us more about your question..."
                     rows={6}
                     value={formData.message}

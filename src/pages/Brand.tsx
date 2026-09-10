@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import Layout from "@/components/layout/Layout";
+import SEOHead from "@/components/SEOHead";
 import FinatixLogo from "@/components/FinatixLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -83,6 +84,7 @@ const Brand = () => {
 
   return (
     <Layout>
+      <SEOHead title="Brand Assets" description="Internal Finatix brand assets." noIndex />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 uppercase">Brand <span className="text-gradient-brand">Assets</span></h1>

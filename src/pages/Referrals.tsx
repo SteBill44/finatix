@@ -277,12 +277,10 @@ export default function Referrals() {
                 })()}
 
                 <div className="text-center pt-2">
-                  <Link to="/courses">
-                    <Button variant="outline" className="gap-2">
+                  <Button asChild variant="outline" className="gap-2"><Link to="/courses">
                       <Tag className="w-4 h-4" />
                       Browse Courses
-                    </Button>
-                  </Link>
+                    </Link></Button>
                 </div>
               </CardContent>
             </Card>

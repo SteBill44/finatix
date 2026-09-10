@@ -153,8 +153,7 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
       </div>
       
       <div className="mt-4 flex gap-2">
-        <Link to={`/courses/${enrollment.courses.slug}`} className="flex-1">
-          <Button 
+        <Button asChild 
             variant={isCompleted ? "outline" : "default"} 
             size="sm" 
             className={`w-full gap-2 font-semibold ${
@@ -162,12 +161,11 @@ const CourseProgressCard = ({ enrollment }: CourseProgressCardProps) => {
                 ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all group-hover:scale-[1.02]" 
                 : ""
             }`}
-          >
+          ><Link to={`/courses/${enrollment.courses.slug}`} className="flex-1">
             <Play className={`w-4 h-4 ${!isCompleted ? "animate-pulse" : ""}`} />
             {isCompleted ? "Review" : "Continue"}
             <ArrowRight className="w-4 h-4 ml-auto" />
-          </Button>
-        </Link>
+          </Link></Button>
         
         <AlertDialog open={showUnenrollDialog} onOpenChange={setShowUnenrollDialog}>
           <AlertDialogTrigger asChild>
