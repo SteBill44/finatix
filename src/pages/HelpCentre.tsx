@@ -51,7 +51,7 @@ const helpCategories = [
       },
       {
         question: "What happens when I complete a course?",
-        answer: "Upon completion, you'll receive a certificate of completion that you can download and share. Your achievement will also be displayed in your profile."
+        answer: "You'll receive a Finatix certificate of completion that you can download and share, and your achievement appears in your profile. It records the Finatix study you finished - it is not a CIMA qualification, exam result or membership."
       }
     ]
   },
