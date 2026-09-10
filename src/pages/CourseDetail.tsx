@@ -679,7 +679,7 @@ const CourseDetail = () => {
 
               <div className="flex flex-wrap gap-6 mb-6">
                 <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <Clock className="w-5 h-5" /><span>{course.duration_hours || 40} hours</span>
+                  <Clock className="w-5 h-5" /><span>About {course.duration_hours || 40} hours of study</span>
                 </div>
                 <div className="flex items-center gap-2 text-primary-foreground/90">
                   <BookOpen className="w-5 h-5" /><span>{totalLessons} lessons</span>
@@ -693,7 +693,7 @@ const CourseDetail = () => {
               </div>
 
               {/* Syllabus Accordion */}
-              <Accordion type="single" collapsible defaultValue="objectives" className="w-full">
+              <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
                   <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4">
                     <div className="flex items-center gap-3">
