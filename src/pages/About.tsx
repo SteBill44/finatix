@@ -2,6 +2,10 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import InstructorProfiles from "@/components/credibility/InstructorProfiles";
+import PassRateEvidenceCard from "@/components/credibility/PassRateEvidence";
+import BusinessIdentity from "@/components/credibility/BusinessIdentity";
+import { PLATFORM_FACTS } from "@/lib/company";
 import { 
   Target, 
   Award, 
@@ -33,7 +37,7 @@ const About = () => {
     {
       icon: TrendingUp,
       title: "Results-Driven",
-      description: "Our competency-based approach is designed to maximize your chances of passing first time."
+      description: "Our competency-based approach shows you where you are weakest so your revision time goes where it counts."
     },
   ];
 
