@@ -12,6 +12,8 @@ import HowToBegin from "@/components/home/HowToBegin";
 import FAQ from "@/components/home/FAQ";
 import TestimonialsSection from "@/components/credibility/TestimonialsSection";
 import CTA from "@/components/home/CTA";
+import OfferSummary from "@/components/home/OfferSummary";
+import InstructorProfiles from "@/components/credibility/InstructorProfiles";
 
 const BASE_URL = "https://finatix.io";
 
@@ -80,13 +82,13 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
-      <WhatIsCIMA />
-      
-      <Features />
       <LearningPathway />
-      <CareerPathways />
-      
+      <Features />
+      <InstructorProfiles intro="Every tutor listed here teaches on the platform, and their qualifications are shown in full so you can check them." />
       <HowToBegin />
+      <OfferSummary />
+      <WhatIsCIMA />
+      <CareerPathways />
       <TestimonialsSection />
       <FAQ />
       <CTA />
