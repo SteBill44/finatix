@@ -17,7 +17,6 @@ import {
   POLICY,
   LEVEL_BUNDLE_PRICE,
   LEVEL_NAMES,
-  SINGLE_MODULE_PRICE,
   getCoursePriceId,
   getLevelBundlePriceId,
   billingSummary,
