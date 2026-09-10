@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import QualificationTimeline from "@/components/cima/QualificationTimeline";
 import { SourceLink } from "@/components/credibility/SourceLink";
 import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
-import { CIMA_CLAIMS } from "@/lib/claims";
+import { CIMA_CLAIMS, type ClaimSource } from "@/lib/claims";
 import { 
   GraduationCap, 
   Globe, 
@@ -25,7 +25,7 @@ import {
 const WhyCIMA = () => {
   // Every externally verifiable statement below is recorded in src/lib/claims.ts
   // with its source and the date it was last checked.
-  const benefits = [
+  const benefits: Array<{ icon: React.ElementType; title: string; description: string; source?: ClaimSource }> = [
     {
       icon: Globe,
       title: "Global Recognition",
@@ -68,7 +68,7 @@ const WhyCIMA = () => {
     }
   ];
 
-  const stats = [
+  const stats: Array<{ label: string; value: string; icon: React.ElementType; source?: ClaimSource }> = [
     {
       label: "Members, candidates and registrants (AICPA & CIMA combined)",
       value: "597,000",
