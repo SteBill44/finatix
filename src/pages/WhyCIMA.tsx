@@ -20,44 +20,76 @@ import {
 } from "lucide-react";
 
 const WhyCIMA = () => {
+  // Every externally verifiable statement below is recorded in src/lib/claims.ts
+  // with its source and the date it was last checked.
   const benefits = [
     {
       icon: Globe,
       title: "Global Recognition",
-      description: "CIMA is recognised in over 188 countries worldwide, opening doors to international career opportunities."
+      description:
+        "AICPA & CIMA members, candidates and registrants are based in 188 countries and territories.",
+      source: CIMA_CLAIMS.countries.source
     },
     {
       icon: TrendingUp,
-      title: "Career Advancement",
-      description: "CIMA-qualified professionals often command higher salaries and access senior management positions faster."
+      title: "Career Progression",
+      description:
+        "AICPA & CIMA publish salary data for CGMA designation holders and candidates, so you can check current earnings for your role and region yourself.",
+      source: CIMA_CLAIMS.salary.source
     },
     {
       icon: Briefcase,
       title: "Business Focus",
-      description: "Unlike traditional accounting qualifications, CIMA focuses on strategic business management and decision-making."
+      description:
+        "CIMA's syllabus centres on management accounting and business decision-making rather than audit and practice work."
     },
     {
       icon: Users,
-      title: "Professional Network",
-      description: "Join a community of over 150,000 members and 100,000+ students globally, with exclusive networking opportunities."
+      title: "Professional Community",
+      description:
+        "AICPA & CIMA report a combined community of 597,000 members, candidates and registrants worldwide.",
+      source: CIMA_CLAIMS.community.source
     },
     {
       icon: Award,
       title: "CGMA Designation",
-      description: "Earn the prestigious Chartered Global Management Accountant designation, recognised by top employers worldwide."
+      description:
+        "Passing the exams is one part. The CGMA designation also requires a minimum of three years' verified relevant practical experience.",
+      source: CIMA_CLAIMS.practicalExperience.source
     },
     {
       icon: Building2,
-      title: "Industry Demand",
-      description: "CIMA skills are in high demand across sectors including finance, consulting, technology, and manufacturing."
+      title: "Where It's Used",
+      description:
+        "Management accounting roles sit across industry, the public sector, consulting and financial services."
     }
   ];
 
-  const salaryStats = [
-    { label: "Average UK Salary", value: "£65,000+", icon: DollarSign },
-    { label: "Salary Premium", value: "Up to 25%", icon: TrendingUp },
-    { label: "Global Members", value: "150,000+", icon: Users },
-    { label: "Countries", value: "188+", icon: Globe }
+  const stats = [
+    {
+      label: "Members, candidates and registrants (AICPA & CIMA combined)",
+      value: "597,000",
+      icon: Users,
+      source: CIMA_CLAIMS.community.source
+    },
+    {
+      label: "Countries and territories",
+      value: "188",
+      icon: Globe,
+      source: CIMA_CLAIMS.countries.source
+    },
+    {
+      label: "Years of verified practical experience for CGMA",
+      value: "3 min.",
+      icon: Briefcase,
+      source: CIMA_CLAIMS.practicalExperience.source
+    },
+    {
+      label: "Official fees are set and charged by AICPA & CIMA",
+      value: "Separate",
+      icon: DollarSign,
+      source: CIMA_CLAIMS.fees.source
+    }
   ];
 
   const careerPaths = [
