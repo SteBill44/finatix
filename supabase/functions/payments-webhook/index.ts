@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/stripe.ts";
+import { type StripeEnv, createStripeClient, getActiveStripeEnv, verifyWebhook } from "../_shared/stripe.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -61,6 +61,13 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
 
   if (!userId) {
     console.log("Guest purchase recorded - will be claimed when the account is created");
+    return;
+  }
+
+  // Test-mode transactions are recorded for reference but never turned into
+  // real access once the site is running live payments.
+  if (env !== getActiveStripeEnv()) {
+    console.log(`Purchase in ${env} mode ignored for access - site runs ${getActiveStripeEnv()}`);
     return;
   }
 
