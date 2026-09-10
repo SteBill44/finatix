@@ -238,12 +238,8 @@ export const useMarkLessonComplete = () => {
       const allDone = allIds.length > 0 && allIds.every((id) => doneIds.has(id));
 
       if (allDone) {
-        await supabase
-          .from("enrollments")
-          .update({ completed_at: new Date().toISOString() })
-          .eq("user_id", user.id)
-          .eq("course_id", courseId)
-          .is("completed_at", null);
+        // Completion is awarded server-side after re-verifying every lesson.
+        await supabase.rpc("award_course_completion", { p_course_id: courseId });
       }
 
       return data;
