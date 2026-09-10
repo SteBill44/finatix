@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, createStripeClient, getActiveStripeEnv, verifyWebhook } from "../_shared/stripe.ts";
+import { resolveCoursesForPrice } from "../_shared/catalogue.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -27,12 +28,30 @@ function stringId(value: any): string | null {
 }
 
 async function grantCourseAccess(session: any, env: StripeEnv) {
-  const bundleIds: string[] = (session.metadata?.courseIds ?? "")
-    .split(",")
-    .map((id: string) => id.trim())
-    .filter(Boolean);
-  const singleId = session.metadata?.courseId;
-  const courseIds: string[] = bundleIds.length ? bundleIds : (singleId ? [singleId] : []);
+  const paidPriceId: string | null = session.metadata?.priceId ?? null;
+
+  // What was paid for decides what is unlocked. The course list is worked out
+  // here from the price, not taken from the browser or from a metadata list.
+  let courseIds: string[] = [];
+  let isBundle = false;
+  if (paidPriceId) {
+    const resolved = await resolveCoursesForPrice(paidPriceId);
+    courseIds = resolved.courseIds;
+    isBundle = resolved.isBundle;
+  }
+
+  // Older sessions (created before the price-based resolution) carried the
+  // course IDs in metadata. Honour those so historical orders still fulfil.
+  if (!courseIds.length) {
+    const legacyIds: string[] = (session.metadata?.courseIds ?? "")
+      .split(",")
+      .map((id: string) => id.trim())
+      .filter(Boolean);
+    const singleId = session.metadata?.courseId;
+    courseIds = legacyIds.length ? legacyIds : (singleId ? [singleId] : []);
+    isBundle = legacyIds.length > 1;
+  }
+
   const email = session.customer_details?.email ?? session.customer_email ?? null;
   let userId: string | null = session.metadata?.userId ?? null;
 
