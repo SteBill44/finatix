@@ -73,28 +73,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // THEN check for existing session.
-    // If the user didn't choose "stay logged in", their session is only valid
-    // for the current browser tab - sign them out when the tab/browser closes.
+    // If the user didn't choose "stay logged in", their session should end when
+    // the browser is closed - but NOT when they simply open a second tab.
+    // A heartbeat timestamp in localStorage tells us whether the app is still
+    // open somewhere else.
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       const sessionOnlyMarker = sessionStorage.getItem("finatix_session_only");
       const hasStoredSession = !!session;
 
       if (hasStoredSession && !sessionOnlyMarker) {
-        // Check if this session was created without rememberMe - the marker
-        // should be in sessionStorage if the browser is still open.
-        // If it's absent (browser was closed and reopened) AND the session
-        // was stored without rememberMe, sign out.
         const noRemember = localStorage.getItem("finatix_no_remember");
         if (noRemember) {
-          supabase.auth.signOut().then(() => {
-            localStorage.removeItem("finatix_no_remember");
-            setSession(null);
-            setUser(null);
-            setLoading(false);
-          });
-          return;
+          const lastActive = Number(localStorage.getItem("finatix_last_active") || 0);
+          const stillOpenElsewhere = Date.now() - lastActive < 2 * 60 * 1000;
+
+          if (stillOpenElsewhere) {
+            // Another tab is still using this session - adopt it in this tab.
+            sessionStorage.setItem("finatix_session_only", "1");
+          } else {
+            supabase.auth.signOut().then(() => {
+              localStorage.removeItem("finatix_no_remember");
+              localStorage.removeItem("finatix_last_active");
+              setSession(null);
+              setUser(null);
+              setLoading(false);
+            });
+            return;
+          }
         }
       }
+
 
       if (error) {
         const parsed = parseError(error);
@@ -110,8 +118,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Heartbeat so other tabs know the app is still open in this browser.
+    const beat = () => {
+      if (localStorage.getItem("finatix_no_remember")) {
+        localStorage.setItem("finatix_last_active", String(Date.now()));
+      }
+    };
+    beat();
+    const heartbeat = window.setInterval(beat, 15000);
+
+    return () => {
+      subscription.unsubscribe();
+      window.clearInterval(heartbeat);
+    };
   }, []);
+
 
   const signUp = async (email: string, password: string, fullName: string, cimaData?: CIMAData) => {
     const redirectUrl = `${window.location.origin}/`;

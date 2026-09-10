@@ -427,7 +427,7 @@ const CourseDetail = () => {
       <div className="space-y-3">
         {lessons?.map((lesson, index) => {
           const completed = isLessonCompleted(lesson.id);
-          const isLocked = !isEnrolled && index > 0;
+          const isLocked = !isEnrolled;
           return (
             <Card
               key={lesson.id}
