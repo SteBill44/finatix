@@ -118,8 +118,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Heartbeat so other tabs know the app is still open in this browser.
+    const beat = () => {
+      if (localStorage.getItem("finatix_no_remember")) {
+        localStorage.setItem("finatix_last_active", String(Date.now()));
+      }
+    };
+    beat();
+    const heartbeat = window.setInterval(beat, 15000);
+
+    return () => {
+      subscription.unsubscribe();
+      window.clearInterval(heartbeat);
+    };
   }, []);
+
 
   const signUp = async (email: string, password: string, fullName: string, cimaData?: CIMAData) => {
     const redirectUrl = `${window.location.origin}/`;
