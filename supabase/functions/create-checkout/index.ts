@@ -50,35 +50,37 @@ function getCheckoutCorsHeaders(req: Request): Record<string, string> {
   };
 }
 
-async function resolveOrCreateCustomer(
+// Only ever called for a verified signed-in user, so linking a Stripe customer
+// to that account is safe. Guests never reach this path.
+async function resolveOrCreateCustomerForUser(
   stripe: ReturnType<typeof createStripeClient>,
-  options: { email?: string; userId?: string },
+  userId: string,
+  email?: string,
 ): Promise<string> {
-  if (options.userId && !ID_PATTERN.test(options.userId)) {
-    throw new Error("Invalid userId");
-  }
-  if (options.userId) {
-    const found = await stripe.customers.search({
-      query: `metadata['userId']:'${options.userId}'`,
-      limit: 1,
-    });
-    if (found.data.length) return found.data[0].id;
-  }
-  if (options.email) {
-    const existing = await stripe.customers.list({ email: options.email, limit: 1 });
-    if (existing.data.length) {
-      const customer = existing.data[0];
-      if (options.userId && customer.metadata?.userId !== options.userId) {
-        await stripe.customers.update(customer.id, {
-          metadata: { ...customer.metadata, userId: options.userId },
-        });
-      }
+  if (!ID_PATTERN.test(userId)) throw new Error("Invalid user");
+
+  const found = await stripe.customers.search({
+    query: `metadata['userId']:'${userId}'`,
+    limit: 1,
+  });
+  if (found.data.length) return found.data[0].id;
+
+  if (email) {
+    const existing = await stripe.customers.list({ email, limit: 1 });
+    const customer = existing.data[0];
+    // Never steal a customer that is already associated with another account.
+    if (customer && !customer.metadata?.userId) {
+      await stripe.customers.update(customer.id, {
+        metadata: { ...customer.metadata, userId },
+      });
       return customer.id;
     }
+    if (customer && customer.metadata?.userId === userId) return customer.id;
   }
+
   const created = await stripe.customers.create({
-    ...(options.email && { email: options.email }),
-    ...(options.userId && { metadata: { userId: options.userId } }),
+    ...(email && { email }),
+    metadata: { userId },
   });
   return created.id;
 }
@@ -88,8 +90,11 @@ async function createCheckoutSession(options: {
   courseId?: string;
   courseIds?: string[];
   bundleLabel?: string;
-  customerEmail?: string;
+  // Verified session identity, or undefined for guest checkout.
   userId?: string;
+  userEmail?: string;
+  // Unverified email typed by a guest: prefill only, never used to link.
+  guestEmail?: string;
   returnUrl: string;
   environment: StripeEnv;
 }) {
@@ -101,11 +106,8 @@ async function createCheckoutSession(options: {
   const stripePrice = prices.data[0];
   const isRecurring = stripePrice.type === "recurring";
 
-  const customerId = (options.customerEmail || options.userId)
-    ? await resolveOrCreateCustomer(stripe, {
-      email: options.customerEmail,
-      userId: options.userId,
-    })
+  const customerId = options.userId
+    ? await resolveOrCreateCustomerForUser(stripe, options.userId, options.userEmail)
     : undefined;
 
   let productDescription: string | undefined;
@@ -122,10 +124,16 @@ async function createCheckoutSession(options: {
     mode: isRecurring ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
-    ...(customerId && { customer: customerId }),
+    ...(customerId
+      ? { customer: customerId }
+      : options.guestEmail
+      ? { customer_email: options.guestEmail }
+      : {}),
     ...(!isRecurring && { payment_intent_data: { description: productDescription } }),
     managed_payments: { enabled: true },
     metadata: {
+      // Ownership is only stamped for a verified session. Guest purchases stay
+      // unclaimed until the buyer proves the email is theirs by signing in.
       ...(options.userId && { userId: options.userId }),
       ...(options.courseId && { courseId: options.courseId }),
       ...(options.courseIds?.length && { courseIds: options.courseIds.join(",") }),
@@ -137,6 +145,26 @@ async function createCheckoutSession(options: {
       subscription_data: { metadata: { userId: options.userId } },
     }),
   } as any);
+
+  return session.client_secret;
+}
+
+// Identity comes from the caller's session token, never from the request body.
+async function getVerifiedUser(
+  req: Request,
+): Promise<{ id: string; email?: string } | null> {
+  const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.replace(/^Bearer\s+/i, "").trim();
+  if (!token) return null;
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+  );
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) return null;
+  return { id: data.user.id, email: data.user.email ?? undefined };
+}
+
 
   return session.client_secret;
 }
