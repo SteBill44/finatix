@@ -214,6 +214,16 @@ async function markSubscriptionCanceled(subscription: any, env: StripeEnv) {
     .eq("environment", env);
 }
 
+// Keep the database in step with the server's payment mode so access checks
+// there only count entitlements from the same mode.
+async function syncActiveEnvironment() {
+  const { error } = await getSupabase().from("site_settings").upsert(
+    { key: "payments_environment", value: getActiveStripeEnv() },
+    { onConflict: "key" },
+  );
+  if (error) console.error("Failed to sync payments environment:", error);
+}
+
 async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
 
@@ -257,6 +267,7 @@ Deno.serve(async (req) => {
     });
   }
   try {
+    await syncActiveEnvironment();
     await handleWebhook(req, rawEnv);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
