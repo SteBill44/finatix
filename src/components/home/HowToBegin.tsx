@@ -25,7 +25,7 @@ const steps = [
   {
     title: "Sit Your CIMA Exam",
     description:
-      "Book your official exam through CIMA Connect when you're ready, and earn your globally-recognised credential.",
+      "Register as a CIMA student and book each official exam directly with AICPA & CIMA. Registration, subscription and exam fees are paid to them, not to Finatix.",
   },
 ];
 
