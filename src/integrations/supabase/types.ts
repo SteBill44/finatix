@@ -598,6 +598,7 @@ export type Database = {
           completed_course_slug: string | null
           course_id: string
           enrolled_at: string
+          granted_by_admin: boolean
           id: string
           user_id: string
         }
@@ -606,6 +607,7 @@ export type Database = {
           completed_course_slug?: string | null
           course_id: string
           enrolled_at?: string
+          granted_by_admin?: boolean
           id?: string
           user_id: string
         }
@@ -614,6 +616,7 @@ export type Database = {
           completed_course_slug?: string | null
           course_id?: string
           enrolled_at?: string
+          granted_by_admin?: boolean
           id?: string
           user_id?: string
         }
@@ -2019,6 +2022,10 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      has_paid_entitlement: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2026,6 +2033,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_free_course: { Args: { _course_id: string }; Returns: boolean }
       is_master_admin: { Args: { _user_id: string }; Returns: boolean }
       log_profile_access: {
         Args: { p_access_type?: string; p_profile_user_id: string }

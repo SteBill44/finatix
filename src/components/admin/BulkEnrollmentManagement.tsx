@@ -179,7 +179,11 @@ const BulkEnrollmentManagement = () => {
   const handleBulkEnroll = async () => {
     if (selectedToEnroll.size === 0 || !selectedCourseId) return;
     setEnrolling(true);
-    const rows = Array.from(selectedToEnroll).map((userId) => ({ user_id: userId, course_id: selectedCourseId }));
+    const rows = Array.from(selectedToEnroll).map((userId) => ({
+      user_id: userId,
+      course_id: selectedCourseId,
+      granted_by_admin: true,
+    }));
     const { error } = await supabase.from("enrollments").insert(rows);
     if (error) {
       toast.error("Failed to enroll users");
