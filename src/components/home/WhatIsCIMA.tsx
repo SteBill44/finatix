@@ -1,82 +1,46 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import SplitTextReveal from "./SplitTextReveal";
+
+const levels = [
+  { name: "Certificate", detail: "The fundamentals of business accounting (BA1-BA4)" },
+  { name: "Operational", detail: "Short-term decision making (E1, P1, F1)" },
+  { name: "Management", detail: "Medium-term performance (E2, P2, F2)" },
+  { name: "Strategic", detail: "Long-term strategy and leadership (E3, P3, F3)" },
+];
 
 const WhatIsCIMA = () => {
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="bg-background py-12 lg:py-16">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-4"
-          >
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             Understanding CIMA
-          </motion.span>
-
-          <SplitTextReveal
-            as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-8 leading-[1.15]"
-          >
+          </p>
+          <h2 className="mb-4 text-2xl font-bold leading-tight text-charcoal md:text-3xl lg:text-4xl">
             What is the CIMA qualification?
-          </SplitTextReveal>
+          </h2>
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            CIMA is the professional qualification for management accountants: the
+            people who turn financial data into business decisions. It runs across
+            four levels, and you sit the exams with CIMA itself.
+          </p>
 
-          <div className="space-y-5 text-base md:text-lg text-muted-foreground leading-relaxed">
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              The Chartered Institute of Management Accountants (CIMA) is the world's
-              leading professional body for management accountants. As both a qualification
-              and a designation, it certifies expertise in financial management, strategic
-              decision-making, and business performance. Skills that drive organisations
-              forward, not just balance the books.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              CIMA-qualified professionals translate financial data into business strategy.
-              They forecast performance, evaluate investments, optimise costs, and partner
-              with leadership to make the calls that shape the future of an organisation,
-              from FTSE 100 boards to high-growth startups.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              The qualification spans four progressive levels: Certificate in Business
-              Accounting establishes the fundamentals; Operational develops short-term
-              decision-making; Management focuses on medium-term performance; and Strategic
-              equips you for senior leadership and long-term strategy.
-            </motion.p>
-          </div>
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+            {levels.map((level) => (
+              <li key={level.name} className="rounded-xl border border-border bg-card p-4">
+                <p className="text-sm font-semibold text-foreground">{level.name}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{level.detail}</p>
+              </li>
+            ))}
+          </ul>
 
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-10"
+          <Link
+            to="/why-cima"
+            className="group mt-8 inline-flex items-center gap-2 text-base font-semibold text-primary hover:underline"
           >
-            <Link
-              to="/why-cima"
-              className="inline-flex items-center gap-2 text-primary font-semibold text-base group hover:gap-3 transition-all"
-            >
-              Read the complete guide to CIMA
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </motion.div>
+            Read the complete guide to CIMA
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>

@@ -81,8 +81,8 @@ const LearningPathway = () => {
             From Foundations to Chartered
           </SplitTextReveal>
           <p className="text-sm md:text-base text-muted-foreground">
-            A structured pathway designed by CIMA-qualified practitioners to take you from
-            complete beginner to fully-chartered management accountant.
+            A structured pathway that takes you from complete beginner to fully-chartered
+            management accountant, one level at a time.
           </p>
         </div>
 
