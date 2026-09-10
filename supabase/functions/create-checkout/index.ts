@@ -194,16 +194,27 @@ Deno.serve(async (req) => {
     // are ignored on purpose.
     const resolved = await resolveCoursesForPrice(body.priceId);
 
+    // Signed-in identity comes from the verified session only.
+    const verifiedUser = await getVerifiedUser(req);
+    const rawGuestEmail = typeof body.customerEmail === "string"
+      ? body.customerEmail.trim().slice(0, 254)
+      : undefined;
+    const guestEmail = !verifiedUser && rawGuestEmail && EMAIL_PATTERN.test(rawGuestEmail)
+      ? rawGuestEmail
+      : undefined;
+
     const clientSecret = await createCheckoutSession({
       priceId: body.priceId,
       courseId: !resolved.isBundle ? resolved.courseIds[0] : undefined,
       courseIds: resolved.isBundle ? resolved.courseIds : undefined,
       bundleLabel: typeof body.bundleLabel === "string" ? body.bundleLabel.slice(0, 60) : undefined,
-      customerEmail: typeof body.customerEmail === "string" ? body.customerEmail : undefined,
-      userId: typeof body.userId === "string" ? body.userId : undefined,
+      userId: verifiedUser?.id,
+      userEmail: verifiedUser?.email,
+      guestEmail,
       returnUrl: body.returnUrl,
       environment,
     });
+
 
     return new Response(JSON.stringify({ clientSecret }), {
       status: 200,
