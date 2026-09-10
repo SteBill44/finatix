@@ -239,17 +239,15 @@ const Quiz = () => {
         current={currentQuestion + 1}
         total={questions.length}
         right={
-          <Link to={`/exam/${quizId}`}>
-            <Button variant="outline" size="sm" className="gap-1.5 hidden sm:inline-flex">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 hidden sm:inline-flex"><Link to={`/exam/${quizId}`}>
               <GraduationCap className="w-4 h-4" />
               Exam Mode
-            </Button>
-          </Link>
+            </Link></Button>
         }
       />
 
       {/* Question area - maximized */}
-      <main className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
           <div key={currentQuestion} className="animate-fade-in">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3 capitalize">
@@ -268,7 +266,7 @@ const Quiz = () => {
             />
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Sticky bottom navigation */}
       <footer className="sticky bottom-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border safe-area-bottom">

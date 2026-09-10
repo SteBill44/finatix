@@ -586,3 +586,32 @@
     transform: translate(-20px, 20px) scale(0.95);
   }
 }
+
+/* Respect the user's reduced-motion setting across every animation utility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-up,
+  .animate-fade-up-delay-1,
+  .animate-fade-up-delay-2,
+  .animate-fade-up-delay-3,
+  .animate-scale-in,
+  .animate-fade-in,
+  .animate-slide-in,
+  .animate-slide-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .gradient-orb,
+  .logo-marquee {
+    animation: none !important;
+  }
+}

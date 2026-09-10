@@ -64,8 +64,8 @@ export const MEMBERSHIP_MONTHLY: CatalogueProduct = {
   includes: "Every CIMA course on Finatix",
   features: [
     { text: "All CIMA modules", included: true },
-    { text: "500+ hours of video content", included: true },
-    { text: "5000+ practice questions", included: true },
+    { text: "Every lesson in all 16 CIMA modules", included: true },
+    { text: "Practice quizzes and timed mock exams for every module", included: true },
     { text: "Unlimited mock exams", included: true },
     { text: "Full analytics suite", included: true },
     { text: COMMON_FEATURES.mobile, included: true },
@@ -112,8 +112,8 @@ export const COMPLETE_BUNDLE: CatalogueProduct = {
   includes: "Every CIMA course on Finatix",
   features: [
     { text: "All CIMA modules", included: true },
-    { text: "500+ hours of video content", included: true },
-    { text: "5000+ practice questions", included: true },
+    { text: "Every lesson in all 16 CIMA modules", included: true },
+    { text: "Practice quizzes and timed mock exams for every module", included: true },
     { text: "Unlimited mock exams", included: true },
     { text: "Full analytics suite", included: true },
     { text: COMMON_FEATURES.mobile, included: true },

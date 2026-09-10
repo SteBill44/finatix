@@ -103,12 +103,10 @@ export default function FlashcardStudy() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <Link to="/flashcards">
-                <Button variant="ghost" size="sm">
+              <Button asChild variant="ghost" size="sm"><Link to="/flashcards">
                   <ArrowLeft className="w-4 h-4 mr-1" />
                   Back
-                </Button>
-              </Link>
+                </Link></Button>
               <div>
                 <h1 className="font-semibold text-lg">{deck?.title || "Study Session"}</h1>
                 <p className="text-xs text-muted-foreground">{cards.length} cards</p>

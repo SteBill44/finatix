@@ -594,17 +594,13 @@ const Pricing = () => {
             Study for your CIMA exams with structured courses, practice questions and progress tracking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/courses">
-              <Button size="lg" className="gap-2">
+            <Button asChild size="lg" className="gap-2"><Link to="/courses">
                 <Zap className="w-5 h-5" />
                 Start Free Trial
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button variant="outline" size="lg">
+              </Link></Button>
+            <Button asChild variant="outline" size="lg"><Link to="/contact">
                 Talk to Sales
-              </Button>
-            </Link>
+              </Link></Button>
           </div>
         </div>
       </section>

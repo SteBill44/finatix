@@ -398,7 +398,7 @@ const PracticeMode = () => {
         }
       />
 
-      <main className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
           <div key={currentQuestionIndex} className="animate-fade-in">
             {/* Question metadata */}
@@ -448,7 +448,7 @@ const PracticeMode = () => {
             )}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Sticky bottom action bar */}
       <footer className="sticky bottom-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border safe-area-bottom">

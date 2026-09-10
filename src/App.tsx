@@ -119,8 +119,8 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Suspense fallback={<PageLoader />}>
+    <Suspense fallback={<PageLoader />}>
+      <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           {/* Public routes */}
           <Route path="/" element={<Public feature="Home"><Index /></Public>} />
@@ -170,8 +170,8 @@ const AnimatedRoutes = () => {
 
           <Route path="*" element={<Public feature="Not Found"><NotFound /></Public>} />
         </Routes>
-      </Suspense>
-    </AnimatePresence>
+      </AnimatePresence>
+    </Suspense>
   );
 };
 

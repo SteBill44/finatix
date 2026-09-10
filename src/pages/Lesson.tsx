@@ -315,7 +315,7 @@ const Lesson = () => {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         {/* Top Navigation */}
         <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border">
           {/* Breadcrumb Navigation */}
@@ -610,7 +610,7 @@ const Lesson = () => {
           </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

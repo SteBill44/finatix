@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
 import EnrolledCourseDashboard from "@/components/course/EnrolledCourseDashboard";
@@ -24,6 +24,7 @@ import { useHasCIMAProfile } from "@/hooks/useCIMAProfile";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { useAdminView } from "@/contexts/AdminViewContext";
 import { useCourseDetailOptimized } from "@/hooks/useCourseDetailOptimized";
+import { paperBySlugCode } from "@/lib/papers";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { funnel } from "@/lib/analytics";
 import CIMAProfileModal from "@/components/CIMAProfileModal";
@@ -107,6 +108,10 @@ const CourseDetail = () => {
 
   const isEffectiveAdmin = isAdmin && !isStudentView;
 
+  // Short paper codes (/courses/e1) are legacy/shareable URLs: send them to
+  // the canonical course slug so there is one indexable URL per course.
+  const shortCodePaper = courseId && !courseId.includes("-") ? paperBySlugCode(courseId.toLowerCase()) : undefined;
+
   // First, fetch course to get its ID (needed for optimized hook)
   const { data: course, isLoading: courseLoading } = useQuery({
     queryKey: ["course", courseId],
@@ -117,7 +122,8 @@ const CourseDetail = () => {
         .eq("slug", courseId!)
         .maybeSingle();
 
-      if (!data) {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId ?? "");
+      if (!data && isUuid) {
         const result = await supabase
           .from("courses")
           .select("*")
@@ -130,7 +136,7 @@ const CourseDetail = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!courseId,
+    enabled: !!courseId && !shortCodePaper,
   });
 
   // Fetch course details with optimized hook (lessons, progress, quizzes in one call)
@@ -330,6 +336,10 @@ const CourseDetail = () => {
     }
   };
 
+  if (shortCodePaper) {
+    return <Navigate to={`/courses/${shortCodePaper.courseSlug}`} replace />;
+  }
+
   if (isLoading) {
     return (
       <Layout>
@@ -443,8 +453,19 @@ const CourseDetail = () => {
           return (
             <Card
               key={lesson.id}
-              className={`p-4 transition-all duration-200 ${isLocked ? "opacity-60" : "hover:shadow-md cursor-pointer"}`}
+              role={isLocked ? undefined : "button"}
+              tabIndex={isLocked ? undefined : 0}
+              aria-disabled={isLocked || undefined}
+              aria-label={isLocked ? `${lesson.title} (locked)` : `Open lesson: ${lesson.title}`}
+              className={`p-4 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isLocked ? "opacity-60" : "hover:shadow-md cursor-pointer"}`}
               onClick={() => !isLocked && navigate(`/courses/${course.id}/lesson/${lesson.id}`)}
+              onKeyDown={(e) => {
+                if (isLocked) return;
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  navigate(`/courses/${course.id}/lesson/${lesson.id}`);
+                }
+              }}
             >
               <div className="flex items-center gap-4">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${completed ? levelBgColor : "bg-secondary"}`}>

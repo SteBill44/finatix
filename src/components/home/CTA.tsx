@@ -91,14 +91,10 @@ const CTA = () => {
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <MagneticButton strength={0.08}>
-                <Link to="/dashboard">
-                  <Button size="xl">Go to Dashboard</Button>
-                </Link>
+                <Button asChild size="xl"><Link to="/dashboard">Go to Dashboard</Link></Button>
               </MagneticButton>
               <MagneticButton strength={0.08}>
-                <Link to="/courses">
-                  <Button size="xl" variant="outline">Browse Courses</Button>
-                </Link>
+                <Button asChild size="xl" variant="outline"><Link to="/courses">Browse Courses</Link></Button>
               </MagneticButton>
             </motion.div>
           </div>
@@ -154,14 +150,10 @@ const CTA = () => {
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <MagneticButton strength={0.08}>
-                <Link to="/auth?mode=signup">
-                  <Button size="xl">Create your free account</Button>
-                </Link>
+                <Button asChild size="xl"><Link to="/auth?mode=signup">Create your free account</Link></Button>
               </MagneticButton>
               <MagneticButton strength={0.08}>
-                <Link to="/courses">
-                  <Button size="xl" variant="outline">Explore Courses</Button>
-                </Link>
+                <Button asChild size="xl" variant="outline"><Link to="/courses">Explore Courses</Link></Button>
               </MagneticButton>
             </motion.div>
 

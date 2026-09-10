@@ -521,7 +521,7 @@ const MockExam = () => {
       {/* Main Content */}
       <div className="flex-1 flex">
         {/* Question Area */}
-        <main className="flex-1 p-6 lg:p-8">
+        <div className="flex-1 p-6 lg:p-8">
           <div className="max-w-3xl mx-auto">
             {/* Question Header */}
             <div className="flex items-center justify-between mb-6">
@@ -614,7 +614,7 @@ const MockExam = () => {
               </div>
             </div>
           </div>
-        </main>
+        </div>
 
         {/* Side Panel - Navigator */}
         {showNavigator && (

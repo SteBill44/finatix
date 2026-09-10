@@ -85,12 +85,10 @@ export default function Checkout() {
       <div className="pt-24 lg:pt-28 pb-12">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="mb-6">
-            <Link to="/pricing">
-              <Button variant="ghost" size="sm" className="mb-4">
+            <Button asChild variant="ghost" size="sm" className="mb-4"><Link to="/pricing">
                 <ArrowLeft className="w-4 h-4 mr-1.5" />
                 Back to Pricing
-              </Button>
-            </Link>
+              </Link></Button>
             <h1 className="text-2xl font-bold">Choose Your Plan</h1>
             <p className="text-muted-foreground text-sm mt-1">
               Membership unlocks every course while it's active. Cancel any time - you keep access

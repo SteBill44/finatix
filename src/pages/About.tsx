@@ -75,17 +75,13 @@ const About = () => {
               {CIMA_RELATIONSHIP.shortStatement}
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
-              <Link to="/courses">
-                <Button size="lg" className="gap-2">
+              <Button asChild size="lg" className="gap-2"><Link to="/courses">
                   Explore Courses
                   <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link to="/contact">
-                <Button size="lg" variant="outline">
+                </Link></Button>
+              <Button asChild size="lg" variant="outline"><Link to="/contact">
                   Contact Us
-                </Button>
-              </Link>
+                </Link></Button>
             </div>
           </div>
         </div>
@@ -197,12 +193,10 @@ const About = () => {
           <PassRateEvidenceCard className="mt-8 max-w-xl mx-auto" />
 
           <div className="text-center mt-10">
-            <Link to="/courses">
-              <Button className="gap-2">
+            <Button asChild className="gap-2"><Link to="/courses">
                 Explore the courses
                 <ArrowRight className="w-4 h-4" />
-              </Button>
-            </Link>
+              </Link></Button>
           </div>
         </div>
       </section>
