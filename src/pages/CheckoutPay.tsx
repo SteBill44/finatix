@@ -161,7 +161,7 @@ const CheckoutPay = () => {
                         disabled={!canContinue}
                         onClick={() => setShowPayment(true)}
                       >
-                        Continue to payment
+                        {checkingPrice ? "Checking price..." : "Continue to payment"}
                       </Button>
                     </div>
                   )}
@@ -183,29 +183,55 @@ const CheckoutPay = () => {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium leading-snug">{title}</p>
+                      <p className="text-sm font-medium leading-snug">
+                        {verified?.productName || title}
+                      </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {courseCount > 1
+                        {isSubscription
+                          ? `Membership - every course while your membership is active`
+                          : courseCount > 1
                           ? `${courseCount} courses - lifetime access`
                           : "One-time purchase - lifetime access"}
                       </p>
                     </div>
-                    {price > 0 && (
-                      <span className="text-sm font-semibold whitespace-nowrap">
-                        £{price.toLocaleString()}
-                      </span>
-                    )}
+                    <span className="text-sm font-semibold whitespace-nowrap">
+                      {checkingPrice
+                        ? "..."
+                        : verifiedAmount != null
+                        ? formatPrice(verifiedAmount, currency)
+                        : price > 0
+                        ? formatPrice(price)
+                        : "-"}
+                    </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Total due today</span>
                     <span className="text-2xl font-bold">
-                      {price > 0 ? `£${price.toLocaleString()}` : "-"}
+                      {checkingPrice
+                        ? "..."
+                        : verifiedAmount != null
+                        ? formatPrice(verifiedAmount, currency)
+                        : price > 0
+                        ? formatPrice(price)
+                        : "-"}
                     </span>
                   </div>
+                  {isSubscription && verifiedAmount != null && (
+                    <p className="text-xs text-muted-foreground">
+                      This is a subscription. {formatPrice(verifiedAmount, currency)} is taken
+                      today and then automatically every {intervalLabel} until you cancel. You can
+                      cancel any time and keep access until the end of the period you've paid for.
+                    </p>
+                  )}
+                  {!isSubscription && (
+                    <p className="text-xs text-muted-foreground">
+                      One-time payment. There is no subscription and nothing renews.
+                    </p>
+                  )}
                   <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
                     <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-primary" />
-                    VAT included. Lifetime access to everything in this purchase.
+                    VAT included in the price shown. {POLICY.refundText}.
                   </p>
                 </CardContent>
               </Card>
