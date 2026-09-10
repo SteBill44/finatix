@@ -202,7 +202,7 @@ const WhyCIMA = () => {
                 <Target className="w-16 h-16 text-primary mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-foreground mb-3">Ready to Begin?</h3>
                 <p className="text-muted-foreground mb-6">
-                  Join thousands of professionals who have transformed their careers with CIMA.
+                  CIMA is a globally recognised qualification for a career in management accounting.
                 </p>
                 <Link to="/courses">
                   <Button size="lg" className="w-full sm:w-auto gap-2">

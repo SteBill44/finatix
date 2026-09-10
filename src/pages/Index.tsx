@@ -10,6 +10,7 @@ import CareerPathways from "@/components/home/CareerPathways";
 
 import HowToBegin from "@/components/home/HowToBegin";
 import FAQ from "@/components/home/FAQ";
+import TestimonialsSection from "@/components/credibility/TestimonialsSection";
 import CTA from "@/components/home/CTA";
 
 const BASE_URL = "https://finatix.io";
@@ -86,6 +87,7 @@ const Index = () => {
       <CareerPathways />
       
       <HowToBegin />
+      <TestimonialsSection />
       <FAQ />
       <CTA />
     </Layout>

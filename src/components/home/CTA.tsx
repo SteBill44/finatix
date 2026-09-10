@@ -228,7 +228,7 @@ const CTA = () => {
                 <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
                 <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
                 <div className="ml-3 flex-1 bg-[#1e1e1e] rounded px-3 py-1 text-[11px] text-muted-foreground max-w-[220px]">
-                  finatix.com/dashboard
+                  finatix.io/dashboard
                 </div>
               </div>
               <img
