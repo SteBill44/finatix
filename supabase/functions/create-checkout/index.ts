@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { getCorsHeaders } from "../_shared/cors.ts";
-import { type StripeEnv, createStripeClient } from "../_shared/stripe.ts";
+import { type StripeEnv, createStripeClient, getActiveStripeEnv } from "../_shared/stripe.ts";
 
 const ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
@@ -183,10 +183,9 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const environment = body?.environment;
-    if (environment !== "sandbox" && environment !== "live") {
-      throw new Error("Invalid environment");
-    }
+    // The payment environment is decided here, not by the browser, so a test
+    // transaction can never be requested against production entitlements.
+    const environment: StripeEnv = getActiveStripeEnv();
     if (typeof body?.priceId !== "string") throw new Error("Missing priceId");
     if (typeof body?.returnUrl !== "string") throw new Error("Missing returnUrl");
 

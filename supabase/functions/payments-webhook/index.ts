@@ -1,5 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/stripe.ts";
+import { type StripeEnv, createStripeClient, getActiveStripeEnv, verifyWebhook } from "../_shared/stripe.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -61,6 +61,13 @@ async function grantCourseAccess(session: any, env: StripeEnv) {
 
   if (!userId) {
     console.log("Guest purchase recorded - will be claimed when the account is created");
+    return;
+  }
+
+  // Test-mode transactions are recorded for reference but never turned into
+  // real access once the site is running live payments.
+  if (env !== getActiveStripeEnv()) {
+    console.log(`Purchase in ${env} mode ignored for access - site runs ${getActiveStripeEnv()}`);
     return;
   }
 
@@ -207,6 +214,16 @@ async function markSubscriptionCanceled(subscription: any, env: StripeEnv) {
     .eq("environment", env);
 }
 
+// Keep the database in step with the server's payment mode so access checks
+// there only count entitlements from the same mode.
+async function syncActiveEnvironment() {
+  const { error } = await getSupabase().from("site_settings").upsert(
+    { key: "payments_environment", value: getActiveStripeEnv() },
+    { onConflict: "key" },
+  );
+  if (error) console.error("Failed to sync payments environment:", error);
+}
+
 async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
 
@@ -250,6 +267,7 @@ Deno.serve(async (req) => {
     });
   }
   try {
+    await syncActiveEnvironment();
     await handleWebhook(req, rawEnv);
     return new Response(JSON.stringify({ received: true }), {
       status: 200,

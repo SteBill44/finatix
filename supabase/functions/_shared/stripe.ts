@@ -9,6 +9,13 @@ const getEnv = (key: string): string => {
 
 export type StripeEnv = "sandbox" | "live";
 
+// The environment is decided on the server, never by the browser. Once live
+// credentials exist, live is the only environment that grants real access.
+export function getActiveStripeEnv(): StripeEnv {
+  return Deno.env.get("STRIPE_LIVE_API_KEY") ? "live" : "sandbox";
+}
+
+
 const GATEWAY_STRIPE_BASE = "https://connector-gateway.lovable.dev/stripe";
 
 export function getConnectionApiKey(env: StripeEnv): string {
