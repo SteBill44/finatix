@@ -39,12 +39,26 @@ const CheckoutPay = () => {
     const raw = params.get("courses");
     return raw ? raw.split(",").filter(Boolean) : undefined;
   }, [params]);
-  const courseCount = courseIds?.length ?? 1;
+  // The real price comes from our payment provider, never from the link, so
+  // the total shown here is always the total that gets charged.
+  const { data: verified, isLoading: checkingPrice, isError: priceCheckFailed } =
+    useVerifiedPrice(priceId);
+
+  const verifiedAmount = verified?.amount ?? null;
+  const currency = verified?.currency ?? "GBP";
+  const isSubscription = verified?.billingType === "subscription";
+  const intervalLabel = verified?.interval === "year" ? "year" : "month";
+  const courseCount = verified?.courseCount || courseIds?.length || 1;
+  const productUnavailable = verified?.available === false || priceCheckFailed;
 
   const paymentsReady = isPaymentsConfigured();
   const guestEmailValid = EMAIL_RE.test(guestEmail.trim());
   const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
-  const canContinue = Boolean(priceId) && (Boolean(user) || guestEmailValid);
+  const canContinue =
+    Boolean(priceId) &&
+    !productUnavailable &&
+    !checkingPrice &&
+    (Boolean(user) || guestEmailValid);
 
   const returnUrl = `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}${
     courseSlug ? `&course=${courseSlug}` : ""
