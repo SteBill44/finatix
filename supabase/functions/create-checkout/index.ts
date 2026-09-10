@@ -53,7 +53,8 @@ async function resolveOrCreateCustomerForUser(
 async function createCheckoutSession(options: {
   priceId: string;
   courseId?: string;
-  courseIds?: string[];
+  /** Short key for a bundle. The course list is resolved again on fulfilment. */
+  bundleKey?: string | null;
   bundleLabel?: string;
   // Verified session identity, or undefined for guest checkout.
   userId?: string;
@@ -101,7 +102,10 @@ async function createCheckoutSession(options: {
       // unclaimed until the buyer proves the email is theirs by signing in.
       ...(options.userId && { userId: options.userId }),
       ...(options.courseId && { courseId: options.courseId }),
-      ...(options.courseIds?.length && { courseIds: options.courseIds.join(",") }),
+      // Only the bundle key is stored: a full list of course IDs overflows the
+      // 500-character limit the payment provider allows per metadata value,
+      // which used to make the complete bundle impossible to buy.
+      ...(options.bundleKey && { bundleKey: options.bundleKey }),
       ...(options.bundleLabel && { bundleLabel: options.bundleLabel }),
       priceId: options.priceId,
       managed_payments: "true",
