@@ -165,9 +165,8 @@ async function getVerifiedUser(
   return { id: data.user.id, email: data.user.email ?? undefined };
 }
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  return session.client_secret;
-}
 
 Deno.serve(async (req) => {
   const cors = getCheckoutCorsHeaders(req);
