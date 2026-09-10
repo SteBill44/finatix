@@ -12,6 +12,7 @@ import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
 import { supabase } from "@/integrations/supabase/client";
+import { learningContextDestination, loadLearningContext } from "@/lib/learningContext";
 
 import PageTransition from "@/components/PageTransition";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
@@ -55,6 +56,12 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Flashcards = lazy(() => import("./pages/Flashcards"));
 const FlashcardStudy = lazy(() => import("./pages/FlashcardStudy"));
 const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
+const Start = lazy(() => import("./pages/Start"));
+const StartNew = lazy(() => import("./pages/StartNew"));
+const StartPaper = lazy(() => import("./pages/StartPaper"));
+const StartCaseStudy = lazy(() => import("./pages/StartCaseStudy"));
+const PaperLanding = lazy(() => import("./pages/PaperLanding"));
+
 
 
 const Checkout = lazy(() => import("./pages/Checkout"));
@@ -118,6 +125,12 @@ const AnimatedRoutes = () => {
           {/* Public routes */}
           <Route path="/" element={<Public feature="Home"><Index /></Public>} />
           <Route path="/why-cima" element={<Public feature="Why CIMA"><WhyCIMA /></Public>} />
+          <Route path="/start" element={<Public feature="Start"><Start /></Public>} />
+          <Route path="/start/new" element={<Public feature="Start New"><StartNew /></Public>} />
+          <Route path="/start/paper" element={<Public feature="Start Paper"><StartPaper /></Public>} />
+          <Route path="/start/case-study" element={<Public feature="Start Case Study"><StartCaseStudy /></Public>} />
+          <Route path="/papers/:paperCode" element={<Public feature="Paper Landing"><PaperLanding /></Public>} />
+
           <Route path="/courses" element={<Public feature="Courses"><Courses /></Public>} />
           <Route path="/courses/:courseId" element={<Public feature="Course Detail"><CourseDetail /></Public>} />
           <Route path="/pricing" element={<Public feature="Pricing"><Pricing /></Public>} />
@@ -190,7 +203,9 @@ const PostSignInRedirect = () => {
             return;
           }
         }
-        navigate("/dashboard", { replace: true });
+        // Land them in the learning they chose before signing up, if any.
+        navigate(learningContextDestination(loadLearningContext()), { replace: true });
+
       }
     });
     return () => subscription.unsubscribe();
