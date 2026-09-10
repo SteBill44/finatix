@@ -11,6 +11,8 @@ import CIMAProfileModal from "@/components/CIMAProfileModal";
 import { toast } from "sonner";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import useSubscription from "@/hooks/useSubscription";
+import { PLATFORM_FACTS } from "@/lib/company";
+import { QualificationDisclosure } from "@/components/credibility/QualificationDisclosure";
 import {
   PLAN_PRODUCTS,
   COMPLETE_BUNDLE,
