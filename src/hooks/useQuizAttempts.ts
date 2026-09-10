@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -31,45 +31,5 @@ export const useQuizAttempts = () => {
   });
 };
 
-export const useRecordQuizAttempt = () => {
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      courseId,
-      quizId,
-      score,
-      maxScore,
-      timeTakenSeconds,
-    }: {
-      courseId: string;
-      quizId?: string;
-      score: number;
-      maxScore: number;
-      timeTakenSeconds?: number;
-    }) => {
-      if (!user) throw new Error("Must be logged in");
-
-      const { data, error } = await supabase
-        .from("quiz_attempts")
-        .insert({
-          user_id: user.id,
-          course_id: courseId,
-          quiz_id: quizId ?? null,
-          score,
-          max_score: maxScore,
-          time_taken_seconds: timeTakenSeconds ?? null,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["quiz_attempts", user?.id] });
-      queryClient.invalidateQueries({ queryKey: ["lesson_quiz_attempts"] });
-    },
-  });
-};
+// NOTE: quiz scores are written only by the server-side `submit-quiz` function.
+// Clients cannot insert or edit their own attempts.
