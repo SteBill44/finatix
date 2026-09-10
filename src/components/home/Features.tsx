@@ -1,132 +1,81 @@
 import {
-  Brain,
   BarChart2,
-  Target,
-  Smartphone,
   FileQuestion,
-  Zap,
+  Layers,
+  MessageSquareText,
+  Smartphone,
+  Target,
 } from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import SplitTextReveal from "./SplitTextReveal";
-import TiltCard from "../three/TiltCard";
 
-const FeatureCard = ({
-  icon: Icon,
-  title,
-  description,
-  index,
-}: {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  index: number;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 60 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{
-        duration: 0.7,
-        delay: index * 0.08,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-    >
-      <TiltCard
-        intensity={10}
-        className="feature-card transition-shadow duration-500 hover:shadow-2xl hover:shadow-primary/20 group will-change-transform"
-      >
-        <div
-          style={{ transform: "translateZ(40px)" }}
-          className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4"
-        >
-          <Icon className="w-6 h-6 text-primary" />
-        </div>
-        <h3 style={{ transform: "translateZ(25px)" }} className="text-lg font-semibold text-charcoal mb-2">{title}</h3>
-        <p style={{ transform: "translateZ(15px)" }} className="text-muted-foreground text-sm">{description}</p>
-      </TiltCard>
-    </motion.div>
-  );
-};
+const features = [
+  {
+    icon: Target,
+    title: "Practice that follows your weak spots",
+    description:
+      "Practice sessions pull more questions from the syllabus areas you've been getting wrong, rather than serving the same set to everyone.",
+  },
+  {
+    icon: MessageSquareText,
+    title: "An explanation with every answer",
+    description:
+      "Each question comes with the reasoning behind the correct answer, so a wrong answer teaches you something.",
+  },
+  {
+    icon: FileQuestion,
+    title: "Exam-style mock papers",
+    description:
+      "Timed mocks marked by the same grading used throughout the course, with a breakdown of where you lost marks.",
+  },
+  {
+    icon: BarChart2,
+    title: "Progress and readiness tracking",
+    description:
+      "See your competency across each syllabus area and a readiness score built from your own attempts.",
+  },
+  {
+    icon: Layers,
+    title: "Flashcards for retention",
+    description:
+      "Spaced-repetition decks to keep earlier topics fresh while you work through later ones.",
+  },
+  {
+    icon: Smartphone,
+    title: "Study on any device",
+    description:
+      "Lessons, practice and mocks all work on a phone, tablet or laptop, so you can study in short sessions.",
+  },
+];
 
 const Features = () => {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(headerRef, { once: true, amount: 0.3 });
-
-  const features = [
-    {
-      icon: Brain,
-      title: "Competency-Based Analytics",
-      description:
-        "Our AI identifies your weak areas and creates personalized study plans that adapt as you learn.",
-    },
-    {
-      icon: Target,
-      title: "Adaptive Learning",
-      description:
-        "Focus on what matters most. Our system prioritizes topics where you need the most improvement.",
-    },
-    {
-      icon: BarChart2,
-      title: "Visual Progress Tracking",
-      description:
-        "See your improvement across all competencies with beautiful, intuitive charts and insights.",
-    },
-    {
-      icon: FileQuestion,
-      title: "Realistic Mock Exams",
-      description:
-        "Practice with exam-style questions and get instant breakdowns of your performance.",
-    },
-    {
-      icon: Smartphone,
-      title: "Phone Compatible",
-      description:
-        "Access your studies from any device. Our responsive platform works seamlessly on phones, tablets, and desktops.",
-    },
-    {
-      icon: Zap,
-      title: "Instant Feedback",
-      description:
-        "Get immediate explanations for every question, helping you learn from mistakes quickly.",
-    },
-  ];
-
   return (
-    <section className="py-12 lg:py-20 bg-background">
+    <section className="bg-background py-12 lg:py-16">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <SplitTextReveal
-            as="h2"
-            className="text-3xl md:text-4xl font-bold text-charcoal mb-4"
-          >
-            Why Choose Finatix
-          </SplitTextReveal>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-lg text-muted-foreground"
-          >
-            Our platform goes beyond traditional learning with data-driven
-            insights that show you exactly where to focus before exam day.
-          </motion.p>
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            What's inside
+          </p>
+          <h2 className="mb-3 text-2xl font-bold text-charcoal md:text-3xl lg:text-4xl">
+            Lessons, practice and feedback in one loop
+          </h2>
+          <p className="text-muted-foreground">
+            Everything below is on the platform today. Nothing is coming soon.
+          </p>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard
-              key={feature.title}
-              icon={feature.icon}
-              title={feature.title}
-              description={feature.description}
-              index={index}
-            />
+        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {features.map(({ icon: Icon, title, description }) => (
+            <li
+              key={title}
+              className="rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
+            >
+              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+                <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+              </span>
+              <h3 className="mb-2 text-base font-semibold text-foreground">{title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
