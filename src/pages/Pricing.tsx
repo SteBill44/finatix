@@ -133,14 +133,13 @@ const Pricing = () => {
   };
 
   const openBundleCheckout = (
-    level: string,
+    priceId: string | undefined,
     label: string,
     bundleCourses: typeof courses,
     price: number,
   ) => {
-    const priceId = getBundlePriceId(level);
     if (!priceId) {
-      toast.error("This bundle isn't available to buy yet");
+      toast.error("This bundle isn't on sale at the moment");
       return;
     }
     if (!bundleCourses || bundleCourses.length === 0) {
@@ -157,12 +156,46 @@ const Pricing = () => {
   };
 
   const handleBuyLevelBundle = (level: string, levelCourses: typeof courses) => {
-    openBundleCheckout(level, `${levelNames[level] ?? level} Bundle`, levelCourses, levelBundlePrice);
+    openBundleCheckout(
+      getLevelBundlePriceId(level),
+      `${LEVEL_NAMES[level] ?? level} Bundle`,
+      levelCourses,
+      LEVEL_BUNDLE_PRICE,
+    );
   };
 
   const handleBuyAllCourses = () => {
-    openBundleCheckout("all", "Complete CIMA Bundle", courses, allCoursesBundlePrice);
+    openBundleCheckout(
+      completeBundle.priceId ?? undefined,
+      completeBundle.name,
+      courses,
+      completeBundle.price ?? allCoursesBundlePrice,
+    );
   };
+
+  // Each plan button must open exactly the product on its own card - never a
+  // different plan or billing period.
+  const handlePlanCta = (product: CatalogueProduct) => {
+    if (product.id === "single_module") {
+      document.getElementById("individual-courses")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    if (product.id === "complete_bundle") {
+      handleBuyAllCourses();
+      return;
+    }
+    if (!product.priceId || product.price == null) {
+      toast.error("This plan isn't on sale at the moment");
+      return;
+    }
+    goToCheckout({
+      priceId: product.priceId,
+      title: product.name,
+      price: product.price,
+    });
+  };
+
+
 
 
 
