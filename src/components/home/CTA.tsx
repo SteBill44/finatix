@@ -18,7 +18,7 @@ const cimaPerks = [
     icon: TrendingUp,
     title: "Higher Earning Potential",
     description:
-      "CIMA-qualified professionals earn on average 33% more than non-qualified peers in similar roles.",
+      "CIMA reports that its qualified members typically earn more than non-qualified peers - see CIMA's own salary survey for current figures.",
   },
   {
     icon: Globe,
@@ -103,7 +103,7 @@ const CTA = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
 
           {/* Left - CTA copy */}
-          <div>
+          <div className="mx-auto max-w-2xl text-center lg:col-span-2">
             <SplitTextReveal
               as="h2"
               className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-tight"
@@ -125,7 +125,7 @@ const CTA = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="space-y-3 mb-10"
+              className="space-y-3 mb-10 inline-block text-left"
             >
               {signupPerks.map((perk) => (
                 <li key={perk} className="flex items-center gap-3 text-sm text-foreground">
@@ -140,11 +140,11 @@ const CTA = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col sm:flex-row items-start gap-4"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <MagneticButton strength={0.08}>
                 <Link to="/auth?mode=signup">
-                  <Button size="xl">Start for free</Button>
+                  <Button size="xl">Create your free account</Button>
                 </Link>
               </MagneticButton>
               <MagneticButton strength={0.08}>
@@ -155,7 +155,7 @@ const CTA = () => {
             </motion.div>
 
             {/* CIMA Info Dropdown */}
-            <div className="mt-8">
+            <div className="mt-8 flex flex-col items-center">
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium group"
@@ -209,36 +209,6 @@ const CTA = () => {
               </AnimatePresence>
             </div>
           </div>
-
-          {/* Right - Dashboard screenshot */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative hidden lg:block"
-          >
-            {/* Glow behind image */}
-            <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-2xl" />
-
-            {/* Screenshot frame */}
-            <div className="relative rounded-2xl overflow-hidden border border-border shadow-2xl">
-              {/* Fake browser chrome */}
-              <div className="bg-[#141414] border-b border-[#222] px-4 py-2.5 flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-                <div className="ml-3 flex-1 bg-[#1e1e1e] rounded px-3 py-1 text-[11px] text-muted-foreground max-w-[220px]">
-                  finatix.io/dashboard
-                </div>
-              </div>
-              <img
-                src="/dashboard-preview.png"
-                alt="Finatix student dashboard"
-                className="w-full block"
-                loading="lazy"
-              />
-            </div>
-          </motion.div>
 
         </div>
       </motion.div>
