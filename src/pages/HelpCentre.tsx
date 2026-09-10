@@ -66,7 +66,7 @@ const helpCategories = [
       },
       {
         question: "Can I get a refund?",
-        answer: "We offer a 14-day money-back guarantee. If you're not satisfied with your purchase, contact our support team within 14 days for a full refund."
+        answer: "We offer a 30-day money-back guarantee. If you're not satisfied with your purchase, contact our support team within 30 days for a full refund."
       },
       {
         question: "How do I access my invoices?",
