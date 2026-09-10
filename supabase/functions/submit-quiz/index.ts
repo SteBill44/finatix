@@ -3,58 +3,18 @@ import { authenticate, isAuthFailure } from "../_shared/auth.ts";
 import { errorResponse, jsonResponse } from "../_shared/response.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+import { isAnswerCorrect, type GradableQuestion } from "../_shared/grading.ts";
+
 interface QuizAnswer {
   questionIndex: number;
-  answer: number | number[] | string | null;
-}
-
-interface QuizQuestion {
-  id: string;
-  correct_answer: number;
-  correct_answers: number[] | null;
-  number_answer: number | null;
-  number_tolerance: number;
-  question_type: string;
-  syllabus_area_index: number | null;
+  answer: unknown;
 }
 
 interface QuestionResult {
   questionId: string;
   syllabusAreaIndex: number | null;
   isCorrect: boolean;
-  userAnswer: QuizAnswer["answer"];
-}
-
-function isAnswerCorrect(question: QuizQuestion, answer: QuizAnswer["answer"]): boolean {
-  if (answer === null || answer === undefined) return false;
-
-  switch (question.question_type) {
-    case "multiple_choice":
-      return answer === question.correct_answer;
-
-    case "multiple_response":
-    case "multiple_select":
-      if (!Array.isArray(answer) || !question.correct_answers) return false;
-      const sortedUser = [...answer].sort();
-      const sortedCorrect = [...question.correct_answers].sort();
-      return (
-        sortedUser.length === sortedCorrect.length &&
-        sortedUser.every((val, idx) => val === sortedCorrect[idx])
-      );
-
-    case "number_entry":
-    case "number_input":
-      if (typeof answer !== "number" || question.number_answer === null) return false;
-      const tolerance = question.number_tolerance || 0;
-      return Math.abs(answer - question.number_answer) <= tolerance;
-
-    case "drag_drop":
-      if (!Array.isArray(answer)) return false;
-      return answer.every((val, idx) => val === idx);
-
-    default:
-      return answer === question.correct_answer;
-  }
+  userAnswer: unknown;
 }
 
 serve(async (req) => {
@@ -107,7 +67,7 @@ serve(async (req) => {
     // Fetch questions server-side (correct answers never sent to client)
     const { data: questions, error: questionsError } = await supabaseAdmin
       .from("quiz_questions")
-      .select("id, correct_answer, correct_answers, number_answer, number_tolerance, question_type, order_index, syllabus_area_index")
+      .select("id, correct_answer, correct_answers, number_answer, number_tolerance, question_type, order_index, syllabus_area_index, hotspot_regions, drag_items, drag_targets")
       .eq("quiz_id", quizId)
       .is("deleted_at", null)
       .order("order_index");
@@ -143,7 +103,7 @@ serve(async (req) => {
 
     questions.forEach((question, index) => {
       const userAnswer = answers[index];
-      const isCorrect = isAnswerCorrect(question, userAnswer);
+      const isCorrect = isAnswerCorrect(question as unknown as GradableQuestion, userAnswer);
       if (isCorrect) score++;
       questionResults.push({
         questionId: question.id,
