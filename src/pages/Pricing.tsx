@@ -220,79 +220,21 @@ const Pricing = () => {
   const allCoursesSavings = totalAllCoursesPrice - allCoursesBundlePrice;
   const allCoursesCount = courses?.length || 0;
 
-  // Level bundle price
-  const levelBundlePrice = 499;
-
   const levelOrder = ['certificate', 'operational', 'management', 'strategic'];
-  const levelNames: Record<string, string> = {
-    certificate: 'Certificate Level (Entry Level)',
-    operational: 'Operational Level',
-    management: 'Management Level',
-    strategic: 'Strategic Level',
+
+  // Every plan card is built from the shared catalogue, so what a card says
+  // and what its button buys can never drift apart.
+  const planExtras: Record<string, { cta: string; popular?: boolean; subtitle?: string; periodLabel: string }> = {
+    single_module: { cta: "Choose your module", periodLabel: "per module" },
+    membership_monthly: { cta: "Start Monthly", popular: true, subtitle: "Cancel anytime", periodLabel: "per month" },
+    complete_bundle: { cta: "Get Lifetime Access", subtitle: "Lifetime access - best value", periodLabel: "one-time payment" },
   };
 
-  const plans = [
-    {
-      name: "Single Module",
-      description: "Perfect for focusing on one exam at a time",
-      price: 199,
-      period: "per module",
-      features: [
-        { text: "One module of your choice", included: true },
-        { text: "50+ hours of video content", included: true },
-        { text: "500+ practice questions", included: true },
-        { text: "5 mock exams", included: true },
-        { text: "Competency tracking", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "1-on-1 tutor sessions", included: false },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Get Started",
-      popular: false,
-    },
-    {
-      name: "Monthly Access",
-      description: "Flexible monthly access to all CIMA content",
-      price: 49,
-      period: "per month",
-      subtitle: "Cancel anytime",
-      features: [
-        { text: "All CIMA modules", included: true },
-        { text: "500+ hours of video content", included: true },
-        { text: "5000+ practice questions", included: true },
-        { text: "Unlimited mock exams", included: true },
-        { text: "Full analytics suite", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "1-on-1 tutor sessions", included: false },
-        { text: "Priority support", included: false },
-      ],
-      cta: "Start Monthly",
-      popular: true,
-    },
-    {
-      name: "Unlimited Bundle",
-      description: "Everything you need to become CIMA qualified",
-      price: 999,
-      period: "one-time payment",
-      originalPrice: totalAllCoursesPrice || 2388,
-      subtitle: "Lifetime access - best value",
-      features: [
-        { text: "All CIMA modules", included: true },
-        { text: "500+ hours of video content", included: true },
-        { text: "5000+ practice questions", included: true },
-        { text: "Unlimited mock exams", included: true },
-        { text: "Full analytics suite", included: true },
-        { text: "Mobile app access", included: true },
-        { text: "Community support", included: true },
-        { text: "Unlimited tutor sessions", included: true },
-        { text: "Priority 24/7 support", included: true },
-      ],
-      cta: "Get Lifetime Access",
-      popular: false,
-    },
-  ];
+  const plans = PLAN_PRODUCTS.map((product) => ({
+    product,
+    ...planExtras[product.id],
+    originalPrice: product.id === "complete_bundle" ? (totalAllCoursesPrice || 2388) : undefined,
+  }));
 
   const comparison = [
     { feature: "Modern, intuitive UI", us: true, kaplan: false },
