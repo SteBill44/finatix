@@ -21,6 +21,7 @@ import CertificateTemplate from "@/components/certificate/CertificateTemplate";
 import CertificateDownloadButton from "@/components/certificate/CertificateDownloadButton";
 import { useCertificatePDF } from "@/hooks/useCertificatePDF";
 import { EmptyState } from "@/components/EmptyState";
+import { CERTIFICATE_MEANING } from "@/lib/claims";
 
 interface Certificate {
   id: string;

@@ -47,7 +47,7 @@ const helpCategories = [
       },
       {
         question: "How do quizzes and exams work?",
-        answer: "Quizzes are available at the end of each module. Mock exams simulate the real CIMA exam experience with timed conditions. Your results are saved and can be reviewed anytime."
+        answer: "Quizzes are available at the end of each module. Mock exams are Finatix-written papers sat under timed conditions to give you exam-style practice; they are not past CIMA papers and are not set or approved by CIMA. Your results are saved and can be reviewed anytime."
       },
       {
         question: "What happens when I complete a course?",
