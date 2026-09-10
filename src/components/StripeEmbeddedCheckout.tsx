@@ -10,7 +10,6 @@ interface StripeEmbeddedCheckoutProps {
   courseIds?: string[];
   bundleLabel?: string;
   customerEmail?: string;
-  userId?: string;
   returnUrl?: string;
 }
 
@@ -20,7 +19,6 @@ export function StripeEmbeddedCheckout({
   courseIds,
   bundleLabel,
   customerEmail,
-  userId,
   returnUrl,
 }: StripeEmbeddedCheckoutProps) {
   const [failed, setFailed] = useState(false);
@@ -38,7 +36,6 @@ export function StripeEmbeddedCheckout({
         courseIds,
         bundleLabel,
         customerEmail,
-        userId,
         returnUrl: returnUrl ??
           `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
         environment: getStripeEnvironment(),
@@ -50,7 +47,7 @@ export function StripeEmbeddedCheckout({
     }
     return data.clientSecret;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [priceId, courseId, courseIdsKey, bundleLabel, customerEmail, userId, returnUrl]);
+  }, [priceId, courseId, courseIdsKey, bundleLabel, customerEmail, returnUrl]);
 
   const options = useMemo(() => ({ fetchClientSecret }), [fetchClientSecret]);
 
