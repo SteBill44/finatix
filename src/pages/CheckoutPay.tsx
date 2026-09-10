@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, CreditCard, Lock, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
+import BusinessIdentity from "@/components/credibility/BusinessIdentity";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useVerifiedPrice } from "@/hooks/useVerifiedPrice";
@@ -235,6 +236,10 @@ const CheckoutPay = () => {
                   </p>
                 </CardContent>
               </Card>
+
+              <div className="mt-6">
+                <BusinessIdentity />
+              </div>
             </div>
           </div>
         </div>
