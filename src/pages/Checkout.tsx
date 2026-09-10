@@ -13,6 +13,7 @@ import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
+import { MEMBERSHIP_MONTHLY, MEMBERSHIP_ANNUAL, POLICY, formatPrice } from "@/lib/catalogue";
 
 // Membership plans come straight from the shared catalogue so this page can
 // never advertise a different price or billing period than the buyer is charged.
