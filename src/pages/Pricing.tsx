@@ -537,59 +537,50 @@ const Pricing = () => {
         </section>
       )}
 
-      {/* Comparison Section */}
+      {/* What's included */}
       <section className="py-8 lg:py-10 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              Why Choose Us
+              What you get
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Finatix vs Kaplan
+              What's included with Finatix
             </h2>
             <p className="text-lg text-muted-foreground">
-              See how we compare to the traditional CIMA providers
+              Exactly what is on the platform today, so you can compare it against anything else
+              you're considering.
             </p>
           </div>
 
           <div className="max-w-3xl mx-auto">
             <div className="bg-card rounded-2xl border border-border overflow-hidden">
-              {/* Header */}
-              <div className="grid grid-cols-3 bg-secondary/50">
-                <div className="p-4 font-semibold text-foreground">Feature</div>
-                <div className="p-4 text-center font-semibold text-primary">Finatix</div>
-                <div className="p-4 text-center font-semibold text-muted-foreground">Kaplan</div>
+              <div className="grid grid-cols-2 bg-secondary/50">
+                <div className="p-4 font-semibold text-foreground">Included</div>
+                <div className="p-4 font-semibold text-foreground">Detail</div>
               </div>
 
-              {/* Rows */}
-              {comparison.map((row, index) => (
-                <div 
-                  key={index} 
-                  className={`grid grid-cols-3 ${index % 2 === 0 ? "bg-background" : "bg-secondary/20"}`}
+              {included.map((row, index) => (
+                <div
+                  key={row.feature}
+                  className={`grid grid-cols-2 ${index % 2 === 0 ? "bg-background" : "bg-secondary/20"}`}
                 >
-                  <div className="p-4 text-foreground">{row.feature}</div>
-                  <div className="p-4 flex justify-center">
-                    {row.us === true ? (
-                      <CheckCircle className="w-5 h-5 text-primary" />
-                    ) : (
-                      <span className="text-muted-foreground">{row.us}</span>
-                    )}
+                  <div className="p-4 flex items-start gap-2 text-foreground">
+                    <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
+                    <span>{row.feature}</span>
                   </div>
-                  <div className="p-4 flex justify-center">
-                    {row.kaplan === true ? (
-                      <CheckCircle className="w-5 h-5 text-muted-foreground" />
-                    ) : row.kaplan === false ? (
-                      <X className="w-5 h-5 text-muted-foreground" />
-                    ) : (
-                      <span className="text-sm text-muted-foreground">{row.kaplan}</span>
-                    )}
-                  </div>
+                  <div className="p-4 text-sm text-muted-foreground">{row.detail}</div>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-6">
+              <QualificationDisclosure />
             </div>
           </div>
         </div>
       </section>
+
 
       {/* CTA Section */}
       <section className="py-10 lg:py-14">
