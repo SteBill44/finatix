@@ -2,6 +2,10 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import InstructorProfiles from "@/components/credibility/InstructorProfiles";
+import PassRateEvidenceCard from "@/components/credibility/PassRateEvidence";
+import BusinessIdentity from "@/components/credibility/BusinessIdentity";
+import { PLATFORM_FACTS } from "@/lib/company";
 import { 
   Target, 
   Award, 
@@ -33,7 +37,7 @@ const About = () => {
     {
       icon: TrendingUp,
       title: "Results-Driven",
-      description: "Our competency-based approach is designed to maximize your chances of passing first time."
+      description: "Our competency-based approach shows you where you are weakest so your revision time goes where it counts."
     },
   ];
 
@@ -146,25 +150,65 @@ const About = () => {
         </div>
       </section>
 
-      {/* Success Rate Section */}
-      <section className="py-16 bg-secondary/30">
+      {/* Who teaches here - hidden until real, verified profiles are added */}
+      <InstructorProfiles intro="Every tutor listed here teaches on the platform, and their qualifications are shown in full so you can check them." />
+
+      {/* What's actually on the platform */}
+      <section className="py-10 md:py-14 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <Award className="w-12 h-12 text-primary mx-auto mb-4" />
-            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-              Our Students Pass First Time
+          <div className="max-w-3xl mx-auto text-center mb-10">
+            <Award className="w-10 h-10 text-primary mx-auto mb-4" />
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+              What you get on Finatix today
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Our competency-based learning approach, combined with advanced analytics and personalized 
-              study paths, helps students achieve their CIMA qualification.
+            <p className="text-muted-foreground">
+              These are the numbers as they stand on the platform right now, not projections.
+              We don't publish pass rates until we have results we can evidence.
             </p>
+          </div>
+
+          <dl className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {[
+              { value: PLATFORM_FACTS.courses, label: "Courses" },
+              { value: PLATFORM_FACTS.qualificationLevels, label: "Qualification levels covered" },
+              { value: PLATFORM_FACTS.lessons, label: "Lessons" },
+              { value: PLATFORM_FACTS.practiceQuestions, label: "Practice questions" },
+            ].map((fact) => (
+              <div
+                key={fact.label}
+                className="rounded-xl border border-border bg-card p-5 text-center"
+              >
+                <dt className="sr-only">{fact.label}</dt>
+                <dd>
+                  <span className="block text-3xl font-bold text-foreground tabular-nums">
+                    {fact.value}
+                  </span>
+                  <span className="mt-1 block text-sm text-muted-foreground">{fact.label}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <PassRateEvidenceCard className="mt-8 max-w-xl mx-auto" />
+
+          <div className="text-center mt-10">
             <Link to="/courses">
               <Button className="gap-2">
-                Start Your Journey
+                Explore the courses
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* How to reach us */}
+      <section className="py-10 md:py-14 bg-card border-t border-border">
+        <div className="container mx-auto px-4 max-w-2xl">
+          <h2 className="text-2xl font-bold text-foreground mb-4 text-center">
+            Talk to a person before you buy
+          </h2>
+          <BusinessIdentity />
         </div>
       </section>
     </Layout>

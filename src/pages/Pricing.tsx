@@ -567,7 +567,7 @@ const Pricing = () => {
             Ready to Start Your Journey?
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of successful CIMA students who chose the modern way to study.
+            Study for your CIMA exams with structured courses, practice questions and progress tracking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/courses">

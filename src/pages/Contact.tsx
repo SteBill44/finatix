@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Mail,
-  MapPin,
+  Clock,
   Send,
   PlayCircle,
   CheckCircle2,
@@ -22,6 +22,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useToast } from "@/hooks/use-toast";
+import { COMPANY, mailto } from "@/lib/company";
+import BusinessIdentity from "@/components/credibility/BusinessIdentity";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -34,11 +36,17 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Opens the visitor's own email app with the message ready to send, so a
+    // message is never silently lost and we never claim it was delivered.
+    window.location.href = mailto(
+      COMPANY.contactEmail,
+      formData.subject,
+      `${formData.message}\n\n---\nFrom: ${formData.name} (${formData.email})`
+    );
     toast({
-      title: "Message sent!",
-      description: "We'll get back to you within 24 - 48 hours, Monday to Friday, 9am to 5pm.",
+      title: "Your email app is opening",
+      description: `Press send there and we'll reply ${COMPANY.responseTime.toLowerCase()}.`,
     });
-    setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
   const faqs = [
@@ -88,17 +96,18 @@ const Contact = () => {
         id="local-business-jsonld"
         schema={{
           "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          name: "Finatix",
-          url: "https://finatix.io/contact",
-          email: "hello@finatix.com",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "123 Learning Street",
-            addressLocality: "London",
-            postalCode: "EC1A 1BB",
-            addressCountry: "GB",
-          },
+          "@type": "Organization",
+          name: COMPANY.name,
+          url: COMPANY.website,
+          email: COMPANY.contactEmail,
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              contactType: "customer support",
+              email: COMPANY.supportEmail,
+              availableLanguage: "English",
+            },
+          ],
           openingHoursSpecification: [
             {
               "@type": "OpeningHoursSpecification",
@@ -245,21 +254,33 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                    <p className="text-muted-foreground">hello@finatix.com</p>
-                    <p className="text-muted-foreground">support@finatix.com</p>
+                    <p className="text-muted-foreground">
+                      General enquiries:{" "}
+                      <a href={`mailto:${COMPANY.contactEmail}`} className="text-primary hover:underline">
+                        {COMPANY.contactEmail}
+                      </a>
+                    </p>
+                    <p className="text-muted-foreground">
+                      Account and course help:{" "}
+                      <a href={`mailto:${COMPANY.supportEmail}`} className="text-primary hover:underline">
+                        {COMPANY.supportEmail}
+                      </a>
+                    </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
                   <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-teal" />
+                    <Clock className="w-6 h-6 text-teal" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Office</h3>
-                    <p className="text-muted-foreground">123 Learning Street</p>
-                    <p className="text-muted-foreground">London, EC1A 1BB, UK</p>
+                    <h3 className="font-semibold text-foreground mb-1">When we're around</h3>
+                    <p className="text-muted-foreground">{COMPANY.supportHours}</p>
+                    <p className="text-muted-foreground">{COMPANY.responseTime}</p>
                   </div>
                 </div>
+
+                <BusinessIdentity compact />
               </div>
             </div>
           </div>

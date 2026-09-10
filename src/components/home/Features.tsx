@@ -111,7 +111,7 @@ const Features = () => {
             className="text-lg text-muted-foreground"
           >
             Our platform goes beyond traditional learning with data-driven
-            insights that help you pass first time.
+            insights that show you exactly where to focus before exam day.
           </motion.p>
         </div>
 
