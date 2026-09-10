@@ -6,6 +6,8 @@ import { ChevronDown, Award, TrendingUp, Globe, Briefcase, CheckCircle2 } from "
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
 import SplitTextReveal from "./SplitTextReveal";
 import MagneticButton from "./MagneticButton";
+import { SourceLink } from "@/components/credibility/SourceLink";
+import { CIMA_CLAIMS, CIMA_RELATIONSHIP, type ClaimSource } from "@/lib/claims";
 
 // Figures here are recorded with their sources in src/lib/claims.ts.
 const cimaPerks = [
@@ -208,6 +210,9 @@ const CTA = () => {
                             <div>
                               <h4 className="font-semibold text-foreground text-sm">{perk.title}</h4>
                               <p className="text-xs text-muted-foreground mt-0.5">{perk.description}</p>
+                              {"source" in perk && perk.source && (
+                                <SourceLink source={perk.source} className="mt-1" />
+                              )}
                             </div>
                           </motion.div>
                         ))}
