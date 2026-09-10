@@ -24,6 +24,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { COMPANY, mailto } from "@/lib/company";
 import BusinessIdentity from "@/components/credibility/BusinessIdentity";
+import { POLICY } from "@/lib/catalogue";
 
 const Contact = () => {
   const { toast } = useToast();
