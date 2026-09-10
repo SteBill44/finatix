@@ -85,7 +85,7 @@ const PaperLanding = () => {
   return (
     <Layout>
       <SEOHead
-        title={`${paper.code} – ${course?.title ?? "CIMA paper"}`}
+        title={course?.title ?? ` – CIMA paper`}
         description={`${paper.code}: ${paper.focus} Learning outcomes, sample content and access terms from Finatix.`}
       />
       <section className="container mx-auto max-w-6xl px-4 py-12 md:py-16">
