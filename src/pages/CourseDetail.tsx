@@ -55,6 +55,9 @@ import CourseReviews from "@/components/CourseReviews";
 import StripeEmbeddedCheckout from "@/components/StripeEmbeddedCheckout";
 import PaymentTestModeBanner from "@/components/PaymentTestModeBanner";
 import { getCoursePriceId } from "@/lib/coursePricing";
+import { POLICY } from "@/lib/catalogue";
+import { deriveCourseFacts } from "@/lib/courseFacts";
+import CoursePreview from "@/components/course/CoursePreview";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -385,16 +388,25 @@ const CourseDetail = () => {
   const levelBgColor = getLevelBgColor(course?.level || "");
   const levelGradientClass = getLevelGradientClass(course?.level || "");
 
+  // Figures come from the content that actually exists in this course.
+  const courseFacts = deriveCourseFacts({
+    durationHours: course.duration_hours,
+    lessons: lessons as Array<{ duration_minutes?: number | null; has_video?: boolean | null }>,
+    quizzes: quizzes as Array<{ quiz_type?: string | null }>,
+  });
+  const isCaseStudyCourse = /case-study/.test(course.slug || "");
+
   const features = [
-    `${course.duration_hours || 40}+ hours of video content`,
-    "500+ practice questions",
-    "5 full mock exams",
-    "Competency-based progress tracking",
-    "Weak area identification",
-    "Mobile app access",
-    "24/7 community support",
-    "Certificate of completion"
-  ];
+    `${courseFacts.lessonCount} lessons`,
+    courseFacts.estimatedStudyHours
+      ? `About ${courseFacts.estimatedStudyHours} hours of study time`
+      : null,
+    courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
+    courseFacts.mockExamCount > 0 ? `${courseFacts.mockExamCount} timed mock exams` : null,
+    "Competency tracking and weak area analysis",
+    "Certificate of completion",
+    POLICY.refundText,
+  ].filter(Boolean) as string[];
 
   // Build navigation sections
   const navSections = [
