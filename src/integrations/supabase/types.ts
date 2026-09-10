@@ -598,6 +598,7 @@ export type Database = {
           completed_course_slug: string | null
           course_id: string
           enrolled_at: string
+          granted_by_admin: boolean
           id: string
           user_id: string
         }
@@ -606,6 +607,7 @@ export type Database = {
           completed_course_slug?: string | null
           course_id: string
           enrolled_at?: string
+          granted_by_admin?: boolean
           id?: string
           user_id: string
         }
@@ -614,6 +616,7 @@ export type Database = {
           completed_course_slug?: string | null
           course_id?: string
           enrolled_at?: string
+          granted_by_admin?: boolean
           id?: string
           user_id?: string
         }
