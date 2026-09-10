@@ -236,16 +236,47 @@ const Pricing = () => {
     originalPrice: product.id === "complete_bundle" ? (totalAllCoursesPrice || 2388) : undefined,
   }));
 
-  const comparison = [
-    { feature: "Modern, intuitive UI", us: true, kaplan: false },
-    { feature: "Competency-based analytics", us: true, kaplan: false },
-    { feature: "Weak area identification", us: true, kaplan: "Limited" },
-    { feature: "Adaptive learning paths", us: true, kaplan: false },
-    { feature: "Mobile-first design", us: true, kaplan: "Limited" },
-    { feature: "Unlimited mock tests", us: true, kaplan: "Extra cost" },
-    { feature: "Visual progress tracking", us: true, kaplan: "Basic" },
-    { feature: "Community support", us: true, kaplan: true },
-    { feature: "Lower pricing", us: true, kaplan: false },
+  // We previously compared ourselves feature-by-feature against a named
+  // competitor without evidence for that competitor's current product. Until
+  // dated evidence exists for a named comparable product (see
+  // OPEN_CLAIM_DECISIONS in src/lib/claims.ts), we describe only what we do.
+  const included = [
+    {
+      feature: "Lessons written to the CIMA syllabus areas for each paper",
+      detail: `${PLATFORM_FACTS.lessons} lessons across ${PLATFORM_FACTS.courses} courses`,
+    },
+    {
+      feature: "Practice questions marked automatically",
+      detail: `${PLATFORM_FACTS.practiceQuestions} questions with per-question explanations`,
+    },
+    {
+      feature: "Timed mock exams",
+      detail: "Included with every course, retakeable as often as you like",
+    },
+    {
+      feature: "Competency tracking and weak-area analysis",
+      detail: "Readiness scoring by syllabus area",
+    },
+    {
+      feature: "Spaced-repetition flashcards and discussions",
+      detail: "Included with every course",
+    },
+    {
+      feature: "Access on phone, tablet and desktop",
+      detail: "One account, no separate app purchase",
+    },
+    {
+      feature: "Finatix certificate of completion",
+      detail: "Not a CIMA qualification or exam result",
+    },
+    {
+      feature: "Support",
+      detail: POLICY.standardSupport,
+    },
+    {
+      feature: "Refunds",
+      detail: POLICY.refundText,
+    },
   ];
 
   return (
