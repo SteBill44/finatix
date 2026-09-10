@@ -214,6 +214,9 @@ const About = () => {
             Talk to a person before you buy
           </h2>
           <BusinessIdentity />
+          <div className="mt-8">
+            <QualificationDisclosure />
+          </div>
         </div>
       </section>
     </Layout>
