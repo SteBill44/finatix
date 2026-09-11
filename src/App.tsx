@@ -12,7 +12,11 @@ import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
 import { supabase } from "@/integrations/supabase/client";
-import { learningContextDestination, loadLearningContext } from "@/lib/learningContext";
+import {
+  clearLearningContext,
+  learningContextDestination,
+  loadLearningContext,
+} from "@/lib/learningContext";
 
 import PageTransition from "@/components/PageTransition";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
@@ -204,7 +208,11 @@ const PostSignInRedirect = () => {
           }
         }
         // Land them in the learning they chose before signing up, if any.
-        navigate(learningContextDestination(loadLearningContext()), { replace: true });
+        // The choice is used once, then cleared so later sign-ins go to the
+        // dashboard rather than an old course page.
+        const chosen = loadLearningContext();
+        clearLearningContext();
+        navigate(learningContextDestination(chosen), { replace: true });
 
       }
     });

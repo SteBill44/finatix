@@ -23,7 +23,7 @@ interface CurriculumRow {
 const PaperLanding = () => {
   const { paperCode } = useParams<{ paperCode: string }>();
   const paper = paperBySlugCode(paperCode);
-  const { setContext } = useLearningContext();
+  const { context, setContext } = useLearningContext();
 
   const { data: course, isLoading } = useQuery({
     queryKey: ["paper-course", paper?.courseSlug],
@@ -51,14 +51,18 @@ const PaperLanding = () => {
     },
   });
 
+  // Only refine a choice the visitor already made in the "where are you
+  // starting from?" selector. Merely reading a paper page must not silently
+  // become their saved study path.
   useEffect(() => {
-    if (!paper) return;
+    if (!paper || !context) return;
+    if (context.paperSlug === paper.courseSlug) return;
     setContext({
       journey: paper.kind === "case-study" ? "case-study" : "paper",
       paperSlug: paper.courseSlug,
       level: paper.level,
     });
-  }, [paper, setContext]);
+  }, [paper, context, setContext]);
 
   if (!paperCode) return <Navigate to="/start/paper" replace />;
   if (!paper) {
