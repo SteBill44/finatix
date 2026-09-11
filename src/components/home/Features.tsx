@@ -6,6 +6,7 @@ import {
   Smartphone,
   Target,
 } from "lucide-react";
+import SectionHeading from "./SectionHeading";
 
 const features = [
   {
@@ -48,27 +49,25 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="bg-background py-12 lg:py-16">
+    <section className="bg-background py-16 lg:py-24">
       <div className="container mx-auto px-4">
-        <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            What's inside
-          </p>
-          <h2 className="mb-3 text-2xl font-bold text-charcoal md:text-3xl lg:text-4xl">
-            Lessons, practice and feedback in one loop
-          </h2>
-          <p className="text-muted-foreground">
-            Everything below is on the platform today. Nothing is coming soon.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="What's inside"
+          title="Lessons, practice and feedback in one loop"
+          description="Everything below is on the platform today. Nothing is coming soon."
+        />
 
-        <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mx-auto grid max-w-6xl gap-5 md:grid-cols-2 lg:grid-cols-3">
           {features.map(({ icon: Icon, title, description }) => (
             <li
               key={title}
-              className="rounded-2xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 motion-reduce:hover:translate-y-0"
             >
-              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              />
+              <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-inset ring-primary/15 transition-colors group-hover:bg-primary/15">
                 <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
               </span>
               <h3 className="mb-2 text-base font-semibold text-foreground">{title}</h3>
