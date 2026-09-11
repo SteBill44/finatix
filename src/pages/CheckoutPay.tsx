@@ -50,7 +50,10 @@ const CheckoutPay = () => {
   const isSubscription = verified?.billingType === "subscription";
   const intervalLabel = verified?.interval === "year" ? "year" : "month";
   const courseCount = verified?.courseCount || courseIds?.length || 1;
-  const productUnavailable = verified?.available === false || priceCheckFailed;
+  // Only an explicit "not on sale" answer stops the payment. If the price check
+  // itself fails (network hiccup, server blip) we still let the buyer pay - the
+  // payment provider confirms the real price on the payment form anyway.
+  const productUnavailable = verified?.available === false;
 
   const paymentsReady = isPaymentsConfigured();
   const guestEmailValid = EMAIL_RE.test(guestEmail.trim());
@@ -58,7 +61,7 @@ const CheckoutPay = () => {
   const canContinue =
     Boolean(priceId) &&
     !productUnavailable &&
-    !checkingPrice &&
+    (!checkingPrice || priceCheckFailed) &&
     (Boolean(user) || guestEmailValid);
 
   const returnUrl = `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}${
