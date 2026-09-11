@@ -23,7 +23,7 @@ interface CurriculumRow {
 const PaperLanding = () => {
   const { paperCode } = useParams<{ paperCode: string }>();
   const paper = paperBySlugCode(paperCode);
-  const { setContext } = useLearningContext();
+  const { context, setContext } = useLearningContext();
 
   const { data: course, isLoading } = useQuery({
     queryKey: ["paper-course", paper?.courseSlug],
