@@ -3,6 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { POLICY } from "@/lib/catalogue";
 import { COMPANY } from "@/lib/company";
+import SectionHeading from "./SectionHeading";
 
 const options = [
   {
@@ -38,27 +39,22 @@ const options = [
 
 const OfferSummary = () => {
   return (
-    <section className="bg-card py-12 lg:py-16 border-y border-border">
+    <section className="bg-card py-16 lg:py-24 border-y border-border">
       <div className="container mx-auto px-4">
-        <div className="mx-auto mb-10 max-w-2xl text-center">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            What it costs
-          </p>
-          <h2 className="mb-3 text-2xl font-bold text-charcoal md:text-3xl lg:text-4xl">
-            Pay for what you need
-          </h2>
-          <p className="text-muted-foreground">
-            All prices include VAT, so the price you see is the price you pay.
-            {" "}{POLICY.refundText}.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="What it costs"
+          title="Pay for what you need"
+          description={`All prices include VAT, so the price you see is the price you pay. ${POLICY.refundText}.`}
+        />
 
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {options.map((option) => (
             <div
               key={option.name}
-              className={`flex flex-col rounded-2xl border bg-background p-5 ${
-                option.highlight ? "border-primary/60" : "border-border"
+              className={`flex flex-col rounded-2xl border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 motion-reduce:hover:translate-y-0 ${
+                option.highlight
+                  ? "border-primary/60 shadow-lg shadow-primary/10"
+                  : "border-border hover:border-primary/40"
               }`}
             >
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">

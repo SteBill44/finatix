@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { TrendingUp, Briefcase, BarChart3, Building2 } from "lucide-react";
-import SplitTextReveal from "./SplitTextReveal";
+import SectionHeading from "./SectionHeading";
 
 const roles = [
   {
@@ -51,23 +51,13 @@ const roles = [
 
 const CareerPathways = () => {
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-16 lg:py-24 bg-background border-t border-border/60">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-4">
-            Career Pathways
-          </span>
-          <SplitTextReveal
-            as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-[1.15]"
-          >
-            What CIMA Professionals Actually Do
-          </SplitTextReveal>
-          <p className="text-lg text-muted-foreground">
-            CIMA-qualified accountants lead across every level of an organisation - from
-            frontline analysis to the boardroom.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Career pathways"
+          title="What CIMA professionals actually do"
+          description="CIMA-qualified accountants lead across every level of an organisation - from frontline analysis to the boardroom."
+        />
 
         <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {roles.map((role, i) => (
@@ -77,7 +67,7 @@ const CareerPathways = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="p-7 rounded-2xl bg-card border border-border/60 hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+              className="p-7 rounded-2xl bg-card border border-border/60 hover:border-primary/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 motion-reduce:hover:translate-y-0"
             >
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">

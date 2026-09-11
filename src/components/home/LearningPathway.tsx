@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
-import SplitTextReveal from "./SplitTextReveal";
+import SectionHeading from "./SectionHeading";
 
 const tiers = [
   {
@@ -68,23 +68,13 @@ const tiers = [
 
 const LearningPathway = () => {
   return (
-    <section className="py-10 lg:py-14 bg-card">
+    <section className="py-16 lg:py-24 bg-card border-y border-border">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-8">
-          <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-2">
-            Learning Pathway
-          </span>
-          <SplitTextReveal
-            as="h2"
-            className="text-2xl md:text-3xl lg:text-4xl font-bold text-charcoal mb-3 leading-[1.15]"
-          >
-            From Foundations to Chartered
-          </SplitTextReveal>
-          <p className="text-sm md:text-base text-muted-foreground">
-            A structured pathway that takes you from complete beginner to fully-chartered
-            management accountant, one level at a time.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Learning pathway"
+          title="From foundations to chartered"
+          description="A structured pathway that takes you from complete beginner to fully-chartered management accountant, one level at a time."
+        />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl mx-auto">
           {tiers.map((tier, i) => (
@@ -94,7 +84,7 @@ const LearningPathway = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              className="flex flex-col p-5 rounded-2xl bg-background border border-border/60 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 group"
+              className="group flex flex-col rounded-2xl border border-border/60 bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 motion-reduce:hover:translate-y-0"
             >
               <span
                 className={`inline-block self-start px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${tier.badgeTone} mb-3`}

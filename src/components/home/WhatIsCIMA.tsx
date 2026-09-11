@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import SectionHeading from "./SectionHeading";
 
 const levels = [
   { name: "Certificate", detail: "The fundamentals of business accounting (BA1-BA4)" },
@@ -10,33 +11,37 @@ const levels = [
 
 const WhatIsCIMA = () => {
   return (
-    <section className="bg-background py-12 lg:py-16">
+    <section className="bg-background py-16 lg:py-24">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-4xl">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Understanding CIMA
-          </p>
-          <h2 className="mb-4 text-2xl font-bold leading-tight text-charcoal md:text-3xl lg:text-4xl">
-            What is the CIMA qualification?
-          </h2>
-          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
-            CIMA is the professional qualification for management accountants: the
-            people who turn financial data into business decisions. It runs across
-            four levels, and you sit the exams with CIMA itself.
-          </p>
+        <SectionHeading
+          eyebrow="Understanding CIMA"
+          title="What is the CIMA qualification?"
+          description="CIMA is the professional qualification for management accountants: the people who turn financial data into business decisions. It runs across four levels, and you sit the exams with CIMA itself."
+        />
 
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-            {levels.map((level) => (
-              <li key={level.name} className="rounded-xl border border-border bg-card p-4">
+        <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+          {levels.map((level, i) => (
+            <li
+              key={level.name}
+              className="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
+            >
+              <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-semibold text-primary">
+                {i + 1}
+              </span>
+              <div>
                 <p className="text-sm font-semibold text-foreground">{level.name}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{level.detail}</p>
-              </li>
-            ))}
-          </ul>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {level.detail}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
 
+        <div className="mt-10 text-center">
           <Link
             to="/why-cima"
-            className="group mt-8 inline-flex items-center gap-2 text-base font-semibold text-primary hover:underline"
+            className="group inline-flex items-center gap-2 text-base font-semibold text-primary hover:underline"
           >
             Read the complete guide to CIMA
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
