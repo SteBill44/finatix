@@ -6,11 +6,9 @@ import {
 } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
-import { useRef } from "react";
 
 const FAQ = () => {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(headerRef, { once: true, amount: 0.3 });
+
 
   const faqs = [
     {
