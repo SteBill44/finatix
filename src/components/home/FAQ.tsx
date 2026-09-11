@@ -5,9 +5,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
-import SplitTextReveal from "./SplitTextReveal";
+import SectionHeading from "./SectionHeading";
 import { useRef } from "react";
-import { useInView } from "framer-motion";
 
 const FAQ = () => {
   const headerRef = useRef<HTMLDivElement>(null);
@@ -47,26 +46,15 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-12 lg:py-20 bg-card">
+    <section className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
-          {/* Header */}
-          <div ref={headerRef} className="text-center mb-12">
-            <SplitTextReveal
-              as="h2"
-              className="text-3xl md:text-4xl font-bold text-charcoal mb-4"
-            >
-              Frequently asked questions
-            </SplitTextReveal>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="text-muted-foreground"
-            >
-              Before you move on, take a look at our FAQs in case we have
-              already answered any question you may have.
-            </motion.p>
+          <div ref={headerRef}>
+            <SectionHeading
+              eyebrow="Questions"
+              title="Frequently asked questions"
+              description="Before you move on, take a look at our FAQs in case we have already answered any question you may have."
+            />
           </div>
 
           {/* FAQ Accordion */}
@@ -85,7 +73,7 @@ const FAQ = () => {
               >
                 <AccordionItem
                   value={`item-${index}`}
-                  className="bg-background rounded-lg border border-border px-6"
+                  className="bg-card rounded-2xl border border-border px-6 transition-colors hover:border-primary/40"
                 >
                   <AccordionTrigger className="text-left text-charcoal hover:no-underline py-5">
                     {faq.question}
