@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import SplitTextReveal from "./SplitTextReveal";
+import SectionHeading from "./SectionHeading";
 
 const steps = [
   {
@@ -31,23 +31,13 @@ const steps = [
 
 const HowToBegin = () => {
   return (
-    <section className="py-16 lg:py-24 bg-background">
+    <section className="py-16 lg:py-24 bg-card border-y border-border">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="block text-xs uppercase tracking-[0.2em] text-primary font-semibold mb-4">
-            Getting Started
-          </span>
-          <SplitTextReveal
-            as="h2"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal mb-5 leading-tight pb-1"
-          >
-            How to Begin Your CIMA Journey
-          </SplitTextReveal>
-          <p className="text-lg text-muted-foreground">
-            A straightforward pathway from registration to certification - designed to fit
-            around your schedule and your career.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Getting started"
+          title="How to begin your CIMA journey"
+          description="A straightforward pathway from registration to certification - designed to fit around your schedule and your career."
+        />
 
         <div className="max-w-3xl mx-auto relative">
           {/* Vertical line */}
