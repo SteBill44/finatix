@@ -31,7 +31,7 @@ const steps = [
 
 const HowToBegin = () => {
   return (
-    <section className="py-16 lg:py-24 bg-card border-y border-border">
+    <section className="py-16 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
         <SectionHeading
           eyebrow="Getting started"
