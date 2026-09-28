@@ -26,6 +26,7 @@ import AdminAuditLog from "@/components/admin/AdminAuditLog";
 import CourseManagement from "@/components/admin/CourseManagement";
 import UserManagement from "@/components/admin/UserManagement";
 import ContentStatusDashboard from "@/components/admin/ContentStatusDashboard";
+import SaleReadinessPanel from "@/components/admin/SaleReadinessPanel";
 import QuestionGenerator from "@/components/admin/QuestionGenerator";
 import AnnouncementsManagement from "@/components/admin/AnnouncementsManagement";
 import NotificationsBroadcast from "@/components/admin/NotificationsBroadcast";
@@ -275,6 +276,7 @@ const Admin = () => {
 
           {/* Content Status Tab */}
           <TabsContent value="content-status">
+            <SaleReadinessPanel />
             <ContentStatusDashboard />
           </TabsContent>
 
