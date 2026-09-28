@@ -2,6 +2,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { type StripeEnv, createStripeClient, getActiveStripeEnv } from "../_shared/stripe.ts";
 import { resolveCoursesForPrice } from "../_shared/catalogue.ts";
+import { checkSaleReadiness } from "../_shared/saleReadiness.ts";
+import { isAllowedReturnUrl } from "../_shared/returnUrl.ts";
 
 const ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
 
@@ -157,10 +159,23 @@ Deno.serve(async (req) => {
     const environment: StripeEnv = getActiveStripeEnv();
     if (typeof body?.priceId !== "string") throw new Error("Missing priceId");
     if (typeof body?.returnUrl !== "string") throw new Error("Missing returnUrl");
+    if (!isAllowedReturnUrl(body.returnUrl)) throw new Error("Return address not allowed");
 
     // Access is derived from the price on the server; client-sent course IDs
     // are ignored on purpose.
     const resolved = await resolveCoursesForPrice(body.priceId);
+    if (!resolved.isMembership && resolved.courseIds.length === 0) {
+      throw new Error("This product is not available");
+    }
+
+    // Refuse anything that includes a course not yet approved for sale.
+    const sale = await checkSaleReadiness(resolved.isMembership ? "all_paid" : resolved.courseIds);
+    if (!sale.allowed) {
+      return new Response(
+        JSON.stringify({ error: "not_available", message: "This course is not open for purchase yet." }),
+        { status: 409, headers: { ...cors, "Content-Type": "application/json" } },
+      );
+    }
 
     // Signed-in identity comes from the verified session only.
     const verifiedUser = await getVerifiedUser(req);
