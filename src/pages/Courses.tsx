@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -182,7 +182,7 @@ function CourseCard({
             {totalLessons > 0 && (
               <p className="text-xs text-muted-foreground mb-0.5">{totalLessons} lessons</p>
             )}
-            <p className="text-xs text-muted-foreground">{course.duration_hours || 30}h</p>
+            <p className="text-xs text-muted-foreground">{course.duration_hours ? `${course.duration_hours}h` : null}</p>
             <p className="text-sm font-semibold text-foreground mt-1">
               {course.price === 0 ? <span className="text-green-600 dark:text-green-400">Free</span> : `£${course.price}`}
             </p>
@@ -275,7 +275,7 @@ function CourseCard({
             <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
-                {course.duration_hours || 30}h
+                {course.duration_hours ? `${course.duration_hours}h` : null}
               </span>
               {totalLessons > 0 && (
                 <span className="flex items-center gap-1">
@@ -301,12 +301,40 @@ function CourseCard({
 
 // ── Page ──────────────────────────────────────────────────────────
 const Courses = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState<string>("all");
-  const [caseStudyOnly, setCaseStudyOnly] = useState(false);
-  const [priceFilter, setPriceFilter] = useState<"all" | "free" | "paid">("all");
-  const [sortBy, setSortBy] = useState<"default" | "title" | "price-asc" | "price-desc">("default");
+  // Filters live in the address bar so /courses?level=management&q=ratio links,
+  // refresh and the back button all restore the same view.
+  const [params, setParams] = useSearchParams();
+  const LEVELS = ["certificate", "operational", "management", "strategic"];
+  const levelParam = params.get("level") ?? "all";
+  const selectedLevel = LEVELS.includes(levelParam) ? levelParam : "all";
+  const caseStudyOnly = params.get("case") === "1";
+  const priceParam = params.get("price");
+  const priceFilter: "all" | "free" | "paid" = priceParam === "free" || priceParam === "paid" ? priceParam : "all";
+  const sortParam = params.get("sort");
+  const sortBy: "default" | "title" | "price-asc" | "price-desc" =
+    sortParam === "title" || sortParam === "price-asc" || sortParam === "price-desc" ? sortParam : "default";
+  const qParam = params.get("q") ?? "";
+  const [searchTerm, setSearchTerm] = useState(qParam);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(qParam);
+  const updateParam = (key: string, value: string | null, replace = false) => {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (value === null || value === "") next.delete(key); else next.set(key, value);
+      return next;
+    }, { replace });
+  };
+  const setSelectedLevel = (v: string) => updateParam("level", v === "all" ? null : v);
+  const setCaseStudyOnly = (v: boolean | ((prev: boolean) => boolean)) => {
+    const val = typeof v === "function" ? v(caseStudyOnly) : v;
+    updateParam("case", val ? "1" : null);
+  };
+  const setPriceFilter = (v: "all" | "free" | "paid") => updateParam("price", v === "all" ? null : v);
+  const setSortBy = (v: string) => updateParam("sort", v === "default" ? null : v);
+  // Back/forward navigation changes the URL: bring the search box along.
+  useEffect(() => {
+    setSearchTerm(qParam);
+    setDebouncedSearchTerm(qParam);
+  }, [qParam]);
   const [view, setView] = useState<"grid" | "list">("grid");
   const { user } = useAuth();
   const { isAdmin } = useIsAdmin();
@@ -314,7 +342,7 @@ const Courses = () => {
   const queryClient = useQueryClient();
   const isEffectiveAdmin = isAdmin && !isStudentView;
 
-  const { data: courses = [], isLoading } = useQuery({
+  const { data: courses = [], isLoading, isError, refetch } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
       const { data, error } = await queries.getCoursesForCatalog();
@@ -361,7 +389,10 @@ const Courses = () => {
 
   // Debounce search input so typing doesn't re-filter on every keystroke
   useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSearchTerm(searchTerm), 250);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      if (searchTerm !== qParam) updateParam("q", searchTerm.trim() || null, true);
+    }, 250);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
@@ -399,7 +430,7 @@ const Courses = () => {
     <Layout>
       <SEOHead
         title="CIMA Courses"
-        description="Browse Finatix CIMA courses from Certificate (BA1-BA4) through Operational, Management and Strategic levels - with practice exams and AI tools."
+        description="Browse Finatix CIMA courses from Certificate (BA1-BA4) through Operational, Management and Strategic levels. See what each course contains today before you enrol."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
         canonicalUrl="/courses"
       />
@@ -598,6 +629,13 @@ const Courses = () => {
           </div>
 
           {isLoading && <CourseGridSkeleton count={8} />}
+          {isError && (
+            <div role="alert" className="text-center py-12 space-y-3">
+              <p className="text-foreground font-medium">We couldn't load the courses.</p>
+              <p className="text-sm text-muted-foreground">Check your connection and try again.</p>
+              <Button onClick={() => refetch()}>Try again</Button>
+            </div>
+          )}
 
           {!isLoading && levelOrder.map((level) => {
             const levelCourses = groupedCourses[level] || [];
@@ -678,7 +716,7 @@ const Courses = () => {
             );
           })}
 
-          {filteredCourses.length === 0 && !isLoading && (
+          {filteredCourses.length === 0 && !isLoading && !isError && (
             <div className="text-center py-20">
               <BookOpen className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
               <p className="text-muted-foreground text-lg">No courses match your filters.</p>
