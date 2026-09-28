@@ -323,8 +323,17 @@ const Pricing = () => {
             INVEST IN YOUR <span className="text-gradient-brand">CIMA SUCCESS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            Choose the plan that fits your goals. All plans include our modern analytics and learning tools.
+            Choose the plan that fits your goals. The four Certificate courses (BA1-BA4) are free to start.
           </p>
+          {contentStatusMap && !anyPaidOnSale && (
+            <div role="note" className="mt-6 max-w-2xl rounded-lg border border-primary/40 bg-card p-4 text-sm">
+              <p className="font-semibold text-foreground">Paid courses aren't open for purchase yet</p>
+              <p className="text-muted-foreground mt-1">
+                Their lessons and question banks are still being written and reviewed. The prices below are what they
+                will cost. You can register interest now, and nothing is charged. Anyone who has already bought keeps their access.
+              </p>
+            </div>
+          )}
         </div>
         
       </section>
