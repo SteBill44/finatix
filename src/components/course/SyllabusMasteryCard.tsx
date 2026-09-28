@@ -39,6 +39,23 @@ const SyllabusMasteryCard = ({ courseId, syllabusAreas = [] }: SyllabusMasteryCa
     );
   }
 
+  const totalAttempted = (mastery ?? []).reduce((n, m) => n + (m.questions_attempted || 0), 0);
+  if (totalAttempted < 10) {
+    return (
+      <Card className="p-6">
+        <div className="flex items-center gap-3 mb-2">
+          <Brain className="w-5 h-5 text-primary" />
+          <h3 className="font-bold text-foreground">Knowledge Mastery</h3>
+        </div>
+        <p className="text-sm text-foreground">Not enough answers yet</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Answer at least 10 practice questions in this course to see which syllabus areas are strongest and weakest.
+          Mastery reflects your Finatix answers only and is not a prediction of your exam result.
+        </p>
+      </Card>
+    );
+  }
+
   // Calculate overall mastery
   const overallMastery = mastery && mastery.length > 0
     ? Math.round(mastery.reduce((sum, m) => sum + Number(m.mastery_score), 0) / mastery.length)
