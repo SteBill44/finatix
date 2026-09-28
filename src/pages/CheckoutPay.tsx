@@ -198,7 +198,9 @@ const CheckoutPay = () => {
                         {verified?.productName || title}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {isSubscription
+                        {!verified
+                          ? "Confirming what's included..."
+                          : isSubscription
                           ? `Membership - every course while your membership is active`
                           : courseCount > 1
                           ? `${courseCount} courses - lifetime access`
@@ -215,7 +217,7 @@ const CheckoutPay = () => {
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Total due today</span>
+                    <span className="text-sm font-medium">{priceConfirmed ? "Total due today" : "Price not confirmed"}</span>
                     <span className="text-2xl font-bold">
                       {checkingPrice
                         ? "..."
@@ -231,7 +233,7 @@ const CheckoutPay = () => {
                       cancel any time and keep access until the end of the period you've paid for.
                     </p>
                   )}
-                  {!isSubscription && (
+                  {verified && !isSubscription && (
                     <p className="text-xs text-muted-foreground">
                       One-time payment. There is no subscription and nothing renews.
                     </p>
