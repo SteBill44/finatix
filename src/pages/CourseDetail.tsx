@@ -668,7 +668,7 @@ const CourseDetail = () => {
     <Layout>
       <SEOHead
         title={course.title}
-        description={course.description || `Master ${course.title} with Finatix. Practice exams, AI study tools, competency analytics and expert-led lessons.`}
+        description={course.description || `${course.title} on Finatix: the lesson outline, what is available today and how to start.`}
         keywords={`CIMA ${course.slug?.toUpperCase()}, ${course.title}, CIMA exam prep, management accounting`}
         canonicalUrl={`https://finatix.io/courses/${course.slug}`}
       />

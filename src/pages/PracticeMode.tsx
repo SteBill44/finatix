@@ -186,7 +186,7 @@ const PracticeMode = () => {
       <Layout>
         <SEOHead 
           title={`Practice Mode - ${course.title}`}
-          description="Adaptive practice questions tailored to your weak areas"
+          description="Practice questions weighted towards the syllabus areas you get wrong most"
         />
         <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
           <Button 
@@ -216,7 +216,7 @@ const PracticeMode = () => {
                   <div className="flex items-start gap-3">
                     <Lightbulb className="w-5 h-5 text-yellow-500 mt-0.5" />
                     <div>
-                      <h3 className="font-medium text-foreground">Adaptive Learning</h3>
+                      <h3 className="font-medium text-foreground">Weak-area focus</h3>
                       <p className="text-sm text-muted-foreground">
                         Questions are weighted toward your weak areas to help you improve faster.
                         60% of questions will come from areas where you need the most practice.
@@ -253,7 +253,7 @@ const PracticeMode = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">All Areas (Adaptive)</SelectItem>
+                          <SelectItem value="all">All areas (weighted to weak areas)</SelectItem>
                           {syllabusAreas.map((area, index) => (
                             <SelectItem key={index} value={index.toString()}>
                               {area.title}
@@ -311,7 +311,7 @@ const PracticeMode = () => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <Brain className="w-12 h-12 text-primary mx-auto mb-4 animate-pulse" />
-            <p className="text-muted-foreground">Generating adaptive questions...</p>
+            <p className="text-muted-foreground">Choosing questions...</p>
           </div>
         </div>
       </Layout>
