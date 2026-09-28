@@ -59,6 +59,7 @@ import { getCoursePriceId } from "@/lib/coursePricing";
 import { POLICY } from "@/lib/catalogue";
 import { deriveCourseFacts } from "@/lib/courseFacts";
 import CoursePreview from "@/components/course/CoursePreview";
+import { ContentStatusNotice } from "@/components/course/ContentStatusNotice";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -693,6 +694,7 @@ const CourseDetail = () => {
               <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4 capitalize">
                 {course.level} Level
               </span>
+              <ContentStatusNotice courseId={course.id} />
               <h1 className="course-title text-2xl md:text-3xl font-bold text-primary-foreground mb-4">{course.title}</h1>
               <p className="text-lg text-primary-foreground/80 mb-6">
                 {course.description || "Comprehensive course designed to help you master the exam content and pass with confidence."}

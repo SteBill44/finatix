@@ -40,6 +40,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import CourseCover from "@/components/course/CourseCover";
+import { ContentStatusBadge } from "@/components/course/ContentStatusNotice";
 import { useEnrollments, useLessonProgress } from "@/hooks/useStudentProgress";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useAuth } from "@/contexts/AuthContext";
@@ -154,6 +155,7 @@ function CourseCard({
             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
               <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>{code}</span>
               {caseStudy && <Badge variant="secondary" className="text-xs">Case Study</Badge>}
+              <ContentStatusBadge courseId={course.id} />
               {isCompleted && (
                 <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Completed
@@ -246,6 +248,7 @@ function CourseCard({
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>{code}</span>
           </div>
 
+          <div className="mb-1"><ContentStatusBadge courseId={course.id} /></div>
           <h3 className="text-sm font-semibold text-foreground leading-snug mb-1.5 line-clamp-2 min-h-[2.5rem]">
             {course.title}
           </h3>

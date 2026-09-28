@@ -2063,6 +2063,17 @@ export type Database = {
         }[]
       }
       get_admin_dashboard_stats: { Args: never; Returns: Json }
+      get_course_content_status: {
+        Args: never
+        Returns: {
+          course_id: string
+          lessons: number
+          lessons_with_content: number
+          questions: number
+          resources: number
+          videos: number
+        }[]
+      }
       get_course_curriculum: {
         Args: { p_course_id: string }
         Returns: {

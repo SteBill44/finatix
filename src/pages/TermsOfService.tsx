@@ -1,3 +1,4 @@
+import { COMPANY } from "@/lib/company";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -153,8 +154,8 @@ const TermsOfService = () => {
             <h2 className="text-2xl font-semibold mb-4">13. Contact Information</h2>
             <p className="text-muted-foreground">
               If you have questions about these Terms, please contact us at{" "}
-              <a href="mailto:legal@finatix.com" className="text-primary hover:underline">
-                legal@finatix.com
+              <a href={`mailto:${COMPANY.legalEmail}`} className="text-primary hover:underline">
+                {COMPANY.legalEmail}
               </a>
             </p>
           </section>
