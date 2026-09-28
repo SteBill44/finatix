@@ -48,7 +48,7 @@ export const POLICY = {
 
 const COMMON_FEATURES = {
   analytics: "Competency tracking and analytics",
-  mobile: "Mobile app access",
+  mobile: "Works in any modern web browser",
 };
 
 export const MEMBERSHIP_MONTHLY: CatalogueProduct = {
@@ -64,9 +64,9 @@ export const MEMBERSHIP_MONTHLY: CatalogueProduct = {
   includes: "Every CIMA course on Finatix",
   features: [
     { text: "All CIMA modules", included: true },
-    { text: "Every lesson in all 16 CIMA modules", included: true },
-    { text: "Practice quizzes and timed mock exams for every module", included: true },
-    { text: "Unlimited mock exams", included: true },
+    { text: "Every lesson published in any CIMA module", included: true },
+    { text: "Practice questions and mock exams where published for a module", included: true },
+    { text: "Retake published mock exams as often as you like", included: true },
     { text: "Full analytics suite", included: true },
     { text: COMMON_FEATURES.mobile, included: true },
     { text: "Downloadable resources", included: true },
@@ -90,10 +90,10 @@ export const MEMBERSHIP_ANNUAL: CatalogueProduct = {
   includes: "Every CIMA course on Finatix",
   features: [
     { text: "Everything in Monthly", included: true },
-    { text: "Unlimited mock exams", included: true },
+    { text: "Retake published mock exams as often as you like", included: true },
     { text: "Downloadable resources", included: true },
     { text: "Certificate of completion", included: true },
-    { text: "Early access to new content", included: true },
+    
     { text: POLICY.prioritySupport, included: true },
   ],
   support: POLICY.prioritySupport,
@@ -112,9 +112,9 @@ export const COMPLETE_BUNDLE: CatalogueProduct = {
   includes: "Every CIMA course on Finatix",
   features: [
     { text: "All CIMA modules", included: true },
-    { text: "Every lesson in all 16 CIMA modules", included: true },
-    { text: "Practice quizzes and timed mock exams for every module", included: true },
-    { text: "Unlimited mock exams", included: true },
+    { text: "Every lesson published in any CIMA module", included: true },
+    { text: "Practice questions and mock exams where published for a module", included: true },
+    { text: "Retake published mock exams as often as you like", included: true },
     { text: "Full analytics suite", included: true },
     { text: COMMON_FEATURES.mobile, included: true },
     { text: "Downloadable resources", included: true },
@@ -140,13 +140,12 @@ export const SINGLE_MODULE_PLAN: CatalogueProduct = {
   includes: "One module of your choice",
   features: [
     { text: "One module of your choice", included: true },
-    { text: "Every lesson in that module", included: true },
-    { text: "Practice quizzes and timed mock exams for that module", included: true },
+    { text: "Every lesson published in that module", included: true },
+    { text: "Practice questions and mock exams where published for that module", included: true },
     { text: "Automatic marking with per-question explanations", included: true },
     { text: COMMON_FEATURES.analytics, included: true },
     { text: COMMON_FEATURES.mobile, included: true },
     { text: POLICY.standardSupport, included: true },
-    { text: "1-on-1 tutor sessions", included: false },
     { text: POLICY.prioritySupport, included: false },
   ],
   support: POLICY.standardSupport,
