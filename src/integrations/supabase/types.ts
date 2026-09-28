@@ -2058,6 +2058,16 @@ export type Database = {
         Returns: undefined
       }
       complete_referral: { Args: { p_referred_id: string }; Returns: Json }
+      evaluate_course_readiness: {
+        Args: {
+          p_is_case_study: boolean
+          p_lesson_records: number
+          p_questions: number
+          p_taught_lessons: number
+          p_usable_mocks: number
+        }
+        Returns: boolean
+      }
       fail_payment_event: {
         Args: { p_error: string; p_event_id: string }
         Returns: undefined
@@ -2101,9 +2111,11 @@ export type Database = {
       get_course_content_status: {
         Args: never
         Returns: {
+          blocked_reason: string
           course_id: string
           downloads: number
           editorially_approved: boolean
+          is_case_study: boolean
           is_free: boolean
           lesson_records: number
           mock_exams: number
@@ -2112,6 +2124,7 @@ export type Database = {
           prerequisites_met: boolean
           questions: number
           substantive_lessons: number
+          taught_lessons: number
           usable_mocks: number
           videos: number
         }[]
@@ -2184,6 +2197,10 @@ export type Database = {
       }
       is_free_course: { Args: { _course_id: string }; Returns: boolean }
       is_master_admin: { Args: { _user_id: string }; Returns: boolean }
+      lesson_is_taught: {
+        Args: { p_content: string; p_video_url: string }
+        Returns: boolean
+      }
       log_profile_access: {
         Args: { p_access_type?: string; p_profile_user_id: string }
         Returns: undefined
