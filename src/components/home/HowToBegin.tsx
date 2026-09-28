@@ -15,12 +15,12 @@ const steps = [
   {
     title: "Train at Your Own Pace",
     description:
-      "Work through video lessons, practical examples, and adaptive practice on your schedule. Lifetime access means no pressure.",
+      "Work through lesson outlines and exam-style practice questions at your own pace.",
   },
   {
     title: "Progress to Higher Levels",
     description:
-      "Move into Operational, Management and Strategic levels. Track your readiness with our competency radar.",
+      "Operational, Management and Strategic courses are being written. Register interest to hear when each one opens.",
   },
   {
     title: "Sit Your CIMA Exam",
