@@ -1,3 +1,4 @@
+import { usePlatformFacts } from "@/hooks/usePlatformFacts";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 
 const About = () => {
+  const facts = usePlatformFacts();
   const values = [
     {
       icon: Target,
@@ -111,7 +113,7 @@ const About = () => {
               </p>
             </div>
             <div className="grid gap-4">
-              {["Adaptive learning paths", "Progress insights", "Exam-focused support"].map((item) => (
+              {["Exam-style practice", "Progress insights", "Clear course outlines"].map((item) => (
                 <div key={item} className="flex items-center gap-3 rounded-xl border border-border bg-background/60 p-5">
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
                   <span className="font-semibold text-foreground">{item}</span>
@@ -170,10 +172,10 @@ const About = () => {
 
           <dl className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { value: PLATFORM_FACTS.courses, label: "Courses" },
-              { value: PLATFORM_FACTS.qualificationLevels, label: "Qualification levels covered" },
-              { value: PLATFORM_FACTS.lessons, label: "Lessons" },
-              { value: PLATFORM_FACTS.practiceQuestions, label: "Practice questions" },
+              { value: facts.ready ? facts.courses : "-", label: "Course outlines" },
+              { value: facts.ready ? facts.writtenLessons : "-", label: "Full written lessons" },
+              { value: facts.ready ? facts.questions : "-", label: "Practice questions" },
+              { value: facts.ready ? facts.coursesWithQuestions : "-", label: "Courses with practice questions" },
             ].map((fact) => (
               <div
                 key={fact.label}

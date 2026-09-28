@@ -1,3 +1,4 @@
+import { usePlatformFacts } from "@/hooks/usePlatformFacts";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
 import InterestRegistrationForm from "@/components/InterestRegistrationForm";
@@ -68,6 +69,7 @@ const Pricing = () => {
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
   const { data: contentStatusMap } = useCourseContentStatus();
+  const facts = usePlatformFacts();
   const [interestFor, setInterestFor] = useState<{ name: string; courseId?: string } | null>(null);
   const paidStatuses = contentStatusMap ? [...contentStatusMap.values()].filter((r) => !r.is_free) : [];
   const anyPaidOnSale = paidStatuses.some((r) => r.on_sale);
@@ -265,16 +267,16 @@ const Pricing = () => {
   // OPEN_CLAIM_DECISIONS in src/lib/claims.ts), we describe only what we do.
   const included = [
     {
-      feature: "Lessons written to the CIMA syllabus areas for each paper",
-      detail: `${PLATFORM_FACTS.lessons} lessons across ${PLATFORM_FACTS.courses} courses`,
+      feature: "Lesson outlines mapped to CIMA syllabus areas",
+      detail: facts.ready ? `${facts.lessonOutlines} lesson outlines across ${facts.courses} courses; ${facts.writtenLessons} full written lessons so far` : "Counting...",
     },
     {
       feature: "Practice questions marked automatically",
-      detail: `${PLATFORM_FACTS.practiceQuestions} questions with per-question explanations`,
+      detail: facts.ready ? `${facts.questions} questions so far, across ${facts.coursesWithQuestions} courses` : "Counting...",
     },
     {
       feature: "Timed mock exams",
-      detail: "Included with every course, retakeable as often as you like",
+      detail: facts.ready && facts.usableMocks > 0 ? `${facts.usableMocks} mock exams ready` : "Being prepared - not yet available",
     },
     {
       feature: "Competency tracking and weak-area analysis",
