@@ -60,6 +60,8 @@ import { POLICY } from "@/lib/catalogue";
 import { deriveCourseFacts } from "@/lib/courseFacts";
 import CoursePreview from "@/components/course/CoursePreview";
 import { ContentStatusNotice } from "@/components/course/ContentStatusNotice";
+import { useCourseContentStatus, canPurchase } from "@/hooks/useCourseContentStatus";
+import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import { isPaymentsConfigured } from "@/lib/stripe";
 import { useSubscription } from "@/hooks/useSubscription";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -207,6 +209,12 @@ const CourseDetail = () => {
   // An active all-access membership unlocks every paid course
   const { isActive: hasMembership } = useSubscription();
   const requiresPayment = isPaidCourse && !hasMembership;
+  const { data: contentStatusMap } = useCourseContentStatus();
+  const contentStatus = course ? contentStatusMap?.get(course.id) : undefined;
+  // Paid courses stay closed until editorially approved and complete. Existing
+  // buyers are unaffected - their access is checked separately.
+  const notOnSale = requiresPayment && !canPurchase(contentStatus);
+  const [showInterest, setShowInterest] = useState(false);
 
 
 
@@ -251,6 +259,10 @@ const CourseDetail = () => {
     if (!course) return;
 
     // Paying is never gated: anyone can buy and sort out their account after
+    if (notOnSale) {
+      setShowInterest(true);
+      return;
+    }
     if (requiresPayment) {
       if (!paymentsReady) {
         toast.error("Payments aren't available right now. Please try again later.");
@@ -631,7 +643,7 @@ const CourseDetail = () => {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
-    description: course.description || `Comprehensive CIMA ${course.title} course with practice exams, flashcards, and AI-powered study tools.`,
+    description: course.description || `CIMA ${course.title}: see the lesson outline, what is available today and how to start.`,
     url: `https://finatix.io/courses/${course.slug}`,
     provider: { "@type": "Organization", name: "Finatix", url: "https://finatix.io" },
     educationalCredentialAwarded: "CIMA Certificate",
@@ -772,7 +784,9 @@ const CourseDetail = () => {
                         One-time purchase - lifetime access
                       </span>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
-                      <p className="text-sm text-muted-foreground mt-1">No subscription needed - pay once, keep forever</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {notOnSale ? "Not open for purchase yet - the material is still being prepared." : "No subscription needed - pay once, keep forever"}
+                      </p>
                     </>
                   ) : isPaidCourse && hasMembership ? (
                     <>
@@ -800,7 +814,7 @@ const CourseDetail = () => {
                     disabled={enrollMutation.isPending}
                   >
                     {requiresPayment ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
-                    {requiresPayment ? "Buy this course" : "Start this course"}
+                    {notOnSale ? "Register interest" : requiresPayment ? "Buy this course" : "Start this course"}
                   </Button>
                 )}
                 {hasMembership && !isEnrolled && (
@@ -963,12 +977,24 @@ const CourseDetail = () => {
               disabled={enrollMutation.isPending}
             >
               <ShoppingCart className="w-4 h-4" />
-              Buy this course
+              {notOnSale ? "Register interest" : "Buy this course"}
             </Button>
           </div>
         </div>
       )}
 
+    <Dialog open={showInterest} onOpenChange={setShowInterest}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Get told when {course.title} opens</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This course isn't on sale yet because its lessons and practice questions are still being written and reviewed.
+            Nothing is charged. We'll email you once when it opens.
+          </p>
+          <InterestRegistrationForm courseId={course.id} courseName={course.title} />
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
