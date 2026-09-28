@@ -182,7 +182,7 @@ function CourseCard({
             {totalLessons > 0 && (
               <p className="text-xs text-muted-foreground mb-0.5">{totalLessons} lessons</p>
             )}
-            <p className="text-xs text-muted-foreground">{course.duration_hours ? `${course.duration_hours}h` : null}</p>
+            
             <p className="text-sm font-semibold text-foreground mt-1">
               {course.price === 0 ? <span className="text-green-600 dark:text-green-400">Free</span> : `£${course.price}`}
             </p>
@@ -275,7 +275,7 @@ function CourseCard({
             <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
-                {course.duration_hours ? `${course.duration_hours}h` : null}
+                
               </span>
               {totalLessons > 0 && (
                 <span className="flex items-center gap-1">
@@ -480,6 +480,7 @@ const Courses = () => {
               return (
                 <button
                   key={level}
+                  aria-pressed={selectedLevel === level}
                   onClick={() => setSelectedLevel(selectedLevel === level ? "all" : level)}
                   className={`text-center p-2 sm:p-4 rounded-xl border transition-all ${
                     selectedLevel === level
