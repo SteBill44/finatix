@@ -145,6 +145,19 @@ const CompleteProfile = () => {
     );
   }
 
+  if (loadError) {
+    return (
+      <Layout>
+        <div role="alert" className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center gap-3 px-4 text-center">
+          <p className="font-medium text-foreground">We couldn't load your profile.</p>
+          <p className="text-sm text-muted-foreground">Check your connection and try again.</p>
+          <Button onClick={() => { setChecking(true); setReloadKey((k) => k + 1); }}>Try again</Button>
+        </div>
+      </Layout>
+    );
+  }
+
+
   return (
     <Layout>
       <SEOHead title="Complete Your Profile" description="Finish setting up your Finatix account." noIndex />
