@@ -273,10 +273,6 @@ function CourseCard({
           {/* Footer */}
           <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
             <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" />
-                
-              </span>
               {totalLessons > 0 && (
                 <span className="flex items-center gap-1">
                   <FileText className="w-3.5 h-3.5" />
