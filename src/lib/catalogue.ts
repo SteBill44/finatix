@@ -104,7 +104,7 @@ export const COMPLETE_BUNDLE: CatalogueProduct = {
   id: "complete_bundle",
   priceId: "complete_cima_bundle_onetime",
   name: "Unlimited Bundle",
-  description: "Everything you need to become CIMA qualified",
+  description: "Every Finatix course, one payment, lifetime access",
   price: 999,
   currency: "GBP",
   billingType: "one_time",

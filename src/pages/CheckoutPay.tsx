@@ -217,7 +217,7 @@ const CheckoutPay = () => {
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{priceConfirmed ? "Total due today" : "Price not confirmed"}</span>
+                    <span className="text-sm font-medium">{priceConfirmed ? "Total due today" : productUnavailable && verifiedAmount != null ? "Price when it opens" : "Price not confirmed"}</span>
                     <span className="text-2xl font-bold">
                       {checkingPrice
                         ? "..."
