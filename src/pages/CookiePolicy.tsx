@@ -1,3 +1,4 @@
+import { COMPANY } from "@/lib/company";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -133,8 +134,8 @@ const CookiePolicy = () => {
             <h2 className="text-2xl font-semibold mb-4">6. Contact Us</h2>
             <p className="text-muted-foreground">
               If you have questions about our use of cookies, please contact us at{" "}
-              <a href="mailto:privacy@finatix.com" className="text-primary hover:underline">
-                privacy@finatix.com
+              <a href={`mailto:${COMPANY.privacyEmail}`} className="text-primary hover:underline">
+                {COMPANY.privacyEmail}
               </a>
             </p>
           </section>
