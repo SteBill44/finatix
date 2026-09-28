@@ -24,6 +24,10 @@ export interface CourseContentStatus {
   editorially_approved: boolean;
   prerequisites_met: boolean;
   on_sale: boolean;
+  /** Distinct lessons with written notes OR a real video (no double counting). */
+  taught_lessons: number;
+  is_case_study: boolean;
+  blocked_reason: string | null;
 }
 
 /** Paid courses can be bought only when on_sale. Free courses are always enrollable. */
@@ -35,7 +39,7 @@ export function canPurchase(s?: CourseContentStatus | null) {
 export function isInDevelopment(s?: CourseContentStatus | null) {
   if (!s) return false;
   if (!s.is_free) return !s.on_sale;
-  return s.substantive_lessons + s.videos < s.lesson_records;
+  return s.taught_lessons < s.lesson_records;
 }
 
 export function useCourseContentStatus() {

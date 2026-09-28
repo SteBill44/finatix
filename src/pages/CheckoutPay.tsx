@@ -1,3 +1,4 @@
+import { isPriceConfirmed, subscriptionTerms } from "@/lib/checkoutState";
 import { useMemo, useState } from "react";
 import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -53,7 +54,13 @@ const CheckoutPay = () => {
   // Fail closed: payment only opens once the server has confirmed the price
   // AND that the product is approved for sale.
   const productUnavailable = verified?.available === false;
-  const priceConfirmed = Boolean(verified?.available) && verifiedAmount != null;
+  const priceConfirmed = isPriceConfirmed({
+    available: verified?.available,
+    amount: verifiedAmount,
+    checking: checkingPrice,
+    rechecking: recheckingPrice,
+    failed: priceCheckFailed,
+  });
 
   const paymentsReady = isPaymentsConfigured();
   const guestEmailValid = EMAIL_RE.test(guestEmail.trim());
@@ -228,9 +235,7 @@ const CheckoutPay = () => {
                   </div>
                   {isSubscription && verifiedAmount != null && (
                     <p className="text-xs text-muted-foreground">
-                      This is a subscription. {formatPrice(verifiedAmount, currency)} is taken
-                      today and then automatically every {intervalLabel} until you cancel. You can
-                      cancel any time and keep access until the end of the period you've paid for.
+                      {subscriptionTerms(formatPrice(verifiedAmount, currency), intervalLabel, priceConfirmed)}
                     </p>
                   )}
                   {verified && !isSubscription && (
