@@ -57,7 +57,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
       const { error } = await signUp(email, password, fullName, {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
-        cima_id: cimaId.trim() || null,
+        cima_id: cimaId.trim() || undefined,
       });
 
       if (error) {
