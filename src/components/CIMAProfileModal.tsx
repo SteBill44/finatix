@@ -1,3 +1,4 @@
+import { normaliseCimaId } from "@/lib/profile";
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -15,7 +16,7 @@ import { User, CreditCard, Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const cimaProfileSchema = z.object({
-  cima_id: z.string().trim().min(1, "CIMA ID is required").max(20, "CIMA ID must be 20 characters or less"),
+  cima_id: z.string().trim().max(20, "CIMA ID must be 20 characters or less").optional().or(z.literal("")),
   first_name: z.string().trim().min(1, "First name is required").max(100, "First name must be 100 characters or less"),
   last_name: z.string().trim().min(1, "Last name is required").max(100, "Last name must be 100 characters or less"),
 });
@@ -68,7 +69,7 @@ const CIMAProfileModal = ({
 
     try {
       await updateProfile.mutateAsync({
-        cima_id: cimaId.trim(),
+        cima_id: normaliseCimaId(cimaId),
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         cima_start_date: new Date().toISOString().split("T")[0],
@@ -99,7 +100,7 @@ const CIMAProfileModal = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="cimaId">CIMA ID / AICPA ID *</Label>
+            <Label htmlFor="cimaId">CIMA ID / AICPA ID (optional)</Label>
             <div className="relative">
               <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input

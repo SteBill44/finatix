@@ -1,3 +1,4 @@
+import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -74,7 +75,12 @@ const Lesson = () => {
   // Extract individual pieces from the optimized response
   const course = lessonDetail?.course?.[0] || null;
   const lesson = lessonDetail?.lesson?.[0] || null;
-  const resources = lessonDetail?.resources || [];
+  // Placeholder links (example.com) are not real files - never offer them as downloads.
+  const resources = (lessonDetail?.resources || []).filter(
+    (r: { file_url: string | null }) => r.file_url && !/example\.com/i.test(r.file_url),
+  );
+  const { data: contentStatusMap } = useCourseContentStatus();
+  const courseStatus = course?.id ? contentStatusMap?.get(course.id) : undefined;
   const quizzesToShow = lessonDetail?.quizzes || [];
   const incrementDownload = useIncrementDownloadCount();
 
@@ -444,14 +450,27 @@ const Lesson = () => {
                 );
               })()
             ) : (
-              <Card className="p-8 text-center bg-secondary/30">
+              <Card className="p-8 text-center bg-secondary/30 not-prose">
                 <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Lesson content is being prepared
+                  The written notes for this lesson aren't published yet
                 </h3>
-                <p className="text-muted-foreground">
-                  The full lesson content including notes, resources, and exercises will be available here.
+                <p className="text-muted-foreground mb-4">
+                  {courseStatus && courseStatus.questions > 0
+                    ? `You can still practise this course: it has ${courseStatus.questions} exam-style questions with marking and explanations.`
+                    : "There's no practice material for this course yet either. We'll add it as soon as it has been written and checked."}
+                  {resources.length > 0 && " There are downloads for this lesson below."}
                 </p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {courseStatus && courseStatus.questions > 0 && course?.slug && (
+                    <Button asChild>
+                      <Link to={`/practice/${course.slug}`}>Practise questions</Link>
+                    </Button>
+                  )}
+                  <Button asChild variant="outline">
+                    <Link to={`/courses/${course?.slug || courseId}`}>Back to course</Link>
+                  </Button>
+                </div>
               </Card>
             )}
           </div>

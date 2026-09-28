@@ -1,3 +1,4 @@
+import { isProfileComplete } from "@/lib/profile";
 import { lazy, Suspense, useEffect } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -195,13 +196,15 @@ const PostSignInRedirect = () => {
           // Link any course bought before this account existed
           void supabase.rpc("claim_guest_purchases").then(() => {}, () => {});
           void (supabase.rpc as any)("claim_guest_membership").then(() => {}, () => {});
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from("profiles")
             .select("first_name, last_name, cima_id")
             .eq("user_id", userId)
             .maybeSingle();
-          const needsProfile =
-            !profile?.first_name || !profile?.last_name || !profile?.cima_id;
+          // If the profile can't be read, don't trap the user on a form: send
+          // them on and let the enrolment gate ask later. The chosen learning
+          // destination is kept for /complete-profile to consume.
+          const needsProfile = !profileError && !isProfileComplete(profile);
           if (needsProfile) {
             navigate("/complete-profile", { replace: true });
             return;

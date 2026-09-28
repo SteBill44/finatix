@@ -9,17 +9,17 @@ const loop = [
   {
     icon: PlayCircle,
     title: "Learn the topic",
-    text: "Short, structured lessons that follow the CIMA syllabus.",
+    text: "Lesson outlines organised by CIMA syllabus area, starting with BA1 and BA2.",
   },
   {
     icon: Target,
     title: "Practise it",
-    text: "Exam-style questions after every lesson, plus full mock exams.",
+    text: "Around 190 exam-style practice questions each in BA1 and BA2, marked as you go.",
   },
   {
     icon: MessageSquareText,
     title: "See where you stand",
-    text: "Every answer comes with an explanation, so revision time goes where it's needed.",
+    text: "Answers show the reasoning and track weaker syllabus areas, so you know what to revise.",
   },
 ];
 
@@ -39,18 +39,18 @@ const Hero = () => {
           <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500">
             <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-              CIMA training, start to chartered
+              Free BA1 and BA2 practice
             </span>
 
             <h1 className="mb-5 text-4xl font-bold leading-[1.1] tracking-tight text-charcoal md:text-5xl lg:text-6xl dark:text-white">
               Learn CIMA by{" "}
-              <span className="text-gradient-brand">answering real exam questions</span>
+              <span className="text-gradient-brand">exam-style practice</span>
             </h1>
 
             <p className="mb-8 max-w-xl text-lg leading-relaxed text-charcoal/80 dark:text-white/75">
-              Finatix teaches every CIMA level through short lessons, exam-style
-              practice and an explanation for every answer, so you always know
-              which topic to study next instead of guessing.
+              Start the CIMA Certificate with free BA1 and BA2 question banks.
+              Every answer is marked straight away with the reasoning shown, so you
+              can see which topics need more work.
             </p>
 
             <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -63,13 +63,13 @@ const Hero = () => {
               <Button asChild size="xl" variant="outline" className="group bg-background/70">
                 <Link to="/courses">
                   <BookOpen className="mr-2 h-5 w-5" />
-                  Explore courses
+                  Browse all courses
                 </Link>
               </Button>
             </div>
 
             <p className="text-sm text-muted-foreground">
-              The four Certificate-level courses (BA1-BA4) are free.{" "}
+              BA1-BA4 are free to join. Higher-level courses are still being written.{" "}
               <Link to="/why-cima" className="font-medium text-primary hover:underline">
                 What is CIMA?
               </Link>

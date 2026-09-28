@@ -38,6 +38,7 @@ export const COMPANY = {
  * Things about the platform that can be checked by looking at the site itself.
  * Update these when content is added; never round them up.
  */
+/** @deprecated Hand-typed totals go stale. Use usePlatformFacts() instead. */
 export const PLATFORM_FACTS = {
   courses: 16,
   qualificationLevels: 4,

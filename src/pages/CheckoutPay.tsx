@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
@@ -32,7 +33,6 @@ const CheckoutPay = () => {
 
   const priceId = params.get("priceId");
   const title = params.get("title") || "Complete your purchase";
-  const price = Number(params.get("price") || 0);
   const courseId = params.get("courseId") || undefined;
   const bundleLabel = params.get("bundle") || undefined;
   const courseSlug = params.get("slug") || undefined;
@@ -42,7 +42,7 @@ const CheckoutPay = () => {
   }, [params]);
   // The real price comes from our payment provider, never from the link, so
   // the total shown here is always the total that gets charged.
-  const { data: verified, isLoading: checkingPrice, isError: priceCheckFailed } =
+  const { data: verified, isLoading: checkingPrice, isError: priceCheckFailed, refetch: retryPriceCheck, isFetching: recheckingPrice } =
     useVerifiedPrice(priceId);
 
   const verifiedAmount = verified?.amount ?? null;
@@ -50,18 +50,17 @@ const CheckoutPay = () => {
   const isSubscription = verified?.billingType === "subscription";
   const intervalLabel = verified?.interval === "year" ? "year" : "month";
   const courseCount = verified?.courseCount || courseIds?.length || 1;
-  // Only an explicit "not on sale" answer stops the payment. If the price check
-  // itself fails (network hiccup, server blip) we still let the buyer pay - the
-  // payment provider confirms the real price on the payment form anyway.
+  // Fail closed: payment only opens once the server has confirmed the price
+  // AND that the product is approved for sale.
   const productUnavailable = verified?.available === false;
+  const priceConfirmed = Boolean(verified?.available) && verifiedAmount != null;
 
   const paymentsReady = isPaymentsConfigured();
   const guestEmailValid = EMAIL_RE.test(guestEmail.trim());
   const checkoutEmail = user?.email ?? (guestEmailValid ? guestEmail.trim() : undefined);
   const canContinue =
     Boolean(priceId) &&
-    !productUnavailable &&
-    (!checkingPrice || priceCheckFailed) &&
+    priceConfirmed &&
     (Boolean(user) || guestEmailValid);
 
   const returnUrl = `${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}${
@@ -122,15 +121,23 @@ const CheckoutPay = () => {
                     <p className="text-sm text-muted-foreground">
                       Payments aren't available right now. Please try again shortly.
                     </p>
+                  ) : priceCheckFailed ? (
+                    <div role="alert" className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        We couldn't confirm the price for this item, so payment is paused. Nothing has been charged.
+                      </p>
+                      <Button variant="outline" onClick={() => retryPriceCheck()} disabled={recheckingPrice}>
+                        {recheckingPrice ? "Checking..." : "Try again"}
+                      </Button>
+                    </div>
                   ) : productUnavailable ? (
                     <div className="space-y-3">
                       <p className="text-sm text-muted-foreground">
-                        This option isn't on sale at the moment, so we can't take a payment for
-                        it. Nothing has been charged.
+                        This isn't open for purchase yet because the course material is still
+                        being prepared. Nothing has been charged. Leave your email and we'll tell
+                        you when it opens.
                       </p>
-                      <Button asChild variant="outline">
-                        <Link to="/contact">Get in touch</Link>
-                      </Button>
+                      <InterestRegistrationForm courseId={courseId ?? null} courseName={verified?.productName || title} />
                     </div>
                   ) : showPayment && canContinue ? (
                     <StripeEmbeddedCheckout
@@ -191,7 +198,9 @@ const CheckoutPay = () => {
                         {verified?.productName || title}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {isSubscription
+                        {!verified
+                          ? "Confirming what's included..."
+                          : isSubscription
                           ? `Membership - every course while your membership is active`
                           : courseCount > 1
                           ? `${courseCount} courses - lifetime access`
@@ -203,21 +212,17 @@ const CheckoutPay = () => {
                         ? "..."
                         : verifiedAmount != null
                         ? formatPrice(verifiedAmount, currency)
-                        : price > 0
-                        ? formatPrice(price)
                         : "-"}
                     </span>
                   </div>
                   <Separator />
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Total due today</span>
+                    <span className="text-sm font-medium">{priceConfirmed ? "Total due today" : productUnavailable && verifiedAmount != null ? "Price when it opens" : "Price not confirmed"}</span>
                     <span className="text-2xl font-bold">
                       {checkingPrice
                         ? "..."
                         : verifiedAmount != null
                         ? formatPrice(verifiedAmount, currency)
-                        : price > 0
-                        ? formatPrice(price)
                         : "-"}
                     </span>
                   </div>
@@ -228,7 +233,7 @@ const CheckoutPay = () => {
                       cancel any time and keep access until the end of the period you've paid for.
                     </p>
                   )}
-                  {!isSubscription && (
+                  {verified && !isSubscription && (
                     <p className="text-xs text-muted-foreground">
                       One-time payment. There is no subscription and nothing renews.
                     </p>

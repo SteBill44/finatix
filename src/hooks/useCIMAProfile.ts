@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { from, tracked } from "@/lib/api/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { isProfileComplete } from "@/lib/profile";
 
 export interface CIMAProfileData {
   cima_id: string | null;
@@ -11,7 +12,7 @@ export interface CIMAProfileData {
 }
 
 export interface CIMAProfileUpdate {
-  cima_id?: string;
+  cima_id?: string | null;
   first_name?: string;
   last_name?: string;
   cima_start_date?: string;
@@ -39,9 +40,9 @@ export const useCIMAProfile = () => {
 };
 
 export const useHasCIMAProfile = () => {
-  const { data: profile, isLoading } = useCIMAProfile();
-  const hasCompleteProfile = !!(profile?.cima_id && profile?.first_name && profile?.last_name);
-  return { hasCompleteProfile, isLoading, profile };
+  const { data: profile, isLoading, isError, refetch } = useCIMAProfile();
+  const hasCompleteProfile = isProfileComplete(profile);
+  return { hasCompleteProfile, isLoading, isError, refetch, profile };
 };
 
 export const useUpdateCIMAProfile = () => {

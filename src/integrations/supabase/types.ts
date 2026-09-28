@@ -319,6 +319,41 @@ export type Database = {
         }
         Relationships: []
       }
+      course_editorial_approvals: {
+        Row: {
+          approved: boolean
+          approved_at: string | null
+          approved_by: string | null
+          course_id: string
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          course_id: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          course_id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_editorial_approvals_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_purchases: {
         Row: {
           amount_total: number | null
@@ -2067,10 +2102,17 @@ export type Database = {
         Args: never
         Returns: {
           course_id: string
-          lessons: number
-          lessons_with_content: number
+          downloads: number
+          editorially_approved: boolean
+          is_free: boolean
+          lesson_records: number
+          mock_exams: number
+          on_sale: boolean
+          placeholder_downloads: number
+          prerequisites_met: boolean
           questions: number
-          resources: number
+          substantive_lessons: number
+          usable_mocks: number
           videos: number
         }[]
       }

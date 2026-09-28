@@ -1,6 +1,7 @@
 import { getCorsHeaders } from "../_shared/cors.ts";
 import { createStripeClient, getActiveStripeEnv } from "../_shared/stripe.ts";
 import { resolveCoursesForPrice } from "../_shared/catalogue.ts";
+import { checkSaleReadiness } from "../_shared/saleReadiness.ts";
 
 /**
  * Returns the real, provider-held details of a price so the order summary can
@@ -45,10 +46,13 @@ Deno.serve(async (req) => {
 
     const resolved = await resolveCoursesForPrice(priceId);
     const product: any = price.product;
+    const sale = await checkSaleReadiness(resolved.isMembership ? "all_paid" : resolved.courseIds);
 
     return new Response(
       JSON.stringify({
-        available: true,
+        // "available" means the buyer may pay now: priced AND approved for sale.
+        available: sale.allowed,
+        notOnSaleReason: sale.allowed ? null : "content_not_ready",
         priceId,
         amount: price.unit_amount != null ? price.unit_amount / 100 : null,
         currency: (price.currency ?? "gbp").toUpperCase(),

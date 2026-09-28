@@ -125,6 +125,10 @@ const getScoreColor = (score: number) => {
   return "text-muted-foreground";
 };
 
+const MIN_DATA_POINTS = 10;
+export const READINESS_DISCLAIMER =
+  "This is a study-progress estimate based on your Finatix activity. It is not a prediction of your CIMA exam result.";
+
 const ReadinessScoreCard = ({
   courseId,
   compact = false,
@@ -140,6 +144,23 @@ const ReadinessScoreCard = ({
   }
 
   if (!readiness) return null;
+
+  // Too little activity to say anything meaningful - don't show a number.
+  if (readiness.dataPoints < MIN_DATA_POINTS) {
+    return (
+      <Card className={compact ? "p-4" : "p-6"}>
+        <div className="flex items-center gap-2 mb-2">
+          <Target className="w-5 h-5 text-primary" />
+          <h4 className="font-semibold text-sm">Readiness Score</h4>
+        </div>
+        <p className="text-sm text-foreground">Not enough activity yet</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Complete a few lessons and answer at least {MIN_DATA_POINTS} practice questions or quizzes to see an estimate.
+          {" "}{READINESS_DISCLAIMER}
+        </p>
+      </Card>
+    );
+  }
 
   const levelConfig = getLevelConfig(readiness.level);
   const confidenceConfig = getConfidenceConfig(readiness.confidenceLevel);
@@ -209,7 +230,7 @@ const ReadinessScoreCard = ({
           <div>
             <h3 className="font-bold text-foreground">Readiness Score</h3>
             <p className="text-xs text-muted-foreground">
-              Your exam preparation level
+              Study-progress estimate - not a pass prediction
             </p>
           </div>
         </div>
@@ -228,6 +249,7 @@ const ReadinessScoreCard = ({
               Recent activity is weighted more heavily. Older quiz attempts 
               contribute less to your score.
             </p>
+            <p className="text-xs text-muted-foreground mt-2">{READINESS_DISCLAIMER}</p>
           </TooltipContent>
         </Tooltip>
       </div>

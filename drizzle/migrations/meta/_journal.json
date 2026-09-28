@@ -8,6 +8,13 @@
       "when": 1790555186550,
       "tag": "0000_course_content_status",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790555285244,
+      "tag": "0001_course_sale_readiness",
+      "breakpoints": true
     }
   ]
 }

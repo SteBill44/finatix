@@ -13,7 +13,7 @@ interface SEOHeadProps {
 const SITE_URL = "https://finatix.io";
 const DEFAULT_TITLE = "Finatix | CIMA Training & Exam Prep";
 const DEFAULT_DESCRIPTION =
-  "CIMA training from Certificate to Strategic level - courses, mock exams, AI study tools, and competency analytics to help you pass faster.";
+  "CIMA Certificate practice with free BA1 and BA2 exam-style question banks, instant marking with reasoning, and clear outlines for every CIMA paper.";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png?v=3`;
 
 const toAbsolute = (url: string) => {

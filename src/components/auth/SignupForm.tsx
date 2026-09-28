@@ -57,7 +57,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
       const { error } = await signUp(email, password, fullName, {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
-        cima_id: cimaId.trim(),
+        cima_id: cimaId.trim() || undefined,
       });
 
       if (error) {
@@ -145,7 +145,7 @@ const SignupForm = ({ onLogin, initialReferralCode = "" }: Props) => {
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="cimaId">CIMA ID</Label>
+          <Label htmlFor="cimaId">CIMA ID (optional)</Label>
           <div className="relative">
             <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input

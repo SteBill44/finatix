@@ -47,7 +47,7 @@ const cimaPerks = [
 
 const signupPerks = [
   "Track progress across all CIMA levels",
-  "AI-powered study assistant",
+  "Instant marking with the reasoning shown",
   "Competency radar & readiness score",
   "Spaced-repetition flashcards",
 ];

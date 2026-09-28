@@ -72,14 +72,6 @@ const Contact = () => {
       answer: POLICY.refundText
     },
     {
-      question: "Can I pause my subscription?",
-      answer: "Yes, you can pause your subscription for up to 3 months. Your progress and data will be saved, and you can resume whenever you're ready to continue studying."
-    },
-    {
-      question: "How do the tutor sessions work?",
-      answer: "Tutor sessions are one-on-one video calls with our CIMA-qualified instructors. You can book sessions through the dashboard, and they're typically 45 minutes long. Use them for difficult topics or exam preparation."
-    },
-    {
       question: "Is my data secure?",
       answer: "Absolutely. We use industry-standard encryption and security practices to protect your data. We're GDPR compliant and never share your information with third parties."
     },

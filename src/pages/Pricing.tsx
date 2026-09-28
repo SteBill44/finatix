@@ -1,3 +1,7 @@
+import { usePlatformFacts } from "@/hooks/usePlatformFacts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
+import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -64,6 +68,21 @@ const Pricing = () => {
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
+  const { data: contentStatusMap } = useCourseContentStatus();
+  const facts = usePlatformFacts();
+  const [interestFor, setInterestFor] = useState<{ name: string; courseId?: string } | null>(null);
+  const paidStatuses = contentStatusMap ? [...contentStatusMap.values()].filter((r) => !r.is_free) : [];
+  const anyPaidOnSale = paidStatuses.some((r) => r.on_sale);
+  // Mirror of the server rule: every paid course in the item must be on sale.
+  const itemOnSale = (item: { courseId?: string; courseIds?: string[] }) => {
+    if (!contentStatusMap) return false;
+    const ids = item.courseId ? [item.courseId] : item.courseIds;
+    const scope = ids?.length
+      ? ids.map((id) => contentStatusMap.get(id)).filter((r) => r && !r.is_free)
+      : paidStatuses;
+    return scope.length > 0 && scope.every((r) => r!.on_sale);
+  };
+
   // Everything paid goes through the dedicated checkout page
   const goToCheckout = (item: {
     priceId: string;
@@ -73,7 +92,11 @@ const Pricing = () => {
     courseIds?: string[];
     bundleLabel?: string;
   }) => {
-    const q = new URLSearchParams({ priceId: item.priceId, title: item.title, price: String(item.price) });
+    if (!itemOnSale(item)) {
+      setInterestFor({ name: item.bundleLabel || item.title.replace(/^Buy /, ""), courseId: item.courseId });
+      return;
+    }
+    const q = new URLSearchParams({ priceId: item.priceId, title: item.title });
     if (item.courseId) q.set("courseId", item.courseId);
     if (item.courseIds?.length) q.set("courses", item.courseIds.join(","));
     if (item.bundleLabel) q.set("bundle", item.bundleLabel);
@@ -244,16 +267,16 @@ const Pricing = () => {
   // OPEN_CLAIM_DECISIONS in src/lib/claims.ts), we describe only what we do.
   const included = [
     {
-      feature: "Lessons written to the CIMA syllabus areas for each paper",
-      detail: `${PLATFORM_FACTS.lessons} lessons across ${PLATFORM_FACTS.courses} courses`,
+      feature: "Lesson outlines mapped to CIMA syllabus areas",
+      detail: facts.ready ? `${facts.lessonOutlines} lesson outlines across ${facts.courses} courses; ${facts.writtenLessons} full written lessons so far` : "Counting...",
     },
     {
       feature: "Practice questions marked automatically",
-      detail: `${PLATFORM_FACTS.practiceQuestions} questions with per-question explanations`,
+      detail: facts.ready ? `${facts.questions} questions so far, across ${facts.coursesWithQuestions} courses` : "Counting...",
     },
     {
       feature: "Timed mock exams",
-      detail: "Included with every course, retakeable as often as you like",
+      detail: facts.ready && facts.usableMocks > 0 ? `${facts.usableMocks} mock exams ready` : "Being prepared - not yet available",
     },
     {
       feature: "Competency tracking and weak-area analysis",
@@ -302,8 +325,17 @@ const Pricing = () => {
             INVEST IN YOUR <span className="text-gradient-brand">CIMA SUCCESS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            Choose the plan that fits your goals. All plans include our modern analytics and learning tools.
+            Choose the plan that fits your goals. The four Certificate courses (BA1-BA4) are free to start.
           </p>
+          {contentStatusMap && !anyPaidOnSale && (
+            <div role="note" className="mt-6 max-w-2xl rounded-lg border border-primary/40 bg-card p-4 text-sm">
+              <p className="font-semibold text-foreground">Paid courses aren't open for purchase yet</p>
+              <p className="text-muted-foreground mt-1">
+                Their lessons and question banks are still being written and reviewed. The prices below are what they
+                will cost. You can register interest now, and nothing is charged. Anyone who has already bought keeps their access.
+              </p>
+            </div>
+          )}
         </div>
         
       </section>
@@ -614,6 +646,18 @@ const Pricing = () => {
         onSuccess={handleCIMAModalSuccess}
       />
 
+    <Dialog open={!!interestFor} onOpenChange={(o) => !o && setInterestFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Not open for purchase yet</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {interestFor?.name} includes course material that is still being written and reviewed, so we aren't
+            taking payment for it yet. Nothing is charged. Leave your email and we'll let you know when it opens.
+          </p>
+          <InterestRegistrationForm courseId={interestFor?.courseId ?? null} courseName={interestFor?.name ?? "this option"} />
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };

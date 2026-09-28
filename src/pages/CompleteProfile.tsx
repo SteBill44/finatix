@@ -1,3 +1,4 @@
+import { isProfileComplete, normaliseCimaId } from "@/lib/profile";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -10,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { User, CreditCard, Loader2, Mail } from "lucide-react";
-import { learningContextDestination, loadLearningContext } from "@/lib/learningContext";
+import { learningContextDestination, loadLearningContext, clearLearningContext } from "@/lib/learningContext";
 
 const CompleteProfile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -23,6 +24,8 @@ const CompleteProfile = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     if (authLoading) return;
@@ -32,14 +35,23 @@ const CompleteProfile = () => {
     }
 
     (async () => {
-      const { data: profile } = await supabase
+      const { data: profile, error: loadErr } = await supabase
         .from("profiles")
         .select("first_name, last_name, cima_id")
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (profile?.first_name && profile?.last_name && profile?.cima_id) {
-        navigate("/dashboard", { replace: true });
+      if (loadErr) {
+        setLoadError(true);
+        setChecking(false);
+        return;
+      }
+      setLoadError(false);
+
+      if (isProfileComplete(profile)) {
+        const dest = learningContextDestination(loadLearningContext());
+        clearLearningContext();
+        navigate(dest, { replace: true });
         return;
       }
 
@@ -77,7 +89,7 @@ const CompleteProfile = () => {
       setCimaId(profile?.cima_id || "");
       setChecking(false);
     })();
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, reloadKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +98,6 @@ const CompleteProfile = () => {
     const nextErrors: Record<string, string> = {};
     if (!firstName.trim()) nextErrors.firstName = "First name is required";
     if (!lastName.trim()) nextErrors.lastName = "Last name is required";
-    if (!cimaId.trim()) nextErrors.cimaId = "CIMA ID is required";
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
 
@@ -98,7 +109,7 @@ const CompleteProfile = () => {
           first_name: firstName.trim(),
           last_name: lastName.trim(),
           full_name: `${firstName.trim()} ${lastName.trim()}`,
-          cima_id: cimaId.trim(),
+          cima_id: normaliseCimaId(cimaId),
         },
         { onConflict: "user_id" }
       );
@@ -109,7 +120,10 @@ const CompleteProfile = () => {
       }
 
       toast({ title: "Welcome to Finatix!", description: "Your profile is all set." });
-      navigate(learningContextDestination(loadLearningContext()), { replace: true });
+      // Use the chosen destination once, then clear it so it can't resurface later.
+      const dest = learningContextDestination(loadLearningContext());
+      clearLearningContext();
+      navigate(dest, { replace: true });
     } catch (err) {
       toast({
         title: "Error",
@@ -130,6 +144,19 @@ const CompleteProfile = () => {
       </Layout>
     );
   }
+
+  if (loadError) {
+    return (
+      <Layout>
+        <div role="alert" className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center gap-3 px-4 text-center">
+          <p className="font-medium text-foreground">We couldn't load your profile.</p>
+          <p className="text-sm text-muted-foreground">Check your connection and try again.</p>
+          <Button onClick={() => { setChecking(true); setReloadKey((k) => k + 1); }}>Try again</Button>
+        </div>
+      </Layout>
+    );
+  }
+
 
   return (
     <Layout>
@@ -160,7 +187,7 @@ const CompleteProfile = () => {
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="cimaId">CIMA ID *</Label>
+                  <Label htmlFor="cimaId">CIMA ID (optional)</Label>
                   <div className="relative">
                     <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input

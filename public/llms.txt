@@ -1,19 +1,19 @@
 # Finatix
 
-> Online CIMA training platform — courses, mock exams, AI study tools and competency analytics covering every paper from Certificate (BA1–BA4) to Strategic Case Study.
+> Independent online CIMA study platform. Free Certificate courses (BA1–BA4), with exam-style question banks currently available for BA1 and BA2. Higher-level courses are being written and are not yet on sale.
 
-Finatix helps students preparing for the CIMA qualification practice, track readiness and pass exams faster with adaptive study tools and tutor support.
+Finatix offers exam-style practice with instant marking and progress tracking. It is not accredited by or affiliated with CIMA or AICPA & CIMA.
 
 ## Pages
 
 - [Home](/): Platform overview and CIMA training intro.
 - [Why CIMA](/why-cima): Career value and benefits of the CIMA qualification.
 - [Courses](/courses): Full directory of CIMA papers (BA1–BA4, E1–E3, P1–P3, F1–F3, OCS, MCS, SCS).
-- [Pricing](/pricing): Subscription plans for individuals and corporate teams.
+- [Pricing](/pricing): Prices for courses, bundles and membership.
 - [About](/about): Mission, team and approach.
 - [Contact](/contact): Support, sales and FAQ.
 - [Help Centre](/help): Common questions and platform guides.
-- [Learning Paths](/learning-paths): Structured study routes through the qualification.
+- [Start here](/start): Choose a starting point.
 
 ## Courses
 
