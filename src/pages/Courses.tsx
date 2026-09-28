@@ -248,6 +248,7 @@ function CourseCard({
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>{code}</span>
           </div>
 
+          <div className="mb-1"><ContentStatusBadge courseId={course.id} /></div>
           <h3 className="text-sm font-semibold text-foreground leading-snug mb-1.5 line-clamp-2 min-h-[2.5rem]">
             {course.title}
           </h3>
