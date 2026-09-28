@@ -1,3 +1,6 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
+import InterestRegistrationForm from "@/components/InterestRegistrationForm";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -64,6 +67,20 @@ const Pricing = () => {
   const [showCIMAModal, setShowCIMAModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => Promise<void>) | null>(null);
 
+  const { data: contentStatusMap } = useCourseContentStatus();
+  const [interestFor, setInterestFor] = useState<{ name: string; courseId?: string } | null>(null);
+  const paidStatuses = contentStatusMap ? [...contentStatusMap.values()].filter((r) => !r.is_free) : [];
+  const anyPaidOnSale = paidStatuses.some((r) => r.on_sale);
+  // Mirror of the server rule: every paid course in the item must be on sale.
+  const itemOnSale = (item: { courseId?: string; courseIds?: string[] }) => {
+    if (!contentStatusMap) return false;
+    const ids = item.courseId ? [item.courseId] : item.courseIds;
+    const scope = ids?.length
+      ? ids.map((id) => contentStatusMap.get(id)).filter((r) => r && !r.is_free)
+      : paidStatuses;
+    return scope.length > 0 && scope.every((r) => r!.on_sale);
+  };
+
   // Everything paid goes through the dedicated checkout page
   const goToCheckout = (item: {
     priceId: string;
@@ -73,7 +90,11 @@ const Pricing = () => {
     courseIds?: string[];
     bundleLabel?: string;
   }) => {
-    const q = new URLSearchParams({ priceId: item.priceId, title: item.title, price: String(item.price) });
+    if (!itemOnSale(item)) {
+      setInterestFor({ name: item.bundleLabel || item.title.replace(/^Buy /, ""), courseId: item.courseId });
+      return;
+    }
+    const q = new URLSearchParams({ priceId: item.priceId, title: item.title });
     if (item.courseId) q.set("courseId", item.courseId);
     if (item.courseIds?.length) q.set("courses", item.courseIds.join(","));
     if (item.bundleLabel) q.set("bundle", item.bundleLabel);
@@ -614,6 +635,18 @@ const Pricing = () => {
         onSuccess={handleCIMAModalSuccess}
       />
 
+    <Dialog open={!!interestFor} onOpenChange={(o) => !o && setInterestFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Not open for purchase yet</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            {interestFor?.name} includes course material that is still being written and reviewed, so we aren't
+            taking payment for it yet. Nothing is charged. Leave your email and we'll let you know when it opens.
+          </p>
+          <InterestRegistrationForm courseId={interestFor?.courseId ?? null} courseName={interestFor?.name ?? "this option"} />
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
