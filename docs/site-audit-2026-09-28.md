@@ -71,7 +71,7 @@ Conclusion: the site advertised lessons, mocks and downloads that don't exist fo
 7. Confirm exam sittings for the case-study journey, and write a case-study readiness policy (tasks, pre-seen, marking and review workflow).
 8. Syllabus: the CGMA 2026 syllabus upgrade is examined from the May 2026 case study sitting ([AICPA & CIMA upgrade page](https://www.aicpa-cima.com/resources/landing/cgma-professional-qualification-upgrade-2026-for-candidates); [syllabus download](https://www.aicpa-cima.com/resources/download/cgma-professional-qualification-syllabus); [2026–27 blueprint changes](https://www.aicpa-cima.com/resources/download/summary-of-changes-for-2026-2027-cgma-pq-blueprints)). **Lesson-by-lesson verification against it is still pending** for every course.
 
-## 6. Competitor comparison (owner-verified primary pages, 28 Sep 2026)
+## 6. Competitor comparison (Primary-page research verified during this audit, 28 Sep 2026)
 
 These are what each provider publicly advertises. They weren't independently audited, and no paid courses were evaluated.
 
