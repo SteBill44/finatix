@@ -22,6 +22,7 @@ export function StripeEmbeddedCheckout({
   returnUrl,
 }: StripeEmbeddedCheckoutProps) {
   const [failed, setFailed] = useState(false);
+  const [notOnSale, setNotOnSale] = useState(false);
   // Bumping this forces a brand new payment session (stale sessions expire
   // and make Stripe render "Something went wrong").
   const [attempt, setAttempt] = useState(0);
@@ -42,6 +43,13 @@ export function StripeEmbeddedCheckout({
       },
     });
     if (error || !data?.clientSecret) {
+      // The server refuses products that aren't approved for sale (HTTP 409).
+      let code: string | undefined = data?.error;
+      try {
+        const ctx = (error as { context?: Response } | null)?.context;
+        if (ctx && typeof ctx.json === "function") code = (await ctx.clone().json())?.error ?? code;
+      } catch { /* ignore */ }
+      if (code === "not_available") setNotOnSale(true);
       setFailed(true);
       throw new Error(error?.message || data?.error || "Failed to start checkout");
     }
@@ -50,6 +58,17 @@ export function StripeEmbeddedCheckout({
   }, [priceId, courseId, courseIdsKey, bundleLabel, customerEmail, returnUrl]);
 
   const options = useMemo(() => ({ fetchClientSecret }), [fetchClientSecret]);
+
+  if (notOnSale) {
+    return (
+      <div role="alert" className="py-10 text-center space-y-2">
+        <p className="text-sm font-medium text-foreground">This isn't open for purchase yet.</p>
+        <p className="text-sm text-muted-foreground">
+          Some of the course material it includes is still being written and reviewed. Nothing has been charged.
+        </p>
+      </div>
+    );
+  }
 
   if (failed) {
     return (
