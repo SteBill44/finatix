@@ -43,7 +43,7 @@ const Hero = () => {
             </span>
 
             <h1 className="mb-5 text-4xl font-bold leading-[1.1] tracking-tight text-charcoal md:text-5xl lg:text-6xl dark:text-white">
-              Learn CIMA by{" "}
+              Build CIMA confidence with{" "}
               <span className="text-gradient-brand">exam-style practice</span>
             </h1>
 
