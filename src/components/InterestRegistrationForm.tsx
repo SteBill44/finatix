@@ -8,7 +8,8 @@ import { toast } from "sonner";
 import { Mail, User, CheckCircle, Loader2 } from "lucide-react";
 
 interface InterestRegistrationFormProps {
-  courseId: string;
+  /** Omit for general interest (e.g. a bundle or membership). */
+  courseId?: string | null;
   courseName: string;
 }
 
@@ -27,7 +28,7 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
       const { error } = await supabase
         .from("interest_registrations")
         .insert({
-          course_id: courseId,
+          course_id: courseId ?? null,
           email,
           full_name: fullName || null,
         });
@@ -44,7 +45,8 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
         setIsRegistered(true);
       }
     } catch (error: any) {
-      toast.error(error.message || "Failed to register interest");
+      // Never pretend it worked: keep the form open so they can retry.
+      toast.error("We couldn't save your details. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -52,11 +54,12 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email) {
-      toast.error("Please enter your email address");
+    const email = formData.email.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      toast.error("Please enter a valid email address");
       return;
     }
-    await registerInterest(formData.email, formData.fullName);
+    await registerInterest(email, formData.fullName.trim().slice(0, 100));
   };
 
   const handleQuickRegister = async () => {
