@@ -12,9 +12,13 @@ import { useCourseContentStatus, type CourseContentStatus } from "@/hooks/useCou
 /** What still blocks a paid course from going on sale, in plain words. */
 export function saleGaps(s: CourseContentStatus): string[] {
   const gaps: string[] = [];
-  const taught = s.substantive_lessons + s.videos;
+  if (s.is_case_study)
+    gaps.push(
+      "Case study: closed until a case-specific readiness policy exists (written tasks, sitting-specific pre-seen work, reviewed marking and feedback). Question counts don't apply",
+    );
   if (s.lesson_records === 0) gaps.push("No lessons");
-  else if (taught < s.lesson_records) gaps.push(`${s.lesson_records - taught} lessons need written notes or a video`);
+  else if (s.taught_lessons < s.lesson_records)
+    gaps.push(`${s.lesson_records - s.taught_lessons} lessons need written notes or a video`);
   if (s.questions < 100) gaps.push(`${100 - s.questions} more practice questions (min 100)`);
   if (s.usable_mocks < 1) gaps.push("No mock exam with 20+ questions");
   if (s.placeholder_downloads > 0) gaps.push(`${s.placeholder_downloads} placeholder downloads to replace`);
@@ -56,10 +60,11 @@ const SaleReadinessPanel = () => {
       <CardHeader>
         <CardTitle>Sale readiness</CardTitle>
         <CardDescription>
-          A paid course goes on sale only when it has editorial approval AND every lesson has written notes (1,500+
-          characters) or a video, 100+ practice questions and at least one mock exam with 20+ questions. The text-length
-          check is a size check, not a quality check - approve only after an academic review. Free courses stay open
-          to enrol either way.
+          A paid course can go on sale only with editorial approval AND these internal, provisional launch checks: every
+          lesson has written notes (1,500+ characters) or a real video, 100+ practice questions and one mock with 20+
+          questions. These numbers are not CIMA requirements, not realistic full mock sizes and not proof of academic
+          quality - passing them does not make a course "complete". Approve only after academic review. Case study
+          courses (OCS/MCS/SCS) stay closed until a case-specific policy exists. Free courses stay open to enrol.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -76,6 +81,7 @@ const SaleReadinessPanel = () => {
               <TableRow>
                 <TableHead>Course</TableHead>
                 <TableHead className="text-right">Outlines</TableHead>
+                <TableHead className="text-right">Taught</TableHead>
                 <TableHead className="text-right">Written</TableHead>
                 <TableHead className="text-right">Videos</TableHead>
                 <TableHead className="text-right">Questions</TableHead>
@@ -95,6 +101,7 @@ const SaleReadinessPanel = () => {
                   <TableRow key={c.id}>
                     <TableCell className="font-medium">{c.title}</TableCell>
                     <TableCell className="text-right">{s.lesson_records}</TableCell>
+                    <TableCell className="text-right">{s.taught_lessons}</TableCell>
                     <TableCell className="text-right">{s.substantive_lessons}</TableCell>
                     <TableCell className="text-right">{s.videos}</TableCell>
                     <TableCell className="text-right">{s.questions}</TableCell>
@@ -118,6 +125,8 @@ const SaleReadinessPanel = () => {
                     <TableCell>
                       {s.is_free ? (
                         <Badge variant="secondary">Free</Badge>
+                      ) : s.is_case_study ? (
+                        <Badge variant="outline">Closed - policy pending</Badge>
                       ) : s.on_sale ? (
                         <Badge>On sale</Badge>
                       ) : (

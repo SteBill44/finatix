@@ -25,7 +25,7 @@ export function ContentStatusNotice({ courseId }: { courseId: string }) {
       <p className="text-primary-foreground/85">
         {s.lesson_records} lesson outlines, {s.substantive_lessons} full written lessons, {s.videos} videos,{" "}
         {s.questions} practice questions, {s.downloads} downloads and {s.usable_mocks} ready mock exams.
-        {!s.is_free && " It isn't on sale until the material is complete and has been reviewed."}
+        {!s.is_free && " It isn't on sale until its material has been written and academically reviewed."}
       </p>
     </div>
   );
