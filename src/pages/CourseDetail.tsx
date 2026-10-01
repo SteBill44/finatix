@@ -256,11 +256,11 @@ const CourseDetail = () => {
   // after the browser's own hash jump, so scroll once the course is loaded.
   const curriculumScrolled = useRef(false);
   useEffect(() => {
-    if (curriculumScrolled.current || !course || window.location.hash !== "#curriculum") return;
+    if (curriculumScrolled.current || !course || isLoading || window.location.hash !== "#curriculum") return;
     curriculumScrolled.current = true;
     trackEvent("course_curriculum_view", { course: course.slug });
-    requestAnimationFrame(() => document.getElementById("curriculum")?.scrollIntoView({ block: "start" }));
-  }, [course]);
+    setTimeout(() => document.getElementById("curriculum")?.scrollIntoView({ block: "start" }), 50);
+  }, [course, isLoading]);
 
   const scrollToSection = (key: string) => {
     sectionRefs.current[key]?.scrollIntoView({ behavior: "smooth", block: "start" });
