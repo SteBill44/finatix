@@ -1,3 +1,4 @@
+import { trackEvent } from "@/lib/analytics";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -32,6 +33,12 @@ const Quiz = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, Answer>>({});
   const [showResults, setShowResults] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const quizCourse = (quiz as { course_id?: string } | undefined)?.course_id;
+  useEffect(() => {
+    if (quiz?.id && questions.length > 0) trackEvent("quiz_start", { course: quizCourse });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz?.id, questions.length > 0]);
 
   const handleNext = useCallback(() => {
     setCurrentQuestion((prev) => Math.min(prev + 1, questions.length - 1));
@@ -120,6 +127,7 @@ const Quiz = () => {
         quizId: quiz.id,
         answers: selectedAnswers,
       });
+      trackEvent("quiz_complete", { course: quizCourse, question_count: questions.length });
       // Refetch questions to get correct answers now that attempt is recorded
       await refetchQuestions();
       toast.success(`Quiz completed! You scored ${result.score}/${result.maxScore} (${result.percentage}%)`);
