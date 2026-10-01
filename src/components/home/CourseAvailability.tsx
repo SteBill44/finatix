@@ -56,7 +56,7 @@ const CourseAvailability = () => {
                           to={`/courses/${c.slug}`}
                           className="block rounded-lg px-2 py-1.5 transition-colors hover:bg-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         >
-                          <span className="block truncate text-sm font-medium text-foreground">{c.title}</span>
+                          <span className="block text-sm font-medium leading-snug text-foreground">{c.title}</span>
                           <span className={`mt-1 inline-block rounded-full border px-2 py-0.5 text-[11px] ${TONE[a.tone]}`}>
                             {a.label}
                           </span>
