@@ -19,7 +19,7 @@ const options = [
     price: "£199",
     detail: "One paid course, yours for good. One payment, nothing renews.",
     to: "/courses",
-    cta: "Choose a course",
+    cta: "Register interest",
   },
   {
     name: "A full level",
@@ -44,7 +44,7 @@ const OfferSummary = () => {
         <SectionHeading
           eyebrow="What it costs"
           title="Pay for what you need"
-          description={`All prices include VAT, so the price you see is the price you pay. ${POLICY.refundText}.`}
+          description={`All prices include VAT. Paid courses are still being written and aren't open for purchase yet - these are the prices when they open. ${POLICY.refundText}.`}
         />
 
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">

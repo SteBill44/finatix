@@ -1,3 +1,4 @@
+import { trackEvent } from "@/lib/analytics";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
@@ -250,6 +251,16 @@ const CourseDetail = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
+
+  // Homepage "Start practising free" lands on #curriculum; the SPA renders
+  // after the browser's own hash jump, so scroll once the course is loaded.
+  const curriculumScrolled = useRef(false);
+  useEffect(() => {
+    if (curriculumScrolled.current || !course || window.location.hash !== "#curriculum") return;
+    curriculumScrolled.current = true;
+    trackEvent("course_curriculum_view", { course: course.slug });
+    requestAnimationFrame(() => document.getElementById("curriculum")?.scrollIntoView({ block: "start" }));
+  }, [course]);
 
   const scrollToSection = (key: string) => {
     sectionRefs.current[key]?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -888,6 +899,7 @@ const CourseDetail = () => {
 
 
 
+      <div id="curriculum" className="scroll-mt-24" aria-hidden="true" />
       {/* Course Content - Mobile: Tabs, Desktop: Side nav + scroll */}
       {navSections.length > 1 && (
         <section className="py-8 lg:py-16">
