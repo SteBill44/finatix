@@ -1,4 +1,6 @@
 import Layout from "@/components/layout/Layout";
+import WhatIsCIMA from "@/components/home/WhatIsCIMA";
+import CareerPathways from "@/components/home/CareerPathways";
 import SEOHead from "@/components/SEOHead";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -261,6 +263,8 @@ const WhyCIMA = () => {
       </section>
 
       {/* CTA Section */}
+      <WhatIsCIMA />
+      <CareerPathways />
       <section className="py-16 text-foreground">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">

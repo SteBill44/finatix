@@ -1,3 +1,4 @@
+import { trackEvent } from "@/lib/analytics";
 import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -126,6 +127,11 @@ const Lesson = () => {
 
   // Current lesson - optimized hook provides detailed data
   const currentLesson = lesson;
+
+  // Funnel: identifiers only, never content or answers.
+  useEffect(() => {
+    if (currentLesson?.id) trackEvent("lesson_open", { course: courseId });
+  }, [currentLesson?.id, courseId]);
 
   useEffect(() => {
     let cancelled = false;
