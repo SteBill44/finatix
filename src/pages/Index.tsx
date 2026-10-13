@@ -2,9 +2,10 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
-import PlatformTabs from "@/components/home/PlatformTabs";
-import StartChooser from "@/components/home/StartChooser";
-import CourseAvailability from "@/components/home/CourseAvailability";
+import LevelsSection from "@/components/home/LevelsSection";
+import WhyFinatix from "@/components/home/WhyFinatix";
+import StudyApproach from "@/components/home/StudyApproach";
+import CaseStudySection from "@/components/home/CaseStudySection";
 import OfferSummary from "@/components/home/OfferSummary";
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
@@ -49,16 +50,16 @@ const Index = () => {
   return (
     <Layout>
       <SEOHead
-        description="Practise CIMA BA1 and BA2 free: about 190 exam-style questions per paper in short lesson quizzes, each with a worked explanation. Outlines for every CIMA paper."
+        description="Independent CIMA study for every level, from Certificate to Strategic case study. Free Certificate courses, syllabus-mapped lessons and marked practice."
         keywords="CIMA, management accounting, CIMA training, CIMA courses, CIMA exam prep"
         canonicalUrl={BASE_URL}
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
-      <PlatformTabs />
-      <StartChooser />
-      <CourseAvailability />
-      <OfferSummary />
+      <LevelsSection />
+      <WhyFinatix />
+      <StudyApproach />
+      <CaseStudySection />
       <section aria-label="Independence" className="bg-background pt-16">
         <div className="container mx-auto max-w-4xl px-4">
           <QualificationDisclosure compact />
