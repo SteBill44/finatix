@@ -61,8 +61,8 @@ const About = () => {
               <Heart className="w-4 h-4" />
               Our Story
             </span>
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
-              Helping CIMA Students <span className="text-gradient-brand">Learn Smarter</span>
+            <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
+              Helping CIMA students <span className="text-primary">learn with focus.</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
               We build study material for people working towards the CIMA qualification, so the
@@ -75,11 +75,11 @@ const About = () => {
               {CIMA_RELATIONSHIP.shortStatement}
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="gap-2"><Link to="/courses">
+              <Button asChild trace size="lg" className="gap-2"><Link to="/courses">
                   Explore Courses
                   <ArrowRight className="w-4 h-4" />
                 </Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/contact">
+              <Button asChild trace size="lg" variant="outline"><Link to="/contact">
                   Contact Us
                 </Link></Button>
             </div>

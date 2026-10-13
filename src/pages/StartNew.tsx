@@ -43,7 +43,7 @@ const StartNew = () => {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
           New to CIMA
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h1 className="mt-2 text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-foreground md:text-6xl">
           Start at the beginning, for free
         </h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -87,13 +87,13 @@ const StartNew = () => {
             </ul>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg">
+              <Button asChild trace size="lg">
                 <Link to="/courses/ba1-business-economics">
                   Start with BA1
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild trace size="lg" variant="outline">
                 <Link to="/why-cima">What is CIMA?</Link>
               </Button>
             </div>

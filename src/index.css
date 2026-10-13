@@ -355,6 +355,69 @@
     background-image: linear-gradient(180deg, hsl(0 0% 100% / 0.03), transparent 40%);
   }
 
+
+  /* ── Animated perimeter border for marketing CTAs ──
+     Two pseudo-elements draw the stroke clockwise: ::before traces top then right,
+     ::after traces bottom then left. Decorative only (pointer-events: none, no content). */
+  .btn-trace {
+    position: relative;
+    isolation: isolate;
+    --trace-color: hsl(var(--primary-foreground));
+    --trace-w: 1.5px;
+    --trace-inset: 0px;
+    --trace-seg: 175ms;
+  }
+  /* Filled primary: light stroke drawn just inside the orange so it reads in both themes */
+  .btn-trace:not(.btn-trace-outline) { --trace-inset: 3px; --trace-w: 1.5px; }
+  .btn-trace-outline, .dark .btn-trace-outline { --trace-color: hsl(var(--primary)); }
+  .btn-trace::before,
+  .btn-trace::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    box-sizing: border-box;
+    border: var(--trace-w) solid transparent;
+    --trace-full: calc(100% - var(--trace-inset) * 2);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .btn-trace::before { top: var(--trace-inset); left: var(--trace-inset); }
+  .btn-trace::after { bottom: var(--trace-inset); right: var(--trace-inset); }
+
+  /* Keyboard focus and reduced motion: immediate, complete, static border */
+  .btn-trace:focus-visible::before,
+  .btn-trace:focus-visible::after {
+    width: var(--trace-full); height: var(--trace-full);
+    border-color: var(--trace-color);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-trace:hover::before {
+      width: var(--trace-full); height: var(--trace-full);
+      border-top-color: var(--trace-color);
+      border-right-color: var(--trace-color);
+      transition: width var(--trace-seg) linear, height var(--trace-seg) linear var(--trace-seg);
+    }
+    .btn-trace:hover::after {
+      width: var(--trace-full); height: var(--trace-full);
+      border-bottom-color: var(--trace-color);
+      border-left-color: var(--trace-color);
+      transition:
+        border-color 0s linear calc(var(--trace-seg) * 2),
+        width var(--trace-seg) linear calc(var(--trace-seg) * 2),
+        height var(--trace-seg) linear calc(var(--trace-seg) * 3);
+    }
+  }
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+    .btn-trace:hover::before,
+    .btn-trace:hover::after {
+      border-color: var(--trace-color);
+      transition: none !important;
+    }
+  }
+
   .stat-card {
     @apply bg-card rounded-xl border border-border p-8 text-center transition-all duration-300 shadow-sm;
   }

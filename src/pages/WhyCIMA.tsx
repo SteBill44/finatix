@@ -127,8 +127,8 @@ const WhyCIMA = () => {
               <GraduationCap className="w-4 h-4" />
               <span>Chartered Institute of Management Accountants</span>
             </div>
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
-              WHY CHOOSE <span className="text-gradient-brand">CIMA?</span>
+            <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
+              Why choose <span className="text-primary">CIMA?</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-2">
               CIMA describes itself as the world's largest professional body of management
@@ -140,11 +140,11 @@ const WhyCIMA = () => {
             </p>
 
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="gap-2"><Link to="/auth?mode=signup">
+              <Button asChild trace size="lg" className="gap-2"><Link to="/auth?mode=signup">
                   Start Your Journey
                   <ArrowRight className="w-4 h-4" />
                 </Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/courses">
+              <Button asChild trace size="lg" variant="outline"><Link to="/courses">
                   Explore Courses
                 </Link></Button>
             </div>
@@ -252,7 +252,7 @@ const WhyCIMA = () => {
                 <p className="text-muted-foreground mb-6">
                   CIMA is a globally recognised qualification for a career in management accounting.
                 </p>
-                <Button asChild size="lg" className="w-full sm:w-auto gap-2"><Link to="/courses">
+                <Button asChild trace size="lg" className="w-full sm:w-auto gap-2"><Link to="/courses">
                     <BookOpen className="w-4 h-4" />
                     View Our Courses
                   </Link></Button>
@@ -275,11 +275,11 @@ const WhyCIMA = () => {
             Finatix provides everything you need to succeed in your CIMA studies.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="gap-2"><Link to="/auth?mode=signup">
+            <Button asChild trace size="lg" className="gap-2"><Link to="/auth?mode=signup">
                 Start for free
                 <ArrowRight className="w-4 h-4" />
               </Link></Button>
-            <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-white hover:bg-primary-foreground/10"><Link to="/contact">
+            <Button asChild trace size="lg" variant="outline" className="border-primary-foreground/30 text-white hover:bg-primary-foreground/10"><Link to="/contact">
                 Contact Us
               </Link></Button>
           </div>

@@ -218,7 +218,7 @@ const Navbar = () => {
                 <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   SIGN IN
                 </Link>
-                <Button asChild size="sm"><Link to="/auth?mode=signup">Get Started</Link></Button>
+                <Button asChild size="sm" trace className="rounded-md"><Link to="/auth?mode=signup">Get Started</Link></Button>
               </>
             )}
 

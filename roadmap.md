@@ -15,3 +15,9 @@
    - Keep existing desktop pricing card
 4. **Theme embedded checkout** to match site (orange/charcoal)
 5. **VAT inclusive pricing** - shown price is the final price, VAT inside
+
+## Editorial redesign (Oct 2026)
+- [x] Ethnocare-inspired editorial homepage rebuild (hero motif, levels journey, benefits, approach, case studies, FAQ, CTA)
+- [x] Reusable animated perimeter-trace border for marketing buttons (CSS, asChild-safe, reduced-motion, focus, touch)
+- [x] Extend type/button language to About, Start, Pricing, catalogue header
+- [x] Verify 1920/1440/1024/390, light/dark, reduced motion, button states; tests/build

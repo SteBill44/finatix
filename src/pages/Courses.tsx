@@ -458,16 +458,15 @@ const Courses = () => {
       />
 
       {/* ── Hero ── */}
-      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hero-gradient-light overflow-hidden">
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-20 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/4 -right-20 pointer-events-none" />
+      <section className="relative pt-28 lg:pt-36 pb-14 lg:pb-20 border-b border-border bg-background">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="animate-fade-up text-lg md:text-xl font-bold text-foreground mb-4 uppercase">
-              EXPLORE <span className="text-gradient-brand">CIMA COURSES</span>
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.24em] text-primary">Courses</p>
+            <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
+              Every CIMA paper. <span className="text-primary">One place.</span>
             </h1>
-            <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
-              Every level of the CIMA qualification, from Certificate in Business Accounting to Strategic case study. Each course shows what's available today.
+            <p className="text-lg text-muted-foreground max-w-xl">
+              Every level of the CIMA qualification, from Certificate in Business Accounting to Strategic case study. Choose a level to see its subjects and case study.
             </p>
           </div>
         </div>
