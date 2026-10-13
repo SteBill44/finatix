@@ -41,6 +41,7 @@ import AdminImageDropZone from "@/components/admin/AdminImageDropZone";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import CourseCover from "@/components/course/CourseCover";
 import { ContentStatusBadge } from "@/components/course/ContentStatusNotice";
+import { useCourseContentStatus, canPurchase } from "@/hooks/useCourseContentStatus";
 import { useEnrollments, useLessonProgress } from "@/hooks/useStudentProgress";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useAuth } from "@/contexts/AuthContext";
@@ -137,6 +138,15 @@ function CourseCard({
   const code = getCourseCode(course.slug);
   const caseStudy = isCaseStudy(course.slug);
   const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const { data: statusMap } = useCourseContentStatus();
+  const st = statusMap?.get(course.id);
+  // Outlines aren't delivered lessons: only call them lessons once taught, and never show a price for an unopened course.
+  const unopened = course.price > 0 && !canPurchase(st);
+  const outlineOnly = !st || st.taught_lessons < st.lesson_records;
+  const lessonLabel = outlineOnly ? `${totalLessons}-lesson outline` : `${totalLessons} lessons`;
+  const priceNode = course.price === 0
+    ? <span className="text-green-600 dark:text-green-400">Free</span>
+    : unopened ? <span className="text-muted-foreground font-medium">In development</span> : `£${course.price}`;
 
   if (view === "list") {
     return (
@@ -180,11 +190,11 @@ function CourseCard({
           {/* Meta */}
           <div className="flex-shrink-0 text-right hidden sm:block">
             {totalLessons > 0 && (
-              <p className="text-xs text-muted-foreground mb-0.5">{totalLessons} lessons</p>
+              <p className="text-xs text-muted-foreground mb-0.5">{lessonLabel}</p>
             )}
             
             <p className="text-sm font-semibold text-foreground mt-1">
-              {course.price === 0 ? <span className="text-green-600 dark:text-green-400">Free</span> : `£${course.price}`}
+              {priceNode}
             </p>
           </div>
 
@@ -276,15 +286,13 @@ function CourseCard({
               {totalLessons > 0 && (
                 <span className="flex items-center gap-1">
                   <FileText className="w-3.5 h-3.5" />
-                  {totalLessons} lessons
+                  {lessonLabel}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-foreground">
-                {course.price === 0
-                  ? <span className="text-green-600 dark:text-green-400">Free</span>
-                  : `£${course.price}`}
+                {priceNode}
               </span>
               <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
@@ -426,7 +434,7 @@ const Courses = () => {
     <Layout>
       <SEOHead
         title="CIMA Courses"
-        description="Browse Finatix CIMA courses from Certificate (BA1-BA4) through Operational, Management and Strategic levels. See what each course contains today before you enrol."
+        description="Browse Finatix CIMA courses across Certificate, Operational, Management and Strategic levels, including case studies. See what each course contains today before you enrol."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
         canonicalUrl="/courses"
       />
@@ -459,7 +467,7 @@ const Courses = () => {
               EXPLORE <span className="text-gradient-brand">CIMA COURSES</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
-              From Certificate in Business Accounting to Strategic Case Study - comprehensive prep for every CIMA exam.
+              Every level of the CIMA qualification, from Certificate in Business Accounting to Strategic case study. Each course shows what's available today.
             </p>
           </div>
         </div>

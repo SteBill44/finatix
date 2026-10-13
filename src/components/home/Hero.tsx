@@ -9,15 +9,17 @@ import { trackEvent } from "@/lib/analytics";
 const Pathway = () => {
   const { forLevel } = useLevelAvailability();
   return (
+    <div>
+    <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">The CIMA qualification</p>
     <ol aria-label="The CIMA qualification journey" className="relative space-y-3">
-      <span aria-hidden="true" className="absolute left-[19px] top-6 bottom-6 w-px bg-gradient-to-b from-primary via-primary/40 to-border" />
+      <span aria-hidden="true" className="absolute left-[19px] top-6 bottom-6 w-px bg-border" />
       {CIMA_LEVELS.map((lv, i) => {
         const s = forLevel(lv.id);
         return (
           <li key={lv.id}>
             <Link
               to={`/courses?level=${lv.id}`}
-              className="group relative flex items-start gap-4 rounded-xl border border-border/70 bg-card/70 p-4 backdrop-blur transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group relative flex items-start gap-4 rounded-xl border border-border/70 bg-card p-4 transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-primary/40 bg-background text-sm font-semibold text-primary">
                 {i + 1}
@@ -41,19 +43,20 @@ const Pathway = () => {
         );
       })}
     </ol>
+    <p className="mt-4 text-xs text-muted-foreground">Availability labels update from live course data.</p>
+    </div>
   );
 };
 
 const Hero = () => (
   <section className="relative -mt-16 overflow-hidden border-b border-border bg-background pt-28 pb-16 lg:pt-36 lg:pb-28">
-    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-    <div className="container relative z-10 mx-auto px-4">
+        <div className="container relative z-10 mx-auto px-4">
       <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-20">
         <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Independent CIMA study platform</p>
-          <h1 className="mb-6 text-4xl font-bold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-[4.25rem]">
+          <h1 className="mb-6 text-balance text-4xl font-bold leading-[1.05] tracking-tight text-foreground md:text-6xl xl:text-[4.25rem]">
             Your CIMA journey.{" "}
-            <span className="text-gradient-brand">A clearer way forward.</span>
+            <span className="text-primary">A clearer way forward.</span>
           </h1>
           <p className="mb-9 max-w-xl text-lg leading-relaxed text-muted-foreground">
             Find your next step with Finatix, from Certificate level to Strategic case study, with a clear, focused approach to CIMA study.

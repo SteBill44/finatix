@@ -6,7 +6,6 @@ import LevelsSection from "@/components/home/LevelsSection";
 import WhyFinatix from "@/components/home/WhyFinatix";
 import StudyApproach from "@/components/home/StudyApproach";
 import CaseStudySection from "@/components/home/CaseStudySection";
-import OfferSummary from "@/components/home/OfferSummary";
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
 import FinalCTA from "@/components/home/FinalCTA";

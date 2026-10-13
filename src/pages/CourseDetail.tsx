@@ -430,16 +430,19 @@ const CourseDetail = () => {
   });
   const isCaseStudyCourse = /case-study/.test(course.slug || "");
 
+  // Only list what genuinely exists: outlines aren't lessons, empty quizzes and mocks aren't counted.
+  const outlineOnly = !contentStatus || contentStatus.taught_lessons < contentStatus.lesson_records;
+  const hasQuestions = (contentStatus?.questions ?? 0) > 0;
   const features = [
-    `${courseFacts.lessonCount} lessons`,
-    courseFacts.estimatedStudyHours
+    outlineOnly ? `${courseFacts.lessonCount}-lesson outline` : `${courseFacts.lessonCount} lessons`,
+    !notOnSale && courseFacts.estimatedStudyHours
       ? `About ${courseFacts.estimatedStudyHours} hours of study time`
       : null,
-    courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
-    courseFacts.mockExamCount > 0 ? `${courseFacts.mockExamCount} timed mock exams` : null,
-    "Competency tracking and weak area analysis",
-    "Certificate of completion",
-    POLICY.refundText,
+    hasQuestions && courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
+    (contentStatus?.usable_mocks ?? 0) > 0 ? `${contentStatus!.usable_mocks} timed mock exams` : null,
+    hasQuestions ? "Progress saved to your account" : null,
+    notOnSale ? null : "Certificate of completion",
+    notOnSale ? null : POLICY.refundText,
   ].filter(Boolean) as string[];
 
   // Build navigation sections
@@ -792,7 +795,7 @@ const CourseDetail = () => {
                     <>
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
                         <Sparkles className="w-3.5 h-3.5" />
-                        One-time purchase - lifetime access
+                        {notOnSale ? "Price when it opens" : "One-time purchase - lifetime access"}
                       </span>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -834,7 +837,7 @@ const CourseDetail = () => {
                     you can add the others whenever you're ready.
                   </p>
                 )}
-                {requiresPayment && (
+                {requiresPayment && !notOnSale && (
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
                       Secure payment. VAT included - the price shown is the price you pay.
@@ -980,7 +983,7 @@ const CourseDetail = () => {
           <div className="container mx-auto px-4 flex items-center gap-4">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-foreground leading-none">£{coursePrice.toFixed(0)}</p>
-              <p className="text-xs text-muted-foreground truncate">One-time purchase - lifetime access</p>
+              <p className="text-xs text-muted-foreground truncate">{notOnSale ? "Price when it opens" : "One-time purchase - lifetime access"}</p>
             </div>
             <Button
               size="lg"
@@ -1002,7 +1005,7 @@ const CourseDetail = () => {
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             This course isn't on sale yet because its lessons and practice questions are still being written and reviewed.
-            Nothing is charged. We'll email you once when it opens.
+            Nothing is charged, and registering interest doesn't commit you to buying.
           </p>
           <InterestRegistrationForm courseId={course.id} courseName={course.title} />
         </DialogContent>

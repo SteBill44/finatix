@@ -325,7 +325,7 @@ const Pricing = () => {
             INVEST IN YOUR <span className="text-gradient-brand">CIMA SUCCESS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            Choose the plan that fits your goals. The four Certificate courses (BA1-BA4) are free to start.
+            Choose the plan that fits your goals. Certificate level courses are free to start.
           </p>
           {contentStatusMap && !anyPaidOnSale && (
             <div role="note" className="mt-6 max-w-2xl rounded-lg border border-primary/40 bg-card p-4 text-sm">

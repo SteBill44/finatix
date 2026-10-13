@@ -11,10 +11,10 @@ const CaseStudySection = () => (
           Where each level comes together
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          The case study exams test how you apply a whole level to a realistic business. Finatix case study preparation, built around pre-seen material and written tasks, is in development.
+          Each case study exam asks you to apply a whole level to a realistic business scenario. Finatix case study preparation for OCS, MCS and SCS is planned and still in development.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          Register interest on any case study page and we'll email you when it opens. Nothing is charged until then.
+          You can register interest on each case study page. Nothing is charged, and none of these courses are on sale yet.
         </p>
       </div>
       <ul className="divide-y divide-border rounded-2xl border border-border bg-card">

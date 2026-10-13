@@ -41,7 +41,7 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
           throw error;
         }
       } else {
-        toast.success("Thanks! We'll notify you when this course launches.");
+        toast.success("Thanks, your interest is registered.");
         setIsRegistered(true);
       }
     } catch (error: any) {
@@ -75,7 +75,7 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
         </div>
         <h3 className="font-semibold text-foreground mb-2">You're on the list!</h3>
         <p className="text-sm text-muted-foreground">
-          We'll email you when <strong>{courseName}</strong> is available.
+          Your interest in <strong>{courseName}</strong> is recorded. Nothing is charged.
         </p>
       </div>
     );
@@ -86,7 +86,7 @@ const InterestRegistrationForm = ({ courseId, courseName }: InterestRegistration
     return (
       <div className="space-y-3">
         <p className="text-sm text-muted-foreground text-center">
-          We'll notify <strong className="text-foreground">you</strong> when this course launches.
+          Register interest in <strong className="text-foreground">{courseName}</strong> so we know which courses to open first.
         </p>
         <Button
           size="lg"
