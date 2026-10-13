@@ -467,7 +467,7 @@ const Courses = () => {
               EXPLORE <span className="text-gradient-brand">CIMA COURSES</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground">
-              From Certificate in Business Accounting to Strategic Case Study - comprehensive prep for every CIMA exam.
+              Every level of the CIMA qualification, from Certificate in Business Accounting to Strategic case study. Each course shows what's available today.
             </p>
           </div>
         </div>

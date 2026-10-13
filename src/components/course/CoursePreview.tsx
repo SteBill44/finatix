@@ -1,3 +1,4 @@
+import { useCourseContentStatus } from "@/hooks/useCourseContentStatus";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -104,6 +105,8 @@ const CoursePreview = ({
   isAdmin,
   onBuy,
 }: CoursePreviewProps) => {
+  const { data: statusMap } = useCourseContentStatus();
+  const status = statusMap?.get(courseId);
   const academics: CourseAcademics = getCourseAcademics(courseSlug);
   const missing = missingAcademicFields(courseSlug, isCaseStudy);
 

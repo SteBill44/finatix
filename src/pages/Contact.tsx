@@ -65,7 +65,7 @@ const Contact = () => {
     },
     {
       question: "What do I get with Finatix?",
-      answer: "Lessons written to the CIMA syllabus areas for each paper, automatically marked practice questions with explanations, timed mock exams, competency and weak-area tracking, flashcards, discussions, and a Finatix certificate of completion. Finatix is an independent study provider; CIMA registration, subscription and exam fees are paid directly to AICPA & CIMA."
+      answer: "It depends on the course. Each course page lists what it includes today. Courses are organised by the CIMA syllabus areas; where a question bank exists, questions are marked automatically with explanations, and your progress is saved to your account. Mock exams are still being built, and paid courses can't be bought until they're ready. Finatix is an independent study provider; CIMA registration, subscription and exam fees are paid directly to AICPA & CIMA."
     },
     {
       question: "Do you offer refunds?",
