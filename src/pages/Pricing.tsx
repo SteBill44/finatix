@@ -321,7 +321,7 @@ const Pricing = () => {
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
             Simple, Transparent Pricing
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
+          <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
             INVEST IN YOUR <span className="text-gradient-brand">CIMA SUCCESS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">

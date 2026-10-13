@@ -127,7 +127,7 @@ const WhyCIMA = () => {
               <GraduationCap className="w-4 h-4" />
               <span>Chartered Institute of Management Accountants</span>
             </div>
-            <h1 className="animate-fade-up text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
+            <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
               WHY CHOOSE <span className="text-gradient-brand">CIMA?</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-2">

@@ -43,7 +43,7 @@ const StartNew = () => {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
           New to CIMA
         </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h1 className="mt-2 text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-foreground md:text-6xl">
           Start at the beginning, for free
         </h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
