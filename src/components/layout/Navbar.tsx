@@ -72,17 +72,21 @@ const Navbar = () => {
   }, [user]);
 
   const navLinks = [
-    { name: "HOME", path: "/" },
-    { name: "WHY CIMA?", path: "/why-cima" },
-    { name: "START HERE", path: "/start" },
-    { name: "EXPLORE COURSES", path: "/courses" },
-    { name: "PRICING", path: "/pricing" },
-    { name: "ABOUT", path: "/about" },
-    { name: "CONTACT", path: "/contact" },
-    ...(user ? [{ name: "DASHBOARD", path: "/dashboard" }] : []),
+    { name: "Courses", path: "/courses" },
+    { name: "Levels", path: "/#levels" },
+    { name: "Case studies", path: "/courses?case=1" },
+    { name: "Approach", path: "/#approach" },
+    { name: "Pricing", path: "/pricing" },
+    { name: "About", path: "/about" },
+    ...(user ? [{ name: "Dashboard", path: "/dashboard" }] : []),
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    const [p, q] = path.split("?");
+    if (p.includes("#")) return false;
+    if (q) return location.pathname === p && location.search === `?${q}`;
+    return location.pathname === p && (p !== "/courses" || !location.search.includes("case=1"));
+  };
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -103,15 +107,14 @@ const Navbar = () => {
           <FinatixLogo size="sm" />
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-5 xl:gap-7">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-xs tracking-wide transition-colors duration-200 underline-offset-8 decoration-2 ${
-                  isActive(link.path)
-                    ? "font-bold text-primary underline decoration-primary"
-                    : "font-medium text-muted-foreground hover:text-foreground"
+                aria-current={isActive(link.path) ? "page" : undefined}
+                className={`rounded text-sm font-medium transition-colors duration-200 ${
+                  isActive(link.path) ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.name}

@@ -1002,7 +1002,7 @@ const CourseDetail = () => {
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
             This course isn't on sale yet because its lessons and practice questions are still being written and reviewed.
-            Nothing is charged. We'll email you once when it opens.
+            Nothing is charged, and registering interest doesn't commit you to buying.
           </p>
           <InterestRegistrationForm courseId={course.id} courseName={course.title} />
         </DialogContent>
