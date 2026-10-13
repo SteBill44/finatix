@@ -36,13 +36,20 @@ const LevelsSection = () => {
                   <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Subjects</dt><dd className="font-medium text-foreground">{lv.subjects.join(", ")}</dd></div>
                   <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Case study</dt><dd className="font-medium text-foreground">{lv.caseStudy?.code ?? "None"}</dd></div>
                 </dl>
+                <div className="mt-6 flex flex-col gap-2">
                 <Link
                   to={`/courses?level=${lv.id}`}
-                  className="group mt-6 inline-flex items-center gap-1 rounded text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group inline-flex items-center gap-1 rounded text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   View {lv.name} courses
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
                 </Link>
+                {lv.caseStudy && (
+                  <Link to={`/courses/${lv.caseStudy.slug}`} className="rounded text-sm text-muted-foreground transition-colors hover:text-foreground">
+                    {lv.caseStudy.code} case study
+                  </Link>
+                )}
+                </div>
               </article>
             );
           })}
