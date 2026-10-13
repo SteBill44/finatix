@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -64,7 +64,6 @@ const CompleteProfile = lazy(() => import("./pages/CompleteProfile"));
 const Start = lazy(() => import("./pages/Start"));
 const StartNew = lazy(() => import("./pages/StartNew"));
 const StartPaper = lazy(() => import("./pages/StartPaper"));
-const StartCaseStudy = lazy(() => import("./pages/StartCaseStudy"));
 const PaperLanding = lazy(() => import("./pages/PaperLanding"));
 
 
@@ -133,7 +132,7 @@ const AnimatedRoutes = () => {
           <Route path="/start" element={<Public feature="Start"><Start /></Public>} />
           <Route path="/start/new" element={<Public feature="Start New"><StartNew /></Public>} />
           <Route path="/start/paper" element={<Public feature="Start Paper"><StartPaper /></Public>} />
-          <Route path="/start/case-study" element={<Public feature="Start Case Study"><StartCaseStudy /></Public>} />
+          <Route path="/start/case-study" element={<Navigate to="/courses?case=1" replace />} />
           <Route path="/papers/:paperCode" element={<Public feature="Paper Landing"><PaperLanding /></Public>} />
 
           <Route path="/courses" element={<Public feature="Courses"><Courses /></Public>} />

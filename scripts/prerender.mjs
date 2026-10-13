@@ -61,7 +61,6 @@ const ROUTES = [
   '/start',
   '/start/new',
   '/start/paper',
-  '/start/case-study',
   '/papers/ba1',
   '/papers/ba2',
   '/papers/ba3',

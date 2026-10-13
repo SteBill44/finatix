@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, FileText, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { journeyAnalytics } from "@/lib/analytics";
 import { skipJourneySelector } from "@/lib/learningContext";
 
@@ -20,13 +20,6 @@ const OPTIONS = [
     icon: BookOpen,
     title: "I'm studying for a paper",
     text: "Pick your paper and open its outcomes, sample content and access terms.",
-  },
-  {
-    id: "case-study" as const,
-    to: "/start/case-study",
-    icon: FileText,
-    title: "I'm preparing for a case study",
-    text: "Choose your level and see the case study preparation we currently publish.",
   },
 ];
 
@@ -49,7 +42,7 @@ const Start = () => {
           </p>
         </div>
 
-        <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-3">
+        <div className="mx-auto mt-10 grid max-w-3xl gap-4 md:grid-cols-2">
           {OPTIONS.map(({ id, to, icon: Icon, title, text }) => (
             <Link
               key={id}

@@ -90,7 +90,7 @@ export function learningContextDestination(
   if (ctx.paperSlug) return `/courses/${ctx.paperSlug}`;
   if (ctx.journey === "new") return "/courses/ba1-business-economics";
   if (ctx.journey === "case-study" && ctx.level) {
-    return `/start/case-study?level=${encodeURIComponent(ctx.level)}`;
+    return "/courses?case=1";
   }
   return "/dashboard";
 }

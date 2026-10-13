@@ -26,11 +26,11 @@ describe("homepage availability labels", () => {
 });
 
 describe("homepage CTA destinations exist", () => {
-  const routes = ["/courses/:courseId", "/start/new", "/start/paper", "/start/case-study", "/courses", "/pricing", "/why-cima"];
+  const routes = ["/courses/:courseId", "/start/new", "/start/paper", "/courses", "/pricing", "/why-cima"];
   it("every route CTA matches an app route", () => {
     for (const to of Object.values(HOME_CTAS)) {
       if (to.startsWith("#")) continue;
-      const path = to.split("#")[0];
+      const path = to.split("#")[0].split("?")[0];
       const ok = routes.some((r) => new RegExp("^" + r.replace(/:[^/]+/g, "[^/]+") + "$").test(path));
       expect(ok, path).toBe(true);
     }
