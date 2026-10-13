@@ -2,8 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HelmetProvider } from "react-helmet-async";
 
+vi.mock("@/components/SEOHead", () => ({ default: () => null }));
+vi.mock("@/components/JsonLd", () => ({ default: () => null }));
 vi.mock("@/components/layout/Layout", () => ({ default: ({ children }: { children: React.ReactNode }) => <main>{children}</main> }));
 vi.mock("@/integrations/supabase/client", () => {
   const chain: any = { select: () => chain, order: () => Promise.resolve({ data: [], error: null }) };
@@ -14,11 +15,10 @@ import Index from "./Index";
 
 const renderHome = () =>
   render(
-    <HelmetProvider>
       <QueryClientProvider client={new QueryClient()}>
         <MemoryRouter><Index /></MemoryRouter>
       </QueryClientProvider>
-    </HelmetProvider>,
+  ,
   );
 
 describe("homepage", () => {

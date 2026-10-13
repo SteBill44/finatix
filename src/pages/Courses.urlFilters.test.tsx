@@ -11,7 +11,7 @@ vi.mock("@/hooks/useUserRole", () => ({ useIsAdmin: () => ({ isAdmin: false }) }
 vi.mock("@/contexts/AdminViewContext", () => ({ useAdminView: () => ({ isStudentView: false }) }));
 vi.mock("@/hooks/useStudentProgress", () => ({ useEnrollments: () => ({ data: [] }), useLessonProgress: () => ({ data: [] }) }));
 vi.mock("@/hooks/useSubscription", () => ({ useSubscription: () => ({ isActive: false }) }));
-vi.mock("@/hooks/useCourseContentStatus", () => ({ useCourseContentStatus: () => ({ data: undefined }), isInDevelopment: () => false }));
+vi.mock("@/hooks/useCourseContentStatus", () => ({ useCourseContentStatus: () => ({ data: undefined }), isInDevelopment: () => false, canPurchase: () => false }));
 vi.mock("@/lib/api", () => ({
   queries: {
     getCoursesForCatalog: async () => ({
