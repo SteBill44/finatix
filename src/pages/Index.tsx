@@ -21,7 +21,7 @@ const homepageSchemas = [
     url: BASE_URL,
     logo: `${BASE_URL}/favicon.svg`,
     sameAs: ["https://twitter.com/Finatix"],
-    description: "Independent CIMA study platform. Free BA1 and BA2 exam-style practice with worked explanations; higher levels in development.",
+    description: "Independent CIMA study platform covering Certificate, Operational, Management and Strategic levels and case studies.",
     contactPoint: { "@type": "ContactPoint", contactType: "customer support", url: `${BASE_URL}/contact` },
   },
   {
