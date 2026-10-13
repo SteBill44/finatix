@@ -386,15 +386,12 @@ const CoursePreview = ({
       <Section id="course-assessment" title="Mocks, feedback and support" icon={ClipboardList}>
         <Card className="space-y-3 p-5 text-sm text-muted-foreground">
           <p>
-            {facts.mockExamCount > 0
-              ? `This course includes ${facts.mockExamCount} timed mock exam${facts.mockExamCount === 1 ? "" : "s"} and ${facts.practiceQuizCount} practice quiz${facts.practiceQuizCount === 1 ? "" : "zes"}.`
-              : `This course includes ${facts.practiceQuizCount} practice quiz${facts.practiceQuizCount === 1 ? "" : "zes"}.`}{" "}
-            Questions are marked automatically the moment you submit.
-          </p>
-          <p>
-            Feedback is per question and per syllabus area: you see the correct answer with an
-            explanation, and your results build a competency picture showing which areas are
-            holding your score back.
+            {(status?.questions ?? 0) === 0
+              ? "Practice questions and mock exams for this course are still being written."
+              : (status?.usable_mocks ?? 0) > 0
+                ? `This course includes ${status!.usable_mocks} timed mock exam${status!.usable_mocks === 1 ? "" : "s"} and ${status!.questions} marked practice questions.`
+                : `This course includes ${status!.questions} marked practice questions. Mock exams are still being built.`}
+            {(status?.questions ?? 0) > 0 && " Questions are marked automatically the moment you submit, with the correct answer explained."}
           </p>
           <p>
             Support is {POLICY.standardSupport.toLowerCase()}, {POLICY.supportHours}. One-to-one
