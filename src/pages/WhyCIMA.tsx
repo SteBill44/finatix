@@ -128,7 +128,7 @@ const WhyCIMA = () => {
               <span>Chartered Institute of Management Accountants</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
-              WHY CHOOSE <span className="text-primary">CIMA?</span>
+              Why choose <span className="text-primary">CIMA?</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-2">
               CIMA describes itself as the world's largest professional body of management
