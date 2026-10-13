@@ -196,13 +196,13 @@ const StartCaseStudy = () => {
                 </p>
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                  <Button asChild size="lg">
+                  <Button asChild trace size="lg">
                     <Link to={`/papers/${paper.slugCode}`}>
                       Open {paper.code} preparation
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline">
+                  <Button asChild trace size="lg" variant="outline">
                     <Link to="/courses/ba1-business-economics">
                       Try a free sample lesson
                     </Link>

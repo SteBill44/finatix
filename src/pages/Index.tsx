@@ -59,8 +59,8 @@ const Index = () => {
       <WhyFinatix />
       <StudyApproach />
       <CaseStudySection />
-      <section aria-label="Independence" className="bg-background pt-16">
-        <div className="container mx-auto max-w-4xl px-4">
+      <section aria-label="Independence" className="bg-background pt-20">
+        <div className="container mx-auto px-4">
           <QualificationDisclosure compact />
         </div>
       </section>

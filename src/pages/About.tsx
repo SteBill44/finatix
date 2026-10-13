@@ -75,11 +75,11 @@ const About = () => {
               {CIMA_RELATIONSHIP.shortStatement}
             </p>
             <div className="animate-fade-up-delay-2 flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="gap-2"><Link to="/courses">
+              <Button asChild trace size="lg" className="gap-2"><Link to="/courses">
                   Explore Courses
                   <ArrowRight className="w-4 h-4" />
                 </Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/contact">
+              <Button asChild trace size="lg" variant="outline"><Link to="/contact">
                   Contact Us
                 </Link></Button>
             </div>

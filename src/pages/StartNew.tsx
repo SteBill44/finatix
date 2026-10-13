@@ -87,13 +87,13 @@ const StartNew = () => {
             </ul>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg">
+              <Button asChild trace size="lg">
                 <Link to="/courses/ba1-business-economics">
                   Start with BA1
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild trace size="lg" variant="outline">
                 <Link to="/why-cima">What is CIMA?</Link>
               </Button>
             </div>

@@ -11,17 +11,17 @@ export const HOME_FAQS = [
 ];
 
 const FAQ = () => (
-  <section aria-labelledby="faq-heading" className="bg-background py-20 lg:py-28">
+  <section aria-labelledby="faq-heading" className="border-t border-border bg-background py-24 lg:py-36">
     <div className="container mx-auto grid gap-12 px-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
       <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Questions</p>
-        <h2 id="faq-heading" className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Frequently asked questions</h2>
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.24em] text-primary">Questions</p>
+        <h2 id="faq-heading" className="text-4xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground md:text-6xl">Good questions.</h2>
         <p className="mt-4 text-lg text-muted-foreground">Practical answers about levels, availability and getting started.</p>
       </div>
-      <Accordion type="single" collapsible className="border-t border-border">
+      <Accordion type="single" collapsible className="border-t border-foreground/80">
         {HOME_FAQS.map((faq, i) => (
           <AccordionItem key={faq.question} value={`item-${i}`} className="border-b border-border">
-            <AccordionTrigger className="py-5 text-left text-base font-semibold text-foreground hover:no-underline">{faq.question}</AccordionTrigger>
+            <AccordionTrigger className="py-5 text-left text-lg font-semibold text-foreground hover:no-underline">{faq.question}</AccordionTrigger>
             <AccordionContent className="pb-5 leading-relaxed text-muted-foreground">{faq.answer}</AccordionContent>
           </AccordionItem>
         ))}
