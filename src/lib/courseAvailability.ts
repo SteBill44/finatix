@@ -27,7 +27,7 @@ export const HOME_CTAS = {
   explore: "#platform",
   newToCima: "/start/new",
   paper: "/start/paper",
-  caseStudy: "/start/case-study",
+  caseStudy: "/courses?case=1",
   courses: "/courses",
   pricing: "/pricing",
   whyCima: "/why-cima",

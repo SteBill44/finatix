@@ -5,7 +5,7 @@ import Hero from "@/components/home/Hero";
 import LevelsSection from "@/components/home/LevelsSection";
 import WhyFinatix from "@/components/home/WhyFinatix";
 import StudyApproach from "@/components/home/StudyApproach";
-import CaseStudySection from "@/components/home/CaseStudySection";
+import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -55,10 +55,10 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
+      <WhatIsCIMA />
       <LevelsSection />
       <WhyFinatix />
       <StudyApproach />
-      <CaseStudySection />
       <section aria-label="Independence" className="bg-background pt-20">
         <div className="container mx-auto px-4">
           <QualificationDisclosure compact />

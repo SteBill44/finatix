@@ -1,58 +1,69 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowDown } from "lucide-react";
-import QualificationMotif from "./QualificationMotif";
 import { trackEvent } from "@/lib/analytics";
 
+/** Structural facts about the CIMA qualification and Finatix catalogue. Not learner metrics. */
+const FACTS = [
+  { v: "4", k: "Levels" },
+  { v: "13", k: "Papers" },
+  { v: "3", k: "Case study courses" },
+  { v: "1", k: "Account" },
+];
+
 const Hero = () => (
-  <section className="relative -mt-16 border-b border-border bg-background pt-28 pb-20 lg:pt-32 lg:pb-28">
-    <div className="container mx-auto px-4">
-      <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
-        <span className="h-px w-10 bg-primary" aria-hidden="true" />
+  <section className="relative -mt-16 overflow-hidden border-b border-border bg-background pt-32 pb-16 lg:pt-40 lg:pb-20">
+    {/* Fine grid backdrop, tokens only */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(hsl(var(--border))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border))_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"
+    />
+    <div className="container relative mx-auto px-4 text-center">
+      <p className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
         Independent CIMA study
       </p>
 
-      <h1 className="mb-0 max-w-[14ch] text-[clamp(3.25rem,min(9vw,11vh),9.5rem)] font-bold leading-[0.92] tracking-[-0.045em] text-foreground">
-        Your CIMA{" "}
+      <h1 className="mx-auto mb-0 max-w-5xl text-[clamp(2.75rem,7.5vw,6.75rem)] font-bold leading-[0.98] tracking-[-0.04em] text-foreground">
+        Your CIMA journey.{" "}
         <br className="hidden sm:block" />
-        journey.{" "}
-        <span className="text-primary">
-          A clearer{" "}
-          <br className="hidden sm:block" />
-          way forward.
-        </span>
+        <span className="text-primary">A clearer way forward.</span>
       </h1>
 
-      <div className="mt-10 grid items-end gap-12 border-t border-border pt-8 lg:mt-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-        <div>
-          <p className="max-w-md text-lg leading-relaxed text-muted-foreground md:text-xl">
-            Find your next step with Finatix, from Certificate level to Strategic case study, with a clear, focused approach to CIMA study.
-          </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button asChild size="xl" trace className="group rounded-md">
-              <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>
-                Explore CIMA Courses
-                <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
-              </Link>
-            </Button>
-            <Button asChild size="xl" variant="outline" trace className="group rounded-md">
-              <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>
-                Find Your Level
-                <ArrowDown className="transition-transform duration-200 ease-out group-hover:translate-y-0.5 motion-reduce:transition-none" />
-              </a>
-            </Button>
-          </div>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Independent of AICPA &amp; CIMA.{" "}
-            <Link to="/why-cima" className="font-medium text-foreground underline decoration-primary underline-offset-4 hover:text-primary">
-              What is CIMA?
-            </Link>
-          </p>
-        </div>
-        <div className="mx-auto w-full max-w-2xl lg:mx-0">
-          <QualificationMotif />
-        </div>
+      <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+        Find your next step with Finatix, from Certificate level to Strategic case study, with a clear, focused approach to CIMA study.
+      </p>
+
+      <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+        <Button asChild size="xl" trace className="group rounded-md">
+          <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>
+            Explore CIMA Courses
+            <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
+          </Link>
+        </Button>
+        <Button asChild size="xl" variant="outline" trace className="group rounded-md">
+          <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>
+            Find Your Level
+            <ArrowDown className="transition-transform duration-200 ease-out group-hover:translate-y-0.5 motion-reduce:transition-none" />
+          </a>
+        </Button>
       </div>
+
+      <dl className="mx-auto mt-16 grid max-w-4xl grid-cols-2 divide-border overflow-hidden rounded-xl border border-border bg-card md:grid-cols-4 md:divide-x">
+        {FACTS.map((f, i) => (
+          <div key={f.k} className={`px-6 py-6 ${i < 2 ? "border-b border-border md:border-b-0" : ""} ${i % 2 === 0 ? "border-r border-border md:border-r-0" : ""}`}>
+            <dt className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{f.k}</dt>
+            <dd className="mt-2 text-4xl font-bold tracking-tight text-foreground">{f.v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <p className="mt-6 text-sm text-muted-foreground">
+        Independent of AICPA &amp; CIMA.{" "}
+        <Link to="/why-cima" className="font-medium text-foreground underline decoration-primary underline-offset-4 hover:text-primary">
+          What is CIMA?
+        </Link>
+      </p>
     </div>
   </section>
 );
