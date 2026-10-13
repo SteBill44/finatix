@@ -62,7 +62,7 @@ const About = () => {
               Our Story
             </span>
             <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
-              Helping CIMA Students <span className="text-gradient-brand">Learn Smarter</span>
+              Helping CIMA students <span className="text-primary">learn with focus.</span>
             </h1>
             <p className="animate-fade-up-delay-1 text-lg text-muted-foreground mb-6">
               We build study material for people working towards the CIMA qualification, so the
