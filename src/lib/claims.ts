@@ -123,9 +123,9 @@ export const CIMA_RELATIONSHIP = {
 /** What a buyer gets from us, and what they must arrange themselves. */
 export const RESPONSIBILITIES = {
   finatixProvides: [
-    "Structured lessons written to the CIMA syllabus areas for each paper",
-    "Practice quizzes and timed mock exams marked automatically",
-    "Progress, competency and weak-area tracking",
+    "Courses organised by the CIMA syllabus areas for each paper (content varies by course; each course page shows what's ready)",
+    "Practice quizzes marked automatically, where a course has a question bank",
+    "Progress saved to your account",
     "A Finatix certificate of completion for each course you finish",
   ],
   studentArranges: [
