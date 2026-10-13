@@ -716,3 +716,31 @@
     box-shadow: 0 8px 20px -8px hsl(var(--primary) / 0.6);
   }
 }
+
+/* ── Site-wide spice for public pages ── */
+@layer components {
+  main h1 .text-primary,
+  main h2 > .text-primary:only-child {
+    background: linear-gradient(100deg, hsl(var(--brand-orange-dark)), hsl(var(--primary)) 40%, hsl(38 95% 55%));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  /* Linked cards: lift with orange edge and warm shadow */
+  main a:is(.rounded-xl, .rounded-2xl).border.bg-card {
+    transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), border-color .3s var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    main a:is(.rounded-xl, .rounded-2xl).border.bg-card:hover {
+      transform: translateY(-3px);
+      border-color: hsl(var(--primary) / 0.6);
+      box-shadow: 0 18px 40px -18px hsl(var(--primary) / 0.45);
+    }
+  }
+  /* Card-premium gets the same warm lift */
+  .card-premium:hover { box-shadow: 0 18px 40px -18px hsl(var(--primary) / 0.4); border-color: hsl(var(--primary) / 0.45); }
+  /* Footer: thin orange gradient rule on top */
+  footer { position: relative; }
+  footer::before {
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.7), transparent);
+  }
+}

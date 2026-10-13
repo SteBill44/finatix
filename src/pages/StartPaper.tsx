@@ -69,7 +69,7 @@ const StartPaper = () => {
           Studying for a paper
         </p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-          Which paper are you sitting?
+          Which paper are you <span className="text-primary">sitting?</span>
         </h1>
         <p className="mt-3 text-muted-foreground">
           Pick a level, then a paper. You can change this at any time.
