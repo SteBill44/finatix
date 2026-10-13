@@ -1,7 +1,7 @@
 const STEPS = [
-  { n: "Learn", text: "Each course sets out its lessons in CIMA syllabus order, so you can see the whole paper before you begin." },
-  { n: "Practise", text: "Where a course has a question bank, short lesson quizzes are marked instantly with the reasoning explained." },
-  { n: "Prepare", text: "Your completed lessons and quiz scores are saved to your account. Mock exams are still being built." },
+  { n: "Learn", text: "Work through lessons in CIMA syllabus order, with the whole paper mapped out before you begin." },
+  { n: "Practise", text: "Test each topic with short lesson quizzes, marked instantly with the reasoning explained." },
+  { n: "Prepare", text: "Track the lessons and quizzes you've completed, revisit weaker topics and go into the exam with a plan." },
 ];
 
 const StudyApproach = () => (
@@ -13,7 +13,7 @@ const StudyApproach = () => (
           Learn it, practise it, be ready for it
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          One simple rhythm for every paper. What's available varies by course, and each course page says exactly what it includes today.
+          One simple rhythm for every paper, from BA1 to the Strategic case study.
         </p>
       </div>
       <ol className="divide-y divide-border border-y border-border">

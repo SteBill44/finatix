@@ -11,10 +11,10 @@ const CaseStudySection = () => (
           Where each level comes together
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Each case study exam asks you to apply a whole level to a realistic business scenario. Finatix case study preparation for OCS, MCS and SCS is planned and still in development.
+          Each case study exam asks you to apply a whole level to a realistic business scenario. Finatix has a dedicated preparation course for each one: OCS, MCS and SCS.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          You can register interest on each case study page. Nothing is charged, and none of these courses are on sale yet.
+          Each course page sets out what the course covers and how to access it.
         </p>
       </div>
       <ul className="divide-y divide-border rounded-2xl border border-border bg-card">
@@ -26,7 +26,7 @@ const CaseStudySection = () => (
             >
               <span>
                 <span className="block font-semibold text-foreground">{l.name} Case Study ({l.caseStudy!.code})</span>
-                <span className="mt-1 block text-sm text-muted-foreground">In development · register interest</span>
+                <span className="mt-1 block text-sm text-muted-foreground">Builds on {l.subjects.join(", ")}</span>
               </span>
               <ArrowRight className="h-5 w-5 flex-shrink-0 text-primary transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
             </Link>
