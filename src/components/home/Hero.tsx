@@ -1,74 +1,57 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { CIMA_LEVELS } from "@/lib/cimaLevels";
+import { ArrowRight, ArrowDown } from "lucide-react";
+import QualificationMotif from "./QualificationMotif";
 import { trackEvent } from "@/lib/analytics";
 
-/** Qualification journey visual: the real CIMA structure, no product simulation. */
-const Pathway = () => {
-  return (
-    <div>
-    <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">The CIMA qualification</p>
-    <ol aria-label="The CIMA qualification journey" className="relative space-y-3">
-      <span aria-hidden="true" className="absolute left-[19px] top-6 bottom-6 w-px bg-border" />
-      {CIMA_LEVELS.map((lv, i) => {
-        return (
-          <li key={lv.id}>
-            <Link
-              to={`/courses?level=${lv.id}`}
-              className="group relative flex items-start gap-4 rounded-xl border border-border/70 bg-card p-4 transition-colors hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <span className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-primary/40 bg-background text-sm font-semibold text-primary">
-                {i + 1}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-semibold text-foreground">{lv.full}</span>
-                </span>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  {lv.subjects.join(" · ")}
-                  {lv.caseStudy && <> · {lv.caseStudy.code} case study</>}
-                </span>
-              </span>
-            </Link>
-          </li>
-        );
-      })}
-    </ol>
-    </div>
-  );
-};
-
 const Hero = () => (
-  <section className="relative -mt-16 overflow-hidden border-b border-border bg-background pt-28 pb-16 lg:pt-36 lg:pb-28">
-        <div className="container relative z-10 mx-auto px-4">
-      <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-20">
-        <div className="motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Independent CIMA study platform</p>
-          <h1 className="mb-6 text-balance text-4xl font-bold leading-[1.05] tracking-tight text-foreground md:text-6xl xl:text-[4.25rem]">
-            Your CIMA journey.{" "}
-            <span className="text-primary">A clearer way forward.</span>
-          </h1>
-          <p className="mb-9 max-w-xl text-lg leading-relaxed text-muted-foreground">
+  <section className="relative -mt-16 border-b border-border bg-background pt-32 pb-20 lg:pt-40 lg:pb-28">
+    <div className="container mx-auto px-4">
+      <p className="mb-8 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.24em] text-muted-foreground">
+        <span className="h-px w-10 bg-primary" aria-hidden="true" />
+        Independent CIMA study
+      </p>
+
+      <h1 className="mb-0 max-w-[14ch] text-[clamp(3.25rem,9vw,9.5rem)] font-bold leading-[0.92] tracking-[-0.045em] text-foreground">
+        Your CIMA{" "}
+        <br className="hidden sm:block" />
+        journey.{" "}
+        <span className="text-primary">
+          A clearer{" "}
+          <br className="hidden sm:block" />
+          way forward.
+        </span>
+      </h1>
+
+      <div className="mt-14 grid items-end gap-12 border-t border-border pt-10 lg:mt-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+        <div>
+          <p className="max-w-md text-lg leading-relaxed text-muted-foreground md:text-xl">
             Find your next step with Finatix, from Certificate level to Strategic case study, with a clear, focused approach to CIMA study.
           </p>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Button asChild size="xl" className="group">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Button asChild size="xl" trace className="group rounded-md">
               <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>
                 Explore CIMA Courses
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" />
+                <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
               </Link>
             </Button>
-            <Button asChild size="xl" variant="outline">
-              <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>Find Your Level</a>
+            <Button asChild size="xl" variant="outline" trace className="group rounded-md">
+              <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>
+                Find Your Level
+                <ArrowDown className="transition-transform duration-200 ease-out group-hover:translate-y-0.5 motion-reduce:transition-none" />
+              </a>
             </Button>
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
             Independent of AICPA &amp; CIMA.{" "}
-            <Link to="/why-cima" className="font-medium text-primary hover:underline">What is CIMA?</Link>
+            <Link to="/why-cima" className="font-medium text-foreground underline decoration-primary underline-offset-4 hover:text-primary">
+              What is CIMA?
+            </Link>
           </p>
         </div>
-        <Pathway />
+        <div className="mx-auto w-full max-w-2xl lg:mx-0">
+          <QualificationMotif />
+        </div>
       </div>
     </div>
   </section>
