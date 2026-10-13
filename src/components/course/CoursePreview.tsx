@@ -145,15 +145,15 @@ const CoursePreview = ({
               <p className="text-xs text-muted-foreground">Estimated total study time</p>
             </Card>
           )}
-          {facts.practiceQuizCount > 0 && (
+          {(status?.questions ?? 0) > 0 && (
             <Card className="p-4">
-              <p className="text-2xl font-bold text-foreground">{facts.practiceQuizCount}</p>
-              <p className="text-xs text-muted-foreground">Practice quizzes</p>
+              <p className="text-2xl font-bold text-foreground">{status!.questions}</p>
+              <p className="text-xs text-muted-foreground">Practice questions</p>
             </Card>
           )}
-          {facts.mockExamCount > 0 && (
+          {(status?.usable_mocks ?? 0) > 0 && (
             <Card className="p-4">
-              <p className="text-2xl font-bold text-foreground">{facts.mockExamCount}</p>
+              <p className="text-2xl font-bold text-foreground">{status!.usable_mocks}</p>
               <p className="text-xs text-muted-foreground">Mock exams</p>
             </Card>
           )}
