@@ -1,8 +1,8 @@
 const POINTS = [
   { title: "Mapped to the syllabus", text: "Every course follows the published CIMA syllabus areas for its paper, so you always know where a topic fits." },
-  { title: "Explanations, not just answers", text: "Where question banks are live, every answer is marked straight away with the reasoning shown." },
+  { title: "Explanations, not just answers", text: "Practice questions are marked the moment you submit, with the correct answer and the reasoning shown." },
   { title: "Progress kept in one place", text: "Your account remembers the lessons and quizzes you've completed, so you can pick up where you left off." },
-  { title: "Honest about what's ready", text: "Each course shows whether it's open, free or still being written. Nothing is sold before it's ready." },
+  { title: "Every level, one account", text: "Move from Certificate to Strategic without switching providers. Your courses, progress and certificates of completion stay together." },
 ];
 
 const WhyFinatix = () => (

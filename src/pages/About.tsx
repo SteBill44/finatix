@@ -1,4 +1,3 @@
-import { usePlatformFacts } from "@/hooks/usePlatformFacts";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
@@ -21,7 +20,6 @@ import {
 } from "lucide-react";
 
 const About = () => {
-  const facts = usePlatformFacts();
   const values = [
     {
       icon: Target,
@@ -108,12 +106,12 @@ const About = () => {
               </p>
               <p className="text-muted-foreground mb-6">
               We're passionate about helping every student succeed. That's why we've built a platform 
-              that doesn't just teach - it adapts, analyzes, and guides you every step of the way 
-              towards your CIMA qualification.
+              that keeps every level of CIMA study structured, with marked practice and your progress
+              saved in one place.
               </p>
             </div>
             <div className="grid gap-4">
-              {["Exam-style practice", "Progress insights", "Clear course outlines"].map((item) => (
+              {["Exam-style practice", "Progress insights", "Syllabus-organised courses"].map((item) => (
                 <div key={item} className="flex items-center gap-3 rounded-xl border border-border bg-background/60 p-5">
                   <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
                   <span className="font-semibold text-foreground">{item}</span>
@@ -162,35 +160,27 @@ const About = () => {
           <div className="max-w-3xl mx-auto text-center mb-10">
             <Award className="w-10 h-10 text-primary mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-              What you get on Finatix today
+              The whole qualification in one place
             </h2>
             <p className="text-muted-foreground">
-              These are the numbers as they stand on the platform right now, not projections.
+              Every CIMA level and case study, organised by the published syllabus.
               We don't publish pass rates until we have results we can evidence.
             </p>
           </div>
 
-          <dl className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <ul className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { value: facts.ready ? facts.courses : "-", label: "Course outlines" },
-              { value: facts.ready ? facts.writtenLessons : "-", label: "Full written lessons" },
-              { value: facts.ready ? facts.questions : "-", label: "Practice questions" },
-              { value: facts.ready ? facts.coursesWithQuestions : "-", label: "Courses with practice questions" },
+              { value: "4", label: "CIMA levels, Certificate to Strategic" },
+              { value: "13", label: "Subject papers" },
+              { value: "3", label: "Case study courses" },
+              { value: "1", label: "Account for all your progress" },
             ].map((fact) => (
-              <div
-                key={fact.label}
-                className="rounded-xl border border-border bg-card p-5 text-center"
-              >
-                <dt className="sr-only">{fact.label}</dt>
-                <dd>
-                  <span className="block text-3xl font-bold text-foreground tabular-nums">
-                    {fact.value}
-                  </span>
-                  <span className="mt-1 block text-sm text-muted-foreground">{fact.label}</span>
-                </dd>
-              </div>
+              <li key={fact.label} className="rounded-xl border border-border bg-card p-5 text-center">
+                <span className="block text-3xl font-bold text-foreground tabular-nums">{fact.value}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{fact.label}</span>
+              </li>
             ))}
-          </dl>
+          </ul>
 
           <PassRateEvidenceCard className="mt-8 max-w-xl mx-auto" />
 

@@ -44,7 +44,7 @@ describe("homepage", () => {
   it("contains no demo, sample question or BA1/BA2-first messaging", () => {
     renderHome();
     const text = document.body.textContent ?? "";
-    for (const banned of ["GDP", "Try the demo", "Example question", "Start practising free", "about 190", "we'll email"]) {
+    for (const banned of ["GDP", "Try the demo", "Example question", "Start practising free", "about 190", "we'll email", "in development", "being written", "still being", "planned", "outline"]) {
       expect(text.toLowerCase()).not.toContain(banned.toLowerCase());
     }
     expect(document.querySelectorAll("fieldset, [role=tablist]").length).toBe(0);

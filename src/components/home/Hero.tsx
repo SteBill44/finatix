@@ -2,19 +2,16 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { CIMA_LEVELS } from "@/lib/cimaLevels";
-import { useLevelAvailability } from "@/hooks/useLevelAvailability";
 import { trackEvent } from "@/lib/analytics";
 
 /** Qualification journey visual: the real CIMA structure, no product simulation. */
 const Pathway = () => {
-  const { forLevel } = useLevelAvailability();
   return (
     <div>
     <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">The CIMA qualification</p>
     <ol aria-label="The CIMA qualification journey" className="relative space-y-3">
       <span aria-hidden="true" className="absolute left-[19px] top-6 bottom-6 w-px bg-border" />
       {CIMA_LEVELS.map((lv, i) => {
-        const s = forLevel(lv.id);
         return (
           <li key={lv.id}>
             <Link
@@ -27,11 +24,6 @@ const Pathway = () => {
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-semibold text-foreground">{lv.full}</span>
-                  {s && (
-                    <span className={`text-[11px] font-medium uppercase tracking-wide ${s.live ? "text-primary" : "text-muted-foreground"}`}>
-                      {s.label}
-                    </span>
-                  )}
                 </span>
                 <span className="mt-1 block text-sm text-muted-foreground">
                   {lv.subjects.join(" · ")}
@@ -43,7 +35,6 @@ const Pathway = () => {
         );
       })}
     </ol>
-    <p className="mt-4 text-xs text-muted-foreground">Availability labels update from live course data.</p>
     </div>
   );
 };

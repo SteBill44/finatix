@@ -1,6 +1,6 @@
 # Finatix
 
-> Independent online CIMA study platform. Covers the full CIMA qualification: Certificate, Operational, Management and Strategic levels and their case studies. Certificate courses are free to start; some include exam-style question banks. Higher-level and case study courses are being written and are not yet on sale.
+> Independent online CIMA study platform. Covers the full CIMA qualification: Certificate, Operational, Management and Strategic levels and their case studies. Certificate courses are free to start with an account; professional-level and case study courses are paid.
 
 Finatix offers exam-style practice with instant marking and progress tracking. It is not accredited by or affiliated with CIMA or AICPA & CIMA.
 

@@ -9,7 +9,6 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useLearningContext } from "@/hooks/useLearningContext";
 import { journeyAnalytics } from "@/lib/analytics";
 import { LEVEL_ORDER, LEVEL_LABELS, papersByLevel } from "@/lib/papers";
-import TryQuestion from "@/components/home/TryQuestion";
 
 const StartNew = () => {
   const { setContext } = useLearningContext();
@@ -112,12 +111,6 @@ const StartNew = () => {
             </div>
           </div>
 
-          <div>
-            <h2 className="mb-3 text-xl font-semibold text-foreground">
-              Try a question from BA1
-            </h2>
-            <TryQuestion />
-          </div>
         </div>
       </section>
     </Layout>

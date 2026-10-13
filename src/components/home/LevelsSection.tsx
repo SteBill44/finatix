@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { CIMA_LEVELS } from "@/lib/cimaLevels";
-import { useLevelAvailability } from "@/hooks/useLevelAvailability";
 
 const LevelsSection = () => {
-  const { forLevel } = useLevelAvailability();
   return (
     <section id="levels" aria-labelledby="levels-heading" className="scroll-mt-20 bg-card py-20 lg:py-28">
       <div className="container mx-auto px-4">
@@ -19,16 +17,10 @@ const LevelsSection = () => {
         </div>
         <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
           {CIMA_LEVELS.map((lv, i) => {
-            const s = forLevel(lv.id);
             return (
               <article key={lv.id} className="flex flex-col bg-background p-7">
                 <div className="mb-6 flex items-center justify-between">
                   <span className="font-mono text-sm text-muted-foreground">0{i + 1}</span>
-                  {s && (
-                    <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${s.live ? "border-primary/40 text-primary" : "border-border text-muted-foreground"}`}>
-                      {s.label}
-                    </span>
-                  )}
                 </div>
                 <h3 className="text-xl font-semibold text-foreground">{lv.name}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{lv.who}</p>

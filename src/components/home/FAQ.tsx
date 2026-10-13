@@ -2,10 +2,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 /** Shared with the homepage FAQ schema so page and structured data always match. */
 export const HOME_FAQS = [
-  { question: "Which CIMA levels does Finatix cover?", answer: "Finatix is planned to cover the whole qualification: Certificate, Operational, Management and Strategic levels, plus the Operational, Management and Strategic case studies. Not all of these are available yet. Each course page shows what it includes today." },
-  { question: "What can I use for free today?", answer: "The four Certificate in Business Accounting courses are free with an account. They are not all complete: some include lesson quizzes with explanations, while others show only their lesson outline for now." },
-  { question: "Can I buy Operational, Management, Strategic or case study courses?", answer: "Not yet. These courses are still being written and reviewed, and they cannot be purchased until they are ready. You can register interest on any course page. Nothing is charged." },
-  { question: "How do I get started?", answer: "Choose your level, open a course and create a free account. Your completed lessons and quiz results are saved to your account." },
+  { question: "Which level should I start at?", answer: "Most people new to accounting start at Certificate level (BA1 to BA4). If you hold a relevant degree or qualification, CIMA may grant exemptions so you can start at Operational level or above. CIMA confirms exemptions, not Finatix." },
+  { question: "Which CIMA levels does Finatix cover?", answer: "All of them: Certificate, Operational, Management and Strategic, plus the Operational, Management and Strategic case studies." },
+  { question: "What's free and what's paid?", answer: "The four Certificate in Business Accounting courses are free with an account. Operational, Management, Strategic and case study courses are paid, and each course page shows its price and how to access it." },
+  { question: "How do I get started?", answer: "Choose your level, open a course and create a free account. Your completed lessons and quiz results are saved to your account, so you can pick up where you left off." },
   { question: "Does a Finatix course include CIMA exam fees?", answer: "No. Finatix prices cover Finatix study material only. CIMA registration, the annual student subscription and exam fees are set and charged by AICPA & CIMA." },
   { question: "Is Finatix accredited by CIMA?", answer: "No. Finatix is an independent study provider, not accredited by, approved by, affiliated with or endorsed by CIMA or AICPA & CIMA. CIMA alone sets the exams and awards the qualification." },
 ];

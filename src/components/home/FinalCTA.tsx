@@ -10,7 +10,7 @@ const FinalCTA = () => (
         Find the right course for your next CIMA exam.
       </h2>
       <p className="max-w-xl text-muted-foreground">
-        Start free at Certificate level, or register interest in the courses still being written.
+        Choose your level and see everything each course covers.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button asChild size="xl" className="group">
