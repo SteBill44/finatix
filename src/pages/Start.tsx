@@ -35,7 +35,7 @@ const Start = () => {
       <section className="container mx-auto px-4 py-14 md:py-20">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-foreground md:text-6xl">
-            Where are you starting from?
+            Where are you <span className="text-primary">starting from?</span>
           </h1>
           <p className="mt-3 text-muted-foreground">
             Three questions at most. We'll take you straight to the right content.
