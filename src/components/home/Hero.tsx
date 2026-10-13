@@ -13,6 +13,7 @@ const FACTS = [
 
 const Hero = () => (
   <section className="relative -mt-16 overflow-hidden border-b border-border bg-background pt-32 pb-16 lg:pt-40 lg:pb-20">
+    <div aria-hidden="true" className="hero-atmosphere pointer-events-none absolute inset-0" />
     {/* Fine grid backdrop, tokens only */}
     <div
       aria-hidden="true"
@@ -27,7 +28,7 @@ const Hero = () => (
       <h1 className="mx-auto mb-0 max-w-5xl text-[clamp(2.75rem,7.5vw,6.75rem)] font-bold leading-[0.98] tracking-[-0.04em] text-foreground">
         Your CIMA journey.{" "}
         <br className="hidden sm:block" />
-        <span className="text-primary">A clearer way forward.</span>
+        <span className="text-sheen">A clearer way forward.</span>
       </h1>
 
       <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
@@ -49,11 +50,11 @@ const Hero = () => (
         </Button>
       </div>
 
-      <dl className="mx-auto mt-16 grid max-w-4xl grid-cols-2 divide-border overflow-hidden rounded-xl border border-border bg-card md:grid-cols-4 md:divide-x">
+      <dl className="mx-auto mt-16 grid max-w-4xl grid-cols-2 divide-border overflow-hidden rounded-xl border border-border bg-card/70 backdrop-blur md:grid-cols-4 md:divide-x">
         {FACTS.map((f, i) => (
           <div key={f.k} className={`px-6 py-6 ${i < 2 ? "border-b border-border md:border-b-0" : ""} ${i % 2 === 0 ? "border-r border-border md:border-r-0" : ""}`}>
             <dt className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{f.k}</dt>
-            <dd className="mt-2 text-4xl font-bold tracking-tight text-foreground">{f.v}</dd>
+            <dd className="mt-2 text-4xl font-bold tracking-tight text-sheen">{f.v}</dd>
           </div>
         ))}
       </dl>
