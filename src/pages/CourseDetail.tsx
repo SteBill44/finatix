@@ -795,7 +795,7 @@ const CourseDetail = () => {
                     <>
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
                         <Sparkles className="w-3.5 h-3.5" />
-                        One-time purchase - lifetime access
+                        {notOnSale ? "Price when it opens" : "One-time purchase - lifetime access"}
                       </span>
                       <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -983,7 +983,7 @@ const CourseDetail = () => {
           <div className="container mx-auto px-4 flex items-center gap-4">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-foreground leading-none">£{coursePrice.toFixed(0)}</p>
-              <p className="text-xs text-muted-foreground truncate">One-time purchase - lifetime access</p>
+              <p className="text-xs text-muted-foreground truncate">{notOnSale ? "Price when it opens" : "One-time purchase - lifetime access"}</p>
             </div>
             <Button
               size="lg"
