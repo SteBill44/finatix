@@ -70,7 +70,7 @@ const Hero = () => (
             </Button>
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
-            Independent of CIMA and AICPA.{" "}
+            Independent of AICPA &amp; CIMA.{" "}
             <Link to="/why-cima" className="font-medium text-primary hover:underline">What is CIMA?</Link>
           </p>
         </div>
