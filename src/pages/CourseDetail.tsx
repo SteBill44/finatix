@@ -430,16 +430,19 @@ const CourseDetail = () => {
   });
   const isCaseStudyCourse = /case-study/.test(course.slug || "");
 
+  // Only list what genuinely exists: outlines aren't lessons, empty quizzes and mocks aren't counted.
+  const outlineOnly = !contentStatus || contentStatus.taught_lessons < contentStatus.lesson_records;
+  const hasQuestions = (contentStatus?.questions ?? 0) > 0;
   const features = [
-    `${courseFacts.lessonCount} lessons`,
-    courseFacts.estimatedStudyHours
+    outlineOnly ? `${courseFacts.lessonCount}-lesson outline` : `${courseFacts.lessonCount} lessons`,
+    !notOnSale && courseFacts.estimatedStudyHours
       ? `About ${courseFacts.estimatedStudyHours} hours of study time`
       : null,
-    courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
-    courseFacts.mockExamCount > 0 ? `${courseFacts.mockExamCount} timed mock exams` : null,
-    "Competency tracking and weak area analysis",
-    "Certificate of completion",
-    POLICY.refundText,
+    hasQuestions && courseFacts.practiceQuizCount > 0 ? `${courseFacts.practiceQuizCount} practice quizzes` : null,
+    (contentStatus?.usable_mocks ?? 0) > 0 ? `${contentStatus!.usable_mocks} timed mock exams` : null,
+    hasQuestions ? "Progress saved to your account" : null,
+    notOnSale ? null : "Certificate of completion",
+    notOnSale ? null : POLICY.refundText,
   ].filter(Boolean) as string[];
 
   // Build navigation sections
@@ -834,7 +837,7 @@ const CourseDetail = () => {
                     you can add the others whenever you're ready.
                   </p>
                 )}
-                {requiresPayment && (
+                {requiresPayment && !notOnSale && (
                   <>
                     <p className="text-xs text-muted-foreground text-center mt-3">
                       Secure payment. VAT included - the price shown is the price you pay.
