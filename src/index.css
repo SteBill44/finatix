@@ -671,3 +671,48 @@
     animation: none !important;
   }
 }
+
+/* ── Ambient brand atmosphere (tokens only) ── */
+@layer components {
+  .hero-atmosphere {
+    background:
+      radial-gradient(60% 50% at 50% 0%, hsl(var(--primary) / 0.28), transparent 70%),
+      radial-gradient(40% 40% at 90% 30%, hsl(var(--accent) / 0.16), transparent 70%),
+      radial-gradient(35% 35% at 5% 60%, hsl(var(--brand-orange-dark) / 0.14), transparent 70%);
+  }
+  .dark .hero-atmosphere {
+    background:
+      radial-gradient(60% 50% at 50% 0%, hsl(var(--primary) / 0.22), transparent 70%),
+      radial-gradient(40% 40% at 90% 35%, hsl(var(--accent) / 0.12), transparent 70%),
+      radial-gradient(35% 35% at 5% 65%, hsl(var(--brand-orange-dark) / 0.18), transparent 70%);
+  }
+  .section-warm {
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.07), hsl(var(--background)) 70%);
+  }
+  .dark .section-warm {
+    background: linear-gradient(180deg, hsl(var(--primary) / 0.06), hsl(var(--background)) 70%);
+  }
+  /* Card with orange gradient edge revealed on hover */
+  .card-spark {
+    position: relative;
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+      linear-gradient(140deg, hsl(var(--border)), hsl(var(--border))) border-box;
+    border: 1px solid transparent;
+    transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+  }
+  .card-spark:hover {
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+      linear-gradient(140deg, hsl(var(--primary)), hsl(var(--border)) 45%, hsl(var(--accent) / 0.7)) border-box;
+    box-shadow: 0 18px 40px -18px hsl(var(--primary) / 0.45);
+    transform: translateY(-3px);
+  }
+  .text-sheen {
+    background: linear-gradient(100deg, hsl(var(--brand-orange-dark)), hsl(var(--primary)) 40%, hsl(38 95% 55%));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .icon-chip {
+    background: linear-gradient(140deg, hsl(var(--primary)), hsl(var(--brand-orange-dark)));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 8px 20px -8px hsl(var(--primary) / 0.6);
+  }
+}

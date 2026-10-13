@@ -19,8 +19,8 @@ const WhyFinatix = () => (
       </div>
       <ul className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {POINTS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="rounded-xl border border-border bg-background p-7 transition-colors hover:border-primary/50">
-            <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-primary/30 text-primary">
+          <li key={title} className="card-spark rounded-xl p-7">
+            <span className="flex h-11 w-11 items-center justify-center icon-chip rounded-lg">
               <Icon className="h-5 w-5" aria-hidden="true" />
             </span>
             <h3 className="mt-6 text-lg font-semibold text-foreground">{title}</h3>

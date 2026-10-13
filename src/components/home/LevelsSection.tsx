@@ -5,7 +5,7 @@ import { CIMA_LEVELS } from "@/lib/cimaLevels";
 
 /** Course-catalogue style: one card per level with a level badge, contents list and clear action. */
 const LevelsSection = () => (
-  <section id="levels" aria-labelledby="levels-heading" className="scroll-mt-16 bg-background py-24 lg:py-32">
+  <section id="levels" aria-labelledby="levels-heading" className="section-warm scroll-mt-16 py-24 lg:py-32">
     <div className="container mx-auto px-4">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
@@ -21,12 +21,13 @@ const LevelsSection = () => (
 
       <ul className="mt-14 grid gap-5 md:grid-cols-2">
         {CIMA_LEVELS.map((lv, i) => (
-          <li key={lv.id} className="group flex flex-col rounded-xl border border-border bg-card p-7 transition-colors hover:border-primary/50 lg:p-9">
+          <li key={lv.id} className="group flex flex-col card-spark rounded-xl p-7 lg:p-9">
             <div className="flex items-center justify-between">
               <span className="rounded-full border border-primary/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
                 Level 0{i + 1}
               </span>
-              <span className="font-mono text-sm text-muted-foreground">{lv.subjects.join(" · ")}</span>
+              <span className="font-mono text-5xl font-light text-primary/25" aria-hidden="true">0{i + 1}</span>
+              <span className="sr-only">{lv.subjects.join(" · ")}</span>
             </div>
             <h3 className="mt-6 text-2xl font-bold tracking-tight text-foreground md:text-3xl">{lv.full}</h3>
             <p className="mt-3 leading-relaxed text-muted-foreground">{lv.who}</p>
