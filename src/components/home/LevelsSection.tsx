@@ -1,59 +1,49 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight } from "lucide-react";
 import { CIMA_LEVELS } from "@/lib/cimaLevels";
 
-/** Course-catalogue style: one card per level with a level badge, contents list and clear action. */
 const LevelsSection = () => (
-  <section id="levels" aria-labelledby="levels-heading" className="section-warm scroll-mt-16 py-24 lg:py-32">
-    <div className="container mx-auto px-4">
-      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <div>
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Our courses</p>
-          <h2 id="levels-heading" className="text-4xl font-bold leading-[1.05] tracking-[-0.03em] text-foreground md:text-5xl">
-            Four levels. One qualification.
-          </h2>
-        </div>
-        <p className="max-w-md text-lg text-muted-foreground">
+  <section id="levels" aria-labelledby="levels-heading" className="scroll-mt-16 bg-background py-24 lg:py-36">
+    <div className="container mx-auto grid gap-14 px-4 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-20">
+      <div className="lg:sticky lg:top-28 lg:self-start">
+        <p className="mb-5 font-mono text-xs uppercase tracking-[0.24em] text-primary">Find your place</p>
+        <h2 id="levels-heading" className="text-4xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground md:text-6xl">
+          Four levels.
+          <br />
+          One qualification.
+        </h2>
+        <p className="mt-6 max-w-sm text-lg text-muted-foreground">
           Start where your experience puts you. From Operational onwards, each level ends with a case study exam.
         </p>
       </div>
 
-      <ul className="mt-14 grid gap-5 md:grid-cols-2">
+      <ol className="border-t border-foreground/80">
         {CIMA_LEVELS.map((lv, i) => (
-          <li key={lv.id} className="group flex flex-col card-spark rounded-xl p-7 lg:p-9">
-            <div className="flex items-center justify-between">
-              <span className="rounded-full border border-primary/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                Level 0{i + 1}
-              </span>
-              <span className="font-mono text-5xl font-light text-primary/25" aria-hidden="true">0{i + 1}</span>
-              <span className="sr-only">{lv.subjects.join(" · ")}</span>
+          <li key={lv.id} className="grid gap-6 border-b border-border py-10 md:grid-cols-[6rem_minmax(0,1fr)_minmax(0,14rem)] md:gap-8 lg:py-12">
+            <span className="font-mono text-5xl font-light leading-none tracking-tight text-primary md:text-6xl">0{i + 1}</span>
+            <div>
+              <h3 className="mb-0 text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{lv.full}</h3>
+              <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">{lv.who}</p>
+              <p className="mt-4 text-xs uppercase tracking-[0.16em] text-muted-foreground">{lv.award}</p>
             </div>
-            <h3 className="mt-6 text-2xl font-bold tracking-tight text-foreground md:text-3xl">{lv.full}</h3>
-            <p className="mt-3 leading-relaxed text-muted-foreground">{lv.who}</p>
-            <ul className="mt-6 space-y-2 text-sm text-foreground">
-              <li className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{lv.subjects.length} subject papers</li>
+            <div className="flex flex-col gap-3 text-sm md:items-end md:text-right">
+              <span className="font-mono text-foreground">{lv.subjects.join("  ")}</span>
+              <Link
+                to={`/courses?level=${lv.id}`}
+                className="group inline-flex items-center gap-1 rounded font-medium text-foreground underline decoration-primary/60 underline-offset-4 hover:text-primary"
+              >
+                View {lv.name} courses
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+              </Link>
               {lv.caseStudy && (
-                <li className="flex gap-2">
-                  <Check className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <Link to={`/courses/${lv.caseStudy.slug}`} className="underline decoration-primary/50 underline-offset-4 hover:text-primary">
-                    {lv.caseStudy.code} case study preparation
-                  </Link>
-                </li>
-              )}
-              <li className="flex gap-2"><Check className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />{lv.award}</li>
-            </ul>
-            <div className="mt-auto pt-8">
-              <Button asChild variant="outline" trace className="group/btn rounded-md">
-                <Link to={`/courses?level=${lv.id}`}>
-                  View {lv.name} courses
-                  <ArrowRight className="transition-transform duration-200 group-hover/btn:translate-x-1 motion-reduce:transition-none" />
+                <Link to={`/courses/${lv.caseStudy.slug}`} className="rounded text-muted-foreground hover:text-primary">
+                  {lv.caseStudy.code} case study
                 </Link>
-              </Button>
+              )}
             </div>
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   </section>
 );
