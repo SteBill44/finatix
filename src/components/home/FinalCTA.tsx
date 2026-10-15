@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 
 const FinalCTA = () => (
-  <section className="section-warm border-t border-border py-28 lg:py-40">
+  <section className="border-t border-border bg-background py-28 lg:py-40">
     <div className="container mx-auto px-4">
       <h2 className="max-w-[16ch] text-[clamp(2.75rem,7vw,7rem)] font-bold leading-[0.95] tracking-[-0.045em] text-foreground">
-        Your next CIMA exam <span className="text-sheen">starts here.</span>
+        Your next CIMA exam <span className="text-primary">starts here.</span>
       </h2>
       <div className="mt-12 flex flex-col gap-6 border-t border-border pt-10 md:flex-row md:items-center md:justify-between">
         <p className="max-w-md text-lg text-muted-foreground">Choose your level and see everything each course covers.</p>
