@@ -49,11 +49,11 @@ export default function Flashcards() {
   return (
     <Layout>
       <SEOHead title="Flashcards" description="Study with spaced-repetition flashcard decks" noIndex />
-      <div className="pt-24 lg:pt-28 pb-12">
+      <div className="py-10 lg:py-12">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2 uppercase">
+              <h1 className="text-2xl font-medium flex items-center gap-2">
                 <Layers className="w-6 h-6 text-primary" />
                 <span className="text-gradient-brand">Flashcards</span>
               </h1>

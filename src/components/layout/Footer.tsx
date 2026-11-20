@@ -14,15 +14,13 @@ const COLUMNS = [
       { name: "Operational", path: "/courses?level=operational" },
       { name: "Management", path: "/courses?level=management" },
       { name: "Strategic", path: "/courses?level=strategic" },
-      { name: "Case studies", path: "/courses?case=1" },
     ],
   },
   {
     title: "Study",
     links: [
-      { name: "All courses", path: "/courses" },
-      { name: "Start here", path: "/start" },
-      { name: "Our approach", path: "/#approach" },
+      { name: "All CIMA exams", path: "/courses" },
+      { name: "The platform", path: "/#platform" },
       { name: "Why CIMA?", path: "/why-cima" },
       { name: "Pricing", path: "/pricing" },
     ],
@@ -49,17 +47,17 @@ const COLUMNS = [
 
 const Footer = ({ className }: FooterProps) => (
   <footer className={cn("border-t border-border bg-card", className)}>
-    <div className="container mx-auto px-4 py-16">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_repeat(4,minmax(0,1fr))]">
-        <div className="max-w-xs">
+    <div className="container mx-auto px-5 md:px-8 py-14">
+      <div className="grid grid-cols-2 gap-10 lg:grid-cols-[minmax(0,1.3fr)_repeat(4,minmax(0,1fr))]">
+        <div className="col-span-2 max-w-xs lg:col-span-1">
           <FinatixLogo size="sm" />
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Independent CIMA study, from Certificate level to the Strategic case study.
+            One connected study platform. All sixteen CIMA exams, from Certificate to Strategic.
           </p>
         </div>
         {COLUMNS.map((col) => (
           <nav key={col.title} aria-label={col.title}>
-            <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-foreground">{col.title}</h2>
+            <h2 className="mb-4 text-sm font-semibold text-foreground">{col.title}</h2>
             <ul className="space-y-2.5">
               {col.links.map((l) => (
                 <li key={l.name}>

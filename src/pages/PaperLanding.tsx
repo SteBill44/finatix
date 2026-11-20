@@ -64,7 +64,7 @@ const PaperLanding = () => {
     });
   }, [paper, context, setContext]);
 
-  if (!paperCode) return <Navigate to="/start/paper" replace />;
+  if (!paperCode) return <Navigate to="/courses" replace />;
   if (!paper) {
     return (
       <Layout>
@@ -75,7 +75,7 @@ const PaperLanding = () => {
             Pick from the papers we do cover.
           </p>
           <Button asChild className="mt-6">
-            <Link to="/start/paper">Choose a paper</Link>
+            <Link to="/courses">CIMA exams</Link>
           </Button>
         </section>
       </Layout>
@@ -92,20 +92,20 @@ const PaperLanding = () => {
         title={course?.title ?? `${paper.code} – CIMA paper`}
         description={`${paper.code}: ${paper.focus} Learning outcomes, sample content and access terms from Finatix.`}
       />
-      <section className="container mx-auto max-w-6xl px-4 py-12 md:py-16">
+      <section className="container mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
-          <Link to="/start/paper" className="hover:text-foreground">Choose a paper</Link>
+          <Link to="/courses" className="hover:text-foreground">CIMA exams</Link>
           <span className="mx-2">/</span>
           <span className="text-foreground">{paper.code}</span>
         </nav>
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               {LEVEL_LABELS[paper.level]} ·{" "}
               {paper.kind === "case-study" ? "Case study" : "Objective test"}
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            <h1 className="mt-2 public-title text-foreground">
               {course?.title ?? paper.code}
             </h1>
             <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -151,7 +151,7 @@ const PaperLanding = () => {
                   {lessons.map((l, i) => (
                     <li
                       key={l.id}
-                      className="flex gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm"
+                      className="flex gap-3 border-b border-border py-4 text-sm"
                     >
                       <span className="w-6 flex-shrink-0 font-semibold text-primary">
                         {i + 1}
@@ -181,7 +181,7 @@ const PaperLanding = () => {
                   <li>
                     {isFree
                       ? "Free. You need a Finatix account to open the lessons."
-                      : `£${Number(course.price).toFixed(0)} one-off payment, VAT included. Lifetime access to this course.`}
+                      : "Open the exam course page for pricing and current access options."}
                   </li>
                   <li>Lessons, practice questions and explanations are included.</li>
                   <li>
@@ -191,7 +191,7 @@ const PaperLanding = () => {
                 </ul>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Button asChild size="lg">
+                  <Button asChild trace size="lg">
                     <Link
                       to={`/courses/${course.slug}`}
                       onClick={() =>
@@ -202,7 +202,7 @@ const PaperLanding = () => {
                         })
                       }
                     >
-                      {isFree ? `Start ${paper.code} free` : `Get ${paper.code}`}
+                      {`Explore ${paper.code} resources`}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
@@ -233,7 +233,7 @@ const PaperLanding = () => {
             )}
           </div>
 
-          <aside>
+          {paper.code === "BA1" && <aside>
             <div className="lg:sticky lg:top-24">
               <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-foreground">
                 <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -261,7 +261,7 @@ const PaperLanding = () => {
                 }
               />
             </div>
-          </aside>
+          </aside>}
         </div>
       </section>
     </Layout>

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Play, CheckCircle, ArrowRight } from "lucide-react";
 import { useLessons, useLessonProgress } from "@/hooks/useStudentProgress";
 
@@ -55,15 +55,11 @@ const CourseProgressRow = ({ enrollment }: CourseProgressRowProps) => {
           <span className="text-xs text-accent font-medium">Completed</span>
         )}
       </div>
-      <Button
-        size="sm"
-        variant={isCompleted ? "outline" : "default"}
-        className="gap-1.5 flex-shrink-0"
-      >
+      <span className={buttonVariants({ size: "sm", variant: isCompleted ? "outline" : "default", className: "gap-1.5 flex-shrink-0" })}>
         <Play className="w-3.5 h-3.5" />
         <span className="hidden sm:inline">{isCompleted ? "Review" : "Continue"}</span>
         <ArrowRight className="w-3.5 h-3.5" />
-      </Button>
+      </span>
     </Link>
   );
 };

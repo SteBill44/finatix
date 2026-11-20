@@ -52,6 +52,8 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { toast } from "sonner";
+import FinatixLogo from "@/components/FinatixLogo";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { createSanitizedMarkup } from "@/lib/sanitize";
 
@@ -60,7 +62,9 @@ const Lesson = () => {
   const { courseId, lessonId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  useEffect(() => { setSidebarOpen(!isMobile); }, [isMobile]);
   const markComplete = useMarkLessonComplete();
   const [signedVideoUrl, setSignedVideoUrl] = useState<string | null>(null);
   
@@ -227,17 +231,18 @@ const Lesson = () => {
 
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex study-surface">
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-50 w-80 bg-card border-r border-border transform transition-transform duration-300 ease-in-out",
+          "fixed lg:static inset-y-0 left-0 z-50 w-[min(320px,88vw)] bg-card border-r border-border transform transition-transform duration-300 ease-in-out",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-0 lg:overflow-hidden"
         )}
       >
         <div className="h-full flex flex-col">
           {/* Sidebar Header */}
-          <div className="p-4 border-b border-border">
+          <div className="p-5 border-b border-border">
+            <div className="mb-5"><FinatixLogo size="sm" /></div>
             <div className="flex items-center justify-between mb-4">
               <Link
                 to={`/courses/${course?.slug || courseId}`}
@@ -250,6 +255,7 @@ const Lesson = () => {
                 variant="ghost"
                 size="icon"
                 className="lg:hidden"
+                aria-label="Close lesson list"
                 onClick={() => setSidebarOpen(false)}
               >
                 <X className="w-5 h-5" />
@@ -320,6 +326,7 @@ const Lesson = () => {
           variant="outline"
           size="icon"
           className="fixed bottom-4 left-4 z-40 lg:hidden shadow-lg"
+          aria-label="Open lesson list"
           onClick={() => setSidebarOpen(true)}
         >
           <Menu className="w-5 h-5" />
@@ -368,12 +375,13 @@ const Lesson = () => {
             </Breadcrumb>
           </div>
           
-          <div className="flex items-center justify-between p-4">
+          <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
                 className="hidden lg:flex"
+                aria-label="Toggle lesson list"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
               >
                 <Menu className="w-5 h-5" />
@@ -382,7 +390,7 @@ const Lesson = () => {
                 <p className="text-sm text-muted-foreground">
                   Lesson {currentIndex + 1} of {totalLessons}
                 </p>
-                <h1 className="font-semibold text-foreground line-clamp-1">
+                <h1 className="text-xl font-medium text-foreground line-clamp-2">
                   {currentLesson.title}
                 </h1>
               </div>
@@ -407,7 +415,7 @@ const Lesson = () => {
         </header>
 
         {/* Lesson Content */}
-        <div className="p-6 lg:p-8">
+        <div className="p-5 lg:p-10">
           {/* Video Player and Notes - Side by Side on larger screens */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
             <div className="xl:col-span-2">
@@ -441,7 +449,7 @@ const Lesson = () => {
           <Separator className="my-8" />
 
           {/* Lesson Content */}
-          <div className="prose prose-slate dark:prose-invert max-w-none">
+          <div className="prose dark:prose-invert max-w-none">
             {currentLesson.content ? (
               (() => {
                 const pdfMatch = currentLesson.content.match(/^\{\{PDF:(.+)\}\}$/);
@@ -589,7 +597,7 @@ const Lesson = () => {
           <Separator className="my-8" />
 
           {/* Navigation */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {prevLesson ? (
               <Button
                 variant="outline"

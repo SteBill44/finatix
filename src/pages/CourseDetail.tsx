@@ -40,6 +40,7 @@ import {
   FileText,
   Award,
   ArrowLeft,
+  ArrowRight,
   ShoppingCart,
   Lock,
   MessageSquare,
@@ -388,39 +389,8 @@ const CourseDetail = () => {
     );
   }
 
-  const getLevelColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "certificate": return "text-orange";
-      case "operational": return "text-primary";
-      case "management": return "text-purple";
-      case "strategic": return "text-red";
-      default: return "text-primary";
-    }
-  };
-
-  const getLevelBgColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "certificate": return "bg-orange";
-      case "operational": return "bg-primary";
-      case "management": return "bg-purple";
-      case "strategic": return "bg-red";
-      default: return "bg-primary";
-    }
-  };
-
-  const getLevelGradientClass = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case "certificate": return "course-hero-gradient-certificate";
-      case "operational": return "course-hero-gradient-operational";
-      case "management": return "course-hero-gradient-management";
-      case "strategic": return "course-hero-gradient-strategic";
-      default: return "course-hero-gradient";
-    }
-  };
-
-  const levelColor = getLevelColor(course?.level || "");
-  const levelBgColor = getLevelBgColor(course?.level || "");
-  const levelGradientClass = getLevelGradientClass(course?.level || "");
+  const levelColor = "text-primary";
+  const levelBgColor = "bg-primary";
 
   // Figures come from the content that actually exists in this course.
   const courseFacts = deriveCourseFacts({
@@ -434,7 +404,7 @@ const CourseDetail = () => {
   const outlineOnly = !contentStatus || contentStatus.taught_lessons < contentStatus.lesson_records;
   const hasQuestions = (contentStatus?.questions ?? 0) > 0;
   const features = [
-    outlineOnly ? `${courseFacts.lessonCount}-lesson outline` : `${courseFacts.lessonCount} lessons`,
+    (contentStatus?.taught_lessons ?? 0) > 0 ? `${contentStatus?.taught_lessons} taught lessons` : null,
     !notOnSale && courseFacts.estimatedStudyHours
       ? `About ${courseFacts.estimatedStudyHours} hours of study time`
       : null,
@@ -657,7 +627,7 @@ const CourseDetail = () => {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
-    description: course.description || `CIMA ${course.title}: see the lesson outline, what is available today and how to start.`,
+    description: course.description || `CIMA ${course.title}: explore the syllabus, resources and access options.`,
     url: `https://finatix.io/courses/${course.slug}`,
     provider: { "@type": "Organization", name: "Finatix", url: "https://finatix.io" },
     educationalCredentialAwarded: "CIMA Certificate",
@@ -682,200 +652,27 @@ const CourseDetail = () => {
     <Layout>
       <SEOHead
         title={course.title}
-        description={course.description || `${course.title} on Finatix: the lesson outline, what is available today and how to start.`}
+        description={course.description || `${course.title} on Finatix: explore the syllabus, resources and access options.`}
         keywords={`CIMA ${course.slug?.toUpperCase()}, ${course.title}, CIMA exam prep, management accounting`}
         canonicalUrl={`https://finatix.io/courses/${course.slug}`}
       />
       <JsonLd schema={courseSchema} id={`course-schema-${course.slug}`} />
-      {/* Hero Section */}
-      <section className="relative py-10 lg:py-14 overflow-hidden">
-        <div className={`absolute inset-0 ${levelGradientClass} opacity-95`} />
-        <div className="absolute bottom-20 -right-20 w-64 sm:w-96 h-64 sm:h-96 bg-accent/20 rounded-full blur-3xl" />
-        
-        <div className="container mx-auto px-4 relative z-10 overflow-hidden">
-          <Breadcrumb className="mb-6">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/" className="flex items-center gap-1 text-primary-foreground/70 hover:text-primary-foreground">
-                    <Home className="w-4 h-4" />Home
-                  </Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-primary-foreground/50" />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/courses" className="text-primary-foreground/70 hover:text-primary-foreground">Courses</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="text-primary-foreground/50" />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="text-primary-foreground font-medium">{course.title}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <div>
-              <span className="inline-block px-4 py-1.5 rounded-full bg-primary-foreground/10 text-primary-foreground text-sm font-medium mb-4 capitalize">
-                {course.level} Level
-              </span>
-              <ContentStatusNotice courseId={course.id} />
-              <h1 className="course-title text-2xl md:text-3xl font-bold text-primary-foreground mb-4">{course.title}</h1>
-              <p className="text-lg text-primary-foreground/80 mb-6">
-                {course.description || "Comprehensive course designed to help you master the exam content and pass with confidence."}
-              </p>
-
-              <div className="flex flex-wrap gap-6 mb-6">
-                <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <Clock className="w-5 h-5" /><span>About {course.duration_hours || 40} hours of study</span>
-                </div>
-                <div className="flex items-center gap-2 text-primary-foreground/90">
-                  <BookOpen className="w-5 h-5" /><span>{totalLessons} lessons</span>
-                </div>
-                {(ratingData?.totalReviews ?? 0) > 0 && (
-                  <div className="flex items-center gap-2 text-primary-foreground/90">
-                    <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                    <span>{ratingData?.averageRating.toFixed(1) || "0.0"} ({ratingData?.totalReviews || 0} reviews)</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Syllabus Accordion */}
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="objectives" className="border border-primary-foreground/20 rounded-xl bg-primary-foreground/5 backdrop-blur-sm px-5 overflow-hidden">
-                  <AccordionTrigger className="text-base font-semibold text-primary-foreground hover:no-underline py-4">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-primary-foreground" />
-                      Course Objectives & Syllabus
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5">
-                    <div className="text-primary-foreground/90">
-                      {syllabusData ? (
-                        <>
-                          {syllabusData.objective && (
-                            <p className="mb-5 text-sm leading-relaxed">
-                              <strong className="text-primary-foreground">Objective:</strong> {syllabusData.objective}
-                            </p>
-                          )}
-                          {Array.isArray(syllabusData.syllabus_areas) && syllabusData.syllabus_areas.length > 0 && (
-                            <ul className="space-y-4 list-none pl-0 text-sm">
-                              {(syllabusData.syllabus_areas as Array<{ title: string; weight: string; topics: string[] }>).map((area, index) => (
-                                <li key={index}>
-                                  <h4 className="font-semibold text-primary-foreground mb-1.5">
-                                    • {area.title} {area.weight && `(${area.weight})`}
-                                  </h4>
-                                  {area.topics && area.topics.length > 0 && (
-                                    <ul className="list-disc list-inside space-y-0.5 pl-4 text-primary-foreground/80">
-                                      {area.topics.map((topic, topicIndex) => (
-                                        <li key={topicIndex}>{topic}</li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </>
-                      ) : (
-                        <p className="text-sm text-primary-foreground/80">Course objectives and syllabus information coming soon.</p>
-                      )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-
-            {/* Pricing Card */}
-            <div className="lg:justify-self-end w-full max-w-md">
-              <div className="bg-card rounded-2xl border border-border shadow-xl p-8">
-                <div className="text-center mb-6">
-                  {requiresPayment ? (
-                    <>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        {notOnSale ? "Price when it opens" : "One-time purchase - lifetime access"}
-                      </span>
-                      <div className="text-4xl font-bold text-foreground">£{coursePrice.toFixed(0)}</div>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {notOnSale ? "Not open for purchase yet - the material is still being prepared." : "No subscription needed - pay once, keep forever"}
-                      </p>
-                    </>
-                  ) : isPaidCourse && hasMembership ? (
-                    <>
-                      <div className="text-4xl font-bold text-foreground">Included</div>
-                      <p className="text-sm text-muted-foreground mt-1">Covered by your membership</p>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-4xl font-bold text-foreground">Free</div>
-                      <p className="text-sm text-muted-foreground mt-1">Join instantly, no payment needed</p>
-                    </>
-                  )}
-                </div>
-
-                {isEnrolled ? (
-                  <Button size="lg" className="w-full gap-2" onClick={handleStartLearning}>
-                    <Play className="w-4 h-4" />
-                    Continue learning
-                  </Button>
-                ) : (
-                  <Button
-                    size="lg"
-                    className="w-full gap-2"
-                    onClick={handleEnroll}
-                    disabled={enrollMutation.isPending}
-                  >
-                    {requiresPayment ? <ShoppingCart className="w-4 h-4" /> : <GraduationCap className="w-4 h-4" />}
-                    {notOnSale ? "Register interest" : requiresPayment ? "Buy this course" : "Start this course"}
-                  </Button>
-                )}
-                {hasMembership && !isEnrolled && (
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    Your membership covers every course. Enrol in the one you want to begin with -
-                    you can add the others whenever you're ready.
-                  </p>
-                )}
-                {requiresPayment && !notOnSale && (
-                  <>
-                    <p className="text-xs text-muted-foreground text-center mt-3">
-                      Secure payment. VAT included - the price shown is the price you pay.
-                      {!user && " No account needed - you can set one up right after paying."}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground text-center mt-2">
-                      Or{" "}
-                      <Link to="/checkout" className="text-primary underline">
-                        join our membership
-                      </Link>{" "}
-                      for access to every course.
-                    </p>
-                  </>
-                )}
-
-
-                <div className="mt-6 pt-6 border-t border-border">
-                  <h4 className="font-semibold text-foreground mb-4">This course includes:</h4>
-                  <ul className="space-y-3">
-                    {features.slice(0, 5).map((feature, index) => (
-                      <li key={index} className="flex items-center gap-3 text-sm text-muted-foreground">
-                        <CheckCircle className={`w-5 h-5 ${levelColor} flex-shrink-0`} />{feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+      <section className="public-hero course-shell"><div className="container px-5 md:px-8">
+        <Breadcrumb className="mb-8"><BreadcrumbList><BreadcrumbItem><BreadcrumbLink asChild><Link to="/courses">CIMA exams</Link></BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink asChild><Link to={`/courses?level=${course.level}`} className="capitalize">{course.level}</Link></BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>{course.slug?.split("-")[0].toUpperCase()}</BreadcrumbPage></BreadcrumbItem></BreadcrumbList></Breadcrumb>
+        <div className="grid items-start gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-20"><div><p className="eyebrow capitalize">{course.level} level / {course.slug?.split("-")[0].toUpperCase()}</p><h1 className="public-title">{course.title}</h1><p className="mt-5 max-w-xl text-lg text-muted-foreground">{course.description || "CIMA study resources, organised around your exam."}</p>
+          <div className="mt-7 flex flex-wrap gap-6 border-y border-border py-5 text-sm text-muted-foreground"><span className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-primary" />{totalLessons} lessons</span>{Number(course.duration_hours) > 0 && <span className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" />About {course.duration_hours} study hours</span>}{(ratingData?.totalReviews ?? 0) > 0 && <span>{ratingData?.averageRating.toFixed(1)} / 5 · {ratingData?.totalReviews} reviews</span>}</div>
+          {syllabusData && <Accordion type="single" collapsible className="mt-6 border-b border-border"><AccordionItem value="syllabus"><AccordionTrigger className="text-left">Exam objectives & syllabus</AccordionTrigger><AccordionContent><p className="mb-4 text-sm text-muted-foreground">{syllabusData.objective}</p><ul className="space-y-2">{parsedSyllabusAreas.map((area) => <li key={area.title} className="text-sm"><span className="font-medium">{area.title}</span>{area.weight && <span className="ml-2 text-muted-foreground">{area.weight}</span>}</li>)}</ul></AccordionContent></AccordionItem></Accordion>}
         </div>
-        
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-            <path d="M0 60L1440 60L1440 0C1200 40 720 60 0 20L0 60Z" fill="hsl(var(--background))"/>
-          </svg>
-        </div>
-      </section>
+        <aside className="border-t-2 border-primary bg-card p-6 lg:p-8"><p className="eyebrow">Your access</p>
+          <div className="mb-6"><p className="font-display text-4xl font-medium">{requiresPayment ? `£${coursePrice.toFixed(0)}` : isPaidCourse && hasMembership ? "Included" : "Free"}</p><p className="mt-2 text-sm text-muted-foreground">{notOnSale ? "Indicative price. Purchasing is currently unavailable." : requiresPayment ? "One-time purchase · lifetime course access" : isPaidCourse && hasMembership ? "Covered by your membership" : "With a Finatix account. No payment needed."}</p></div>
+          <Button trace size="lg" className="w-full" onClick={isEnrolled ? handleStartLearning : handleEnroll} disabled={enrollMutation.isPending}>{enrollMutation.isPending ? "Please wait…" : isEnrolled ? "Continue learning" : notOnSale ? "Register interest" : requiresPayment ? "Buy this course" : "Start this course"}<ArrowRight className="h-4 w-4" /></Button>
+          {notOnSale && <p className="mt-3 text-xs text-muted-foreground">No payment is taken when you register interest. Existing purchases keep their access.</p>}
+          {requiresPayment && !notOnSale && <p className="mt-3 text-xs text-muted-foreground">VAT included. CIMA exam fees are separate.{!user && " You can create an account after payment."}</p>}
+          {hasMembership && !isEnrolled && <p className="mt-3 text-xs text-muted-foreground">Your membership covers this exam. Enrol to begin studying.</p>}
+          <ul className="mt-6 space-y-3 border-t border-border pt-5">{features.slice(0, 5).map((feature) => <li key={feature} className="flex gap-2 text-sm text-muted-foreground"><CheckCircle className="h-4 w-4 shrink-0 text-primary" />{feature}</li>)}</ul>
+          <Link to="/pricing" className="mt-6 inline-flex text-sm font-semibold text-primary underline underline-offset-4">Compare access options</Link>
+        </aside></div>
+      </div></section>
 
       {/* Everything a visitor needs to judge the teaching before paying */}
       {!isEnrolled && (
@@ -892,6 +689,7 @@ const CourseDetail = () => {
               lessons={lessons as Array<{ id: string; title: string; description?: string | null; duration_minutes?: number | null }>}
               price={isPaidCourse ? coursePrice : null}
               isFree={!isPaidCourse}
+              purchaseAvailable={!notOnSale}
               coveredByMembership={isPaidCourse && hasMembership}
               isAdmin={isEffectiveAdmin}
               onBuy={handleEnroll}
@@ -1004,7 +802,7 @@ const CourseDetail = () => {
             <DialogTitle>Get told when {course.title} opens</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            This course isn't on sale yet because its lessons and practice questions are still being written and reviewed.
+            Purchasing for this course is currently unavailable.
             Nothing is charged, and registering interest doesn't commit you to buying.
           </p>
           <InterestRegistrationForm courseId={course.id} courseName={course.title} />

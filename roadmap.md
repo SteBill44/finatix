@@ -1,5 +1,13 @@
 # Quick Wins Roadmap
 
+## Unified platform redesign (November 2026)
+- [ ] Audit public, account and learning interfaces and record findings.
+- [ ] Establish new typography, neutral surfaces and refined shared controls.
+- [ ] Rebuild homepage and navigation around the unified 16-exam catalogue.
+- [ ] Redesign catalogue, exam shells, pricing and supporting pages.
+- [ ] Carry identity through authentication, dashboard, practice and account screens without logic changes.
+- [ ] Verify routes, filters, themes, motion, responsive layouts and existing tests; document limitations.
+
 1. **Polish empty states**
    - Create shared `EmptyState` component
    - Apply to Dashboard, Certificates, Notifications, Flashcards, Referrals, Achievements, MasteryRadar, DashboardRedesigned

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -133,16 +134,16 @@ const HelpCentre = () => {
         description="Answers to common questions about Finatix CIMA courses, accounts, billing, and study tools."
         canonicalUrl="/help"
       />
-      <div className="container mx-auto px-4 pt-24 pb-16 max-w-6xl">
+      <div className="container mx-auto px-5 md:px-8 py-12 md:py-16 max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4 uppercase">Help <span className="text-gradient-brand">Centre</span></h1>
+        <div className="mb-10">
+          <h1 className="public-title mb-4">Help <span className="text-gradient-brand">Centre</span></h1>
           <p className="text-xl text-muted-foreground mb-8">
             Find answers to common questions or get in touch with our support team
           </p>
           
           {/* Search */}
-          <div className="relative max-w-xl mx-auto">
+          <div className="relative max-w-xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
@@ -154,29 +155,12 @@ const HelpCentre = () => {
           </div>
         </div>
 
-        {/* Categories Grid */}
-        {searchQuery === "" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {helpCategories.map((category, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <category.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{category.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{category.description}</p>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        )}
+        {searchQuery === "" && <nav aria-label="Help topics" className="mb-10 flex flex-wrap gap-3 border-y border-border py-5">{helpCategories.map((category, i) => <Button asChild variant="outline" size="sm" key={category.title}><a href={`#help-topic-${i}`}>{category.title}</a></Button>)}</nav>}
 
         {/* FAQs */}
         <div className="space-y-8">
           {filteredCategories.map((category, categoryIndex) => (
-            <div key={categoryIndex}>
+            <div id={`help-topic-${helpCategories.findIndex((item) => item.title === category.title)}`} key={category.title} className="scroll-mt-24">
               <div className="flex items-center gap-3 mb-4">
                 <category.icon className="h-6 w-6 text-primary" />
                 <h2 className="text-2xl font-semibold">{category.title}</h2>
@@ -209,12 +193,7 @@ const HelpCentre = () => {
                 <p className="text-muted-foreground">Our support team is here to assist you</p>
               </div>
             </div>
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              Contact Support
-            </Link>
+            <Button asChild trace><Link to="/contact">Contact Support</Link></Button>
           </CardContent>
         </Card>
       </div>

@@ -1,3 +1,4 @@
+import { PAPERS } from "@/lib/papers";
 import { useMemo } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -44,19 +45,19 @@ import {
 } from "lucide-react";
 
 const STUDY_TOOLS = [
-  { label: "Flashcards", icon: Layers, to: "/flashcards", color: "text-purple-500" },
+  { label: "Flashcards", icon: Layers, to: "/flashcards", color: "text-primary" },
   
-  { label: "Achievements", icon: Trophy, to: "/achievements", color: "text-yellow-500" },
-  { label: "Discussions", icon: MessageSquare, to: "/discussions", color: "text-blue-500" },
+  { label: "Achievements", icon: Trophy, to: "/achievements", color: "text-primary" },
+  { label: "Discussions", icon: MessageSquare, to: "/discussions", color: "text-primary" },
 ];
 
-const CIMA_ORDER = ["BA1","BA2","BA3","BA4","E1","P1","F1","E2","P2","F2","E3","P3","F3","SCS","MCS","OCS"];
+const CIMA_ORDER = PAPERS.map((paper) => paper.code);
 
 const LEVEL_GROUPS = [
-  { key: "certificate", label: "Certificate (CBA)", sub: "BA1 · BA2 · BA3 · BA4", icon: Award, color: "text-teal-500" },
+  { key: "certificate", label: "Certificate (CBA)", sub: "BA1 · BA2 · BA3 · BA4", icon: Award, color: "text-primary" },
   { key: "operational", label: "Operational Level", sub: "E1 · P1 · F1 + OCS", icon: BookOpen, color: "text-primary" },
-  { key: "management", label: "Management Level", sub: "E2 · P2 · F2 + MCS", icon: BarChart3, color: "text-violet-500" },
-  { key: "strategic", label: "Strategic Level", sub: "E3 · P3 · F3 + SCS", icon: TargetIcon, color: "text-rose-500" },
+  { key: "management", label: "Management Level", sub: "E2 · P2 · F2 + MCS", icon: BarChart3, color: "text-primary" },
+  { key: "strategic", label: "Strategic Level", sub: "E3 · P3 · F3 + SCS", icon: TargetIcon, color: "text-primary" },
 ] as const;
 
 const getCimaIndex = (title: string) => {
@@ -113,9 +114,9 @@ const Dashboard = () => {
     return (
       <Layout>
         <SEOHead title="Dashboard" noIndex />
-        <div className="pt-[4rem] pb-6 lg:pt-[4.5rem] lg:pb-9">
+        <div className="py-10 lg:py-12">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-3 md:gap-6 mb-8">
               {[1, 2, 3].map((i) => <DashboardCardSkeleton key={i} />)}
             </div>
           </div>
@@ -129,13 +130,13 @@ const Dashboard = () => {
       <SEOHead title="Dashboard" noIndex />
       <OnboardingModal open={showOnboarding} onComplete={completeOnboarding} />
 
-      <div className="pt-[4rem] pb-6 lg:pt-[4.5rem] lg:pb-9">
-        <div className="container mx-auto px-4 space-y-6">
+      <div className="py-10 lg:py-12">
+        <div className="container mx-auto px-5 md:px-8 space-y-8">
 
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="!text-2xl md:!text-3xl lg:!text-3xl font-bold text-foreground uppercase">
+              <h1 className="text-3xl md:text-4xl font-medium text-foreground">
                 {isFirstSignIn || forceFirst ? "Welcome" : "Welcome back"},{" "}
                 <span className="text-gradient-brand">{userName}</span>
               </h1>
@@ -168,13 +169,13 @@ const Dashboard = () => {
           )}
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3 md:gap-6">
             <Card className="p-4">
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                 <BookOpen className="w-3.5 h-3.5" />
                 Enrolled
               </div>
-              <p className="text-3xl font-bold text-foreground">{enrolledCount}</p>
+              <p className="font-display text-3xl font-medium text-foreground">{enrolledCount}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {enrolledCount > 0 ? "active courses" : "no courses yet"}
               </p>
@@ -185,7 +186,7 @@ const Dashboard = () => {
                 <Target className="w-3.5 h-3.5" />
                 Completed
               </div>
-              <p className="text-3xl font-bold text-foreground">{completedLessonsCount}</p>
+              <p className="font-display text-3xl font-medium text-foreground">{completedLessonsCount}</p>
               <p className="text-xs text-muted-foreground mt-1">lessons finished</p>
             </Card>
 
@@ -200,7 +201,7 @@ const Dashboard = () => {
                   : averageScore >= 50
                   ? "text-primary"
                   : averageScore > 0
-                  ? "text-yellow-500"
+                  ? "text-primary"
                   : "text-foreground"
               }`}>
                 {averageScore > 0 ? `${averageScore}%` : "-"}
@@ -340,7 +341,7 @@ const Dashboard = () => {
                                 pct >= 80
                                   ? "text-accent"
                                   : pct >= 60
-                                  ? "text-yellow-500"
+                                  ? "text-primary"
                                   : "text-destructive"
                               }`}
                             >

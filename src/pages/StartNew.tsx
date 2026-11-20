@@ -43,7 +43,7 @@ const StartNew = () => {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
           New to CIMA
         </p>
-        <h1 className="mt-2 text-4xl font-bold leading-[1.02] tracking-[-0.035em] text-foreground md:text-6xl">
+        <h1 className="mt-2 public-title text-foreground">
           Start at the beginning, <span className="text-primary">for free</span>
         </h1>
         <p className="mt-4 max-w-2xl text-muted-foreground">
@@ -58,7 +58,7 @@ const StartNew = () => {
           before skipping a level - we can't confirm exemptions for you.
         </p>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)]">
+        <div className="mt-10 grid gap-8">
           <div>
             <h2 className="text-xl font-semibold text-foreground">
               The four free Certificate courses
@@ -72,7 +72,7 @@ const StartNew = () => {
                 <li key={course.id}>
                   <Link
                     to={`/courses/${course.slug}`}
-                    className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/60"
+                    className="flex items-start gap-3 border-b border-border py-5 transition-colors hover:border-primary/60"
                   >
                     <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
                     <span>
@@ -88,8 +88,8 @@ const StartNew = () => {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Button asChild trace size="lg">
-                <Link to="/courses/ba1-business-economics">
-                  Start with BA1
+                <Link to="/courses?level=certificate">
+                  Explore Certificate exams
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

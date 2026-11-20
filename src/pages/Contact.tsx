@@ -65,7 +65,7 @@ const Contact = () => {
     },
     {
       question: "What do I get with Finatix?",
-      answer: "It depends on the course. Each course page lists what it includes today. Courses are organised by the CIMA syllabus areas; where a question bank exists, questions are marked automatically with explanations, and your progress is saved to your account. Mock exams are still being built, and paid courses can't be bought until they're ready. Finatix is an independent study provider; CIMA registration, subscription and exam fees are paid directly to AICPA & CIMA."
+      answer: "Finatix brings syllabus-organised lessons, practice and saved progress together in one account. Each exam page lists its resources and access options. CIMA registration, subscription and exam fees are paid separately to AICPA & CIMA."
     },
     {
       question: "Do you offer refunds?",
@@ -111,79 +111,11 @@ const Contact = () => {
           ],
         }}
       />
-      {/* Hero */}
-      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hero-gradient-light overflow-hidden">
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-10 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/3 -right-20 pointer-events-none" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-            Get in Touch
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 uppercase">
-            Contact <span className="text-gradient-brand">Finatix</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl">
-            Have a question about our courses or need support? We respond within 24 - 48 hours, Monday to Friday, 9am to 5pm.
-          </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3 max-w-3xl rounded-lg border border-border bg-card/80 p-6 shadow-lg backdrop-blur-sm">
-            {[
-              { value: "24 - 48h", label: "Response time" },
-              { value: "Mon - Fri", label: "9am - 5pm" },
-              { value: "GMT", label: "Support hours" },
-            ].map((item) => (
-              <div key={item.label} className="border-l-2 border-primary pl-5">
-                <p className="text-2xl font-bold leading-none text-foreground md:text-3xl">
-                  {item.value}
-                </p>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  {item.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section id="faq" className="py-8 lg:py-10 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              FAQ
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Find quick answers to common questions about our platform
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="space-y-3">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
-                  value={`faq-${index}`}
-                  className="bg-card rounded-xl border border-border px-6"
-                >
-                  <AccordionTrigger className="hover:no-underline py-5 text-left">
-                    <span className="font-medium text-foreground">{faq.question}</span>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-muted-foreground">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        </div>
-      </section>
+      <section className="public-hero"><div className="container px-5 md:px-8"><p className="eyebrow">Contact Finatix</p><h1 className="public-title">Let's get you<br /><span className="text-primary">moving forward.</span></h1><p className="mt-5 max-w-xl text-lg text-muted-foreground">Questions about an exam, your account or course access? We're here to help.</p><p className="mt-3 text-sm text-muted-foreground">{COMPANY.responseTime} · {COMPANY.supportHours}</p></div></section>
 
       {/* Contact Section */}
-      <section className="py-8 lg:py-10">
-        <div className="container mx-auto px-4 overflow-hidden">
+      <section className="section-space">
+        <div className="container mx-auto px-5 md:px-8 overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
@@ -233,7 +165,7 @@ const Contact = () => {
                     required
                   />
                 </div>
-                <Button type="submit" size="lg" className="gap-2">
+                <Button trace type="submit" size="lg" className="gap-2">
                   <Send className="w-5 h-5" />
                   Send Message
                 </Button>
@@ -245,8 +177,8 @@ const Contact = () => {
               <h2 className="text-2xl font-bold text-foreground mb-6">Contact Information</h2>
               
               <div className="space-y-6">
-                <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-4 p-6 bg-card rounded-md border border-border">
+                  <div className="w-12 h-12 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
@@ -266,9 +198,9 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-card rounded-2xl border border-border">
-                  <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6 text-teal" />
+                <div className="flex items-start gap-4 p-6 bg-card rounded-md border border-border">
+                  <div className="w-12 h-12 rounded-md bg-secondary flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">When we're around</h3>
@@ -284,102 +216,7 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Course Demo Section */}
-      <section className="py-12 lg:py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              Sneak Peek
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              See What a Finatix Course Looks Like
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              A quick look inside the learning experience before you join
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {/* Video lesson mock */}
-            <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
-              <div className="relative aspect-video bg-gradient-to-br from-primary/80 to-teal/70 flex items-center justify-center">
-                <PlayCircle className="w-14 h-14 text-white/90" />
-                <span className="absolute bottom-3 left-3 text-xs font-medium text-white/90 bg-black/30 rounded px-2 py-0.5">
-                  Lesson 4 · Variance Analysis · 12:36
-                </span>
-              </div>
-              <div className="p-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <BookOpen className="w-4 h-4 text-primary" />
-                  <h3 className="font-semibold text-foreground">Bite-sized video lessons</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Every topic is broken into short, focused videos with downloadable notes and worked examples.
-                </p>
-              </div>
-            </div>
-
-            {/* Quiz mock */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-sm flex flex-col">
-              <div className="flex items-center gap-2 mb-3">
-                <CircleHelp className="w-4 h-4 text-primary" />
-                <h3 className="font-semibold text-foreground">Exam-style practice</h3>
-              </div>
-              <p className="text-sm font-medium text-foreground mb-3">
-                A company budgeted 10,000 units but produced 9,200. What is this called?
-              </p>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-muted-foreground">
-                  <span className="w-4 h-4 rounded-full border border-border" /> Sales variance
-                </div>
-                <div className="flex items-center gap-2 rounded-lg border border-primary/50 bg-primary/5 px-3 py-2 text-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-primary" /> Volume variance
-                </div>
-                <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-muted-foreground">
-                  <span className="w-4 h-4 rounded-full border border-border" /> Price variance
-                </div>
-              </div>
-              <p className="mt-3 text-xs text-muted-foreground">
-                Instant feedback with a full explanation for every answer.
-              </p>
-            </div>
-
-            {/* Analytics mock */}
-            <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <BarChart3 className="w-4 h-4 text-primary" />
-                <h3 className="font-semibold text-foreground">Competency analytics</h3>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { label: "Cost accounting", pct: 86 },
-                  { label: "Budgeting", pct: 64 },
-                  { label: "Financial reporting", pct: 42 },
-                ].map((row) => (
-                  <div key={row.label}>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-foreground font-medium">{row.label}</span>
-                      <span className="text-muted-foreground">{row.pct}%</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full rounded-full bg-primary" style={{ width: `${row.pct}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-xs text-muted-foreground">
-                Your dashboard highlights weak areas so you know exactly what to revise next.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center mt-10">
-            <Button asChild size="lg">
-              <a href="/courses">Browse the Courses</a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <section className="section-space border-t border-border bg-secondary/30"><div className="container grid gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1.2fr]"><h2 className="section-title">A quick answer<br />might be here.</h2><Accordion type="single" collapsible className="border-t border-border">{faqs.map((faq, i) => <AccordionItem key={faq.question} value={`faq-${i}`}><AccordionTrigger className="text-left font-medium">{faq.question}</AccordionTrigger><AccordionContent className="text-muted-foreground">{faq.answer}</AccordionContent></AccordionItem>)}</Accordion></div></section>
     </Layout>
   );
 };

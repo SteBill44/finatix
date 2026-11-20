@@ -146,7 +146,7 @@ const EnrolledCourseDashboard = ({
       : readiness.overall >= 50
       ? "hsl(var(--primary))"
       : hasRadarData
-      ? "hsl(25 95% 53%)"
+      ? "hsl(var(--primary))"
       : "hsl(var(--primary))";
 
   return (
@@ -154,7 +154,7 @@ const EnrolledCourseDashboard = ({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="!text-lg md:!text-xl lg:!text-xl font-bold text-foreground leading-tight">{course.title}</h1>
+          <h1 className="text-2xl md:text-3xl font-medium text-foreground leading-tight">{course.title}</h1>
           {readiness.lastActivityDays !== null && (
             <p className="text-sm text-muted-foreground mt-0.5">
               Last active{" "}

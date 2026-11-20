@@ -2,9 +2,9 @@ import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
-import LevelsSection from "@/components/home/LevelsSection";
-import WhyFinatix from "@/components/home/WhyFinatix";
-import StudyApproach from "@/components/home/StudyApproach";
+import ExamDirectory from "@/components/exams/ExamDirectory";
+import PlatformExperience from "@/components/home/PlatformExperience";
+
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -54,10 +54,9 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
-      <LevelsSection />
-      <WhyFinatix />
-      <StudyApproach />
-      <section aria-label="Independence" className="bg-background pt-20">
+      <ExamDirectory />
+      <PlatformExperience />
+      <section aria-label="Independence" className="bg-background pt-10">
         <div className="container mx-auto px-4">
           <QualificationDisclosure compact />
         </div>

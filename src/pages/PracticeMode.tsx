@@ -188,7 +188,7 @@ const PracticeMode = () => {
           title={`Practice Mode - ${course.title}`}
           description="Practice questions weighted towards the syllabus areas you get wrong most"
         />
-        <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
+        <div className="container mx-auto py-10 lg:py-12 px-5 md:px-8">
           <Button 
             variant="ghost" 
             onClick={() => navigate(`/courses/${courseSlug}`)}
@@ -322,7 +322,7 @@ const PracticeMode = () => {
   if (questions.length === 0) {
     return (
       <Layout>
-        <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
+        <div className="container mx-auto py-10 lg:py-12 px-5 md:px-8">
           <Card className="p-8 text-center">
             <Filter className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-xl font-bold mb-2">No Practice Questions Available</h2>
@@ -346,7 +346,7 @@ const PracticeMode = () => {
     
     return (
       <Layout>
-        <div className="container mx-auto pt-24 lg:pt-28 pb-8 px-4">
+        <div className="container mx-auto py-10 lg:py-12 px-5 md:px-8">
           <Card className="max-w-2xl mx-auto p-8 text-center">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
               <CheckCircle2 className="w-8 h-8 text-primary" />
@@ -379,7 +379,7 @@ const PracticeMode = () => {
 
   // Active practice session - full-screen focus mode
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-secondary/40 flex flex-col study-surface">
       <SEOHead
         title={`Practice Mode - ${course.title}`}
         description="Practice questions"
@@ -399,7 +399,7 @@ const PracticeMode = () => {
       />
 
       <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
+        <div className="container mx-auto px-5 md:px-8 py-8 lg:py-12 max-w-3xl">
           <div key={currentQuestionIndex} className="animate-fade-in">
             {/* Question metadata */}
             <div className="flex items-center gap-2 mb-4">

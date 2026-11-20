@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface QuestionProgressGridProps {
@@ -36,7 +37,7 @@ const QuestionProgressGrid = ({
         const isCurrent = currentIndex === index;
 
         return (
-          <button
+          <Button variant="ghost" size="icon"
             key={index}
             type="button"
             role="tab"
@@ -46,7 +47,7 @@ const QuestionProgressGrid = ({
             className={cn(
               "w-9 h-9 shrink-0 rounded-lg text-sm font-medium transition-all duration-150",
               isCurrent
-                ? "bg-primary text-primary-foreground shadow-sm scale-105"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : answered
                   ? "bg-success/15 text-success hover:bg-success/25"
                   : "bg-secondary/40 text-muted-foreground hover:bg-secondary/70",
@@ -54,7 +55,7 @@ const QuestionProgressGrid = ({
             )}
           >
             {index + 1}
-          </button>
+          </Button>
         );
       })}
     </div>

@@ -30,32 +30,6 @@ import {
   type CatalogueProduct,
 } from "@/lib/catalogue";
 
-const AnimatedCard = ({ 
-  children, 
-  index, 
-  className = "" 
-}: { 
-  children: React.ReactNode; 
-  index: number; 
-  className?: string;
-}) => {
-  const { isVisible, elementRef } = useScrollAnimation({ threshold: 0.1 });
-  
-  return (
-    <div
-      ref={elementRef}
-      className={`transition-all duration-700 ${
-        isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 translate-y-12'
-      } ${className}`}
-      style={{ transitionDelay: `${index * 150}ms` }}
-    >
-      {children}
-    </div>
-  );
-};
-
 const Pricing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -266,42 +240,12 @@ const Pricing = () => {
   // dated evidence exists for a named comparable product (see
   // OPEN_CLAIM_DECISIONS in src/lib/claims.ts), we describe only what we do.
   const included = [
-    {
-      feature: "Lesson outlines mapped to CIMA syllabus areas",
-      detail: facts.ready ? `${facts.lessonOutlines} lesson outlines across ${facts.courses} courses; ${facts.writtenLessons} full written lessons so far` : "Counting...",
-    },
-    {
-      feature: "Practice questions marked automatically",
-      detail: facts.ready ? `${facts.questions} questions so far, across ${facts.coursesWithQuestions} courses` : "Counting...",
-    },
-    {
-      feature: "Timed mock exams",
-      detail: facts.ready && facts.usableMocks > 0 ? `${facts.usableMocks} mock exams ready` : "Being prepared - not yet available",
-    },
-    {
-      feature: "Competency tracking and weak-area analysis",
-      detail: "Readiness scoring by syllabus area",
-    },
-    {
-      feature: "Spaced-repetition flashcards and discussions",
-      detail: "Included with every course",
-    },
-    {
-      feature: "Access on phone, tablet and desktop",
-      detail: "One account, no separate app purchase",
-    },
-    {
-      feature: "Finatix certificate of completion",
-      detail: "Not a CIMA qualification or exam result",
-    },
-    {
-      feature: "Support",
-      detail: POLICY.standardSupport,
-    },
-    {
-      feature: "Refunds",
-      detail: POLICY.refundText,
-    },
+    { feature: "Course access", detail: "Single-exam or bundle purchases provide lifetime access to the included courses. Membership access lasts while your subscription is active." },
+    { feature: "Study workspace", detail: "Syllabus-organised lessons, personal notes, flashcards and saved course progress." },
+    { feature: "Practice and results", detail: "Automatically marked questions with explanations and results saved to your account. See each exam for its resources." },
+    { feature: "Refunds", detail: POLICY.refundText },
+    { feature: "Support", detail: POLICY.standardSupport },
+    { feature: "CIMA fees", detail: "Registration, student subscription and exam fees are separate, payable to AICPA & CIMA." },
   ];
 
   return (
@@ -312,330 +256,32 @@ const Pricing = () => {
         keywords="CIMA pricing, CIMA course fees, CIMA training cost, affordable CIMA courses, CIMA subscription"
         canonicalUrl="https://finatix.io/pricing"
       />
-      {/* Hero */}
-      <section className="relative pt-32 lg:pt-36 pb-16 lg:pb-20 hero-gradient-light overflow-hidden">
-        <div className="gradient-orb gradient-orb-primary w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] -top-20 -left-10 pointer-events-none" />
-        <div className="gradient-orb gradient-orb-accent w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] top-1/3 -right-20 pointer-events-none" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-            Simple, Transparent Pricing
-          </span>
-          <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
-            Invest in your <span className="text-primary">CIMA study.</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl">
-            Choose the plan that fits your goals. Certificate level courses are free to start.
-          </p>
-          {contentStatusMap && !anyPaidOnSale && (
-            <div role="note" className="mt-6 max-w-2xl rounded-lg border border-primary/40 bg-card p-4 text-sm">
-              <p className="font-semibold text-foreground">Paid courses aren't open for purchase yet</p>
-              <p className="text-muted-foreground mt-1">
-                Their lessons and question banks are still being written and reviewed. The prices below are what they
-                will cost. You can register interest now, and nothing is charged. Anyone who has already bought keeps their access.
-              </p>
-            </div>
-          )}
-        </div>
-        
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="py-8 lg:py-10">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Bundle Plans
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Save more with our comprehensive bundle plans. The price you see is the price you pay.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4 lg:gap-6 max-w-6xl mx-auto">
-            {plans.map(({ product, cta, popular, subtitle, periodLabel, originalPrice }, index) => (
-              <AnimatedCard key={product.id} index={index}>
-                <div
-                  className={`relative bg-card rounded-2xl border ${
-                    popular ? "border-primary shadow-glow" : "border-border"
-                  } p-5 lg:p-6 hover-lift h-full flex flex-col`}
-                >
-                  {popular && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <span className="px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-foreground mb-2">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{product.description}</p>
-                    <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-4xl font-bold text-foreground">
-                        {product.price != null ? formatPrice(product.price) : "-"}
-                      </span>
-                      <span className="text-sm text-muted-foreground">/{periodLabel}</span>
-                    </div>
-                    {originalPrice && product.price != null && (
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        <span className="line-through">{formatPrice(originalPrice)}</span>
-                        <span className="ml-2 text-primary font-medium">
-                          Save {formatPrice(originalPrice - product.price)}
-                        </span>
-                      </p>
-                    )}
-                    {subtitle && (
-                      <p className="mt-2 text-sm font-medium text-primary">{subtitle}</p>
-                    )}
-                    <p className="mt-1 text-xs text-muted-foreground">{billingSummary(product)}</p>
-                  </div>
-
-                  <ul className="space-y-2.5 mb-6 flex-1">
-                    {product.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-2.5">
-                        {feature.included ? (
-                          <CheckCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                        ) : (
-                          <X className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
-                        )}
-                        <span className={`text-sm ${feature.included ? "text-foreground" : "text-muted-foreground"}`}>
-                          {feature.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Button
-                    variant={popular ? "default" : "outline"}
-                    size="lg"
-                    className="w-full mt-auto"
-                    onClick={() => handlePlanCta(product)}
-                  >
-                    {cta}
-                  </Button>
-                </div>
-              </AnimatedCard>
-            ))}
-          </div>
-
-          {/* Money Back Guarantee */}
-          <div className="text-center mt-12">
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 rounded-full">
-              <Shield className="w-5 h-5 text-primary" />
-              <span className="text-foreground font-medium">{POLICY.refundText}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Individual Courses by Level */}
-      <div id="individual-courses" />
-      {coursesByLevel && Object.keys(coursesByLevel).length > 0 && (
-        <section className="py-8 lg:py-10 bg-secondary/30">
-          <div className="container mx-auto px-4 overflow-hidden">
-            <div className="text-center mb-12">
-              <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                Individual Courses
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                CIMA Qualification Structure
-              </h2>
-            <p className="text-lg text-muted-foreground mb-6">
-              Choose individual modules or bundle an entire level for maximum savings.
-            </p>
-            
-            {/* Buy All Courses Banner */}
-            {totalAllCoursesPrice > 0 && (
-              <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 bg-gradient-to-r from-primary/20 via-purple/20 to-red/20 rounded-2xl border border-primary/30">
-                <div className="text-center sm:text-left">
-                  <p className="text-lg font-bold text-foreground">Complete CIMA Bundle - All {allCoursesCount} Courses</p>
-                  <p className="text-sm text-muted-foreground">
-                    <span className="line-through">£{totalAllCoursesPrice.toLocaleString()}</span>
-                    <span className="ml-2 text-primary font-semibold">£{allCoursesBundlePrice.toLocaleString()} lifetime access</span>
-                    <span className="ml-2 text-primary">Save £{allCoursesSavings.toLocaleString()}!</span>
-                  </p>
-                </div>
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-primary to-purple hover:opacity-90 text-white shrink-0"
-                  onClick={handleBuyAllCourses}
-                >
-                  {`Buy All ${allCoursesCount} Courses`}
-                </Button>
-              </div>
-            )}
-          </div>
-
-          <div className="max-w-4xl mx-auto space-y-8 mt-8">
-              {levelOrder.map((level) => {
-                const levelCourses = coursesByLevel[level];
-                if (!levelCourses || levelCourses.length === 0) return null;
-
-                const isCertificate = level === 'certificate';
-                const levelTotal = levelCourses.reduce((sum, c) => sum + Number(c.price || 0), 0);
-
-                return (
-                  <div key={level} className="bg-card rounded-2xl border border-border overflow-hidden">
-                    {/* Level Header */}
-                    <div className={`px-4 sm:px-6 py-4 ${
-                      level === 'certificate' ? 'bg-orange/10' : 
-                      level === 'operational' ? 'bg-primary/10' : 
-                      level === 'management' ? 'bg-purple/10' : 
-                      'bg-red/10'
-                    } border-b border-border`}>
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <h3 className="text-xl font-bold text-foreground">{LEVEL_NAMES[level]}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {levelCourses.length} {levelCourses.length === 1 ? 'exam' : 'exams'}
-                          </p>
-                        </div>
-                        {!isCertificate && (
-                          <div className="flex items-center gap-4">
-                            <div className="text-right">
-                              <div className="text-sm text-muted-foreground line-through">
-                                £{levelTotal} individually
-                              </div>
-                              <div className={`text-lg font-bold ${
-                                level === 'operational' ? 'text-primary' : 
-                                level === 'management' ? 'text-purple' : 
-                                'text-red'
-                              }`}>
-                                {formatPrice(LEVEL_BUNDLE_PRICE)} as bundle
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                Save {formatPrice(levelTotal - LEVEL_BUNDLE_PRICE)}
-                              </div>
-                            </div>
-                            <Button
-                              variant="default"
-                              size="sm"
-                              className={`${
-                                level === 'operational' ? 'bg-primary hover:bg-primary/90' : 
-                                level === 'management' ? 'bg-purple hover:bg-purple/90' : 
-                                'bg-red hover:bg-red/90'
-                              } text-white`}
-                              onClick={() => handleBuyLevelBundle(level, levelCourses)}
-                            >
-                              Buy Level Bundle
-                            </Button>
-                          </div>
-                        )}
-                        {isCertificate && (
-                          <span className="px-3 py-1 rounded-full bg-orange text-white text-sm font-medium">
-                            Free
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Course List */}
-                    <div className="divide-y divide-border">
-                      {levelCourses.map((course) => {
-                        const enrolled = isEnrolled(course.id);
-                        const isFree = Number(course.price) === 0;
-
-                        return (
-                          <div key={course.id} className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-secondary/30 transition-colors">
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-medium text-foreground truncate">{course.title}</h4>
-                              <p className="text-sm text-muted-foreground line-clamp-1">
-                                {course.description}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-3 sm:gap-4 sm:ml-4">
-                              <span className={`text-lg font-bold ${
-                                isFree ? 'text-orange' : 'text-foreground'
-                              }`}>
-                                {isFree ? 'Free' : `£${Number(course.price).toFixed(0)}`}
-                              </span>
-                              <Button
-                                size="sm"
-                                variant={enrolled ? "outline" : isFree ? "default" : "secondary"}
-                                disabled={enrollMutation.isPending}
-                                onClick={() => handleEnroll(course.id, course.title, course.slug, Number(course.price))}
-                              >
-                                {enrolled ? "Enrolled" : isFree ? "Start Free" : "Buy"}
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* What's included */}
-      <section className="py-8 lg:py-10 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-              What you get
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              What's included with Finatix
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Exactly what is on the platform today, so you can compare it against anything else
-              you're considering.
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-card rounded-2xl border border-border overflow-hidden">
-              <div className="grid grid-cols-2 bg-secondary/50">
-                <div className="p-4 font-semibold text-foreground">Included</div>
-                <div className="p-4 font-semibold text-foreground">Detail</div>
-              </div>
-
-              {included.map((row, index) => (
-                <div
-                  key={row.feature}
-                  className={`grid grid-cols-2 ${index % 2 === 0 ? "bg-background" : "bg-secondary/20"}`}
-                >
-                  <div className="p-4 flex items-start gap-2 text-foreground">
-                    <CheckCircle className="w-5 h-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                    <span>{row.feature}</span>
-                  </div>
-                  <div className="p-4 text-sm text-muted-foreground">{row.detail}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6">
-              <QualificationDisclosure />
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* CTA Section */}
-      <section className="py-10 lg:py-14">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Ready to Start Your Journey?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Study for your CIMA exams with structured courses, practice questions and progress tracking.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="gap-2"><Link to="/courses">
-                <Zap className="w-5 h-5" />
-                Start Free Trial
-              </Link></Button>
-            <Button asChild variant="outline" size="lg"><Link to="/contact">
-                Talk to Sales
-              </Link></Button>
-          </div>
-        </div>
-      </section>
+      <section className="public-hero"><div className="container px-5 md:px-8"><p className="eyebrow">Access & pricing</p><h1 className="public-title">Study your way.<br /><span className="text-primary">Choose your access.</span></h1><p className="mt-5 max-w-xl text-lg text-muted-foreground">One exam, a level or the full qualification. Choose the option that fits your CIMA study.</p><p className="mt-3 text-sm text-muted-foreground">Certificate courses are free with an account. Prices include VAT; CIMA exam fees are separate.</p></div></section>
+      <section className="section-space"><div className="container px-5 md:px-8">
+        <div className="grid gap-5 lg:grid-cols-3">{plans.map(({ product, cta, periodLabel }) => {
+          const open = product.id === "single_module" || itemOnSale({});
+          return <div key={product.id} className="flex flex-col rounded-md border border-border bg-card p-7">
+            <p className="eyebrow">{product.billingType === "subscription" ? "Flexible access" : "Lifetime course access"}</p><h2 className="text-2xl font-medium">{product.name}</h2><p className="mt-3 text-sm text-muted-foreground">{product.description}</p>
+            <div className="my-7"><span className="font-display text-4xl font-medium">{product.price != null ? formatPrice(product.price) : "—"}</span><span className="ml-2 text-sm text-muted-foreground">/{periodLabel}</span><p className="mt-2 text-xs text-muted-foreground">{open ? billingSummary(product) : "Indicative price. No charge when registering interest."}</p></div>
+            <ul className="mb-8 flex-1 space-y-3">{product.features.map((feature, i) => <li key={i} className="flex items-start gap-3 text-sm">{feature.included ? <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> : <X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />}<span className={feature.included ? "text-foreground" : "text-muted-foreground"}>{feature.text}</span></li>)}</ul>
+            <Button trace variant={product.id === "membership_monthly" ? "default" : "outline"} size="lg" onClick={() => handlePlanCta(product)}>{product.id === "single_module" ? "Choose an exam" : open ? cta : "Register interest"}</Button>
+          </div>;
+        })}</div>
+        {contentStatusMap && !anyPaidOnSale && <p role="note" className="mt-6 border-l-2 border-primary pl-4 text-sm text-muted-foreground">Paid purchasing is currently unavailable. You can view access options and register interest without payment. Existing purchases keep their access.</p>}
+      </div></section>
+      <section id="individual-courses" className="section-space scroll-mt-24 border-y border-border bg-secondary/30"><div className="container px-5 md:px-8"><div className="mb-10"><p className="eyebrow">Exam by exam</p><h2 className="section-title">Choose what you need.</h2><p className="mt-4 text-muted-foreground">Every exam follows the same qualification structure.</p></div>
+        {coursesByLevel && levelOrder.map((level) => {
+          const levelCourses = coursesByLevel[level]; if (!levelCourses?.length) return null;
+          const paid = level !== "certificate";
+          const onSale = itemOnSale({ courseIds: levelCourses.map((course) => course.id) });
+          return <div key={level} className="mb-10 last:mb-0"><div className="mb-2 flex flex-col justify-between gap-4 border-t border-foreground py-5 sm:flex-row sm:items-center"><h3 className="text-2xl font-medium">{LEVEL_NAMES[level]}</h3>{paid && <div className="flex items-center gap-4"><span className="text-sm text-muted-foreground">Level bundle {formatPrice(LEVEL_BUNDLE_PRICE)}</span><Button trace variant="outline" size="sm" onClick={() => handleBuyLevelBundle(level, levelCourses)}>{onSale ? "Buy level bundle" : "Register interest"}</Button></div>}</div>
+            <div className="divide-y divide-border">{levelCourses.map((course) => { const enrolled = isEnrolled(course.id); const free = Number(course.price) === 0; const ready = itemOnSale({ courseId: course.id });
+              return <div key={course.id} className="flex flex-col justify-between gap-4 py-5 sm:flex-row sm:items-center"><Link to={`/courses/${course.slug}`} className="min-w-0 flex-1 font-medium hover:text-primary">{course.title}</Link><div className="flex items-center gap-4"><span className="w-16 text-sm font-semibold">{free ? "Free" : formatPrice(Number(course.price))}</span><Button size="sm" variant={free ? "default" : "outline"} disabled={enrollMutation.isPending} onClick={() => handleEnroll(course.id, course.title, course.slug, Number(course.price))}>{enrolled ? "Enrolled" : free ? "Start free" : ready || hasMembership ? "Access exam" : "Register interest"}</Button></div></div>;
+            })}</div>
+          </div>;
+        })}
+      </div></section>
+      <section className="section-space"><div className="container grid gap-10 px-5 md:px-8 lg:grid-cols-[1fr_1.3fr]"><div><p className="eyebrow">The details</p><h2 className="section-title">Clear from<br />the beginning.</h2><div className="mt-6"><QualificationDisclosure compact /></div></div><dl className="divide-y divide-border border-y border-border">{included.map((row) => <div key={row.feature} className="grid gap-2 py-5 sm:grid-cols-[140px_1fr]"><dt className="text-sm font-semibold">{row.feature}</dt><dd className="text-sm text-muted-foreground">{row.detail}</dd></div>)}</dl></div></section>
 
       <CIMAProfileModal
         open={showCIMAModal}
@@ -652,8 +298,7 @@ const Pricing = () => {
             <DialogTitle>Not open for purchase yet</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            {interestFor?.name} includes course material that is still being written and reviewed, so we aren't
-            taking payment for it yet. Nothing is charged. Leave your email and we'll let you know when it opens.
+            {interestFor?.name} is not currently open for purchase. Nothing is charged. Register interest if you would like to hear when access is available.
           </p>
           <InterestRegistrationForm courseId={interestFor?.courseId ?? null} courseName={interestFor?.name ?? "this option"} />
         </DialogContent>

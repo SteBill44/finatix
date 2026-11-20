@@ -9,14 +9,14 @@ const MobileBottomNav = () => {
   const navItems = user
     ? [
         { icon: Home, label: "Home", path: "/" },
-        { icon: BookOpen, label: "Courses", path: "/courses" },
+        { icon: BookOpen, label: "Exams", path: "/courses" },
         { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
         { icon: Layers, label: "Flashcards", path: "/flashcards" },
         { icon: User, label: "Account", path: "/account" },
       ]
     : [
         { icon: Home, label: "Home", path: "/" },
-        { icon: BookOpen, label: "Courses", path: "/courses" },
+        { icon: BookOpen, label: "Exams", path: "/courses" },
         { icon: GraduationCap, label: "Pricing", path: "/pricing" },
         { icon: User, label: "Sign In", path: "/auth" },
       ];
@@ -39,8 +39,8 @@ const MobileBottomNav = () => {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <item.icon className={`w-5 h-5 mb-1 ${isActive(item.path) ? "scale-110" : ""} transition-transform`} />
-            <span className="text-[9px] font-medium truncate max-w-full">{item.label}</span>
+            <item.icon className="w-5 h-5 mb-1" />
+            <span className="text-[11px] font-medium truncate max-w-full">{item.label}</span>
           </Link>
         ))}
       </div>

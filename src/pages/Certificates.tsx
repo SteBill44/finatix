@@ -147,7 +147,7 @@ const Certificates = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="container max-w-4xl pt-24 pb-12">
+        <div className="container max-w-4xl py-10 lg:py-12">
           <div className="text-center">
             <Award className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-foreground mb-2">
@@ -165,9 +165,9 @@ const Certificates = () => {
 
   return (
     <Layout>
-      <div className="container max-w-4xl pt-24 pb-12">
+      <div className="container max-w-4xl py-10 lg:py-12">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2 uppercase">
+          <h1 className="text-3xl font-medium text-foreground mb-2">
             My <span className="text-gradient-brand">Certificates</span>
           </h1>
           <p className="text-muted-foreground">

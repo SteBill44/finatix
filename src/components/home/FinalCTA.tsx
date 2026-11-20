@@ -2,29 +2,5 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
-
-const FinalCTA = () => (
-  <section className="border-t border-border bg-background py-28 lg:py-40">
-    <div className="container mx-auto px-4">
-      <h2 className="max-w-[16ch] text-[clamp(2.75rem,7vw,7rem)] font-bold leading-[0.95] tracking-[-0.045em] text-foreground">
-        Your next CIMA exam <span className="text-primary">starts here.</span>
-      </h2>
-      <div className="mt-12 flex flex-col gap-6 border-t border-border pt-10 md:flex-row md:items-center md:justify-between">
-        <p className="max-w-md text-lg text-muted-foreground">Choose your level and see everything each course covers.</p>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="xl" trace className="group rounded-md">
-            <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "final_explore_courses" })}>
-              Explore CIMA Courses
-              <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
-            </Link>
-          </Button>
-          <Button asChild size="xl" variant="outline" trace className="rounded-md">
-            <Link to="/start">Not sure where to start?</Link>
-          </Button>
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
+const FinalCTA = () => <section className="section-space border-t border-border bg-secondary/50"><div className="container flex flex-col justify-between gap-8 px-5 md:px-8 lg:flex-row lg:items-end"><div><p className="eyebrow">Your next chapter</p><h2 className="section-title max-w-lg">Make room for<br /><span className="text-primary">what comes next.</span></h2><p className="mt-5 max-w-md text-muted-foreground">Find your exam and bring your CIMA study into focus.</p></div><Button asChild size="xl" trace className="self-start lg:self-auto"><Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "final_explore_courses" })}>Explore CIMA Courses<ArrowRight /></Link></Button></div></section>;
 export default FinalCTA;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useLocation } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEOHead from "@/components/SEOHead";
 import { ArrowLeft, LogIn } from "lucide-react";
@@ -68,10 +68,11 @@ const Auth = () => {
         }
         noIndex
       />
-      <section className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-4">
-        <div className="container mx-auto px-4">
-          <div className="max-w-md mx-auto">
-            <div className="bg-card rounded-xl border border-border p-5 shadow-lg">
+      <section className="bg-background">
+        <div className="container auth-shell px-5 md:px-8">
+          <div className="hidden lg:block"><p className="eyebrow">Finatix / Your study workspace</p><h2 className="section-title max-w-md">Make progress.<br /><span className="text-primary">Keep it yours.</span></h2><p className="mt-6 max-w-sm text-lg text-muted-foreground">All sixteen CIMA exams. Your notes, revision and course progress, together in one account.</p><Link to="/courses" className="mt-8 inline-block border-b border-primary pb-1 text-sm font-semibold">Explore the exam catalogue</Link></div>
+          <div className="auth-form">
+            <div>
               {(mode === "forgot" || mode === "reset") && (
                 <button
                   type="button"
@@ -90,11 +91,11 @@ const Auth = () => {
                 </div>
               )}
 
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-2">
+              <div className="mb-8">
+                <div className="flex mb-5">
                   <FinatixLogo size="md" showText={false} linkTo={null} animated={false} />
                 </div>
-                <h1 className="auth-title text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-foreground mb-1">{title}</h1>
+                <h1 className="auth-title text-2xl md:text-3xl font-medium text-foreground mb-1">{title}</h1>
                 {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
               </div>
 

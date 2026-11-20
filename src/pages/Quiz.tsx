@@ -194,7 +194,7 @@ const Quiz = () => {
   if (showResults) {
     return (
       <Layout>
-        <section className="pt-24 lg:pt-28 pb-12">
+        <section className="py-10 lg:py-12">
           <div className="container mx-auto px-4 max-w-2xl">
             <Card className="p-8 text-center mb-8 animate-scale-in">
               <Trophy className="w-12 h-12 mx-auto text-primary mb-4" />
@@ -203,7 +203,7 @@ const Quiz = () => {
               </h1>
               <p className="text-muted-foreground mb-6">{quiz.title}</p>
 
-              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/20 to-success/20 flex items-center justify-center">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-secondary flex items-center justify-center">
                 <span className="text-4xl font-bold text-foreground">{percentage}%</span>
               </div>
               <h2 className="text-2xl font-bold text-foreground mb-2">
@@ -240,7 +240,7 @@ const Quiz = () => {
 
   // ── Full-screen focus mode ──
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-secondary/40 flex flex-col study-surface">
       <QuizFocusHeader
         title={quiz.title}
         exitTo={exitPath}
@@ -256,12 +256,12 @@ const Quiz = () => {
 
       {/* Question area - maximized */}
       <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
+        <div className="container mx-auto px-5 md:px-8 py-8 lg:py-12 max-w-3xl">
           <div key={currentQuestion} className="animate-fade-in">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3 capitalize">
               {question.question_type.replace('_', ' ')}
             </p>
-            <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-8 leading-snug">
+            <h2 className="text-xl md:text-2xl font-medium text-foreground mb-8 leading-snug">
               {question.question}
             </h2>
 

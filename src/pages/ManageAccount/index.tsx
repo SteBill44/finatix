@@ -63,10 +63,10 @@ const ManageAccount = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 pt-24">
-        <div className="max-w-2xl mx-auto">
+      <div className="container mx-auto px-5 md:px-8 py-10 lg:py-12">
+        <div className="max-w-3xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">Manage Account</h1>
+            <h1 className="text-3xl font-medium text-foreground">Manage Account</h1>
             <p className="text-muted-foreground mt-2">
               Update your profile information and account settings
             </p>

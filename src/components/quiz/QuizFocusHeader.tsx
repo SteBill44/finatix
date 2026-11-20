@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import FinatixLogo from "@/components/FinatixLogo";
 import { Progress } from "@/components/ui/progress";
 
 interface QuizFocusHeaderProps {
@@ -24,17 +26,18 @@ const QuizFocusHeader = ({ title, exitTo, onExit, current, total, right }: QuizF
 
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="flex items-center gap-3 px-4 h-14">
+      <div className="flex items-center gap-3 px-5 md:px-8 h-16">
         {exitTo ? (
           <Link to={exitTo} aria-label="Exit quiz" className={exitClasses}>
             <X className="w-5 h-5" />
           </Link>
         ) : (
-          <button type="button" onClick={onExit} aria-label="Exit quiz" className={exitClasses}>
+          <Button variant="ghost" size="icon" type="button" onClick={onExit} aria-label="Exit quiz" className={exitClasses}>
             <X className="w-5 h-5" />
-          </button>
+          </Button>
         )}
 
+        <div className="hidden md:block mr-3 border-r border-border pr-5"><FinatixLogo size="sm" /></div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground truncate">{title}</p>
           <p className="text-xs text-muted-foreground">

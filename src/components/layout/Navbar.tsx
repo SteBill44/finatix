@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useUserRole";
 import { supabase } from "@/integrations/supabase/client";
+import ExamsMenu from "@/components/exams/ExamsMenu";
 import FinatixLogo from "@/components/FinatixLogo";
 import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -72,10 +73,8 @@ const Navbar = () => {
   }, [user]);
 
   const navLinks = [
-    { name: "Courses", path: "/courses" },
-    { name: "Levels", path: "/#levels" },
-    { name: "Case studies", path: "/courses?case=1" },
-    { name: "Approach", path: "/#approach" },
+    { name: "Exams", path: "/courses" },
+    { name: "Platform", path: "/#platform" },
     { name: "Pricing", path: "/pricing" },
     { name: "About", path: "/about" },
     ...(user ? [{ name: "Dashboard", path: "/dashboard" }] : []),
@@ -85,7 +84,7 @@ const Navbar = () => {
     const [p, q] = path.split("?");
     if (p.includes("#")) return false;
     if (q) return location.pathname === p && location.search === `?${q}`;
-    return location.pathname === p && (p !== "/courses" || !location.search.includes("case=1"));
+    return location.pathname.startsWith(p);
   };
 
   const toggleTheme = () => {
@@ -100,15 +99,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
-      <div className="container mx-auto px-4">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="container mx-auto px-5 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <FinatixLogo size="sm" />
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-5 xl:gap-7">
-            {navLinks.map((link) => (
+            {navLinks.map((link) => link.path === "/courses" ? <ExamsMenu key={link.path} active={location.pathname.startsWith("/courses") || location.pathname.startsWith("/papers")} /> : (
               <Link
                 key={link.path}
                 to={link.path}
@@ -133,7 +132,7 @@ const Navbar = () => {
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                  <button type="button" className="flex items-center gap-2 px-3 py-2 rounded-lg border border-primary bg-primary text-primary-foreground shadow-sm shadow-primary/25 hover:bg-primary/90 transition-colors">
+                  <Button type="button" variant="outline" className="gap-2 px-3">
                     <Avatar className="w-7 h-7">
                       <AvatarImage src={avatarUrl || undefined} alt="Profile" />
                       <AvatarFallback className="bg-primary-foreground text-primary text-xs font-bold">
@@ -141,9 +140,9 @@ const Navbar = () => {
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-sm font-bold max-w-[120px] truncate">
-                      Members Area
+                      My account
                     </span>
-                  </button>
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" sideOffset={4} className="w-48 bg-popover border border-border">
                   <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Navigation</DropdownMenuLabel>
@@ -216,13 +215,13 @@ const Navbar = () => {
             ) : (
               <>
                 <Link to="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  SIGN IN
+                  Sign in
                 </Link>
                 <Button asChild size="sm" trace className="rounded-md"><Link to="/auth?mode=signup">Get Started</Link></Button>
               </>
             )}
 
-            <button
+            <Button variant="ghost" size="icon"
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
@@ -232,7 +231,7 @@ const Navbar = () => {
               ) : (
                 <Moon className="w-5 h-5 text-muted-foreground" />
               )}
-            </button>
+            </Button>
 
             {/* Notifications Bell */}
             {user && <NotificationsBell />}
@@ -240,7 +239,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="flex lg:hidden items-center gap-2">
-            <button
+            <Button variant="ghost" size="icon"
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-secondary transition-colors"
               aria-label="Toggle theme"
@@ -250,28 +249,28 @@ const Navbar = () => {
               ) : (
                 <Moon className="w-5 h-5 text-muted-foreground" />
               )}
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost" size="icon"
               className="p-2 text-foreground"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
+              aria-expanded={isOpen}
+              aria-controls="mobile-navigation"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-fade-up max-h-[70vh] overflow-y-auto">
+          <div id="mobile-navigation" className="lg:hidden py-4 border-t border-border animate-fade-up max-h-[70vh] overflow-y-auto">
             <div className="flex flex-col gap-2">
               {isAdmin && (
-                <Link to="/admin" onClick={() => setIsOpen(false)}>
-                  <Button variant="destructive" className="w-full flex items-center gap-2">
+                <Button asChild variant="destructive" className="w-full flex items-center gap-2"><Link to="/admin" onClick={() => setIsOpen(false)}>
                     <Shield className="w-4 h-4" />
                     Admin Dashboard
-                  </Button>
-                </Link>
+                  </Link></Button>
               )}
               {navLinks.map((link) => (
                 <Link
@@ -290,55 +289,39 @@ const Navbar = () => {
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 {user ? (
                   <>
-                    <Link to="/dashboard" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/dashboard" onClick={() => setIsOpen(false)}>
                         <LayoutDashboard className="w-4 h-4" />
                         Dashboard
-                      </Button>
-                    </Link>
-                    <Link to="/achievements" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/achievements" onClick={() => setIsOpen(false)}>
                         <Trophy className="w-4 h-4" />
                         Achievements
-                      </Button>
-                    </Link>
-                    <Link to="/flashcards" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/flashcards" onClick={() => setIsOpen(false)}>
                         <Layers className="w-4 h-4" />
                         Flashcards
-                      </Button>
-                    </Link>
-                    <Link to="/discussions" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/discussions" onClick={() => setIsOpen(false)}>
                         <MessageSquare className="w-4 h-4" />
                         Discussions
-                      </Button>
-                    </Link>
-                    <Link to="/referrals" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/referrals" onClick={() => setIsOpen(false)}>
                         <Gift className="w-4 h-4" />
                         Referrals
-                      </Button>
-                    </Link>
-                    <Link to="/certificates" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/certificates" onClick={() => setIsOpen(false)}>
                         <Award className="w-4 h-4" />
                         My Certificates
-                      </Button>
-                    </Link>
-                    <Link to="/account" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full flex items-center gap-2">
+                      </Link></Button>
+                    <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/account" onClick={() => setIsOpen(false)}>
                         <Settings className="w-4 h-4" />
                         Manage Account
-                      </Button>
-                    </Link>
+                      </Link></Button>
                     {isAdmin && (
-                      <Link to="/admin" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full flex items-center gap-2">
+                      <Button asChild variant="outline" className="w-full flex items-center gap-2"><Link to="/admin" onClick={() => setIsOpen(false)}>
                           <Shield className="w-4 h-4" />
                           Admin Dashboard
-                        </Button>
-                      </Link>
+                        </Link></Button>
                     )}
                     <Button
                       variant="ghost"
@@ -351,14 +334,10 @@ const Navbar = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/auth" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full">
+                    <Button asChild variant="outline" className="w-full"><Link to="/auth" onClick={() => setIsOpen(false)}>
                         Sign In
-                      </Button>
-                    </Link>
-                    <Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full">Get Started</Button>
-                    </Link>
+                      </Link></Button>
+                    <Button asChild className="w-full"><Link to="/auth?mode=signup" onClick={() => setIsOpen(false)}>Get Started</Link></Button>
                   </>
                 )}
               </div>

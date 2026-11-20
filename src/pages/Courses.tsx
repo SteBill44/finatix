@@ -59,46 +59,10 @@ interface Course {
 
 // ── Level config ──────────────────────────────────────────────────
 const levelConfig = {
-  certificate: {
-    label: "Certificate (CBA)",
-    icon: Award,
-    gradient: "from-teal-600 to-teal-800",
-    lightGradient: "from-teal-400/80 to-teal-600/80",
-    badge: "bg-teal-500/15 text-teal-600 dark:text-teal-400",
-    border: "border-l-teal-500",
-    ring: "ring-teal-500/20",
-    sub: "BA1 · BA2 · BA3 · BA4",
-  },
-  operational: {
-    label: "Operational Level",
-    icon: BookOpen,
-    gradient: "from-primary to-orange-700",
-    lightGradient: "from-primary/80 to-orange-600/80",
-    badge: "bg-primary/15 text-primary",
-    border: "border-l-primary",
-    ring: "ring-primary/20",
-    sub: "E1 · P1 · F1 + Case Study",
-  },
-  management: {
-    label: "Management Level",
-    icon: BarChart3,
-    gradient: "from-violet-600 to-violet-900",
-    lightGradient: "from-violet-500/80 to-violet-700/80",
-    badge: "bg-violet-500/15 text-violet-600 dark:text-violet-400",
-    border: "border-l-violet-500",
-    ring: "ring-violet-500/20",
-    sub: "E2 · P2 · F2 + Case Study",
-  },
-  strategic: {
-    label: "Strategic Level",
-    icon: Target,
-    gradient: "from-rose-600 to-rose-900",
-    lightGradient: "from-rose-500/80 to-rose-700/80",
-    badge: "bg-rose-500/15 text-rose-600 dark:text-rose-400",
-    border: "border-l-rose-500",
-    ring: "ring-rose-500/20",
-    sub: "E3 · P3 · F3 + Case Study",
-  },
+  certificate: { label: "Certificate", icon: Award, sub: "BA1 · BA2 · BA3 · BA4" },
+  operational: { label: "Operational", icon: BookOpen, sub: "E1 · P1 · F1 · OCS" },
+  management: { label: "Management", icon: BarChart3, sub: "E2 · P2 · F2 · MCS" },
+  strategic: { label: "Strategic", icon: Target, sub: "E3 · P3 · F3 · SCS" },
 } as const;
 
 type Level = keyof typeof levelConfig;
@@ -134,173 +98,24 @@ function CourseCard({
   course, isEffectiveAdmin, isEnrolled, isCompleted,
   completedLessons, totalLessons, onImageUpdate, view,
 }: CardProps) {
-  const cfg = levelConfig[course.level as Level] || levelConfig.operational;
   const code = getCourseCode(course.slug);
-  const caseStudy = isCaseStudy(course.slug);
-  const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
   const { data: statusMap } = useCourseContentStatus();
-  const st = statusMap?.get(course.id);
-  // Outlines aren't delivered lessons: only call them lessons once taught, and never show a price for an unopened course.
-  const unopened = course.price > 0 && !canPurchase(st);
-  const outlineOnly = !st || st.taught_lessons < st.lesson_records;
-  const lessonLabel = outlineOnly ? `${totalLessons}-lesson outline` : `${totalLessons} lessons`;
-  const priceNode = course.price === 0
-    ? <span className="text-green-600 dark:text-green-400">Free</span>
-    : unopened ? <span className="text-muted-foreground font-medium">In development</span> : `£${course.price}`;
-
-  if (view === "list") {
-    return (
-      <AdminImageDropZone onImageUpdated={onImageUpdate}>
-        <Link
-          to={`/courses/${course.slug}`}
-          className="group flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:shadow-md hover:border-primary/30 transition-all"
-        >
-          {/* Color swatch */}
-          <div className={`w-14 h-14 rounded-lg bg-gradient-to-br ${cfg.gradient} flex items-center justify-center flex-shrink-0`}>
-            <span className="text-white font-bold text-base">{code}</span>
-          </div>
-
-          {/* Main info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>{code}</span>
-              {caseStudy && <Badge variant="secondary" className="text-xs">Case Study</Badge>}
-              <ContentStatusBadge courseId={course.id} />
-              {isCompleted && (
-                <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400 font-medium">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Completed
-                </span>
-              )}
-              {isEnrolled && !isCompleted && (
-                <Badge variant="outline" className="text-xs text-primary border-primary/40">Enrolled</Badge>
-              )}
-            </div>
-            <h3 className="font-semibold text-sm text-foreground break-words">{course.title}</h3>
-            {course.description && (
-              <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{course.description}</p>
-            )}
-            {isEnrolled && totalLessons > 0 && (
-              <div className="flex items-center gap-2 mt-1.5">
-                <Progress value={progressPct} className="h-1 flex-1 max-w-32" />
-                <span className="text-[10px] text-muted-foreground">{progressPct}%</span>
-              </div>
-            )}
-          </div>
-
-          {/* Meta */}
-          <div className="flex-shrink-0 text-right hidden sm:block">
-            {totalLessons > 0 && (
-              <p className="text-xs text-muted-foreground mb-0.5">{lessonLabel}</p>
-            )}
-            
-            <p className="text-sm font-semibold text-foreground mt-1">
-              {priceNode}
-            </p>
-          </div>
-
-          <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-        </Link>
-      </AdminImageDropZone>
-    );
-  }
-
-  // Grid card
-  return (
-    <AdminImageDropZone onImageUpdated={onImageUpdate}>
-      <Link
-        to={`/courses/${course.slug}`}
-        className={`group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all flex flex-col ring-0 hover:ring-2 ${cfg.ring}`}
-      >
-        {/* Header - image or gradient */}
-        <div className="relative h-36 overflow-hidden flex-shrink-0">
-          {course.image_url ? (
-            <OptimizedImage
-              src={course.image_url}
-              alt={course.title}
-              aspectRatio="video"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : (
-            <CourseCover
-              level={course.level}
-              code={code}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          )}
-          {/* Overlay badges */}
-          <div className="absolute top-2.5 left-2.5 flex gap-1.5 flex-wrap">
-            {caseStudy && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black/50 text-white backdrop-blur-sm">
-                Case Study
-              </span>
-            )}
-          </div>
-          {/* Enrollment badge top-right */}
-          {isCompleted && (
-            <div className="absolute top-2.5 right-2.5">
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-green-500 text-white">
-                <CheckCircle2 className="w-3 h-3" /> Done
-              </span>
-            </div>
-          )}
-          {isEnrolled && !isCompleted && (
-            <div className="absolute top-2.5 right-2.5">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-primary text-primary-foreground">
-                Enrolled
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Body */}
-        <div className="p-4 flex flex-col flex-1">
-          <div className="flex items-center gap-1.5 mb-2">
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>{code}</span>
-          </div>
-
-          <div className="mb-1"><ContentStatusBadge courseId={course.id} /></div>
-          <h3 className="text-sm font-semibold text-foreground leading-snug mb-1.5 line-clamp-2 min-h-[2.5rem]">
-            {course.title}
-          </h3>
-
-          {course.description && (
-            <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3 flex-1">
-              {course.description}
-            </p>
-          )}
-
-          {/* Progress bar for enrolled */}
-          {isEnrolled && totalLessons > 0 && (
-            <div className="mb-3">
-              <div className="flex justify-between text-[10px] text-muted-foreground mb-1">
-                <span>{completedLessons}/{totalLessons} lessons</span>
-                <span>{progressPct}%</span>
-              </div>
-              <Progress value={progressPct} className="h-1.5" />
-            </div>
-          )}
-
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
-            <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
-              {totalLessons > 0 && (
-                <span className="flex items-center gap-1">
-                  <FileText className="w-3.5 h-3.5" />
-                  {lessonLabel}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-foreground">
-                {priceNode}
-              </span>
-              <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-            </div>
-          </div>
-        </div>
-      </Link>
-    </AdminImageDropZone>
-  );
+  const status = statusMap?.get(course.id);
+  const unopened = course.price > 0 && !canPurchase(status);
+  const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const priceNode = course.price === 0 ? "Free" : unopened ? "View access options" : `£${course.price}`;
+  return <AdminImageDropZone onImageUpdated={onImageUpdate}>
+    <Link to={`/courses/${course.slug}`} className={`exam-card group ${view === "list" ? "exam-card-list" : ""}`}>
+      {view === "grid" ? <div className="aspect-[16/7] overflow-hidden border-b border-border">{course.image_url ? <OptimizedImage src={course.image_url} alt={course.title} className="h-full w-full object-cover" /> : <CourseCover level={course.level} code={code} className="h-full w-full" />}</div> : <span className="exam-code">{code}</span>}
+      <div className={`min-w-0 flex-1 ${view === "grid" ? "p-5" : ""}`}>
+        <div className="mb-3 flex items-center justify-between gap-2 text-xs text-muted-foreground"><span>{code}</span>{isCompleted ? <span className="flex items-center gap-1 text-success"><CheckCircle2 className="h-3 w-3" />Completed</span> : isEnrolled ? <span className="text-primary">Enrolled</span> : null}</div>
+        <h3 className="text-base font-medium leading-snug text-foreground">{course.title}</h3>
+        {course.description && <p className={`mt-2 text-sm text-muted-foreground ${view === "grid" ? "line-clamp-2" : "line-clamp-1"}`}>{course.description}</p>}
+        {isEnrolled && totalLessons > 0 && <div className="mt-4"><div className="mb-2 flex justify-between text-xs text-muted-foreground"><span>{completedLessons}/{totalLessons} lessons</span><span>{progressPct}%</span></div><Progress value={progressPct} className="h-1" /></div>}
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4"><span className={`text-xs font-semibold ${course.price === 0 ? "text-primary" : "text-muted-foreground"}`}>{priceNode}</span><ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5" /></div>
+      </div>
+    </Link>
+  </AdminImageDropZone>;
 }
 
 // ── Page ──────────────────────────────────────────────────────────
@@ -433,7 +248,7 @@ const Courses = () => {
   return (
     <Layout>
       <SEOHead
-        title="CIMA Courses"
+        title="CIMA Exam Catalogue"
         description="Browse Finatix CIMA courses across Certificate, Operational, Management and Strategic levels, including case studies. See what each course contains today before you enrol."
         keywords="CIMA courses, BA1, BA2, BA3, BA4, E1, P1, F1, E2, P2, F2, E3, P3, F3, case study, CIMA online training"
         canonicalUrl="/courses"
@@ -457,69 +272,15 @@ const Courses = () => {
         }}
       />
 
-      {/* ── Hero ── */}
-      <section className="relative pt-28 lg:pt-36 pb-14 lg:pb-20 border-b border-border bg-background">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl">
-            <p className="mb-6 font-mono text-xs uppercase tracking-[0.24em] text-primary">Courses</p>
-            <h1 className="text-5xl md:text-7xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground mb-6">
-              Every CIMA paper. <span className="text-primary">One place.</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-xl">
-              Every level of the CIMA qualification, from Certificate in Business Accounting to Strategic case study. Choose a level to see its subjects and case study.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Level overview strip ── */}
-      <section className="py-8 bg-card border-y border-border">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-4 gap-2 sm:gap-4">
-            {levelOrder.map((level) => {
-              const cfg = levelConfig[level];
-              const Icon = cfg.icon;
-              const count = courses.filter((c) => c.level === level).length;
-              return (
-                <button
-                  key={level}
-                  aria-pressed={selectedLevel === level}
-                  onClick={() => setSelectedLevel(selectedLevel === level ? "all" : level)}
-                  className={`text-center p-2 sm:p-4 rounded-xl border transition-all ${
-                    selectedLevel === level
-                      ? `border-transparent bg-gradient-to-br ${cfg.gradient} text-white shadow-md`
-                      : "border-border hover:border-primary/30 hover:bg-secondary/50"
-                  }`}
-                >
-                  <div className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mx-auto mb-1 sm:mb-2 ${
-                    selectedLevel === level ? "bg-white/20" : `bg-gradient-to-br ${cfg.gradient}/10`
-                  }`}>
-                    <Icon className={`w-3.5 h-3.5 sm:w-5 sm:h-5 ${selectedLevel === level ? "text-white" : ""}`} />
-                  </div>
-                  <h3 className={`font-semibold text-[10px] leading-tight sm:text-sm mb-0.5 break-words ${selectedLevel === level ? "text-white" : "text-foreground"}`}>
-                    <span className="sm:hidden">{cfg.label.replace(" Level", "").replace(" (CBA)", "")}</span>
-                    <span className="hidden sm:inline">{cfg.label}</span>
-                  </h3>
-                  <p className={`hidden sm:block text-xs ${selectedLevel === level ? "text-white/70" : "text-muted-foreground"}`}>
-                    {cfg.sub}
-                  </p>
-                  {count > 0 && (
-                    <span className={`inline-block mt-1 sm:mt-1.5 text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full font-medium ${
-                      selectedLevel === level ? "bg-white/20 text-white" : "bg-secondary text-muted-foreground"
-                    }`}>
-                      {count}<span className="hidden sm:inline"> courses</span>
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <section className="public-hero"><div className="container px-5 md:px-8"><p className="eyebrow">The exam catalogue</p><h1 className="public-title">Every CIMA exam.<br /><span className="text-primary">One place.</span></h1><p className="mt-5 max-w-xl text-lg text-muted-foreground">All sixteen exams across four qualification levels. Find the exam you're studying and open its learning resources.</p></div></section>
+      <section className="border-b border-border bg-card"><div className="container px-5 md:px-8"><div className="grid grid-cols-2 gap-2 py-5 sm:grid-cols-5">
+        <Button variant={selectedLevel === "all" ? "secondary" : "ghost"} onClick={() => setSelectedLevel("all")} aria-pressed={selectedLevel === "all"}>All levels</Button>
+        {levelOrder.map((level) => <Button key={level} variant={selectedLevel === level ? "secondary" : "ghost"} className={selectedLevel === level ? "text-primary" : "text-muted-foreground"} aria-pressed={selectedLevel === level} onClick={() => setSelectedLevel(selectedLevel === level ? "all" : level)}>{levelConfig[level].label}</Button>)}
+      </div></div></section>
 
       {/* ── Filters + Courses ── */}
       <section className="py-8 lg:py-10">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-5 md:px-8">
           {hasMembership && (
             <div className="mb-6 rounded-xl border border-primary/30 bg-primary/5 p-4">
               <p className="text-sm font-semibold text-foreground">
@@ -537,30 +298,19 @@ const Courses = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 aria-label="Search courses"
-                placeholder="Search courses (BA1, E2, Case Study…)"
+                placeholder="Search by exam code or subject"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 h-10 rounded-full"
+                className="pl-9 h-10 rounded-md"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-              {/* Case Study toggle */}
-              <button
-                onClick={() => setCaseStudyOnly((v) => !v)}
-                className={`px-3 py-2 h-10 rounded-full text-xs font-medium border transition-colors ${
-                  caseStudyOnly
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-background text-foreground border-border hover:border-primary/50"
-                }`}
-                aria-pressed={caseStudyOnly}
-              >
-                Case Study only
-              </button>
+              {caseStudyOnly && <Button variant="secondary" onClick={() => setCaseStudyOnly(false)}><X className="h-3 w-3" />Exam type filter</Button>}
 
               {/* Price filter */}
               <Select value={priceFilter} onValueChange={(v) => setPriceFilter(v as typeof priceFilter)}>
-                <SelectTrigger className="h-10 w-[110px] rounded-full text-xs">
+                <SelectTrigger className="h-10 w-[110px] rounded-md text-xs">
                   <SelectValue placeholder="Price" />
                 </SelectTrigger>
                 <SelectContent>
@@ -572,7 +322,7 @@ const Courses = () => {
 
               {/* Sort */}
               <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-                <SelectTrigger className="h-10 w-[130px] rounded-full text-xs">
+                <SelectTrigger className="h-10 w-[130px] rounded-md text-xs">
                   <SlidersHorizontal className="w-3.5 h-3.5 mr-1.5" />
                   <SelectValue placeholder="Sort" />
                 </SelectTrigger>
@@ -625,7 +375,7 @@ const Courses = () => {
 
             {/* Enrolled info chip */}
             {user && enrollments.length > 0 && (
-              <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary px-3 py-1.5 rounded-full flex-shrink-0">
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground bg-secondary px-3 py-1.5 rounded-md flex-shrink-0">
                 <GraduationCap className="w-3.5 h-3.5 text-primary" />
                 {enrollments.length} enrolled
               </span>
@@ -649,19 +399,7 @@ const Courses = () => {
 
             return (
               <div key={level} className="mb-14 last:mb-0">
-                {/* Level header */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${cfg.gradient} flex items-center justify-center flex-shrink-0`}>
-                    <Icon className="w-4.5 h-4.5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-foreground">{cfg.label}</h2>
-                    <p className="text-xs text-muted-foreground">{cfg.sub}</p>
-                  </div>
-                  <span className="ml-auto text-xs text-muted-foreground bg-secondary px-2.5 py-1 rounded-full">
-                    {levelCourses.length} courses
-                  </span>
-                </div>
+                <div className="mb-6 flex items-end justify-between gap-3 border-t border-foreground pt-5"><div><h2 className="text-2xl font-medium text-foreground">{cfg.label}</h2><p className="mt-1 text-xs text-muted-foreground">{cfg.sub}</p></div><span className="text-xs text-muted-foreground">{levelCourses.length} exams</span></div>
 
                 {/* Mobile: always list view */}
                 <div className="space-y-2.5 sm:hidden">
@@ -683,7 +421,7 @@ const Courses = () => {
                 {/* Desktop: respect grid/list toggle */}
                 <div className="hidden sm:block">
                   {view === "grid" ? (
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
                       {levelCourses.map((course) => (
                         <CourseCard
                           key={course.id}

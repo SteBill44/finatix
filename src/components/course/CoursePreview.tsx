@@ -50,6 +50,7 @@ interface CoursePreviewProps {
   /** Advertised price in pounds, or null for a free course. */
   price: number | null;
   isFree: boolean;
+  purchaseAvailable: boolean;
   /** True when the visitor's membership already covers this course. */
   coveredByMembership: boolean;
   isAdmin: boolean;
@@ -101,6 +102,7 @@ const CoursePreview = ({
   lessons,
   price,
   isFree,
+  purchaseAvailable,
   coveredByMembership,
   isAdmin,
   onBuy,
@@ -125,46 +127,46 @@ const CoursePreview = ({
   const lessonTime = formatMinutes(facts.lessonMinutes);
 
   return (
-    <div className="space-y-12 pb-28 lg:pb-0">
+    <div className="space-y-10 pb-20 lg:pb-0">
       {/* ── What's in this course, from the actual content ── */}
       <Section id="course-contents" title="What's in this course" icon={BookOpen}>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Card className="p-4">
+        <div className="grid grid-cols-2 gap-5 border-y border-border py-5 sm:grid-cols-4">
+          <div className="border-l border-border pl-4">
             <p className="text-2xl font-bold text-foreground">{facts.lessonCount}</p>
             <p className="text-xs text-muted-foreground">Lessons</p>
-          </Card>
+          </div>
           {lessonTime && (
-            <Card className="p-4">
+            <div className="border-l border-border pl-4">
               <p className="text-2xl font-bold text-foreground">{lessonTime}</p>
               <p className="text-xs text-muted-foreground">Taught lesson time</p>
-            </Card>
+            </div>
           )}
           {facts.estimatedStudyHours !== null && (
-            <Card className="p-4">
+            <div className="border-l border-border pl-4">
               <p className="text-2xl font-bold text-foreground">{facts.estimatedStudyHours} hrs</p>
               <p className="text-xs text-muted-foreground">Estimated total study time</p>
-            </Card>
+            </div>
           )}
           {(status?.questions ?? 0) > 0 && (
-            <Card className="p-4">
-              <p className="text-2xl font-bold text-foreground">{status!.questions}</p>
+            <div className="border-l border-border pl-4">
+              <p className="text-2xl font-bold text-foreground">{status?.questions}</p>
               <p className="text-xs text-muted-foreground">Practice questions</p>
-            </Card>
+            </div>
           )}
           {(status?.usable_mocks ?? 0) > 0 && (
-            <Card className="p-4">
-              <p className="text-2xl font-bold text-foreground">{status!.usable_mocks}</p>
+            <div className="border-l border-border pl-4">
+              <p className="text-2xl font-bold text-foreground">{status?.usable_mocks}</p>
               <p className="text-xs text-muted-foreground">Mock exams</p>
-            </Card>
+            </div>
           )}
           {facts.videoLessonCount > 0 && (
-            <Card className="p-4">
+            <div className="border-l border-border pl-4">
               <p className="flex items-center gap-1.5 text-2xl font-bold text-foreground">
                 <Video className="h-5 w-5 text-primary" aria-hidden="true" />
                 {facts.videoLessonCount}
               </p>
               <p className="text-xs text-muted-foreground">Lessons with video</p>
-            </Card>
+            </div>
           )}
         </div>
         <p className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
@@ -239,7 +241,7 @@ const CoursePreview = ({
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-sm text-muted-foreground">Topic detail is being written up.</p>
+                      <p className="text-sm text-muted-foreground">Refer to the syllabus objectives for this topic.</p>
                     )}
                   </AccordionContent>
                 </AccordionItem>
@@ -249,40 +251,8 @@ const CoursePreview = ({
         </Section>
       )}
 
-      {/* ── Sample lesson ── */}
-      <Section id="course-sample" title="See a real lesson" icon={Play}>
-        {sampleLesson ? (
-          <Card className="p-5">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Sample lesson</p>
-            <h3 className="mt-1 text-lg font-semibold text-foreground">{sampleLesson.title}</h3>
-            {sampleLesson.description && (
-              <p className="mt-2 text-sm text-muted-foreground">{sampleLesson.description}</p>
-            )}
-            <Button asChild className="mt-4 gap-2">
-              <Link to={`/courses/${courseId}/lesson/${sampleLesson.id}`}>
-                <Play className="h-4 w-4" aria-hidden="true" />
-                Open this lesson
-              </Link>
-            </Button>
-            {isFree && (
-              <p className="mt-2 text-xs text-muted-foreground">
-                Free course - create an account and this lesson opens straight away.
-              </p>
-            )}
-          </Card>
-        ) : (
-          <Card className="p-5">
-            <p className="text-sm text-muted-foreground">
-              Every lesson title and length in this course is listed above, so you can see the full
-              scope before paying. A lesson from this course has not yet been released as a free
-              sample. You can read a free Certificate-level lesson in full instead.
-            </p>
-            <Button asChild variant="outline" className="mt-4">
-              <Link to="/courses/ba1-business-economics">See a free lesson in BA1</Link>
-            </Button>
-          </Card>
-        )}
-      </Section>
+      {lessons.length > 0 && <Section id="course-curriculum" title="Your course content" icon={BookOpen}><Accordion type="single" collapsible className="border-y border-border"><AccordionItem value="curriculum"><AccordionTrigger className="text-left text-sm">View all {lessons.length} lessons</AccordionTrigger><AccordionContent><ol className="divide-y divide-border">{lessons.map((lesson, i) => <li key={lesson.id} className="flex items-start gap-4 py-4"><span className="w-6 shrink-0 font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span><span className="text-sm font-medium">{lesson.title}</span></li>)}</ol></AccordionContent></AccordionItem></Accordion></Section>}
+      {sampleLesson && <Section id="course-sample" title="See a real lesson" icon={Play}><div className="border-l-2 border-primary pl-5"><p className="text-xs text-muted-foreground">Sample from this exam</p><h3 className="mt-2 text-lg font-medium">{sampleLesson.title}</h3>{sampleLesson.description && <p className="mt-2 text-sm text-muted-foreground">{sampleLesson.description}</p>}<Button asChild trace variant="outline" className="mt-5"><Link to={`/courses/${courseId}/lesson/${sampleLesson.id}`}>Open this lesson<Play /></Link></Button>{isFree && <p className="mt-2 text-xs text-muted-foreground">Create an account to open this free course.</p>}</div></Section>}
 
       {/* ── Vetted worked question ── */}
       {worked && (
@@ -385,23 +355,7 @@ const CoursePreview = ({
         </Section>
       )}
 
-      {/* ── Mocks, feedback and support ── */}
-      <Section id="course-assessment" title="Mocks, feedback and support" icon={ClipboardList}>
-        <Card className="space-y-3 p-5 text-sm text-muted-foreground">
-          <p>
-            {(status?.questions ?? 0) === 0
-              ? "Practice questions and mock exams for this course are still being written."
-              : (status?.usable_mocks ?? 0) > 0
-                ? `This course includes ${status!.usable_mocks} timed mock exam${status!.usable_mocks === 1 ? "" : "s"} and ${status!.questions} marked practice questions.`
-                : `This course includes ${status!.questions} marked practice questions. Mock exams are still being built.`}
-            {(status?.questions ?? 0) > 0 && " Questions are marked automatically the moment you submit, with the correct answer explained."}
-          </p>
-          <p>
-            Support is {POLICY.standardSupport.toLowerCase()}, {POLICY.supportHours}. One-to-one
-            tutor sessions are not part of this course.
-          </p>
-        </Card>
-      </Section>
+      {(status?.questions ?? 0) > 0 && <Section id="course-assessment" title="Practice resources" icon={ClipboardList}><div className="border-y border-border py-5 text-sm text-muted-foreground"><p>This course has {status?.questions} marked practice questions{(status?.usable_mocks ?? 0) > 0 ? ` and ${status?.usable_mocks} timed mock exams` : ""}. Questions are automatically marked with explanations when you submit.</p></div></Section>}
 
       {/* ── Purchase terms, straight from the catalogue ── */}
       <Section id="course-terms" title="What you're buying" icon={ShieldCheck}>
@@ -409,7 +363,7 @@ const CoursePreview = ({
           <dl className="grid gap-4 sm:grid-cols-2">
             <MetaRow
               label="Price"
-              value={isFree ? "Free" : price !== null ? `${formatPrice(price)} (VAT included)` : "Not on sale"}
+              value={isFree ? "Free" : price !== null ? `${formatPrice(price)} (VAT included)` : "See access options"}
             />
             <MetaRow
               label="Billing"
@@ -426,8 +380,8 @@ const CoursePreview = ({
           </div>
           {!isFree && (
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <Button onClick={onBuy} className="gap-2">
-                {coveredByMembership ? "Start this course" : `Buy ${courseTitle.split(" - ")[0]}`}
+              <Button trace onClick={onBuy} className="gap-2">
+                {coveredByMembership ? "Start this course" : !purchaseAvailable ? "Register interest" : `Buy ${courseTitle.split(" - ")[0]}`}
               </Button>
               <Button asChild variant="outline">
                 <Link to="/pricing">Compare with a bundle or membership</Link>
