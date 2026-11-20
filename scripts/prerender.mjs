@@ -33,6 +33,7 @@ const BUILD_FLAG = process.argv.includes('--build');
 const ROUTES = [
   '/',
   '/why-cima',
+  '/cima-journey',
   '/courses',
   '/courses/ba1-business-economics',
   '/courses/ba2-management-accounting',

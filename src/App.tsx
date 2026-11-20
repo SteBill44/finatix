@@ -30,6 +30,7 @@ import { Loader2 } from "lucide-react";
 
 // Lazy load all page components
 const Index = lazy(() => import("./pages/Index"));
+const CimaJourney = lazy(() => import("./pages/CimaJourney"));
 const WhyCIMA = lazy(() => import("./pages/WhyCIMA"));
 const Courses = lazy(() => import("./pages/Courses"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
@@ -128,6 +129,7 @@ const AnimatedRoutes = () => {
         <Routes location={location} key={location.pathname}>
           {/* Public routes */}
           <Route path="/" element={<Public feature="Home"><Index /></Public>} />
+          <Route path="/cima-journey" element={<Public feature="CIMA Journey"><CimaJourney /></Public>} />
           <Route path="/why-cima" element={<Public feature="Why CIMA"><WhyCIMA /></Public>} />
           <Route path="/start" element={<Public feature="Start"><Start /></Public>} />
           <Route path="/start/new" element={<Public feature="Start New"><StartNew /></Public>} />

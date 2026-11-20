@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 /** April 2026 design language: warm atmospheric hero, bold caps headline. Content is visible on first paint. */
@@ -15,8 +15,10 @@ const Hero = () => (
     <div className="container relative z-10 mx-auto px-4 py-20">
       <div className="max-w-4xl">
         <h1 className="mb-6 text-4xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-          <span className="block text-foreground">Launch your career</span>
-          <span className="block text-primary">in management accounting.</span>
+          <Link to="/cima-journey" className="rounded hover:opacity-90">
+            <span className="block text-foreground">Launch your career</span>
+            <span className="block text-primary">in management accounting.</span>
+          </Link>
         </h1>
         <p className="mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl">
           A focused digital study platform for the entire CIMA qualification. Your lessons, revision and progress, together in one place.
@@ -26,7 +28,7 @@ const Hero = () => (
             <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>Explore CIMA Courses<ArrowRight /></Link>
           </Button>
           <Button asChild size="xl" trace variant="outline" className="bg-background/70 backdrop-blur-md">
-            <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>Find Your Level<ArrowDown /></a>
+            <Link to="/cima-journey" onClick={() => trackEvent("hero_cta_click", { cta: "cima_journey" })}>See the CIMA Journey<ArrowRight /></Link>
           </Button>
         </div>
       </div>
