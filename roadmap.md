@@ -1,5 +1,9 @@
 # Quick Wins Roadmap
 
+## ArcX structure, Finatix styling (November 2026)
+- [x] Adapt homepage ordering from the current ArcX reference without copying its design or claims.
+- [x] Preserve April styling, unified exam links and existing functionality; verify both themes and mobile (1440/390; 201 tests passed).
+
 ## Unified platform redesign (November 2026)
 - [ ] Audit public, account and learning interfaces and record findings.
 - [ ] Establish new typography, neutral surfaces and refined shared controls.

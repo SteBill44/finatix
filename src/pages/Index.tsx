@@ -4,7 +4,10 @@ import JsonLd from "@/components/JsonLd";
 import Hero from "@/components/home/Hero";
 import ExamDirectory from "@/components/exams/ExamDirectory";
 import PlatformExperience from "@/components/home/PlatformExperience";
-
+import QualificationFacts from "@/components/home/QualificationFacts";
+import WhatIsCIMA from "@/components/home/WhatIsCIMA";
+import WhyFinatix from "@/components/home/WhyFinatix";
+import GettingStarted from "@/components/home/GettingStarted";
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
 import FinalCTA from "@/components/home/FinalCTA";
@@ -54,8 +57,12 @@ const Index = () => {
       />
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
+      <QualificationFacts />
+      <WhatIsCIMA />
+      <WhyFinatix />
       <ExamDirectory />
       <PlatformExperience />
+      <GettingStarted />
       <section aria-label="Independence" className="bg-background pt-10">
         <div className="container mx-auto px-4">
           <QualificationDisclosure compact />

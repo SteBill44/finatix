@@ -7,7 +7,7 @@ const WhatIsCIMA = () => (
     <div className="container mx-auto grid gap-12 px-4 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
       <div>
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Understanding CIMA</p>
-        <h2 id="what-heading" className="text-4xl font-bold leading-[1.05] tracking-[-0.03em] text-foreground md:text-5xl">
+        <h2 id="what-heading" className="section-title">
           What is the CIMA qualification?
         </h2>
       </div>
