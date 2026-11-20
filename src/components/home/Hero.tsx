@@ -3,18 +3,35 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowDown } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
-const Hero = () => <section className="border-b border-border bg-background py-14 md:py-20 lg:py-24">
-  <div className="container px-5 md:px-8">
-    <p className="eyebrow flex items-center gap-3"><span className="h-px w-8 bg-primary" aria-hidden="true" />Finatix / Independent CIMA study</p>
-    <h1 className="hero-title max-w-5xl">Your CIMA journey. <span className="block text-primary">A clearer way forward.</span></h1>
-    <div className="mt-8 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-      <div className="max-w-xl"><p className="text-lg text-muted-foreground md:text-xl">A focused digital study platform for the entire CIMA qualification. Your lessons, revision and progress — together in one place.</p>
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row"><Button asChild size="xl" trace><Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>Explore CIMA Courses<ArrowRight /></Link></Button><Button asChild size="xl" trace variant="outline"><a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>Find Your Level<ArrowDown /></a></Button></div>
-      </div>
-      <div className="flex gap-8 border-t border-border pt-5 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0" aria-label="Qualification structure">
-        {[{ value: "16", label: "CIMA exams" }, { value: "4", label: "Qualification levels" }, { value: "1", label: "Connected platform" }].map(({ value, label }) => <div key={label}><span className="font-display text-3xl font-medium md:text-4xl">{value}</span><p className="mt-1 max-w-[12ch] text-xs text-muted-foreground">{label}</p></div>)}
+/** April 2026 design language: warm atmospheric hero, bold caps headline. Content is visible on first paint. */
+const Hero = () => (
+  <section className="relative -mt-16 flex min-h-[92vh] flex-col justify-center overflow-hidden pb-12 pt-24">
+    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[hsl(var(--hero-gradient-start))] to-[hsl(var(--hero-gradient-end))]" aria-hidden="true" />
+    <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-transparent via-primary/10 to-primary/25 dark:via-primary/20 dark:to-primary/40" aria-hidden="true" />
+    <div className="hex-pattern pointer-events-none absolute inset-0 opacity-80 dark:opacity-100" aria-hidden="true" />
+    <div className="gradient-orb gradient-orb-primary pointer-events-none -left-20 -top-20 h-[250px] w-[250px] sm:h-[400px] sm:w-[400px]" aria-hidden="true" />
+    <div className="gradient-orb gradient-orb-accent pointer-events-none -right-20 top-1/4 h-[200px] w-[200px] sm:h-[300px] sm:w-[300px]" aria-hidden="true" />
+
+    <div className="container relative z-10 mx-auto px-4 py-20">
+      <div className="max-w-4xl">
+        <h1 className="mb-6 text-4xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
+          <span className="block text-foreground">Your CIMA journey.</span>
+          <span className="block text-primary">A clearer way forward.</span>
+        </h1>
+        <p className="mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl">
+          A focused digital study platform for the entire CIMA qualification. Your lessons, revision and progress, together in one place.
+        </p>
+        <div className="flex flex-col items-start gap-4 sm:flex-row">
+          <Button asChild size="xl" trace className="shadow-lg shadow-primary/20">
+            <Link to="/courses" onClick={() => trackEvent("hero_cta_click", { cta: "explore_courses" })}>Explore CIMA Courses<ArrowRight /></Link>
+          </Button>
+          <Button asChild size="xl" trace variant="outline" className="bg-background/70 backdrop-blur-md">
+            <a href="#levels" onClick={() => trackEvent("hero_cta_click", { cta: "find_level" })}>Find Your Level<ArrowDown /></a>
+          </Button>
+        </div>
       </div>
     </div>
-  </div>
-</section>;
+  </section>
+);
+
 export default Hero;
