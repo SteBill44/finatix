@@ -7,6 +7,9 @@ import PlatformExperience from "@/components/home/PlatformExperience";
 import QualificationFacts from "@/components/home/QualificationFacts";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
 import WhyFinatix from "@/components/home/WhyFinatix";
+import CimaPillars from "@/components/home/CimaPillars";
+import WhereToStart from "@/components/home/WhereToStart";
+import CourseIncludes from "@/components/home/CourseIncludes";
 import GettingStarted from "@/components/home/GettingStarted";
 import QualificationDisclosure from "@/components/credibility/QualificationDisclosure";
 import FAQ, { HOME_FAQS } from "@/components/home/FAQ";
@@ -59,8 +62,11 @@ const Index = () => {
       <Hero />
       <QualificationFacts />
       <WhatIsCIMA />
-      <WhyFinatix />
+      <CimaPillars />
+      <WhereToStart />
       <ExamDirectory />
+      <CourseIncludes />
+      <WhyFinatix />
       <PlatformExperience />
       <GettingStarted />
       <section aria-label="Independence" className="bg-background pt-10">
