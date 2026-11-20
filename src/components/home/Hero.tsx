@@ -15,8 +15,8 @@ const Hero = () => (
     <div className="container relative z-10 mx-auto px-4 py-20">
       <div className="max-w-4xl">
         <h1 className="mb-6 text-4xl font-extrabold uppercase leading-[1.05] tracking-tight md:text-6xl lg:text-7xl">
-          <span className="block text-foreground">Your CIMA journey.</span>
-          <span className="block text-primary">A clearer way forward.</span>
+          <span className="block text-foreground">Launch your career</span>
+          <span className="block text-primary">in management accounting.</span>
         </h1>
         <p className="mb-10 max-w-2xl text-lg text-muted-foreground md:text-xl">
           A focused digital study platform for the entire CIMA qualification. Your lessons, revision and progress, together in one place.
