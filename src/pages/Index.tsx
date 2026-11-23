@@ -6,7 +6,6 @@ import ExamDirectory from "@/components/exams/ExamDirectory";
 import PlatformExperience from "@/components/home/PlatformExperience";
 import QualificationFacts from "@/components/home/QualificationFacts";
 import WhatIsCIMA from "@/components/home/WhatIsCIMA";
-import WhyFinatix from "@/components/home/WhyFinatix";
 import CimaPillars from "@/components/home/CimaPillars";
 import WhereToStart from "@/components/home/WhereToStart";
 import CourseIncludes from "@/components/home/CourseIncludes";
@@ -61,13 +60,12 @@ const Index = () => {
       <JsonLd schema={homepageSchemas} id="homepage-schema" />
       <Hero />
       <QualificationFacts />
+      <ExamDirectory />
+      <WhereToStart />
+      <CourseIncludes />
+      <PlatformExperience />
       <WhatIsCIMA />
       <CimaPillars />
-      <WhereToStart />
-      <ExamDirectory />
-      <CourseIncludes />
-      <WhyFinatix />
-      <PlatformExperience />
       <GettingStarted />
       <section aria-label="Independence" className="bg-background pt-10">
         <div className="container mx-auto px-4">

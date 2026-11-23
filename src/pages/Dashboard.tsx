@@ -138,11 +138,11 @@ const Dashboard = () => {
             <div>
               <h1 className="text-3xl md:text-4xl font-medium text-foreground">
                 {isFirstSignIn || forceFirst ? "Welcome" : "Welcome back"},{" "}
-                <span className="text-gradient-brand">{userName}</span>
+                <span className="text-primary">{userName}</span>
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 {enrolledCount > 0
-                  ? `Enrolled in ${enrolledCount} course${enrolledCount !== 1 ? "s" : ""} - keep it up.`
+                  ? `Enrolled in ${enrolledCount} course${enrolledCount !== 1 ? "s" : ""}. Pick up where you left off below.`
                   : "Get started by enrolling in your first course."}
               </p>
             </div>
